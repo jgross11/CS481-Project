@@ -32,13 +32,4 @@ class Equipment extends ExperimentObject{
         this.sprite = sprite;
     }
 
-    /**
-    Draw this piece of Equipment onto the screen using P5 2D graphics
-    TODO abstract this out to account for 2D and 3D graphics
-    */
-    draw() {
-        image(this.sprite, this.position[0], this.position[1]);
-    }
-
-
 }

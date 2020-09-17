@@ -16,8 +16,4 @@ class Beaker extends Container{
         super(position, mass, capacity, residue, name, SPRITE_BEAKER);
     }
 
-    canContain(chemical){
-        return true;
-    }
-
 }
