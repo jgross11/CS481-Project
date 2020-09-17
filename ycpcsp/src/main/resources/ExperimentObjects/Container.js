@@ -15,10 +15,28 @@ class Container extends Equipment{
     */
     constructor(position, mass, capacity, residue, name, sprite){
         super(position, mass, name, sprite);
+        this.capacity = capacity;
+        this.residue = residue;
     }
 
     /**
-    By hand, pur out the contents of this Container. This will leave residue inside the container
+    Set the capacity of this Container
+    capacity: The new capacity, a floating point value
+    */
+    setCapacity(capacity){
+        this.capacity = capacity;
+    }
+
+    /**
+    Set the residue of this Container
+    capacity: The new residue, a floating point value in range [0-1]
+    */
+    setResidue(residue){
+        this.residue = residue;
+    }
+
+    /**
+    By hand, pour out the contents of this Container. This will leave residue inside the container
     */
     pourOut(){
         // TODO implement

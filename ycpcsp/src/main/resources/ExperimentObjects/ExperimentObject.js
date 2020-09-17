@@ -13,6 +13,20 @@ class ExperimentObject{
         this.name = name;
     }
 
+    /**
+    Set the mass of this ExperimentObject
+    mass: The new mass, a positive floating point value
+    */
+    setMass(mass){
+        if(isFloat(mass) && mass > 0) this.mass = mass;
+    }
 
+    /**
+    Set the name of this ExperimentObject
+    name: The new name
+    */
+    setName(name){
+        this.name = name;
+    }
 
 }

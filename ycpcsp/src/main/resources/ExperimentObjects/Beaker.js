@@ -13,7 +13,7 @@ class Beaker extends Container{
     name: As a string, the name given to this specific instance of this Beaker
     */
     constructor(position, mass, capacity, residue, name){
-        super(position, mass, capacity, residue, name, BEAKER);
+        super(position, mass, capacity, residue, name, SPRITE_BEAKER);
     }
 
     canContain(chemical){

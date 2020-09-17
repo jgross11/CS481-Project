@@ -8,15 +8,8 @@ class Experiment{
     */
     constructor(){
         // The list of Equipment in this Experiment
-        this.equipment = [];
+        this.equipment = null;
         this.reset();
-    }
-
-    /**
-    Bring the experiment to the next step
-    */
-    runStep(){
-        // TODO implement
     }
 
     /**
@@ -24,6 +17,13 @@ class Experiment{
     */
     reset(){
         this.equipment = [];
+    }
+
+    /**
+    Bring the experiment to the next step
+    */
+    runStep(){
+        // TODO implement
     }
 
     /**

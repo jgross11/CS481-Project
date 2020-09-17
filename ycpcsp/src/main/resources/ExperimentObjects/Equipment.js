@@ -17,6 +17,22 @@ class Equipment extends ExperimentObject{
     }
 
     /**
+    Set the current position of this piece of Equipment
+    pos: The new position, a list [x, y] of coordinates
+    */
+    setPosition(pos){
+        this.position = pos
+    }
+
+    /**
+    Set the sprite which will be used to display this piece of Equipment
+    sprite: The new sprite, a P5 image file
+    */
+    setSprite(sprite){
+        this.sprite = sprite;
+    }
+
+    /**
     Draw this piece of Equipment onto the screen using P5 2D graphics
     TODO abstract this out to account for 2D and 3D graphics
     */

@@ -1,5 +1,5 @@
-var BEAKER;
+var SPRITE_BEAKER;
 
 function loadImages(){
-    BEAKER = loadImage('beaker.png');
+    SPRITE_BEAKER = loadImage('beaker.png');
 }
