@@ -15,8 +15,15 @@ class EquipmentController2D{
     Draw this piece of Equipment onto the screen using P5 2D graphics
     */
     draw(){
-        p = this.equipment.position;
+        var p = this.equipment.position;
         image(this.equipment.sprite, p[0], p[1]);
+    }
+
+    /**
+    Set the currently used Equipment for this EquipmentController
+    */
+    setEquipment(equipment){
+        this.equipment = equipment;
     }
 
 }

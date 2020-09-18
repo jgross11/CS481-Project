@@ -30,8 +30,10 @@ class Experiment{
     Draw the full Experiment to the P5 graphics
     */
     render(){
+        var equipController = new EquipmentController2D(null);
         for(var i = 0; i < this.equipment.length; i++){
-            this.equipment[i].draw();
+            equipController.setEquipment(this.equipment[i]);
+            equipController.draw();
         }
     }
 
