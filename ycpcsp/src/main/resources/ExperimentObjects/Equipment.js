@@ -6,13 +6,15 @@ class Equipment extends ExperimentObject{
     /**
     Create a new Experiment object with the given position, mass, name, and sprite
     position: A list [x, y] of the coordinates of the Equipment's location in the Experiment
+    size: A list [width, height] of the size of the Equipment in pixels
     mass: A floating point value, the mass, in grams, of this piece of Equipment
     name: As a string, the name given to this specific instance of this piece of Equipment
     sprite: A P5 image file used to display this piece of Equipment
     */
-    constructor(position, mass, name, sprite){
+    constructor(position, size, mass, name, sprite){
         super(mass, name);
         this.position = position;
+        this.size = size
         this.sprite = sprite;
     }
 
@@ -22,6 +24,14 @@ class Equipment extends ExperimentObject{
     */
     setPosition(pos){
         this.position = pos
+    }
+
+    /**
+    Set the current size of this piece of Equipment
+    pos: The new size, a list [width, height]
+    */
+    setPosition(size){
+        this.size = size
     }
 
     /**

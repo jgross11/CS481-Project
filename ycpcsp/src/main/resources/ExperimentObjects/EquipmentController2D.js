@@ -16,7 +16,8 @@ class EquipmentController2D{
     */
     draw(){
         var p = this.equipment.position;
-        image(this.equipment.sprite, p[0], p[1]);
+        var s = this.equipment.size;
+        image(this.equipment.sprite, p[0], p[1], s[0], s[1]);
     }
 
     /**

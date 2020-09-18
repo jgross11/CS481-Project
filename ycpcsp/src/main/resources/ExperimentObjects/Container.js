@@ -6,6 +6,7 @@ class Container extends Equipment{
     /**
     Create a new Container object with the given position, mass, capacity, residue, name, and sprite
     position: A list [x, y] of the coordinates of the Container's location in the Experiment
+    size: A list [width, height] of the size of the Equipment in pixels
     mass: A floating point value, the mass, in grams, of this Container
     capacity: A floating point value, the maximum amount of contents which this Container can hold
     residue: A floating point value in range [0-1], the percentage of this Container's capacity
@@ -13,8 +14,8 @@ class Container extends Equipment{
     name: As a string, the name given to this specific instance of this Container
     sprite: A P5 image file used to display this piece of Container
     */
-    constructor(position, mass, capacity, residue, name, sprite){
-        super(position, mass, name, sprite);
+    constructor(position, size, mass, capacity, residue, name, sprite){
+        super(position, size, mass, name, sprite);
         this.capacity = capacity;
         this.residue = residue;
     }
