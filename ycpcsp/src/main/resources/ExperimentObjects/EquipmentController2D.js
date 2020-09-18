@@ -27,4 +27,17 @@ class EquipmentController2D{
         this.equipment = equipment;
     }
 
+    /**
+    Determine if a point is located inside the bounds of this piece of Equipment
+    */
+    inBounds(pos){
+        var cx = pos[0];
+        var cy = pos[1];
+        var eq = this.equipment;
+        var x = eq.position[0];
+        var y = eq.position[1];
+        var w = eq.size[0];
+        var h = eq.size[1];
+        return x <= cx && cx <= x + w && y <= cy && cy <= y + h;
+    }
 }

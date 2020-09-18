@@ -5,7 +5,7 @@ class Beaker extends Container{
 
     /**
     Create a new Beaker object with the given position, mass, capacity, residue, name
-    position: A list [x, y] of the coordinates of the Beaker's location in the Experiment
+    position: A list [x, y] of the upper left hand corner coordinates of the Beaker's location in the Experiment
     size: A list [width, height] of the size of the Equipment in pixels
     mass: A floating point value, the mass, in grams, of this Beaker
     capacity: A floating point value, the maximum amount of contents, in milliliters which this Beaker can hold TODO should this be in milliliters

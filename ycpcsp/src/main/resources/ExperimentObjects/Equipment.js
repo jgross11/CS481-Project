@@ -5,7 +5,7 @@ class Equipment extends ExperimentObject{
 
     /**
     Create a new Experiment object with the given position, mass, name, and sprite
-    position: A list [x, y] of the coordinates of the Equipment's location in the Experiment
+    position: A list [x, y] of the upper left hand corner coordinates of the Equipment's location in the Experiment
     size: A list [width, height] of the size of the Equipment in pixels
     mass: A floating point value, the mass, in grams, of this piece of Equipment
     name: As a string, the name given to this specific instance of this piece of Equipment
@@ -30,7 +30,7 @@ class Equipment extends ExperimentObject{
     Set the current size of this piece of Equipment
     pos: The new size, a list [width, height]
     */
-    setPosition(size){
+    setSize(size){
         this.size = size
     }
 

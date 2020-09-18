@@ -5,7 +5,7 @@ class Container extends Equipment{
 
     /**
     Create a new Container object with the given position, mass, capacity, residue, name, and sprite
-    position: A list [x, y] of the coordinates of the Container's location in the Experiment
+    position: A list [x, y] of the upper left hand corner coordinates of the Container's location in the Experiment
     size: A list [width, height] of the size of the Equipment in pixels
     mass: A floating point value, the mass, in grams, of this Container
     capacity: A floating point value, the maximum amount of contents which this Container can hold
