@@ -7,7 +7,7 @@ class ContainerController2D extends EquipmentController2D{
     container: The Container which this controller will control
     */
     constructor(container){
-        this.container = container;
+        super(container);
     }
 
     /**
@@ -37,6 +37,6 @@ class ContainerController2D extends EquipmentController2D{
     returns: true if the container can hold the chemical, false otherwise
     */
     canContain(chemical){
-        throw new Error("All ContainerController objects must implement canContain(chemical)");
+        throw new Error("All ContainerController2D objects must implement canContain(chemical)");
     }
 }

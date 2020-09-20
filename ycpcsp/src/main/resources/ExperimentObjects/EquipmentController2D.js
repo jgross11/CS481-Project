@@ -12,15 +12,6 @@ class EquipmentController2D{
     }
 
     /**
-    Draw this piece of Equipment onto the screen using P5 2D graphics
-    */
-    draw(){
-        var p = this.equipment.position;
-        var s = this.equipment.size;
-        image(this.equipment.sprite, p[0], p[1], s[0], s[1]);
-    }
-
-    /**
     Set the currently used Equipment for this EquipmentController
     */
     setEquipment(equipment){
@@ -39,5 +30,14 @@ class EquipmentController2D{
         var w = eq.size[0];
         var h = eq.size[1];
         return x <= cx && cx <= x + w && y <= cy && cy <= y + h;
+    }
+
+    /**
+    Draw this piece of Equipment onto the screen using P5 2D graphics
+    */
+    draw(){
+        var p = this.equipment.position;
+        var s = this.equipment.size;
+        image(this.equipment.sprite, p[0], p[1], s[0], s[1]);
     }
 }

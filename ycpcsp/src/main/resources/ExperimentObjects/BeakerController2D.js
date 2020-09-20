@@ -7,7 +7,7 @@ class BeakerController2D extends ContainerController2D{
     beaker: The Beaker which this controller will control
     */
     constructor(beaker){
-        this.beaker = beaker;
+        super(beaker);
     }
 
     canContain(chemical){
