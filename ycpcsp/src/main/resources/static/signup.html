@@ -1,0 +1,52 @@
+<html>
+    <form id="signup-form" name="signup-form" action="/signup-submit" method="post">
+        <label for="fname">First name:</label><br>
+        <input type="text" id="fname" name="fname"><br>
+        <label for="lname">Last name:</label><br>
+        <input type="text" id="lname" name="lname"><br>
+        <label for="email">Email:</label><br>
+        <input type="text" id="email" name="email"><br>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password"><br>
+        <label for="confirm-password">Confirm Password:</label><br>
+        <input type="password" id="confirm-password" name="confirm-password"><br>
+        <label for="school">School or institution:</label><br>
+        <input type="text" id="school" name="school"><br>
+        <!--- TODO make more questions -->
+        <label for="security-question-1">1st Security Question:</label><br>
+        <select name="security-question-1" id="security-question-1">
+            <option value="pet">What was the name of your first pet?</option>
+            <option value="sport">What is your favorite sport?</option>
+            <option value="childhood-address">What is the first address you lived at?</option>
+        </select>
+        <input type="text" id="sec-que-1-answer" name="sec-que-1-answer"><br>
+
+        <label for="security-question-2">2nd Security Question:</label><br>
+        <select name="security-question-2" id="security-question-2">
+            <option value="pet">What was the name of your first pet?</option>
+            <option value="sport">What is your favorite sport?</option>
+            <option value="childhood-address">What is the first address you lived at?</option>
+        </select>
+        <input type="text" id="sec-que-2-answer" name="sec-que-2-answer"><br>
+        
+        <label for="security-question-3">3rd Security Question:</label><br>
+        <select name="security-question-3" id="security-question-3">
+            <option value="pet">What was the name of your first pet?</option>
+            <option value="sport">What is your favorite sport?</option>
+            <option value="childhood-address">What is the first address you lived at?</option>
+        </select>
+        <input type="text" id="sec-que-3-answer" name="sec-que-3-answer"><br>
+        <a href="/recoverinfo">Need to recover information? Click here.</a><br>
+        <input value="Sign up" type="button" id="verifyInformationButton" name="verifyInformationButton" onclick="verifyInformation()">
+    </form>
+
+    <script>
+        console.log("Loaded verification script");
+        function verifyInformation(){
+            // TODO actually verify...
+            console.log("Verifying information...");
+            document.getElementById("signup-form").submit();
+        }
+
+    </script>
+</html>
