@@ -32,3 +32,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### qunit testing files ###
+/node_modules
