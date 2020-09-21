@@ -1,5 +1,6 @@
 package edu.ycpcsp.ycpcsp
 
+import edu.ycpcsp.ycpcsp.Models.SecurityQuestion
 import edu.ycpcsp.ycpcsp.Models.SecurityQuestionEnum
 import edu.ycpcsp.ycpcsp.Models.User
 
@@ -10,9 +11,8 @@ import edu.ycpcsp.ycpcsp.Models.User
 class Tests
 
     fun main(args : Array<String>){
-        // create user and print contents formatted as string
+        // create user
         var user = User("Josh", "Gross", "jgross11@ycp.edu", "123123123", "York College of Pennsylvania")
-        println(user.toString())
 
         // print a specific security question
         println("${SecurityQuestionEnum.PET.question}\n")
@@ -22,5 +22,14 @@ class Tests
             println(sq.question)
         }
 
+        // create security question object and add to user
+        var sq1 = SecurityQuestion(0, "Tippy")
+        var sq2 = SecurityQuestion(1, "Wouldn't you like to know, weather boy?")
+        var sq3 = SecurityQuestion(1, "Still not telling")
+        user.securityQuestions[0] = sq1
+        user.securityQuestions[1] = sq2
+        user.securityQuestions[2] = sq3
 
+        // print user information
+        println(user.toString())
     }
