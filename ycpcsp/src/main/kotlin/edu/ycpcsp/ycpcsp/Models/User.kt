@@ -24,6 +24,7 @@ data class User(var firstName : String = "UNKNOWN",
     {
         firstName = firstName.capitalize()
         lastName = lastName.capitalize()
+        securityQuestions = Array(3){SecurityQuestion()}
 
     }
 
