@@ -20,6 +20,7 @@ fun main() {
         var rs = st.executeQuery("select * from Database.Users")
         // for each result
         while (rs.next()) {
+            // will no longer work as we don't know the correct amount of columns
             // for each property of each result
             println(rs.getString(1));
             println(rs.getString(2));
