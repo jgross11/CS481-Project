@@ -1,33 +1,36 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
-import  java.util.Properties
+import java.util.Properties
 import java.sql.*
+
+const val username = "admin"
+const val password = "ruRkob-6zoqvu-nywryf"
+const val url = "jdbc:mysql://cs481database.c4fmzwru5eoe.us-east-2.rds.amazonaws.com:3306"
+
 
 fun main() {
     val connectionProps = Properties();
-    var username = "username";
-    var password = "password";
-    var url = "jdbc:mysql://###HOSTNAME HERE###";
-    connectionProps.put("user", username);
+    connectionProps.put("user", username)
     connectionProps.put("password", password)
     connectionProps.put("useSSL", "false")
 
     try {
-        Class.forName("com.mysql.jdbc.Driver");
+        Class.forName("com.mysql.jdbc.Driver")
 
         var conn = DriverManager.getConnection(url, connectionProps)
         var st = conn.createStatement();
         var rs = st.executeQuery("select * from Database.Users")
-        // for each result
+        var rsmd = rs.metaData
+        var colmnNum = rsmd.columnCount
+
+        // for each row in the result set
         while (rs.next()) {
-            // will no longer work as we don't know the correct amount of columns
-            // for each property of each result
-            println(rs.getString(1));
-            println(rs.getString(2));
-            println(rs.getString(3));
-            println(rs.getString(4));
-            println(rs.getString(5));
-            println(rs.getString(6));
+            //prints out values in each column of the result set
+            for(i in 1  until colmnNum){
+                println(rs.getString(i))
+            }
+            //For now I will differentiate rows like this
+            println("\n Next Row \n")
         }
     } catch (ex: SQLException) {
         // handle any errors
