@@ -38,6 +38,4 @@ class Container extends Equipment{
     setResidue(residue){
         this.residue = residue;
     }
-
-
 }

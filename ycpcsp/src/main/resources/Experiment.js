@@ -48,9 +48,9 @@ class Experiment{
         // Otherwise, determine which object is selected by the mouse, if any
         else{
             this.selectedEquipment = null;
-            var equipController = new EquipmentController2D(null);
             for(var i = 0; i < this.equipment.length; i++){
                 var eq = this.equipment[i];
+                var equipController = eq.createController();
                 equipController.setEquipment(eq);
                 if(equipController.inBounds([mouseX, mouseY])){
                     this.selectedEquipment = eq;

@@ -39,4 +39,5 @@ class ContainerController2D extends EquipmentController2D{
     canContain(chemical){
         throw new Error("All ContainerController2D objects must implement canContain(chemical)");
     }
+
 }

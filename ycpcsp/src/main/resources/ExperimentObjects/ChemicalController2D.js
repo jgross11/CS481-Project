@@ -28,4 +28,9 @@ class ChemicalController2D{
         // TODO implement
     }
 
+    draw(){
+        super.draw();
+        console.log("draw container");
+    }
+
 }

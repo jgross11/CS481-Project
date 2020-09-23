@@ -5,6 +5,8 @@ var experiment;
 
 TODO:
     Add test cases for Chemical
+    Add draw test cases for BeakerController2D
+    Add test cases for createController for ExperimentObject
 
 */
 
