@@ -21,16 +21,3 @@ QUnit.test('Container setResidue:', function(assert){
     container.setResidue(0.05);
     assert.equal(container.residue, 0.05, 'residue should be 0.05');
 });
-
-QUnit.todo('Container pourOut:', function(assert){
-    assert.true(false);
-});
-
-QUnit.todo('Container addTo:', function(assert){
-    assert.true(false);
-});
-
-QUnit.test('Container canContain:', function(assert){
-    var container = new Container([10, 5], [12, 20], 10.0, 200.0, 0.15, "cont", null);
-    assert.throws(container.canContain, "A generic Container object should throw an error on canContain");
-});

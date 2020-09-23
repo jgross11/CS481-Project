@@ -28,23 +28,3 @@ QUnit.test('Equipment setSprite:', function(assert){
 
     assert.equal(equip.sprite, "SPRITE_BEAKER", 'size should be SPRITE_BEAKER');
 });
-
-QUnit.test('Equipment inBounds:', function(assert){
-    var equip = new Equipment([10, -20], [5, 30], 5.0, "exp obj", null);
-
-    assert.false(equip.inBounds([0, 0]), "Point left of object should be out of bounds");
-    assert.false(equip.inBounds([16, 0]), "Point right of object should be out of bounds");
-    assert.false(equip.inBounds([12, -21]), "Point above object should be out of bounds");
-    assert.false(equip.inBounds([12, 11]), "Point below object should be out of bounds");
-
-    assert.true(equip.inBounds([12, 0]), "Point in object should be in bounds");
-    assert.true(equip.inBounds([10, 0]), "Point on left edge of object should be in bounds");
-    assert.true(equip.inBounds([15, 0]), "Point on right edge of object should be in bounds");
-    assert.true(equip.inBounds([12, -20]), "Point on top edge of object should be in bounds");
-    assert.true(equip.inBounds([12, 10]), "Point on bottom edge of object should be in bounds");
-
-});
-
-QUnit.todo('Equipment draw:', function(assert){
-    assert.true(false);
-});

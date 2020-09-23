@@ -9,8 +9,3 @@ QUnit.test('Beaker constructor:', function(assert){
     assert.equal(beaker.name, "beak", 'name should be "beak"');
     assert.equal(beaker.sprite, SPRITE_BEAKER, 'sprite should be SPRITE_BEAKER');
 });
-
-QUnit.test('Beaker canContain:', function(assert){
-    var beaker = new Beaker([8, 9], [102, 100], 5.0, 150.0, 0.2, "beak");
-    assert.true(beaker.canContain(null), "Beaker can contain anything");
-});

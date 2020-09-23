@@ -17,18 +17,9 @@ class Beaker extends Container{
         super(position, size, mass, capacity, residue, name, SPRITE_BEAKER);
     }
 
-    /**
-    Determine if the given chemical can be in this beaker
-    */
-    canContain(chemical){
-        return true;
-    }
-
-    /**
-    Draw this beaker
-    */
-    draw(){
-        super.draw();
+    createController(){
+        console.log("Create beaker controller");
+        return new BeakerController2D(this);
     }
 
 }
