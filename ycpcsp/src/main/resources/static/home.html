@@ -88,7 +88,7 @@
 <div class="dropdown">
     <button class="dropbtn">Login</button>
     <div class="dropdown-content">
-        <form id="signup-form" name="signup-form" action="/signup-submit" method="post">
+        <form id="login-form" name="login-form" action="/login-submit" method="post">
         <label for="email">Email:</label><br>
             <input type="text" id="email" name="email"><br>
             <label for="password">Password:</label><br>
@@ -129,4 +129,14 @@
 
 
 </body>
+
+<script>
+    console.log("Loaded verification script");
+    function verifyInformation(){
+        // TODO actually verify...
+        console.log("Verifying information...");
+        document.getElementById("login-form").submit();
+    }
+
+</script>
 </html>
