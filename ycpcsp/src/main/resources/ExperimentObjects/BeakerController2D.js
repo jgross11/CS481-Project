@@ -14,9 +14,4 @@ class BeakerController2D extends ContainerController2D{
         return true;
     }
 
-    draw(){
-        super.draw();
-        console.log("draw beaker");
-    }
-
 }
