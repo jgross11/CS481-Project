@@ -1,8 +1,6 @@
 package edu.ycpcsp.ycpcsp
 
-import edu.ycpcsp.ycpcsp.Models.SecurityQuestion
-import edu.ycpcsp.ycpcsp.Models.SecurityQuestionEnum
-import edu.ycpcsp.ycpcsp.Models.User
+import edu.ycpcsp.ycpcsp.Models.*
 
 /**
  *  Class that is used to test (NOT unit test) class functionality to demonstrate Kotlin capabilities
@@ -32,4 +30,32 @@ class Tests
 
         // print user information
         println(user.toString())
+
+        // create water object
+        var water = ChemicalObject("H2O", 1.0f, 0.0f)
+
+        // create beaker object
+        var beaker = EquipmentObject("10mL Beaker")
+
+        // create a step between water and a beaker
+        var waterInBeakerStep = Step(1, water, beaker)
+
+        // print object information
+        println(water.toString())
+        println(beaker.toString())
+        println(waterInBeakerStep.toString())
+
+        // create experiment object
+        var experiment = Experiment("Adding water to a beaker", user.getFullname(), "water, beaker", 1)
+
+        // demonstrate initialization of experiment yields null steps
+        println("### PREPARE FOR ERROR MESSAGES AS DEFAULT EXPERIMENT IS PRINTED")
+        println(experiment.toString())
+
+        // populate experiment with step
+        experiment.addStep(waterInBeakerStep, 0)
+
+        // print full experiment information
+        println(experiment.toString())
+
     }
