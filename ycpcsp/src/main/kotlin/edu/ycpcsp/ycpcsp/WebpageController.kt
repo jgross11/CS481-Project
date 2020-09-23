@@ -67,5 +67,24 @@ class WebpageController {
         // returns to home page
         return "redirect:/"
     }
+    @PostMapping(path = ["/login-submit"], consumes = ["application/x-www-form-urlencoded"])
+    fun login(
+                  @RequestParam("email")  email : String,
+                  @RequestParam("password")  password : String
+
+    ) : String {
+
+        // print received information
+        println("Received the following login information: ")
+        println("email: $email")
+        println("password: $password")
+
+        // TODO verify information is correct, doesn't already exist, etc...
+
+        // TODO return to correct page i.e. to successful creation if successful, back to signup with error messages if not
+
+        // returns to home page
+        return "redirect:/"
+    }
 
 }

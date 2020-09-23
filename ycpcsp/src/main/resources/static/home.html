@@ -1,3 +1,125 @@
+<!DOCTYPE html>
 <html>
-    <h1> Welcome to the home page... </h1>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .dropbtn {
+            background-color: #3498DB;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+
+
+        }
+
+        .dropup {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropup-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            bottom: 50px;
+            z-index: 1;
+        }
+
+        .dropup-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropup-content a:hover {background-color: #ccc}
+
+        .dropup:hover .dropup-content {
+            display: block;
+        }
+
+        .dropup:hover .dropbtn {
+            background-color: #2980B9;
+        }
+        .dropbtn2 {
+            background-color: #4CAF50;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+            width: 250px;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {background-color: #ddd;}
+
+        .dropdown:hover .dropdown-content {display: block;}
+
+        .dropdown:hover .dropbtn2 {background-color: #3e8e41;}
+    </style>
+</head>
+<body>
+<div class="dropdown">
+    <button class="dropbtn">Login</button>
+    <div class="dropdown-content">
+        <form id="signup-form" name="signup-form" action="/signup-submit" method="post">
+        <label for="email">Email:</label><br>
+            <input type="text" id="email" name="email"><br>
+            <label for="password">Password:</label><br>
+            <input type="password" id="password" name="password"><br>
+            <input value="Sign in" type="button" id="verifyInformationButton" name="verifyInformationButton" onclick="verifyInformation()">
+            <a href="/signup.html">Sign up.</a><br>
+        </form>
+    </div>
+</div>
+<div class="dropup">
+    <button class="dropbtn2">FaQ</button>
+    <div class="dropup-content">
+
+    </div>
+</div>
+<div class="dropup">
+    <button class="dropbtn2">FaQ</button>
+    <div class="dropup-content">
+
+    </div>
+</div>
+<div class="dropup">
+    <button class="dropbtn2">FaQ</button>
+    <div class="dropup-content">
+
+    </div>
+</div>
+<div class="dropup">
+    <button class="dropbtn2">FaQ</button>
+    <div class="dropup-content">
+
+    </div>
+</div>
+
+
+
+</body>
 </html>
