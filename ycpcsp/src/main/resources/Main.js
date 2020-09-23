@@ -1,5 +1,14 @@
 var experiment;
 
+
+/*
+
+TODO:
+    Add test cases for Chemical
+
+*/
+
+
 /**
 P5.js function, called when script is initially loaded
 */
