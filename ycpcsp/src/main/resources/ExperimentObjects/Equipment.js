@@ -42,4 +42,26 @@ class Equipment extends ExperimentObject{
         this.sprite = sprite;
     }
 
+    /**
+    Determine if a point is located inside the bounds of this piece of Equipment
+    */
+    inBounds(pos){
+        var cx = pos[0];
+        var cy = pos[1];
+        var x = this.position[0];
+        var y = this.position[1];
+        var w = this.size[0];
+        var h = this.size[1];
+        return x <= cx && cx <= x + w && y <= cy && cy <= y + h;
+    }
+
+    /**
+    Draw this piece of Equipment onto the screen using P5 2D graphics
+    */
+    draw(){
+        var p = this.position;
+        var s = this.size;
+        image(this.sprite, p[0], p[1], s[0], s[1]);
+    }
+
 }

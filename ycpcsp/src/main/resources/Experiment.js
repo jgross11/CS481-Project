@@ -30,10 +30,8 @@ class Experiment{
     Draw the full Experiment to the P5 graphics
     */
     render(){
-        var equipController = new EquipmentController2D(null);
         for(var i = 0; i < this.equipment.length; i++){
-            equipController.setEquipment(this.equipment[i]);
-            equipController.draw();
+            this.equipment[i].draw();
         }
     }
 
@@ -50,9 +48,7 @@ class Experiment{
             this.selectedEquipment = null;
             for(var i = 0; i < this.equipment.length; i++){
                 var eq = this.equipment[i];
-                var equipController = eq.createController();
-                equipController.setEquipment(eq);
-                if(equipController.inBounds([mouseX, mouseY])){
+                if(eq.inBounds([mouseX, mouseY])){
                     this.selectedEquipment = eq;
                     break;
                 }

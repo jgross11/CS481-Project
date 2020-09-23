@@ -51,5 +51,21 @@ class Chemical extends ExperimentObject{
         this.texture = texture;
     }
 
+    /**
+    Determine the number of moles of this Chemical
+    returns: A floating point value, the number of moles
+    */
+    calculateMoles(){
+        // TODO implement
+        return 0;
+    }
+
+    /**
+    Determine the state of matter of this Chemical.
+    The result is stored in the matterState field
+    */
+    calculateMatterState(){
+        // TODO implement
+    }
 
 }

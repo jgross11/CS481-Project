@@ -38,4 +38,34 @@ class Container extends Equipment{
     setResidue(residue){
         this.residue = residue;
     }
+
+    /**
+    By hand, pour out the contents of this Container. This will leave residue inside the container
+    */
+    pourOut(){
+        // TODO implement
+    }
+
+    /**
+    Add the given Chemical to this Container. Does nothing if the Chemical cannot be placed in this Container.
+    chemical: The Chemical to be placed in this container
+    returns: true if the chemical was successfully added, false otherwise
+    */
+    addTo(chemical){
+        if(this.canContain(chemical)){
+            // TODO implement add chemical
+            return true;
+        }
+        return false;
+
+    }
+
+    /**
+    Determine if this Container can hold the given chemical.
+    chemical: The Chemical which should be tested
+    returns: true if the Container can hold the chemical, false otherwise
+    */
+    canContain(chemical){
+        throw new Error("All ContainerController2D objects must implement canContain(chemical)");
+    }
 }
