@@ -4,8 +4,7 @@ var expController;
 /*
 
 TODO:
-    Make a collisionController
-    Add draw test cases for BeakerController2D and EquipmentController2D
+
 */
 
 

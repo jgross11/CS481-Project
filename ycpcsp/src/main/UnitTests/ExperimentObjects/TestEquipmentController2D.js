@@ -14,6 +14,13 @@ QUnit.test('EquipmentController2D setEquipment:', function(assert){
 
 });
 
+QUnit.test('EquipmentController2D toRect:', function(assert){
+    var equip = new Equipment([12, 14], [58, 29], 5.0, "exp obj", null);
+    var controller = new EquipmentController2D(equip);
+
+    assert.deepEqual(controller.toRect(), [12, 14, 58, 29], "Bounds of equipment should be [12, 14, 58, 29]");
+});
+
 QUnit.test('EquipmentController2D inBounds:', function(assert){
     var equip = new Equipment([10, -20], [5, 30], 5.0, "exp obj", null);
     var controller = new EquipmentController2D(equip);

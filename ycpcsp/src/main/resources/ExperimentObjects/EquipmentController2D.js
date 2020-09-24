@@ -19,26 +19,31 @@ class EquipmentController2D{
     }
 
     /**
+    Get the rectangular bounds of this Controller's Equipment as a rectangle
+    returns: the bounds as a list of 4 floating point values [x, y, width, height],
+        x and y are the upper left hand corner
+    */
+    toRect(){
+        var p = this.equipment.position;
+        var s = this.equipment.size;
+        return [p[0], p[1], s[0], s[1]];
+    }
+
+    /**
     Determine if a point is located inside the bounds of this piece of Equipment
+    pos: The point to test
+    returns: true if the point is inside this equipment, false otherwise
     */
     inBounds(pos){
-        var cx = pos[0];
-        var cy = pos[1];
-        var eq = this.equipment;
-        var x = eq.position[0];
-        var y = eq.position[1];
-        var w = eq.size[0];
-        var h = eq.size[1];
-        return x <= cx && cx <= x + w && y <= cy && cy <= y + h;
+        return pointInRect2D(this.toRect(), pos);
     }
 
     /**
     Draw this piece of Equipment onto the screen in it's current position as a generic sprite
     */
     drawSprite(){
-        var p = this.equipment.position;
-        var s = this.equipment.size;
-        image(this.equipment.sprite, p[0], p[1], s[0], s[1]);
+        var r = this.toRect();
+        image(this.equipment.sprite, r[0], r[1], r[2], r[3]);
     }
 
     /**

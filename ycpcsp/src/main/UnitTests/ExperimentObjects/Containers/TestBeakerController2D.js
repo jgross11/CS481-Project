@@ -8,3 +8,8 @@ QUnit.test('BeakerController2D canContain:', function(assert){
     var controller = new BeakerController2D(null);
     assert.true(true, "Beaker can contain anything");
 });
+
+
+QUnit.todo('BeakerController2D draw:', function(assert){
+    assert.true(false);
+});
