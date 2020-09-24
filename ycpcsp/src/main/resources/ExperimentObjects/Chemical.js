@@ -20,8 +20,8 @@ class Chemical extends ExperimentObject{
         this.matterState = null;
         this.texture = texture;
 
-        var control = new ChemicalController2D(this);
-        control.calculateMoles();
+        var controller = new ChemicalController2D(this);
+        controller.calculateMoles();
     }
 
     /**

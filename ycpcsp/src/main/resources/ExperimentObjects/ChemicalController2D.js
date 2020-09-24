@@ -12,6 +12,14 @@ class ChemicalController2D{
     }
 
     /**
+    Set the Chemical controlled by this Controller
+    chemical: The Chemical to set
+    */
+    setChemical(chemical){
+        this.chemical = chemical;
+    }
+
+    /**
     Determine the number of moles of the chemical in this controller
     returns: A floating point value, the number of moles
     */
@@ -26,11 +34,6 @@ class ChemicalController2D{
     */
     calculateMatterState(){
         // TODO implement
-    }
-
-    draw(){
-        super.draw();
-        console.log("draw container");
     }
 
 }

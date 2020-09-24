@@ -5,28 +5,10 @@ QUnit.test('Experiment constructor:', function(assert){
     assert.equal(exp.selectedEquipment, null, 'selectedEquipment should be null');
 });
 
-QUnit.test('Experiment reset:', function(assert){
+QUnit.test('Experiment setEquipment:', function(assert){
     var exp = new Experiment();
-    exp.reset();
-
-    assert.deepEqual(exp.equipment, [], 'equipment should be []');
-    assert.equal(exp.selectedEquipment, null, 'selectedEquipment should be null');
-});
-
-QUnit.todo('Experiment runStep:', function(assert){
-    var exp = new Experiment();
-    exp.runStep();
-    assert.true(false);
-});
-
-QUnit.todo('Experiment render:', function(assert){
-    var exp = new Experiment();
-    exp.render();
-    assert.true(false);
-});
-
-QUnit.todo('Experiment mousePress:', function(assert){
-    var exp = new Experiment();
-    exp.mousePress();
-    assert.true(false);
+    var equip = new Equipment([0, 0], [100, 100], 1, "test", null);
+    exp.setEquipment([equip]);
+    assert.deepEqual(exp.equipment, [equip],
+        "Given Equipment list should be equal to Equipment list in the experiment");
 });

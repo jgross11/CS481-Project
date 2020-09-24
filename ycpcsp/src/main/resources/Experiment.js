@@ -7,66 +7,17 @@ class Experiment{
     Create an empty experiment.
     */
     constructor(){
-        this.reset();
-    }
-
-    /**
-    Bring the experiment to its default state
-    */
-    reset(){
         // The list of Equipment in this Experiment
         this.equipment = [];
-        this.selectedEquipment = null;
+        var controller = new ExperimentController2D(this);
+        controller.reset();
     }
 
     /**
-    Bring the experiment to the next step
+    Set the current list of Equipment used by this Experiment
+    equipment: The list of Equipment to set for this Experiment
     */
-    runStep(){
-        // TODO implement
+    setEquipment(equipment){
+        this.equipment = equipment;
     }
-
-    /**
-    Draw the full Experiment to the P5 graphics
-    */
-    render(){
-        var equipController = new EquipmentController2D(null);
-        for(var i = 0; i < this.equipment.length; i++){
-            equipController.setEquipment(this.equipment[i]);
-            equipController.draw();
-        }
-    }
-
-    /**
-    Call when the mouse is pressed
-    */
-    mousePress(){
-        // If there is a selected object, unselect it
-        if(this.selectedEquipment !== null){
-            this.selectedEquipment = null;
-        }
-        // Otherwise, determine which object is selected by the mouse, if any
-        else{
-            this.selectedEquipment = null;
-            for(var i = 0; i < this.equipment.length; i++){
-                var eq = this.equipment[i];
-                var equipController = eq.createController();
-                equipController.setEquipment(eq);
-                if(equipController.inBounds([mouseX, mouseY])){
-                    this.selectedEquipment = eq;
-                    break;
-                }
-            }
-        }
-    }
-
-    /**
-    Call when the mouse is moved
-    */
-    mouseMove(){
-        if(this.selectedEquipment !== null){
-            this.selectedEquipment.setPosition([mouseX, mouseY]);
-        }
-    }
-
 }
