@@ -4,8 +4,8 @@ var expController;
 /*
 
 TODO:
-    Remove reliance on createController
-    Add draw test cases for BeakerController2D
+    Make a collisionController
+    Add draw test cases for BeakerController2D and EquipmentController2D
 */
 
 
@@ -19,8 +19,8 @@ function setup(){
     experiment = new Experiment();
     expController = new ExperimentController2D(experiment);
 
-    experiment.equipment.push(new Beaker([400, 200], [200, 200], 20.0, 50.0, 0.01, "Test Beaker 1"));
-    experiment.equipment.push(new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 2"));
+    experiment.equipment.push(new BeakerController2D(new Beaker([400, 200], [200, 200], 20.0, 50.0, 0.01, "Test Beaker 1")));
+    experiment.equipment.push(new BeakerController2D(new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 2")));
 }
 
 /**

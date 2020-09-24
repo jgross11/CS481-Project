@@ -17,9 +17,4 @@ class Beaker extends Container{
         super(position, size, mass, capacity, residue, name, SPRITE_BEAKER);
     }
 
-    createController(){
-        console.log("Create beaker controller");
-        return new BeakerController2D(this);
-    }
-
 }

@@ -46,10 +46,8 @@ class ExperimentController2D{
     */
     render(){
         var exp = this.experiment;
-        var equipController = new EquipmentController2D(null);
         for(var i = 0; i < exp.equipment.length; i++){
-            equipController.setEquipment(exp.equipment[i]);
-            equipController.draw();
+            exp.equipment[i].draw();
         }
     }
 
@@ -66,10 +64,8 @@ class ExperimentController2D{
         else{
             exp.selectedEquipment = null;
             for(var i = 0; i < exp.equipment.length; i++){
-                var eq = exp.equipment[i];
-                var equipController = eq.createController();
-                equipController.setEquipment(eq);
-                if(equipController.inBounds([mouseX, mouseY])){
+            var eq = this.experiment.equipment[i];
+                if(eq.inBounds([mouseX, mouseY])){
                     this.setSelectedEquipment(eq);
                     break;
                 }
@@ -82,7 +78,7 @@ class ExperimentController2D{
     */
     mouseMove(){
         if(this.selectedEquipment !== null){
-            this.selectedEquipment.setPosition([mouseX, mouseY]);
+            this.selectedEquipment.equipment.setPosition([mouseX, mouseY]);
         }
     }
 

@@ -29,13 +29,4 @@ class ExperimentObject{
         this.name = name;
     }
 
-    /**
-    Create a Controller object appropriate for this ExperimentObject.
-    All instances must implement this method.
-    returns: The Controller to be used with this ExperimentObject
-    */
-    createController(){
-        throw new Exception("All ExperimentObjects must implement createController");
-    }
-
 }

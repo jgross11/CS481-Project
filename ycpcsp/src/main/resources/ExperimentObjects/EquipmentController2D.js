@@ -33,11 +33,18 @@ class EquipmentController2D{
     }
 
     /**
-    Draw this piece of Equipment onto the screen using P5 2D graphics
+    Draw this piece of Equipment onto the screen in it's current position as a generic sprite
     */
-    draw(){
+    drawSprite(){
         var p = this.equipment.position;
         var s = this.equipment.size;
         image(this.equipment.sprite, p[0], p[1], s[0], s[1]);
+    }
+
+    /**
+    Draw this piece of Equipment onto the screen using P5 2D graphics
+    */
+    draw(){
+        this.drawSprite();
     }
 }

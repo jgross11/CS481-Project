@@ -10,8 +10,16 @@ class BeakerController2D extends ContainerController2D{
         super(beaker);
     }
 
+    /**
+    Determine if the Beaker of this Controller can contain the given chemical.
+    chemical: The Chemical to test if it can be contained
+    */
     canContain(chemical){
         return true;
+    }
+
+    draw(){
+        super.draw();
     }
 
 }
