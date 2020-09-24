@@ -4,6 +4,7 @@ var expController;
 /*
 
 TODO:
+    Make test cases for Equipment x, y, width, height
 
 */
 

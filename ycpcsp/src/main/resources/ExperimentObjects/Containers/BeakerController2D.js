@@ -18,8 +18,18 @@ class BeakerController2D extends ContainerController2D{
         return true;
     }
 
+    /**
+    Draw the beaker along with its name
+    */
     draw(){
+        // Draw the base beaker
         super.draw();
+
+        // Draw the name
+        fill(color(0, 0, 0));
+        noStroke();
+        textSize(15);
+        text(this.equipment.name, this.x() + 25, this.y() + this.height() / 2)
     }
 
 }

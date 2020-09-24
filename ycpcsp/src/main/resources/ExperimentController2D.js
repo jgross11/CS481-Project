@@ -45,9 +45,23 @@ class ExperimentController2D{
     Draw the full Experiment to the P5 graphics
     */
     render(){
-        var exp = this.experiment;
+        let exp = this.experiment;
+        // Draw all not selected equipment
         for(var i = 0; i < exp.equipment.length; i++){
-            exp.equipment[i].draw();
+            if(exp.equipment[i] !== this.selectedEquipment){
+                exp.equipment[i].draw();
+            }
+
+        }
+        // Draw the selected equipment if it exists
+        let eq = this.selectedEquipment;
+        if(eq !== null){
+            eq.draw();
+            // Draw a box around the selected equipment and draw it on top of all other equipment
+            noFill();
+            stroke(150, 150, 255, 160);
+            strokeWeight(8);
+            rect(eq.x(), eq.y(), eq.width(), eq.height());
         }
     }
 
@@ -77,9 +91,10 @@ class ExperimentController2D{
     Call when the mouse is moved
     */
     mouseMove(){
-        if(this.selectedEquipment !== null){
-            this.selectedEquipment.equipment.setPosition([mouseX, mouseY]);
-        }
+        // TODO add this back in to allow mouse movement
+        // if(this.selectedEquipment !== null){
+        //     this.selectedEquipment.equipment.setPosition([mouseX, mouseY]);
+        // }
     }
 
 }

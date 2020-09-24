@@ -19,14 +19,40 @@ class EquipmentController2D{
     }
 
     /**
+    Get the x coordinate of the Equipment of this controller
+    */
+    x(){
+        return this.equipment.position[0];
+    }
+
+    /**
+    Get the y coordinate of the Equipment of this controller
+    */
+    y(){
+        return this.equipment.position[1];
+    }
+
+    /**
+    Get the width of the Equipment of this controller
+    */
+    width(){
+        return this.equipment.size[0];
+    }
+
+    /**
+    Get the height of the Equipment of this controller
+    */
+    height(){
+        return this.equipment.size[1];
+    }
+
+    /**
     Get the rectangular bounds of this Controller's Equipment as a rectangle
     returns: the bounds as a list of 4 floating point values [x, y, width, height],
         x and y are the upper left hand corner
     */
     toRect(){
-        var p = this.equipment.position;
-        var s = this.equipment.size;
-        return [p[0], p[1], s[0], s[1]];
+        return [this.x(), this.y(), this.width(), this.height()];
     }
 
     /**

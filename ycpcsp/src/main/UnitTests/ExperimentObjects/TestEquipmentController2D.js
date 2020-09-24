@@ -14,6 +14,30 @@ QUnit.test('EquipmentController2D setEquipment:', function(assert){
 
 });
 
+QUnit.test('EquipmentController2D x:', function(assert){
+    var equip = new Equipment([8, 9], [2, 3], 5.0, "exp obj", null);
+    var controller = new EquipmentController2D(equip);
+    assert.equal(controller.x(), 8, "X position should be 8");
+});
+
+QUnit.test('EquipmentController2D y:', function(assert){
+    var equip = new Equipment([8, 9], [2, 3], 5.0, "exp obj", null);
+    var controller = new EquipmentController2D(equip);
+    assert.equal(controller.y(), 9, "Y position should be 9");
+});
+
+QUnit.test('EquipmentController2D width:', function(assert){
+    var equip = new Equipment([8, 9], [2, 3], 5.0, "exp obj", null);
+    var controller = new EquipmentController2D(equip);
+    assert.equal(controller.width(), 2, "Width should be 2");
+});
+
+QUnit.test('EquipmentController2D height:', function(assert){
+    var equip = new Equipment([8, 9], [2, 3], 5.0, "exp obj", null);
+    var controller = new EquipmentController2D(equip);
+    assert.equal(controller.height(), 3, "Height should be 3");
+});
+
 QUnit.test('EquipmentController2D toRect:', function(assert){
     var equip = new Equipment([12, 14], [58, 29], 5.0, "exp obj", null);
     var controller = new EquipmentController2D(equip);
