@@ -4,9 +4,6 @@ var expController;
 /*
 
 TODO:
-    Test case Container.setContents
-    Test case Experiment.findEquipment
-    Test case ContainerController2D.pourOut, .addTo
 
 */
 
@@ -21,8 +18,9 @@ function setup(){
     experiment = new Experiment();
     expController = new ExperimentController2D(experiment);
 
-    experiment.equipment.push(new BeakerController2D(new Beaker([400, 200], [200, 200], 20.0, 50.0, 0.01, "Test Beaker 1")));
-    experiment.equipment.push(new BeakerController2D(new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 2")));
+    experiment.equipment.push(new BeakerController2D(new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 1")));
+    experiment.equipment.push(new BeakerController2D(new Beaker([250, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 2")));
+    experiment.equipment.push(new BeakerController2D(new Beaker([450, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 3")));
 }
 
 /**

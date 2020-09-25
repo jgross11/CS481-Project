@@ -10,6 +10,14 @@ QUnit.test('Container constructor:', function(assert){
     assert.equal(container.sprite, null, 'sprite should be null');
 });
 
+QUnit.test('Container setContents:', function(assert){
+    var container = new Container([10, 5], [12, 20], 10.0, 200.0, 0.15, "cont", null);
+    assert.deepEqual(container.contents, null, 'contents should be null');
+    var chem = new Chemical(1, "name", "eq", 20, [100, 0, 0]);
+    container.setContents(chem);
+    assert.deepEqual(container.contents, chem, 'contents should be the same as the set contents');
+});
+
 QUnit.test('Container setCapacity:', function(assert){
     var container = new Container([10, 5], [12, 20], 10.0, 200.0, 0.15, "cont", null);
     container.setCapacity(100.0);

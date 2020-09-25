@@ -42,6 +42,23 @@ class ExperimentController2D{
     }
 
     /**
+    Find a piece of equipment which contains a point
+    p: The point, a list of [x, y] coordinates
+    exclude: A specific object to ignore, or a list of objects to ignore, or null to ignore none, default null
+    returns: The piece of equipment, or null if none is found
+    */
+    findEquipment(p, exclude = null){
+        for(var i = 0; i < this.experiment.equipment.length; i++){
+            var eq = this.experiment.equipment[i];
+            if(eq.inBounds(p) && (exclude === null || exclude !== eq && (!Array.isArray(exclude) || !exclude.includes(eq)))){
+                return eq;
+            }
+        }
+        return null;
+    }
+
+
+    /**
     Draw the full Experiment to the P5 graphics
     */
     render(){
@@ -74,22 +91,6 @@ class ExperimentController2D{
         text("Press 2 to put green chemical to selected beaker", 20, y += 20);
         text("Press 3 to put blue chemical to selected beaker", 20, y += 20);
         text("Click an unselected beaker to combine the chemical in the selected beaker", 20, y += 20);
-    }
-
-    /**
-    Find a piece of equipment which contains a point
-    p: The point, a list of [x, y] coordinates
-    exclude: A specific object to ignore, or a list of objects to ignore, or null to ignore none, default null
-    returns: The piece of equipment, or null if none is found
-    */
-    findEquipment(p, exclude = null){
-        for(var i = 0; i < this.experiment.equipment.length; i++){
-            var eq = this.experiment.equipment[i];
-            if(eq.inBounds(p) && (exclude === null || exclude !== eq && (!Array.isArray(exclude) || !exclude.includes(eq)))){
-                return eq;
-            }
-        }
-        return null;
     }
 
     /**

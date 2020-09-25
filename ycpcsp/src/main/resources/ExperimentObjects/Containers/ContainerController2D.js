@@ -11,7 +11,8 @@ class ContainerController2D extends EquipmentController2D{
     }
 
     /**
-    By hand, pour out the contents of this Container. This will leave residue inside the container
+    By hand, pour out the contents of this Container. This will leave residue inside the container.
+    return: The Chemical poured out of this Container
     */
     pourOut(){
         let chem = this.equipment.contents;
