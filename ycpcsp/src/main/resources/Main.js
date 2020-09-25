@@ -5,6 +5,8 @@ var expController;
 
 TODO:
     Test case Container.setContents
+    Test case Experiment.findEquipment
+    Test case ContainerController2D.pourOut, .addTo
 
 */
 

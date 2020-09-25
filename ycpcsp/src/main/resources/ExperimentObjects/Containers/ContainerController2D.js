@@ -14,7 +14,9 @@ class ContainerController2D extends EquipmentController2D{
     By hand, pour out the contents of this Container. This will leave residue inside the container
     */
     pourOut(){
-        // TODO implement
+        let chem = this.equipment.contents;
+        this.equipment.setContents(null);
+        return chem;
     }
 
     /**
@@ -24,7 +26,14 @@ class ContainerController2D extends EquipmentController2D{
     */
     addTo(chemical){
         if(this.canContain(chemical)){
-            // TODO implement add chemical
+            if(this.equipment.contents === null) this.equipment.setContents(chemical);
+            else{
+                let t1 = this.equipment.contents.texture;
+                let t2 = chemical.texture;
+                this.equipment.contents.texture = [
+                    (t1[0] + t2[0]) / 2, (t1[1] + t2[1]) / 2, (t1[2] + t2[2]) / 2
+                ];
+            }
             return true;
         }
         return false;

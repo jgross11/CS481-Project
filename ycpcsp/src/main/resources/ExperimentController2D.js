@@ -63,27 +63,56 @@ class ExperimentController2D{
             strokeWeight(8);
             rect(eq.x(), eq.y(), eq.width(), eq.height());
         }
+
+        // Draw instructions
+        fill(color(0, 0, 0));
+        noStroke();
+        textSize(18);
+        var y = 600;
+        text("Click a beaker to select it", 20, y += 20);
+        text("Press 1 to put red chemical to selected beaker", 20, y += 20);
+        text("Press 2 to put green chemical to selected beaker", 20, y += 20);
+        text("Press 3 to put blue chemical to selected beaker", 20, y += 20);
+        text("Click an unselected beaker to combine the chemical in the selected beaker", 20, y += 20);
+    }
+
+    /**
+    Find a piece of equipment which contains a point
+    p: The point, a list of [x, y] coordinates
+    exclude: A specific object to ignore, or a list of objects to ignore, or null to ignore none, default null
+    returns: The piece of equipment, or null if none is found
+    */
+    findEquipment(p, exclude = null){
+        for(var i = 0; i < this.experiment.equipment.length; i++){
+            var eq = this.experiment.equipment[i];
+            if(eq.inBounds(p) && (exclude === null || exclude !== eq && (!Array.isArray(exclude) || !exclude.includes(eq)))){
+                return eq;
+            }
+        }
+        return null;
     }
 
     /**
     Call when the mouse is pressed
     */
     mousePress(){
-        var exp = this.experiment;
-        // If there is a selected object, unselect it
-        if(this.selectedEquipment !== null){
+        // TODO this case is specifically for beakers interacting with beakers
+        let exp = this.experiment;
+        // If there is a selected object, check for another piece of Equipment, combine the chemicals if one is found,
+        //  and unselect the original
+        let select = this.selectedEquipment;
+        if(select !== null){
+            let found = this.findEquipment([mouseX, mouseY], select);
+            if(found !== null){
+                let chem = select.pourOut();
+                found.addTo(chem);
+            }
+
             this.setSelectedEquipment(null);
         }
         // Otherwise, determine which object is selected by the mouse, if any
         else{
-            exp.selectedEquipment = null;
-            for(var i = 0; i < exp.equipment.length; i++){
-            var eq = this.experiment.equipment[i];
-                if(eq.inBounds([mouseX, mouseY])){
-                    this.setSelectedEquipment(eq);
-                    break;
-                }
-            }
+            this.setSelectedEquipment(this.findEquipment([mouseX, mouseY]));
         }
     }
 
