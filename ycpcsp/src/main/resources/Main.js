@@ -4,7 +4,7 @@ var expController;
 /*
 
 TODO:
-    Make test cases for Equipment x, y, width, height
+    Test case Container.setContents
 
 */
 
@@ -43,4 +43,11 @@ P5.js function, called when the mouse is moved, not dragged
 */
 function mouseMoved(){
     expController.mouseMove();
+}
+
+/**
+P5.js function, called when a key on the keyboard is pressed
+*/
+function keyPressed(){
+    expController.keyPress();
 }

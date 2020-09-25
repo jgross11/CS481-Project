@@ -97,4 +97,22 @@ class ExperimentController2D{
         // }
     }
 
+    /**
+    Call when a key on the keyboard is pressed
+    */
+    keyPress(){
+        // Option should only work for Container objects
+        let beaker = this.selectedEquipment;
+        if(beaker !== null){
+            var color;
+            switch(key){
+                case '1': color = [255, 0, 0]; break;
+                case '2': color = [0, 255, 0]; break;
+                case '3': color = [0, 0, 255]; break;
+                default: color = null;
+            }
+            if(color !== null) beaker.equipment.setContents(new Chemical(1, "" + color, "", 20, color));
+        }
+    }
+
 }

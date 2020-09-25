@@ -24,6 +24,14 @@ class Container extends Equipment{
     }
 
     /**
+    Set the Chemical contents of this Container
+    contents: The new contents, a chemical
+    */
+    setContents(contents){
+        this.contents = contents;
+    }
+
+    /**
     Set the capacity of this Container
     capacity: The new capacity, a floating point value
     */
