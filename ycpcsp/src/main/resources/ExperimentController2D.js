@@ -90,6 +90,7 @@ class ExperimentController2D{
         text("Press 1 to put red chemical to selected beaker", 20, y += 20);
         text("Press 2 to put green chemical to selected beaker", 20, y += 20);
         text("Press 3 to put blue chemical to selected beaker", 20, y += 20);
+        text("Press ESC to empty the selected beaker", 20, y += 20);
         text("Click an unselected beaker to combine the chemical in the selected beaker", 20, y += 20);
     }
 
@@ -97,7 +98,7 @@ class ExperimentController2D{
     Call when the mouse is pressed
     */
     mousePress(){
-        // TODO this case is specifically for beakers interacting with beakers
+        // TODO this case is specifically for containers interacting with containers
         let exp = this.experiment;
         // If there is a selected object, check for another piece of Equipment, combine the chemicals if one is found,
         //  and unselect the original
@@ -131,17 +132,24 @@ class ExperimentController2D{
     Call when a key on the keyboard is pressed
     */
     keyPress(){
-        // Option should only work for Container objects
+        // Option should only work for Container objects TODO move to be only for containers
         let beaker = this.selectedEquipment;
         if(beaker !== null){
-            var color;
-            switch(key){
-                case '1': color = [255, 0, 0]; break;
-                case '2': color = [0, 255, 0]; break;
-                case '3': color = [0, 0, 255]; break;
-                default: color = null;
+            // Empty the beaker
+            if(keyCode === ESCAPE){
+                beaker.equipment.setContents(null);
+                this.setSelectedEquipment(null);
             }
-            if(color !== null) beaker.equipment.setContents(new Chemical(1, "" + color, "", 20, color));
+            else{
+                var color;
+                switch(key){
+                    case '1': color = [255, 0, 0]; break;
+                    case '2': color = [0, 255, 0]; break;
+                    case '3': color = [0, 0, 255]; break;
+                    default: color = null;
+                }
+                if(color !== null) beaker.equipment.setContents(new Chemical(10, "" + color, "", 20, color));
+            }
         }
     }
 

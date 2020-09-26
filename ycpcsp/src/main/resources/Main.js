@@ -4,6 +4,7 @@ var expController;
 /*
 
 TODO:
+    Make test case ChemicalController2D.combine, hasSpace
 
 */
 

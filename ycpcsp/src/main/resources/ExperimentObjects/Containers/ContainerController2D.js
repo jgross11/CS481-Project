@@ -26,19 +26,27 @@ class ContainerController2D extends EquipmentController2D{
     returns: true if the chemical was successfully added, false otherwise
     */
     addTo(chemical){
-        if(this.canContain(chemical)){
+        if(this.canContain(chemical) && this.hasSpace(chemical)){
             if(this.equipment.contents === null) this.equipment.setContents(chemical);
             else{
-                let t1 = this.equipment.contents.texture;
-                let t2 = chemical.texture;
-                this.equipment.contents.texture = [
-                    (t1[0] + t2[0]) / 2, (t1[1] + t2[1]) / 2, (t1[2] + t2[2]) / 2
-                ];
+                var chemController = new ChemicalController2D(this.equipment.contents);
+                chemController.combine(chemical);
             }
             return true;
         }
         return false;
 
+    }
+
+    /**
+    Determine if this container can hold more of a new chemical
+    chem: The new chemical to add
+    returns: true if the chemical is within the remaining capacity of this Container, false otherwise
+    */
+    hasSpace(chem){
+        let cont = this.equipment.contents;
+        var mass = ((cont === null) ? 0 : cont.mass) + ((chem === null) ? 0 : chem.mass);
+        return mass <= this.equipment.capacity;
     }
 
     /**
