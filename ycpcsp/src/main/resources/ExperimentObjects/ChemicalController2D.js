@@ -46,11 +46,20 @@ class ChemicalController2D{
         let c1 = chemical;
         let c2 = this.chemical;
         if(c1 === null || c2 === null) return false;
+
         let t1 = c1.texture;
         let t2 = c2.texture;
-        var tex = [(t1[0] + t2[0]) / 2, (t1[1] + t2[1]) / 2, (t1[2] + t2[2]) / 2];
+
+        let totalMass = c1.mass + c2.mass;
+        let r1 = c1.mass / totalMass;
+        let r2 = c2.mass / totalMass;
+
+        // Set the amount for each color based on the ratio of the mass of each chemical
+        var tex = [t1[0] * r1 + t2[0] * r2, t1[1] * r1 + t2[1] * r2, t1[2] * r1 + t2[2] * r2];
+
         this.chemical.setTexture(tex);
-        this.chemical.setMass(c1.mass + c2.mass);
+        this.chemical.setMass(totalMass);
+
         return true;
     }
 
