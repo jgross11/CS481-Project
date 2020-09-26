@@ -1,51 +1,127 @@
 <html>
+    <script src="helperFunctions.js"></script>
     <form id="signup-form" name="signup-form" action="/signup-submit" method="post">
         <label for="fname">First name:</label><br>
+        <div name="fname-error" id="fname-error"></div><br>
         <input type="text" id="fname" name="fname"><br>
         <label for="lname">Last name:</label><br>
+        <div name="lname-error" id="lname-error"></div><br>
         <input type="text" id="lname" name="lname"><br>
         <label for="email">Email:</label><br>
+        <div name="email-error" id="email-error"></div><br>
         <input type="text" id="email" name="email"><br>
         <label for="password">Password:</label><br>
+        <div name="password-error" id="password-error"></div><br>
         <input type="password" id="password" name="password"><br>
         <label for="confirm-password">Confirm Password:</label><br>
+        <div name="confirm-password-error" id="confirm-password-error"></div><br>
         <input type="password" id="confirm-password" name="confirm-password"><br>
         <label for="school">School or institution:</label><br>
+        <div name="school-error" id="school-error"></div><br>
         <input type="text" id="school" name="school"><br>
-        <!--- TODO make more questions -->
+
         <label for="security-question-1">1st Security Question:</label><br>
+        <div name="security-question-1-error" id="security-question-1-error"></div><br>
         <select name="security-question-1" id="security-question-1">
             <option value="pet">What was the name of your first pet?</option>
             <option value="sport">What is your favorite sport?</option>
             <option value="childhood-address">What is the first address you lived at?</option>
         </select>
+        <div name="sec-que-1-answer-error" id="sec-que-1-answer-error"></div><br>
         <input type="text" id="sec-que-1-answer" name="sec-que-1-answer"><br>
 
         <label for="security-question-2">2nd Security Question:</label><br>
+        <div name="security-question-2-error" id="security-question-2-error"></div><br>
         <select name="security-question-2" id="security-question-2">
             <option value="pet">What was the name of your first pet?</option>
             <option value="sport">What is your favorite sport?</option>
             <option value="childhood-address">What is the first address you lived at?</option>
         </select>
+        <div name="sec-que-2-answer-error" id="sec-que-2-answer-error"></div><br>
         <input type="text" id="sec-que-2-answer" name="sec-que-2-answer"><br>
         
         <label for="security-question-3">3rd Security Question:</label><br>
+        <div name="security-question-3-error" id="security-question-3-error"></div><br>
         <select name="security-question-3" id="security-question-3">
             <option value="pet">What was the name of your first pet?</option>
             <option value="sport">What is your favorite sport?</option>
             <option value="childhood-address">What is the first address you lived at?</option>
         </select>
+        <div name="sec-que-3-answer-error" id="sec-que-3-answer-error"></div><br>
         <input type="text" id="sec-que-3-answer" name="sec-que-3-answer"><br>
         <a href="/recoverinfo">Need to recover information? Click here.</a><br>
-        <input value="Sign up" type="button" id="verifyInformationButton" name="verifyInformationButton" onclick="verifyInformation()">
+        <input value="Sign up" type="button" id="verifyInformationButton" name="verifyInformationButton" onclick="verifySignupInformation()">
     </form>
 
     <script>
         console.log("Loaded verification script");
-        function verifyInformation(){
-            // TODO actually verify...
-            console.log("Verifying information...");
-            document.getElementById("signup-form").submit();
+
+        function verifySignupInformation(){
+            // acquire relevant elements
+            var fname = getAndTrimById("fname");
+            var lname = getAndTrimById("lname");
+            var email = getAndTrimById("email");
+            var password = document.getElementById("password");
+            var confirmPassword = document.getElementById("confirm-password");
+            var school = getAndTrimById("school");
+            var sq1 = document.getElementById("security-question-1");
+            var sq1a = getAndTrimById("sec-que-1-answer");
+            var sq2 = document.getElementById("security-question-2");
+            var sq2a = getAndTrimById("sec-que-2-answer");
+            var sq3 = document.getElementById("security-question-3");
+            var sq3a = getAndTrimById("sec-que-3-answer");
+
+            // verify information is correct
+            var fnameGood = verifyInformation(fname.value, TYPE_NAME);
+            var lnameGood = verifyInformation(lname.value, TYPE_NAME);
+            var emailGood = verifyInformation(email.value, TYPE_EMAIL);
+            var schoolGood = school.value.length != 0;
+
+            // TODO there will need to be another check regarding password complexity, length, etc.
+            var passwordGood = password.value.length != 0;
+            var confirmPasswordGood = confirmPassword.value.length != 0;
+            var passwordsMatch = (password.value == confirmPassword.value);
+
+
+            var securityQuestionsAreUnique = (sq1.selectedIndex != sq2.selectedIndex && sq2.selectedIndex != sq3.selectedIndex && sq1.selectedIndex != sq3.selectedIndex);
+            var sq1aGood = sq1a.value.length != 0;
+            var sq2aGood = sq2a.value.length != 0;
+            var sq3aGood = sq3a.value.length != 0;
+
+            // if every condition is satisfied, then submit the information
+            if(fnameGood && lnameGood && emailGood && passwordGood && confirmPasswordGood && passwordsMatch && schoolGood && sq1aGood && sq2aGood && sq3aGood && securityQuestionsAreUnique){
+                document.getElementById("signup-form").submit();
+            }
+            // create applicable errors
+            else{
+                setErrorDivMessageByValue("fname", "Please enter your first name.", fnameGood);
+                setErrorDivMessageByValue("lname", "Please enter your last name.", lnameGood);
+                setErrorDivMessageByValue("email", "Please enter your email.", emailGood);
+                setErrorDivMessageByValue("password", "Please enter a valid password.", passwordGood);
+                setErrorDivMessageByValue("confirm-password", "Please enter a valid password.", confirmPasswordGood);
+                setErrorDivMessageByValue("school", "Please enter a valid school or institution.", schoolGood);
+                setErrorDivMessageByValue("security-question-1", "Please enter a valid answer.", sq1aGood);
+                setErrorDivMessageByValue("security-question-2", "Please enter a valid answer.", sq2aGood);
+                setErrorDivMessageByValue("security-question-3", "Please enter a valid answer.", sq3aGood);
+                if(!securityQuestionsAreUnique){
+                    if(sq1.selectedIndex == sq2.selectedIndex && sq2.selectedIndex == sq3.selectedIndex){
+                        setErrorDivMessageByValue("security-question-1", "All questions must be different.", false);
+                    }
+                    else if(sq1.selectedIndex == sq2.selectedIndex){
+                        setErrorDivMessageByValue("security-question-1", "Please ensure question 1 is different than question 2.", false);
+                    }
+                    else if(sq1.selectedIndex == sq3.selectedIndex){
+                        setErrorDivMessageByValue("security-question-1", "Please ensure question 1 is different than question 3.", false);
+                    }
+                    else if(sq2.selectedIndex == sq3.selectedIndex){
+                        setErrorDivMessageByValue("security-question-2", "Please ensure question 2 is different than question 3.", false);
+                    }
+                }
+                if(passwordGood && confirmPasswordGood && !passwordsMatch){
+                    document.getElementById("password-error").innerHTML = "Please confirm the passwords match.";
+                }
+
+            }
         }
 
     </script>
