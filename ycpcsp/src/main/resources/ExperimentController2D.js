@@ -98,18 +98,12 @@ class ExperimentController2D{
     Call when the mouse is pressed
     */
     mousePress(){
-        // TODO this case is specifically for containers interacting with containers
-        let exp = this.experiment;
         // If there is a selected object, check for another piece of Equipment, combine the chemicals if one is found,
         //  and unselect the original
         let select = this.selectedEquipment;
         if(select !== null){
-            let found = this.findEquipment([mouseX, mouseY], select);
-            if(found !== null && found.hasSpace(select.equipment.contents)){
-                let chem = select.pourOut();
-                found.addTo(chem);
-            }
-
+            // TODO modify this so that this particular set of calls is only made for beakers
+            select.pourInto(this.findEquipment([mouseX, mouseY], select));
             this.setSelectedEquipment(null);
         }
         // Otherwise, determine which object is selected by the mouse, if any
@@ -132,12 +126,13 @@ class ExperimentController2D{
     Call when a key on the keyboard is pressed
     */
     keyPress(){
-        // Option should only work for Container objects TODO move to be only for containers
-        let beaker = this.selectedEquipment;
-        if(beaker !== null){
+        // Option should only work for Container objects
+        let eq = this.selectedEquipment;
+        if(eq !== null){
+            // TODO modify this so that this particular set of calls is only made for beakers
             // Empty the beaker
             if(keyCode === ESCAPE){
-                beaker.equipment.setContents(null);
+                eq.pourOut();
                 this.setSelectedEquipment(null);
             }
             else{
@@ -148,7 +143,7 @@ class ExperimentController2D{
                     case '3': color = [0, 0, 255]; break;
                     default: color = null;
                 }
-                if(color !== null) beaker.equipment.setContents(new Chemical(10, "" + color, "", 20, color));
+                if(color !== null) eq.equipment.setContents(new Chemical(10, "" + color, "", 20, color));
             }
         }
     }

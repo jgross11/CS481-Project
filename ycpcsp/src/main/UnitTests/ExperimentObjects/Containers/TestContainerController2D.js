@@ -5,6 +5,34 @@ QUnit.test('ContainerController2D constructor:', function(assert){
 });
 
 QUnit.test('ContainerController2D pourOut:', function(assert){
+    var chem1 = new Chemical(30, "", "", 20, [100, 120, 140]);
+    var chem2 = new Chemical(20, "", "", 20, [10, 20, 40]);
+    var c1 = new Container([0, 0], [0, 0], 1, 100, 0, "", null);
+    c1.setContents(chem1);
+    var c2 = new Container([0, 0], [0, 0], 0, 100, 0, "", null);
+    c2.setContents(chem2);
+    var controller1 = new BeakerController2D(null);
+    var controller2 = new BeakerController2D(null);
+
+    controller1.pourInto(null);
+    assert.deepEqual(controller1.equipment, null, "Container should still be empty");
+
+    controller1.pourInto(controller2);
+    assert.deepEqual(controller1.equipment, null, "Container should still be empty");
+
+    controller1.setEquipment(c2);
+    controller1.pourInto(null);
+    assert.deepEqual(controller1.equipment, c2, "Container should still be empty");
+
+    controller1.setEquipment(c1);
+    controller2.setEquipment(c2);
+    controller1.pourInto(controller2);
+    let cont = controller2.equipment.contents;
+    assert.equal(cont.mass, 50, "Container should contain modified chemical with mass 50");
+    assert.deepEqual(cont.texture, [64, 80, 100], "Container should contain modified chemical with color [64, 80, 100]");
+});
+
+QUnit.test('ContainerController2D pourOut:', function(assert){
     var container = new Container([0, 0], [0, 0], 0, 0, 0, "", null);
     var controller = new ContainerController2D(container);
     let chem = new Chemical(1.0, "chem", "eq", 20.0, null);

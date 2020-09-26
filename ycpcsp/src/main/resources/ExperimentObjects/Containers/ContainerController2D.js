@@ -11,7 +11,19 @@ class ContainerController2D extends EquipmentController2D{
     }
 
     /**
+    Pour the contents of this container into the given container
+    container: The container in which to pour this containers contents
+    */
+    pourInto(container){
+        if(this.equipment !== null && container !== null && container.hasSpace(this.equipment.contents)){
+            let chem = this.pourOut();
+            container.addTo(chem);
+        }
+    }
+
+    /**
     By hand, pour out the contents of this Container. This will leave residue inside the container.
+    TODO add residue remnants
     return: The Chemical poured out of this Container
     */
     pourOut(){
