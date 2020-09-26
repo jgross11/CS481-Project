@@ -22,21 +22,13 @@ class BeakerController2D extends ContainerController2D{
     Draw the beaker along with its name
     */
     draw(){
-        // Draw the color of the chemical, if one exists TODO this should be handled in chemical
+        // Draw the color of the chemical, if one exists
         let eq = this.equipment;
         let chem = eq.contents;
         if(chem !== null){
-            let tex = chem.texture;
-            if(tex !== null){
-                fill(color(tex));
-                noStroke();
-                let w = this.width();
-                let offset = 0.2;
-                let h = this.height();
-                let oh = h * (1 - offset);
-                var space = chem.mass / eq.capacity;
-                rect(this.x() + w * 0.12, this.y() + h * offset + oh * (1 - space), w * 0.85, oh * space);
-            }
+            let chemController = new ChemicalController2D(chem);
+            let w = this.width();
+            chemController.drawRect(this.x() + w * .12, this.y(), chem.mass / eq.capacity, w * .85, this.height(), 0.2);
         }
 
         // Draw the base beaker sprite
@@ -46,9 +38,10 @@ class BeakerController2D extends ContainerController2D{
         fill(color(0, 0, 0));
         noStroke();
         textSize(15);
-        text(this.equipment.name, this.x() + 25, this.y() + this.height() / 2)
+        text(eq.name, this.x() + 25, this.y() + this.height() / 2)
         var mass = "mass: "
-        mass += (this.equipment.contents === null) ? "empty" : this.equipment.contents.mass;
+        mass += (eq.contents === null) ? 0 : eq.contents.mass;
+        mass += " / " + eq.capacity;
         text(mass, this.x() + 25, this.y() + this.height() / 2 + 18)
     }
 

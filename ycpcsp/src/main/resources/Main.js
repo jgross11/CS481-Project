@@ -4,6 +4,8 @@ var expController;
 /*
 
 TODO:
+    ExperimentController2D, move keyPress code to ContainerController2D
+    ExperimentController2D, move mousePress code to ContainerController2D
 
 */
 

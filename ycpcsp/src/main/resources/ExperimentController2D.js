@@ -105,7 +105,7 @@ class ExperimentController2D{
         let select = this.selectedEquipment;
         if(select !== null){
             let found = this.findEquipment([mouseX, mouseY], select);
-            if(found !== null){
+            if(found !== null && found.hasSpace(select.equipment.contents)){
                 let chem = select.pourOut();
                 found.addTo(chem);
             }

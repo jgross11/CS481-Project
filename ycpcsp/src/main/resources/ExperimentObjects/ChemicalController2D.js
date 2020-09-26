@@ -54,4 +54,25 @@ class ChemicalController2D{
         return true;
     }
 
+    /**
+    Draw a rectangular representation of this Chemical.
+    This method is designed for rendering a constant width chemical with a varying height.
+    x: The x position of where the Chemical should be drawn
+    y: The y position of where the Chemical should be drawn
+    fillPercent: The percentage of the total height which is filled, in range [0, 1]
+    width: The width of the rectangle
+    baseHeight: The height before the fillPercent is applied
+    heightOffset: The percentage of the height which cannot be filled
+    */
+    drawRect(x, y, fillPercent, width, baseHeight, heightOffset){
+        let tex = this.chemical.texture;
+        if(tex !== null){
+            fill(color(tex));
+            noStroke();
+            let h = baseHeight;
+            let oh = h * (1 - heightOffset);
+            rect(x, y + h * heightOffset + oh * (1 - fillPercent), width, oh * fillPercent);
+        }
+    }
+
 }
