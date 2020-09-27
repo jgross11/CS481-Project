@@ -35,7 +35,7 @@ class WebpageController {
     }
 
     // handles forgotten password form post
-    @PostMapping(path=["/forgot-password-submit"], consumes = ["application/x-www-form-urlencoded"])
+    @PostMapping(path = ["/forgot-password-submit"], consumes = ["application/x-www-form-urlencoded"])
     fun receiveForgottenPasswordInformation(
             @RequestParam("email") email : String // email that was submitted
     ) : String {
@@ -46,9 +46,9 @@ class WebpageController {
     }
 
     // handles forgotten email form post
-    @PostMapping(path=["/forgot-email-submit"], consumes = ["application/x-www-form-urlencoded"])
+    @PostMapping(path = ["/forgot-email-submit"], consumes = ["application/x-www-form-urlencoded"])
     fun receiveForgottenEmailInformation(
-            @RequestParam("sqResponse") sqResponse : String // email that was submitted
+            @RequestParam("sqResponse") sqResponse: String // email that was submitted
     ) : String {
         println("Received the following forgotten email information: ")
         println("security question response: $sqResponse")
@@ -58,18 +58,18 @@ class WebpageController {
 
     // handles signup submission post
     @PostMapping(path = ["/signup-submit"], consumes = ["application/x-www-form-urlencoded"])
-    fun receiveSignupFormInformation(@RequestParam("fname")  firstName : String,   // first name that was submitted on form
-                  @RequestParam("lname")  lastName : String,    // last name that was submitted on form
-                  @RequestParam("email")  email : String,       // etc.
-                  @RequestParam("password")  password : String,
-                  @RequestParam("school")  school : String,
-                  @RequestParam("security-question-1")  SQ1 : String,
-                  @RequestParam("sec-que-1-answer")  SQA1 : String,
-                  @RequestParam("security-question-2")  SQ2 : String,
-                  @RequestParam("sec-que-2-answer")  SQA2 : String,
-                  @RequestParam("security-question-3")  SQ3 : String,
-                  @RequestParam("sec-que-3-answer")  SQA3 : String
-                  ) : String {
+    fun receiveSignupFormInformation(@RequestParam("fname") firstName: String,   // first name that was submitted on form
+                                     @RequestParam("lname") lastName: String,    // last name that was submitted on form
+                                     @RequestParam("email") email: String,       // etc.
+                                     @RequestParam("password") password: String,
+                                     @RequestParam("school") school: String,
+                                     @RequestParam("security-question-1") SQ1: String,
+                                     @RequestParam("sec-que-1-answer") SQA1: String,
+                                     @RequestParam("security-question-2") SQ2: String,
+                                     @RequestParam("sec-que-2-answer") SQA2: String,
+                                     @RequestParam("security-question-3") SQ3: String,
+                                     @RequestParam("sec-que-3-answer") SQA3: String
+    ) : String {
 
         // print received information
         println("Received the following signup information: ")
@@ -94,8 +94,8 @@ class WebpageController {
     }
     @PostMapping(path = ["/login-submit"], consumes = ["application/x-www-form-urlencoded"])
     fun login(
-                  @RequestParam("email")  email : String,
-                  @RequestParam("password")  password : String
+            @RequestParam("email") email: String,
+            @RequestParam("password") password: String
 
     ) : String {
 
@@ -120,7 +120,7 @@ class WebpageController {
 
     // when user clicks submit button on 'form', sends username and password as json
     // this function will ultimately return json as well
-    @PostMapping(path=["/receiveData-submit"], consumes = ["application/json"], produces = ["application/json"])
+    @PostMapping(path = ["/receiveData-submit"], consumes = ["application/json"], produces = ["application/json"])
 
     // indicates that returned value is converted into json
     @ResponseBody
@@ -129,7 +129,7 @@ class WebpageController {
     // which in this case is just what was submitted as json from the form
     // which in this case is something like
     // {username: [value], password: [value]}
-    fun testReceivingOfDataFromBackEndLongFunctionName(@RequestBody loginFormData : LoginFormData) : Boolean{
+    fun testReceivingOfDataFromBackEndLongFunctionName(@RequestBody loginFormData: LoginFormData) : Boolean{
         println("Received following login information")
         // should print the User Kotlin object .toString()
         // for an output like: username | password
