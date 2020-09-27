@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <input type=text" id="username"><br>
+    <input type="password" id="password"><br>
+    <input type="button" value="Receive Data" onclick="submitAndReceiveData()">
+    <div id="error"></div>
+    </form>
+</body>
+
+<script>
+
+    // backend communication functions must be async
+    async function submitAndReceiveData(){
+
+        // get username, password from form
+        var formUsername = document.getElementById("username").value;
+        var formPassword = document.getElementById("password").value;
+
+        // construct 'user' object for easy json stringification
+        var user = {
+            username: formUsername,
+            password: formPassword
+        };
+
+        // submit to server and get info back
+        let response = await fetch('/receiveData-submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        });
+
+        // decode information and display to user
+        user = await response.json();
+        console.log(user);
+        if(user){
+            // for example, go to homepage
+            window.location.href = "/";
+        }
+        else{
+            document.getElementById("error").innerHTML = "invalid login";
+        }
+    }
+</script>
+</html>
