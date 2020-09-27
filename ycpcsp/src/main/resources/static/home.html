@@ -130,11 +130,23 @@
     </div>
 </div>
 
+<div id="userInformation"></div>
+
 
 
 </body>
 
 <script>
+    // obtain user information from session
+    var username = String(sessionStorage.getItem("username"));
+    var password = String(sessionStorage.getItem("password"));
+    console.log("Logged in as: ")
+    console.log(username);
+
+    // show user information if logged in
+    if(username){
+        document.getElementById("userInformation").innerHTML = username + " " + password;
+    }
     function submitLoginInformation(){
         var emailDiv = getAndTrimById("email")
         var email = emailDiv.value;
