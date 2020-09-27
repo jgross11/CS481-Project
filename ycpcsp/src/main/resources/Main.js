@@ -4,6 +4,7 @@ var expController;
 /*
 
 TODO:
+    Test cases: ExperimentController2D.constructor, reset, setInstructionCounter, nextInstruction
     Create system to run through a list of steps to complete an experiment
     Add a way to find ExperimentObjects by name, or add an ID to them
 
@@ -25,7 +26,13 @@ function setup(){
     experiment.equipment.push(new BeakerController2D(new Beaker([450, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 3")));
 
     let eqs = experiment.equipment;
-    expController.setInstructions([new InstructionController2D(new Instruction(eqs[0], eqs[1], eqs[0].pourInto))]);
+    var ins = [];
+    ins.push(new InstructionController2D(new Instruction(eqs[0], new Chemical(5, "small chem", "", 20, [255, 0, 0]), eqs[0].addTo)));
+    ins.push(new InstructionController2D(new Instruction(eqs[1], new Chemical(5, "small chem", "", 20, [0, 0, 255]), eqs[1].addTo)));
+    ins.push(new InstructionController2D(new Instruction(eqs[0], eqs[1], eqs[0].pourInto)));
+    ins.push(new InstructionController2D(new Instruction(eqs[1], eqs[2], eqs[1].pourInto)));
+    ins.push(new InstructionController2D(new Instruction(eqs[2], new Chemical(20, "big chem", "", 20, [255, 255, 255]), eqs[2].addTo)));
+    expController.setInstructions(ins);
 }
 
 /**

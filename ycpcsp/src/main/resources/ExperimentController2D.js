@@ -11,6 +11,7 @@ class ExperimentController2D{
         this.experiment = experiment;
         this.selectedEquipment = null;
         this.instructions = []
+        this.instructionCounter = 0;
     }
 
     /**
@@ -29,11 +30,32 @@ class ExperimentController2D{
     }
 
     /**
-    Set the list of instructions for use in this Experiment
+    Set the list of instructions for use in this Experiment.
+    Instructions determine the intended course of action for the Experiment.
+    Each instruction should bring the Experiment from beginning to end, one step at a time.
     instructions: the list of instructions
     */
     setInstructions(instructions){
         this.instructions = instructions;
+    }
+
+    /**
+    Set the current instruction index which this Experiment is on
+    instructions: The current instruction index, if this is an invalid index, this method does nothing
+    */
+    setInstructionCounter(instructionCounter){
+        if(instructionCounter < 0 || instructionCounter > this.instructions.length - 1) return;
+        this.instructionCounter = instructionCounter;
+    }
+
+    /**
+    Perform the next Instruction to happen for this Experiment
+    */
+    nextInstruction(){
+        if(this.instructionCounter < this.instructions.length){
+            this.instructions[this.instructionCounter].activate();
+            this.instructionCounter++;
+        }
     }
 
     /**
@@ -43,6 +65,7 @@ class ExperimentController2D{
         this.experiment.equipment = [];
         this.selectedEquipment = null;
         this.instructions = []
+        this.instructionCounter = 0;
     }
 
     /**
@@ -102,7 +125,7 @@ class ExperimentController2D{
         text("Press 3 to put blue chemical to selected beaker", 20, y += 20);
         text("Press ESC to empty the selected beaker", 20, y += 20);
         text("Click an unselected beaker to combine the chemical in the selected beaker", 20, y += 20);
-        text("Press I to run a sample instruction", 20, y += 20);
+        text("Press I to run the next instruction", 20, y += 20);
     }
 
     /**
@@ -150,8 +173,7 @@ class ExperimentController2D{
         }
         switch(key){
             case 'i':
-                // TODO create proper implementation of instructions as a list
-                if(this.instructions.length > 0) this.instructions[0].activate();
+                this.nextInstruction();
                 break;
 
             default:
