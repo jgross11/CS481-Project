@@ -1,12 +1,8 @@
 package edu.ycpcsp.ycpcsp
 
+import edu.ycpcsp.ycpcsp.PostDataClasses.LoginFormData
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.servlet.ModelAndView
-import javax.servlet.http.HttpServletRequest
+import org.springframework.web.bind.annotation.*
 
 
 /**
@@ -113,5 +109,36 @@ class WebpageController {
         // returns to home page
         return "redirect:/"
     }
+
+    // simple demonstration of sending data to front end
+
+    // send basic login form page upon request
+    @GetMapping("/receiveData")
+    fun sendReceiveDataPage() : String{
+        return "receiveData.html"
+    }
+
+    // when user clicks submit button on 'form', sends username and password as json
+    // this function will ultimately return json as well
+    @PostMapping(path=["/receiveData-submit"], consumes = ["application/json"], produces = ["application/json"])
+
+    // indicates that returned value is converted into json
+    @ResponseBody
+
+    // @RequestBody user : User constructs a Kotlin User object from the components of the request body
+    // which in this case is just what was submitted as json from the form
+    // which in this case is something like
+    // {username: [value], password: [value]}
+    fun testReceivingOfDataFromBackEndLongFunctionName(@RequestBody loginFormData : LoginFormData) : Boolean{
+        println("Received following login information")
+        // should print the User Kotlin object .toString()
+        // for an output like: username | password
+        println(loginFormData)
+
+        // if we are sure we have a valid user object, we can query database, etc. and then return whatever result
+        // to be interpreted by the front end
+        return loginFormData.username == "atestuser" && loginFormData.password == "atestpassword"
+    }
+
 
 }
