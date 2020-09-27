@@ -69,10 +69,16 @@ class ExperimentController2D{
     }
 
     /**
-    Bring the Experiment to the next step
+    Get a piece of equipment with the matching name
+    name: A string, the name to search
+    returns: The found piece of Equipment, or null if none is found
     */
-    runStep(){
-        // TODO implement
+    findEquipmentByName(name){
+        let eqs = this.experiment.equipment;
+        for(var i = 0; i < eqs.length; i++){
+            if(eqs[i].equipment.name === name) return eqs[i];
+        }
+        return null;
     }
 
     /**
@@ -81,7 +87,7 @@ class ExperimentController2D{
     exclude: A specific object to ignore, or a list of objects to ignore, or null to ignore none, default null
     returns: The piece of equipment, or null if none is found
     */
-    findEquipment(p, exclude = null){
+    findEquipmentByPosition(p, exclude = null){
         for(var i = 0; i < this.experiment.equipment.length; i++){
             var eq = this.experiment.equipment[i];
             if(eq.inBounds(p) && (exclude === null || exclude !== eq && (!Array.isArray(exclude) || !exclude.includes(eq)))){
@@ -119,6 +125,7 @@ class ExperimentController2D{
         noStroke();
         textSize(18);
         var y = 600;
+        // TODO remove text, only here for testing purposes
         text("Click a beaker to select it", 20, y += 20);
         text("Press 1 to put red chemical to selected beaker", 20, y += 20);
         text("Press 2 to put green chemical to selected beaker", 20, y += 20);
@@ -137,12 +144,12 @@ class ExperimentController2D{
         let select = this.selectedEquipment;
         if(select !== null){
             // TODO modify this so that this particular set of calls is only made for beakers
-            select.pourInto(this.findEquipment([mouseX, mouseY], select));
+            select.pourInto(this.findEquipmentByPosition([mouseX, mouseY], select));
             this.setSelectedEquipment(null);
         }
         // Otherwise, determine which object is selected by the mouse, if any
         else{
-            this.setSelectedEquipment(this.findEquipment([mouseX, mouseY]));
+            this.setSelectedEquipment(this.findEquipmentByPosition([mouseX, mouseY]));
         }
     }
 

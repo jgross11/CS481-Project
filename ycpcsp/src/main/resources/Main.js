@@ -4,7 +4,9 @@ var expController;
 /*
 
 TODO:
+    Test case ExperimentController2D.findEquipmentByName
     Add a way to find ExperimentObjects by name, or add an ID to them
+    Modify ExperimentController2D code to handle abstraction as described by the TO DO comments
 
 */
 
