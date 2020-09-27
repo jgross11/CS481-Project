@@ -1,8 +1,11 @@
 QUnit.test('ExperimentController2D constructor:', function(assert){
     var exp = new Experiment();
     var controller = new ExperimentController2D(exp);
-    assert.equal(controller.experiment, exp,
-        "Experiment in controller should equal the given experiment.");
+
+    assert.equal(controller.experiment, exp, "Experiment in controller should equal the given experiment.");
+    assert.equal(controller.selectedEquipment, null, "selectedEquipment should be null.");
+    assert.deepEqual(controller.instructions, [], "instructions should be empty.");
+    assert.equal(controller.instructionCounter, 0, "instructionCounter should be 0.");
 });
 
 QUnit.test('ExperimentController2D setExperiment:', function(assert){
@@ -11,6 +14,16 @@ QUnit.test('ExperimentController2D setExperiment:', function(assert){
     controller.setExperiment(exp);
     assert.equal(controller.experiment, exp,
         "Experiment in Controller should equal the set Experiment.");
+});
+
+QUnit.test('ExperimentController2D setSelectedEquipment:', function(assert){
+    var exp = new Experiment();
+    var controller = new ExperimentController2D(null);
+    var equip = new EquipmentController2D(new Equipment([0, 0], [1, 1], 0, "", null));
+
+    controller.setSelectedEquipment(equip);
+    assert.equal(controller.selectedEquipment, equip,
+        "Equipment in Controller should equal the set Equipment.");
 });
 
 QUnit.test('ExperimentController2D setInstructions:', function(assert){
@@ -28,6 +41,54 @@ QUnit.test('ExperimentController2D setInstructions:', function(assert){
         "Instructions in Controller should equal the set Instructions.");
 });
 
+QUnit.test('ExperimentController2D setInstructionCounter:', function(assert){
+    var exp = new Experiment();
+    var controller = new ExperimentController2D(null);
+
+    exp.equipment.push(new BeakerController2D(new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 1")));
+    exp.equipment.push(new BeakerController2D(new Beaker([250, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 2")));
+
+    let eqs = exp.equipment;
+    let instructions = [];
+    for(var i = 0; i < 4; i++) instructions.push(new InstructionController2D(new Instruction(eqs[0], eqs[1], eqs[0].pourInto)));
+    controller.setInstructions(instructions);
+
+    assert.equal(controller.instructionCounter, 0, "Instruction should be on 0");
+    controller.setInstructionCounter(2);
+    assert.equal(controller.instructionCounter, 2, "Instruction should be on 2");
+    controller.setInstructionCounter(-1);
+    assert.equal(controller.instructionCounter, 2, "Instruction should not have changed from 2");
+    controller.setInstructionCounter(4);
+    assert.equal(controller.instructionCounter, 2, "Instruction should not have changed from 2");
+    controller.setInstructionCounter(3);
+    assert.equal(controller.instructionCounter, 3, "Instruction should be on 3");
+    controller.setInstructionCounter(1);
+    assert.equal(controller.instructionCounter, 1, "Instruction should be on 1");
+});
+
+QUnit.test('ExperimentController2D nextInstruction:', function(assert){
+    var exp = new Experiment();
+    var controller = new ExperimentController2D(null);
+
+    exp.equipment.push(new BeakerController2D(new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 1")));
+    exp.equipment.push(new BeakerController2D(new Beaker([250, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 2")));
+
+    let eqs = exp.equipment;
+    let instructions = [];
+    for(var i = 0; i < 3; i++) instructions.push(new InstructionController2D(new Instruction(eqs[0], eqs[1], eqs[0].pourInto)));
+    controller.setInstructions(instructions);
+
+    assert.equal(controller.instructionCounter, 0, "Instruction should be on 0");
+    controller.nextInstruction();
+    assert.equal(controller.instructionCounter, 1, "Instruction should be on 1");
+    controller.nextInstruction();
+    assert.equal(controller.instructionCounter, 2, "Instruction should be on 2");
+    controller.nextInstruction();
+    assert.equal(controller.instructionCounter, 3, "Instruction should not have changed from 3");
+    controller.nextInstruction();
+    assert.equal(controller.instructionCounter, 3, "Instruction should not have changed from 3");
+});
+
 QUnit.test('ExperimentController2D reset:', function(assert){
     var exp = new Experiment();
     var controller = new ExperimentController2D(exp);
@@ -36,6 +97,7 @@ QUnit.test('ExperimentController2D reset:', function(assert){
     assert.deepEqual(exp.equipment, [], 'equipment should be []');
     assert.equal(controller.selectedEquipment, null, 'selectedEquipment should be null');
     assert.deepEqual(controller.instructions, [], 'instructions should be []');
+    assert.equal(controller.instructionCounter, 0, "instructionCounter should be 0.");
 });
 
 QUnit.todo('ExperimentController2D runStep:', function(assert){

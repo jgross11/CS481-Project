@@ -4,8 +4,6 @@ var expController;
 /*
 
 TODO:
-    Test cases: ExperimentController2D.constructor, reset, setInstructionCounter, nextInstruction
-    Create system to run through a list of steps to complete an experiment
     Add a way to find ExperimentObjects by name, or add an ID to them
 
 */
