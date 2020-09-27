@@ -11,7 +11,8 @@ class ContainerController2D extends EquipmentController2D{
     }
 
     /**
-    Pour the contents of this container into the given container
+    Pour the contents of this container into the given container. This will leave residue inside the container.
+    TODO add residue remnants
     container: The container in which to pour this containers contents
     */
     pourInto(container){

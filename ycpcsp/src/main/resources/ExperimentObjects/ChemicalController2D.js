@@ -1,13 +1,14 @@
 /**
 A class used to perform operations on chemicals in the context of a 2D environment
 */
-class ChemicalController2D{
+class ChemicalController2D extends ExperimentObjectController2D{
 
     /**
     Create a new Controller with the given chemical
     chemical: The chemical which this Controller will control
     */
     constructor(chemical){
+        super();
         this.chemical = chemical;
     }
 
@@ -17,6 +18,10 @@ class ChemicalController2D{
     */
     setChemical(chemical){
         this.chemical = chemical;
+    }
+
+    getObject(){
+        return this.chemical;
     }
 
     /**

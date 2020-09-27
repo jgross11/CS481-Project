@@ -1,13 +1,14 @@
 /**
 A class for handling controlling a piece of Equipment in a 2D environment
 */
-class EquipmentController2D{
+class EquipmentController2D extends ExperimentObjectController2D{
 
     /**
     Create a new EquipmentController to control the given piece of Equipment
     equipment: The piece of Equipment which this controller will control
     */
     constructor(equipment){
+        super();
         this.equipment = equipment;
     }
 
@@ -16,6 +17,10 @@ class EquipmentController2D{
     */
     setEquipment(equipment){
         this.equipment = equipment;
+    }
+
+    getObject(){
+        return this.equipment;
     }
 
     /**

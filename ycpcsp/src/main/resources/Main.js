@@ -4,7 +4,8 @@ var expController;
 /*
 
 TODO:
-    Test case ContainerController2D.pourInto
+    Test cases Instruction, InstructionController2D, ExperimentObjectController2D,
+        EquipmentController2D, ChemicalController2D, ExperimentController2D.setInstructions, Experiment.reset
 
 */
 
@@ -22,6 +23,9 @@ function setup(){
     experiment.equipment.push(new BeakerController2D(new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 1")));
     experiment.equipment.push(new BeakerController2D(new Beaker([250, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 2")));
     experiment.equipment.push(new BeakerController2D(new Beaker([450, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 3")));
+
+    let eqs = experiment.equipment;
+    expController.setInstructions([new InstructionController2D(new Instruction(eqs[0], eqs[1], eqs[0].pourInto))]);
 }
 
 /**

@@ -5,10 +5,13 @@ class ExperimentController2D{
 
     /**
     Create an empty Controller.
+    experiment: The experiment which will be controlled by this Controller
     */
     constructor(experiment){
         this.experiment = experiment;
         this.selectedEquipment = null;
+
+        this.instructions = []
     }
 
     /**
@@ -27,11 +30,20 @@ class ExperimentController2D{
     }
 
     /**
+    Set the list of instructions for use in this Experiment
+    instructions: the list of instructions
+    */
+    setInstructions(instructions){
+        this.instructions = instructions;
+    }
+
+    /**
     Bring the Experiment to its default state
     */
     reset(){
-        this.equipment = [];
+        this.experiment.equipment = [];
         this.selectedEquipment = null;
+        this.instructions = []
     }
 
     /**
@@ -56,7 +68,6 @@ class ExperimentController2D{
         }
         return null;
     }
-
 
     /**
     Draw the full Experiment to the P5 graphics
@@ -92,6 +103,7 @@ class ExperimentController2D{
         text("Press 3 to put blue chemical to selected beaker", 20, y += 20);
         text("Press ESC to empty the selected beaker", 20, y += 20);
         text("Click an unselected beaker to combine the chemical in the selected beaker", 20, y += 20);
+        text("Press I to run a sample instruction", 20, y += 20);
     }
 
     /**
@@ -128,14 +140,23 @@ class ExperimentController2D{
     keyPress(){
         // Option should only work for Container objects
         let eq = this.selectedEquipment;
-        if(eq !== null){
-            // TODO modify this so that this particular set of calls is only made for beakers
-            // Empty the beaker
-            if(keyCode === ESCAPE){
+        // Empty the beaker
+        // TODO modify this so that the calls under ESCAPE and key default are only made for beakers
+        switch(keyCode){
+            case ESCAPE:
+                if(eq === null) break;
                 eq.pourOut();
                 this.setSelectedEquipment(null);
-            }
-            else{
+                break;
+        }
+        switch(key){
+            case 'i':
+                // TODO create proper implementation of instructions as a list
+                if(this.instructions.length > 0) this.instructions[0].activate();
+                break;
+
+            default:
+                if(eq === null) break;
                 var color;
                 switch(key){
                     case '1': color = [255, 0, 0]; break;
@@ -144,7 +165,7 @@ class ExperimentController2D{
                     default: color = null;
                 }
                 if(color !== null) eq.equipment.setContents(new Chemical(10, "" + color, "", 20, color));
-            }
+                break;
         }
     }
 
