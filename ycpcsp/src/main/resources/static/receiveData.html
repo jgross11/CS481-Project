@@ -37,9 +37,17 @@
         });
 
         // decode information and display to user
-        user = await response.json();
-        console.log(user);
-        if(user){
+        var result = await response.json();
+        console.log("login success: " + result);
+
+        // successful login - store login info in session
+        if(result){
+
+            // store user information in session info
+            // TODO determine way to store user object, rather than parts
+            sessionStorage.setItem("username", user.username);
+            sessionStorage.setItem("password", user.password);
+
             // for example, go to homepage
             window.location.href = "/";
         }
