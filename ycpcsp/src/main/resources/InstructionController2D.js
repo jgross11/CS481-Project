@@ -27,8 +27,7 @@ class InstructionController2D{
         let rec = ins.receiver;
         let act = ins.actor;
 
-        var func = ins.action.bind(act, rec);
-        func();
+        ins.action.bind(act, rec)();
     }
 
 }

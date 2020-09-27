@@ -12,6 +12,12 @@ QUnit.test('ChemicalController2D setChemical:', function(assert){
     assert.equal(controller.chemical, chem, "The Chemical set to the Controller should be the same.");
 });
 
+QUnit.test('ChemicalController2D getObject:', function(assert){
+    var chem = new Chemical(10.0, "test chem", "equ", 20.0, [1, 2, 3]);
+    var controller = new ChemicalController2D(chem);
+    assert.equal(controller.getObject(), chem, "The object obtained should be the same as the Chemical in the Controller.");
+});
+
 QUnit.todo('ChemicalController2D calculateMoles:', function(assert){
     var chem = new Chemical(10.0, "test chem", "equ", 20.0, [1, 2, 3]);
     var controller = new ChemicalController2D(chem);
@@ -36,4 +42,10 @@ QUnit.test('ChemicalController2D combine:', function(assert){
     assert.true(result, "Combine should be successful");
     assert.equal(chem1.mass, 10.0, "Combined mass should be 15.0");
     assert.deepEqual(chem1.texture, [10, 16, 28], "Combined texture should be [10, 16, 28]");
+});
+
+QUnit.todo('ChemicalController2D drawRect:', function(assert){
+    var chem = new Chemical(10.0, "test chem", "equ", 20.0, [1, 2, 3]);
+    var controller = new ChemicalController2D(chem);
+    assert.true(false);
 });

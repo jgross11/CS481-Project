@@ -10,7 +10,6 @@ class ExperimentController2D{
     constructor(experiment){
         this.experiment = experiment;
         this.selectedEquipment = null;
-
         this.instructions = []
     }
 

@@ -10,7 +10,22 @@ QUnit.test('ExperimentController2D setExperiment:', function(assert){
     var controller = new ExperimentController2D(null);
     controller.setExperiment(exp);
     assert.equal(controller.experiment, exp,
-        "Experiment in controller should equal the set experiment.");
+        "Experiment in Controller should equal the set Experiment.");
+});
+
+QUnit.test('ExperimentController2D setInstructions:', function(assert){
+    var exp = new Experiment();
+    var controller = new ExperimentController2D(null);
+
+    exp.equipment.push(new BeakerController2D(new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 1")));
+    exp.equipment.push(new BeakerController2D(new Beaker([250, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 2")));
+
+    let eqs = exp.equipment;
+    let instructions = [new InstructionController2D(new Instruction(eqs[0], eqs[1], eqs[0].pourInto))];
+    controller.setInstructions(instructions);
+
+    assert.deepEqual(controller.instructions, instructions,
+        "Instructions in Controller should equal the set Instructions.");
 });
 
 QUnit.test('ExperimentController2D reset:', function(assert){
@@ -19,7 +34,8 @@ QUnit.test('ExperimentController2D reset:', function(assert){
     controller.reset();
 
     assert.deepEqual(exp.equipment, [], 'equipment should be []');
-    assert.equal(exp.selectedEquipment, null, 'selectedEquipment should be null');
+    assert.equal(controller.selectedEquipment, null, 'selectedEquipment should be null');
+    assert.deepEqual(controller.instructions, [], 'instructions should be []');
 });
 
 QUnit.todo('ExperimentController2D runStep:', function(assert){
@@ -64,5 +80,26 @@ QUnit.todo('ExperimentController2D render:', function(assert){
     var exp = new Experiment();
     var controller = new ExperimentController2D(exp);
     controller.render();
+    assert.true(false);
+});
+
+QUnit.todo('ExperimentController2D mousePress:', function(assert){
+    var exp = new Experiment();
+    var controller = new ExperimentController2D(exp);
+    controller.mousePress();
+    assert.true(false);
+});
+
+QUnit.todo('ExperimentController2D mouseMove:', function(assert){
+    var exp = new Experiment();
+    var controller = new ExperimentController2D(exp);
+    controller.mouseMove();
+    assert.true(false);
+});
+
+QUnit.todo('ExperimentController2D keyPress:', function(assert){
+    var exp = new Experiment();
+    var controller = new ExperimentController2D(exp);
+    controller.keyPress();
     assert.true(false);
 });

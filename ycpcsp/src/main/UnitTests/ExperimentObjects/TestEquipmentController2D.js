@@ -14,6 +14,13 @@ QUnit.test('EquipmentController2D setEquipment:', function(assert){
 
 });
 
+QUnit.test('EquipmentController2D getObject:', function(assert){
+    var equip = new Equipment([0, 0], [0, 0], 5.0, "exp obj", null);
+    var controller = new EquipmentController2D(equip);
+    assert.equal(controller.getObject(), equip, "The Object of the Controller should match the assigned Equipment");
+
+});
+
 QUnit.test('EquipmentController2D x:', function(assert){
     var equip = new Equipment([8, 9], [2, 3], 5.0, "exp obj", null);
     var controller = new EquipmentController2D(equip);
@@ -60,6 +67,10 @@ QUnit.test('EquipmentController2D inBounds:', function(assert){
     assert.true(controller.inBounds([12, -20]), "Point on top edge of object should be in bounds");
     assert.true(controller.inBounds([12, 10]), "Point on bottom edge of object should be in bounds");
 
+});
+
+QUnit.todo('EquipmentController2D drawSprite:', function(assert){
+    assert.true(false);
 });
 
 QUnit.todo('EquipmentController2D draw:', function(assert){

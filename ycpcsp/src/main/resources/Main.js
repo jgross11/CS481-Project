@@ -4,8 +4,8 @@ var expController;
 /*
 
 TODO:
-    Test cases Instruction, InstructionController2D, ExperimentObjectController2D,
-        EquipmentController2D, ChemicalController2D, ExperimentController2D.setInstructions, Experiment.reset
+    Create system to run through a list of steps to complete an experiment
+    Add a way to find ExperimentObjects by name, or add an ID to them
 
 */
 
