@@ -79,7 +79,7 @@ class ChemicalController2D extends ExperimentObjectController2D{
     split(percent){
         let c = this.chemical
         if(percent < 0 || percent > 1 || c === null) return null;
-        var chem = new Chemical(c.mass * (1 - percent), c.name, c.equation, c.temperature, c.texture);
+        var chem = new Chemical(c.mass * (1 - percent), c.instanceID, c.equation, c.temperature, c.texture);
         c.setMass(c.mass * percent);
         return chem;
     }

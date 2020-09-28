@@ -69,19 +69,6 @@ class ExperimentController2D{
     }
 
     /**
-    Get a piece of equipment with the matching name
-    name: A string, the name to search
-    returns: The found piece of Equipment, or null if none is found
-    */
-    findEquipmentByName(name){
-        let eqs = this.experiment.equipment;
-        for(var i = 0; i < eqs.length; i++){
-            if(eqs[i].equipment.name === name) return eqs[i];
-        }
-        return null;
-    }
-
-    /**
     Find a piece of equipment which contains a point
     p: The point, a list of [x, y] coordinates
     exclude: A specific object to ignore, or a list of objects to ignore, or null to ignore none, default null
@@ -93,6 +80,19 @@ class ExperimentController2D{
             if(eq.inBounds(p) && (exclude === null || exclude !== eq && (!Array.isArray(exclude) || !exclude.includes(eq)))){
                 return eq;
             }
+        }
+        return null;
+    }
+
+    /**
+    Get a piece of equipment with the matching name
+    instanceID: The instanceID of the object to search
+    returns: The found piece of Equipment, or null if none is found
+    */
+    findEquipmentByInstanceID(instanceID){
+        let eqs = this.experiment.equipment;
+        for(var i = 0; i < eqs.length; i++){
+            if(eqs[i].equipment.instanceID === instanceID) return eqs[i];
         }
         return null;
     }

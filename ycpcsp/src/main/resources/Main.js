@@ -4,6 +4,8 @@ var expController;
 /*
 
 TODO:
+    Test case ExperimentObject.setInstanceID
+    Change ExperimentController2D.findByName to findByID
     Test case ContainerController2D.pourOut
     Test case ContainerController2D.pourInto
     Test case ContainerController2D.maxPourAmount

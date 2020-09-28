@@ -19,7 +19,7 @@ QUnit.test('ExperimentController2D setExperiment:', function(assert){
 QUnit.test('ExperimentController2D setSelectedEquipment:', function(assert){
     var exp = new Experiment();
     var controller = new ExperimentController2D(null);
-    var equip = new EquipmentController2D(new Equipment([0, 0], [1, 1], 0, "", null));
+    var equip = new EquipmentController2D(new Equipment([0, 0], [1, 1], 0, 1, null));
 
     controller.setSelectedEquipment(equip);
     assert.equal(controller.selectedEquipment, equip,
@@ -30,8 +30,8 @@ QUnit.test('ExperimentController2D setInstructions:', function(assert){
     var exp = new Experiment();
     var controller = new ExperimentController2D(null);
 
-    exp.equipment.push(new BeakerController2D(new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 1")));
-    exp.equipment.push(new BeakerController2D(new Beaker([250, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 2")));
+    exp.equipment.push(new BeakerController2D(new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01, 1)));
+    exp.equipment.push(new BeakerController2D(new Beaker([250, 200], [150, 150], 20.0, 50.0, 0.01, 2)));
 
     let eqs = exp.equipment;
     let instructions = [new InstructionController2D(new Instruction(eqs[0], eqs[1], eqs[0].pourInto))];
@@ -45,8 +45,8 @@ QUnit.test('ExperimentController2D setInstructionCounter:', function(assert){
     var exp = new Experiment();
     var controller = new ExperimentController2D(null);
 
-    exp.equipment.push(new BeakerController2D(new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 1")));
-    exp.equipment.push(new BeakerController2D(new Beaker([250, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 2")));
+    exp.equipment.push(new BeakerController2D(new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01, 1)));
+    exp.equipment.push(new BeakerController2D(new Beaker([250, 200], [150, 150], 20.0, 50.0, 0.01, 2)));
 
     let eqs = exp.equipment;
     let instructions = [];
@@ -70,10 +70,10 @@ QUnit.test('ExperimentController2D nextInstruction:', function(assert){
     var exp = new Experiment();
     var controller = new ExperimentController2D(null);
 
-    var beaker1 = new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 1");
-    var beaker2 = new Beaker([250, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 2");
-    beaker1.setContents(new Chemical(5, "", "", 20.0, [0, 0, 0]));
-    beaker2.setContents(new Chemical(5, "", "", 20.0, [0, 0, 0]));
+    var beaker1 = new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01, 1);
+    var beaker2 = new Beaker([250, 200], [150, 150], 20.0, 50.0, 0.01, 2);
+    beaker1.setContents(new Chemical(5, 3, "", 20.0, [0, 0, 0]));
+    beaker2.setContents(new Chemical(5, 4, "", 20.0, [0, 0, 0]));
     exp.equipment.push(new BeakerController2D(beaker1));
     exp.equipment.push(new BeakerController2D(beaker2));
 
@@ -107,11 +107,11 @@ QUnit.test('ExperimentController2D reset:', function(assert){
 QUnit.test('ExperimentController2D findEquipmentByPosition:', function(assert){
     var exp = new Experiment();
     var controller = new ExperimentController2D(exp);
-    var beaker1 = new BeakerController2D(new Beaker([0, 0], [20, 15], 1.0, 1.0, 0.1, "beaker 1"));
-    var beaker2 = new BeakerController2D(new Beaker([100, 0], [20, 15], 1.0, 1.0, 0.1, "beaker 2"));
-    var beaker3 = new BeakerController2D(new Beaker([45, 100], [20, 15], 1.0, 1.0, 0.1, "beaker 3"));
-    var beaker4 = new BeakerController2D(new Beaker([45, 200], [20, 15], 1.0, 1.0, 0.1, "beaker 4"));
-    var beaker5 = new BeakerController2D(new Beaker([45, 210], [20, 15], 1.0, 1.0, 0.1, "beaker 5"));
+    var beaker1 = new BeakerController2D(new Beaker([0, 0], [20, 15], 1.0, 1.0, 0.1, 1));
+    var beaker2 = new BeakerController2D(new Beaker([100, 0], [20, 15], 1.0, 1.0, 0.1, 2));
+    var beaker3 = new BeakerController2D(new Beaker([45, 100], [20, 15], 1.0, 1.0, 0.1, 3));
+    var beaker4 = new BeakerController2D(new Beaker([45, 200], [20, 15], 1.0, 1.0, 0.1, 4));
+    var beaker5 = new BeakerController2D(new Beaker([45, 210], [20, 15], 1.0, 1.0, 0.1, 5));
     controller.experiment.equipment.push(beaker1);
     controller.experiment.equipment.push(beaker2);
     controller.experiment.equipment.push(beaker3);
@@ -136,20 +136,20 @@ QUnit.test('ExperimentController2D findEquipmentByPosition:', function(assert){
 });
 
 
-QUnit.test('ExperimentController2D findEquipmentByPosition:', function(assert){
+QUnit.test('ExperimentController2D findEquipmentByInstanceID:', function(assert){
     var exp = new Experiment();
     var controller = new ExperimentController2D(exp);
-    var beaker1 = new BeakerController2D(new Beaker([0, 0], [20, 15], 1.0, 1.0, 0.1, "beaker 1"));
-    var beaker2 = new BeakerController2D(new Beaker([100, 0], [20, 15], 1.0, 1.0, 0.1, "beaker 2"));
-    var beaker3 = new BeakerController2D(new Beaker([45, 100], [20, 15], 1.0, 1.0, 0.1, "beaker 3"));
+    var beaker1 = new BeakerController2D(new Beaker([0, 0], [20, 15], 1.0, 1.0, 0.1, 1));
+    var beaker2 = new BeakerController2D(new Beaker([100, 0], [20, 15], 1.0, 1.0, 0.1, 2));
+    var beaker3 = new BeakerController2D(new Beaker([45, 100], [20, 15], 1.0, 1.0, 0.1, 3));
     controller.experiment.equipment.push(beaker1);
     controller.experiment.equipment.push(beaker2);
     controller.experiment.equipment.push(beaker3);
-
-    assert.deepEqual(controller.findEquipmentByName("beaker 1"), beaker1, "Should find the first beaker.");
-    assert.deepEqual(controller.findEquipmentByName("beaker 2"), beaker2, "Should find the second beaker.");
-    assert.deepEqual(controller.findEquipmentByName("beaker 3"), beaker3, "Should find the third beaker.");
-    assert.deepEqual(controller.findEquipmentByName("beaker3"), null, "Should find null.");
+    // TODO replace name with instanceID
+    assert.deepEqual(controller.findEquipmentByInstanceID(1), beaker1, "Should find the first beaker.");
+    assert.deepEqual(controller.findEquipmentByInstanceID(2), beaker2, "Should find the second beaker.");
+    assert.deepEqual(controller.findEquipmentByInstanceID(3), beaker3, "Should find the third beaker.");
+    assert.deepEqual(controller.findEquipmentByInstanceID(4), null, "Should find null.");
 
 });
 

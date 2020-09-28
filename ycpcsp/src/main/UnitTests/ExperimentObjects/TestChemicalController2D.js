@@ -1,11 +1,11 @@
 QUnit.test('ChemicalController2D constructor:', function(assert){
-    var chem = new Chemical(10.0, "test chem", "equ", 20.0, [1, 2, 3]);
+    var chem = new Chemical(10.0, 2, "equ", 20.0, [1, 2, 3]);
     var controller = new ChemicalController2D(chem);
     assert.equal(controller.chemical, chem, "The Chemical given to the Controller should be the same.");
 });
 
 QUnit.test('ChemicalController2D setChemical:', function(assert){
-    var chem = new Chemical(10.0, "test chem", "equ", 20.0, [1, 2, 3]);
+    var chem = new Chemical(10.0, 2, "equ", 20.0, [1, 2, 3]);
     var controller = new ChemicalController2D(null);
     assert.equal(controller.chemical, null, "The Chemical given to the Controller should be null.");
     controller.setChemical(chem);
@@ -13,26 +13,26 @@ QUnit.test('ChemicalController2D setChemical:', function(assert){
 });
 
 QUnit.test('ChemicalController2D getObject:', function(assert){
-    var chem = new Chemical(10.0, "test chem", "equ", 20.0, [1, 2, 3]);
+    var chem = new Chemical(10.0, 2, "equ", 20.0, [1, 2, 3]);
     var controller = new ChemicalController2D(chem);
     assert.equal(controller.getObject(), chem, "The object obtained should be the same as the Chemical in the Controller.");
 });
 
 QUnit.todo('ChemicalController2D calculateMoles:', function(assert){
-    var chem = new Chemical(10.0, "test chem", "equ", 20.0, [1, 2, 3]);
+    var chem = new Chemical(10.0, 2, "equ", 20.0, [1, 2, 3]);
     var controller = new ChemicalController2D(chem);
     assert.true(false);
 });
 
 QUnit.todo('ChemicalController2D calculateMatterState:', function(assert){
-    var chem = new Chemical(10.0, "test chem", "equ", 20.0, [1, 2, 3]);
+    var chem = new Chemical(10.0, 2, "equ", 20.0, [1, 2, 3]);
     var controller = new ChemicalController2D(chem);
     assert.true(false);
 });
 
 QUnit.test('ChemicalController2D combine:', function(assert){
-    var chem1 = new Chemical(6.0, "chem1", "equ", 20.0, [10, 20, 40]);
-    var chem2 = new Chemical(4.0, "chem2", "equ", 20.0, [10, 10, 10]);
+    var chem1 = new Chemical(6.0, 2, "equ", 20.0, [10, 20, 40]);
+    var chem2 = new Chemical(4.0, 2, "equ", 20.0, [10, 10, 10]);
     var controller = new ChemicalController2D(null);
     assert.false(controller.combine(null), "Combine should fail");
     assert.false(controller.combine(chem2), "Combine should fail");
@@ -45,7 +45,7 @@ QUnit.test('ChemicalController2D combine:', function(assert){
 });
 
 QUnit.test('ChemicalController2D split:', function(assert){
-    var chem1 = new Chemical(10.0, "chem1", "equ", 20.0, [10, 20, 40]);
+    var chem1 = new Chemical(10.0, 2, "equ", 20.0, [10, 20, 40]);
     var controller = new ChemicalController2D(chem1);
     var chem2 = controller.split(.4);
 
@@ -63,7 +63,7 @@ QUnit.test('ChemicalController2D split:', function(assert){
 });
 
 QUnit.todo('ChemicalController2D drawRect:', function(assert){
-    var chem = new Chemical(10.0, "test chem", "equ", 20.0, [1, 2, 3]);
+    var chem = new Chemical(10.0, 2, "equ", 20.0, [1, 2, 3]);
     var controller = new ChemicalController2D(chem);
     assert.true(false);
 });

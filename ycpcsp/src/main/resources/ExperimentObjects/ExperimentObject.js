@@ -6,11 +6,11 @@ class ExperimentObject{
     /**
     Create a new ExperimentObject with the given mass and name.
     mass: A floating point value, the mass, in grams, of this object. TODO should mass be in grams?
-    name: As a string, the name given to this specific instance of ExperimentObject
+    instanceID: A unique integer specifying this ExperimentObject
     */
-    constructor(mass, name){
+    constructor(mass, instanceID){
         this.mass = mass;
-        this.instanceID = name;
+        this.instanceID = instanceID;
     }
 
     /**
@@ -22,11 +22,11 @@ class ExperimentObject{
     }
 
     /**
-    Set the name of this ExperimentObject
-    name: The new name
+    Set the id of this ExperimentObject
+    instanceID: The new id
     */
-    setName(name){
-        this.name = name;
+    setInstanceID(instanceID){
+        this.instanceID = instanceID;
     }
 
 }
