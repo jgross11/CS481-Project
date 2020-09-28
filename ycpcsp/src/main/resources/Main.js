@@ -4,7 +4,18 @@ var expController;
 /*
 
 TODO:
+    Test case ContainerController2D.pourOut
+    Test case ContainerController2D.pourInto
+    Test case ContainerController2D.maxPourAmount
+    Test case ContainerController2D.remainingSpace
+    Test case ContainerController2D.emptyOut
+    Change ExperimentObject to have instanceID not name
+    ContainerController2D
+        create method to empty containers out entirely
+    Reword docs to reflect controller names
     Modify ExperimentController2D code to handle abstraction as described by the TO DO comments
+        Set it up so that each piece of equipment has a list of interaction methods
+        So it would be actor and receiver methods?
 
 */
 

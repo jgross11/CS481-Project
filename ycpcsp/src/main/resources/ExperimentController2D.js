@@ -174,7 +174,7 @@ class ExperimentController2D{
         switch(keyCode){
             case ESCAPE:
                 if(eq === null) break;
-                eq.equipment.setContents(null);
+                eq.emptyOut();
                 this.setSelectedEquipment(null);
                 break;
         }

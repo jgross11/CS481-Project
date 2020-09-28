@@ -10,7 +10,7 @@ class ExperimentObject{
     */
     constructor(mass, name){
         this.mass = mass;
-        this.name = name;
+        this.instanceID = name;
     }
 
     /**
