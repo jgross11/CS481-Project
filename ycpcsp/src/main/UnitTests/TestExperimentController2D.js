@@ -70,8 +70,12 @@ QUnit.test('ExperimentController2D nextInstruction:', function(assert){
     var exp = new Experiment();
     var controller = new ExperimentController2D(null);
 
-    exp.equipment.push(new BeakerController2D(new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 1")));
-    exp.equipment.push(new BeakerController2D(new Beaker([250, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 2")));
+    var beaker1 = new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 1");
+    var beaker2 = new Beaker([250, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 2");
+    beaker1.setContents(new Chemical(5, "", "", 20.0, [0, 0, 0]));
+    beaker2.setContents(new Chemical(5, "", "", 20.0, [0, 0, 0]));
+    exp.equipment.push(new BeakerController2D(beaker1));
+    exp.equipment.push(new BeakerController2D(beaker2));
 
     let eqs = exp.equipment;
     let instructions = [];

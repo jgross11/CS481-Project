@@ -174,7 +174,7 @@ class ExperimentController2D{
         switch(keyCode){
             case ESCAPE:
                 if(eq === null) break;
-                eq.pourOut();
+                eq.equipment.setContents(null);
                 this.setSelectedEquipment(null);
                 break;
         }
@@ -192,7 +192,7 @@ class ExperimentController2D{
                     case '3': color = [0, 0, 255]; break;
                     default: color = null;
                 }
-                if(color !== null) eq.equipment.setContents(new Chemical(10, "" + color, "", 20, color));
+                if(color !== null) eq.addTo(new Chemical(10, "" + color, "", 20, color));
                 break;
         }
     }

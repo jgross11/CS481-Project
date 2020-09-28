@@ -18,7 +18,7 @@ class ExperimentObject{
     mass: The new mass, a positive floating point value
     */
     setMass(mass){
-        if(isFloat(mass) && mass > 0) this.mass = mass;
+        if(isFloat(mass) && mass >= 0) this.mass = mass;
     }
 
     /**

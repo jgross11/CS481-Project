@@ -19,7 +19,7 @@ QUnit.test('InstructionController2D setInstruction:', function(assert){
     assert.deepEqual(controller.instruction, ins, "The Controller should have the given Instruction.");
 });
 
-QUnit.test('InstructionController2D setInstruction:', function(assert){
+QUnit.test('InstructionController2D activate:', function(assert){
     var beaker1 = new BeakerController2D(new Beaker([0, 0], [0, 0], 1, 100, 0, "beaker1"));
     var beaker2 = new BeakerController2D(new Beaker([0, 0], [0, 0], 1, 100, 0, "beaker2"));
     var ins = new Instruction(beaker1, beaker2, beaker1.pourInto);
@@ -31,5 +31,5 @@ QUnit.test('InstructionController2D setInstruction:', function(assert){
 
     controller.activate();
     assert.equal(beaker1.equipment.contents, null, "Instruction should empty out beaker1");
-    assert.equal(beaker2.equipment.contents.mass, 10, "Instruction should have put 40 mass in beaker2");
+    assert.equal(beaker2.equipment.contents.mass, 10, "Instruction should have left 10 mass in beaker2");
 });

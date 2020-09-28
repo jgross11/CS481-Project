@@ -4,8 +4,6 @@ var expController;
 /*
 
 TODO:
-    Test case ExperimentController2D.findEquipmentByName
-    Add a way to find ExperimentObjects by name, or add an ID to them
     Modify ExperimentController2D code to handle abstraction as described by the TO DO comments
 
 */
@@ -21,9 +19,9 @@ function setup(){
     experiment = new Experiment();
     expController = new ExperimentController2D(experiment);
 
-    experiment.equipment.push(new BeakerController2D(new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 1")));
-    experiment.equipment.push(new BeakerController2D(new Beaker([250, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 2")));
-    experiment.equipment.push(new BeakerController2D(new Beaker([450, 200], [150, 150], 20.0, 50.0, 0.01, "Test Beaker 3")));
+    experiment.equipment.push(new BeakerController2D(new Beaker([50, 200], [200, 200], 20.0, 50.0, 0.03, "Test Beaker 1")));
+    experiment.equipment.push(new BeakerController2D(new Beaker([300, 200], [200, 200], 20.0, 50.0, 0.03, "Test Beaker 2")));
+    experiment.equipment.push(new BeakerController2D(new Beaker([550, 200], [200, 200], 20.0, 50.0, 0.03, "Test Beaker 3")));
 
     let eqs = experiment.equipment;
     var ins = [];

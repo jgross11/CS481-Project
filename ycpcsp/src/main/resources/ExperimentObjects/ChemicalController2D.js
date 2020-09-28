@@ -69,6 +69,22 @@ class ChemicalController2D extends ExperimentObjectController2D{
     }
 
     /**
+    Take this Chemical and split its mass into two parts.
+    this Chemical will have the given percent, the remainder will be returned.
+    The returned Chemical will be completely separate from this Chemical
+    percent: The percentage of the chemical to remain in this object. Must be in the range [0, 1]
+    returns: A chemical with all the same properties as this chemical, but with the remainder of the mass
+        Also can return null if the chemical could not be split
+    */
+    split(percent){
+        let c = this.chemical
+        if(percent < 0 || percent > 1 || c === null) return null;
+        var chem = new Chemical(c.mass * (1 - percent), c.name, c.equation, c.temperature, c.texture);
+        c.setMass(c.mass * percent);
+        return chem;
+    }
+
+    /**
     Draw a rectangular representation of this Chemical.
     This method is designed for rendering a constant width chemical with a varying height.
     x: The x position of where the Chemical should be drawn

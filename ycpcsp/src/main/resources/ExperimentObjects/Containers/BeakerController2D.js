@@ -40,7 +40,7 @@ class BeakerController2D extends ContainerController2D{
         textSize(15);
         text(eq.name, this.x() + 25, this.y() + this.height() / 2)
         var mass = "mass: "
-        mass += (eq.contents === null) ? 0 : eq.contents.mass;
+        mass += (eq.contents === null) ? 0 : eq.contents.mass.toFixed(2);
         mass += " / " + eq.capacity;
         text(mass, this.x() + 25, this.y() + this.height() / 2 + 18)
     }

@@ -44,6 +44,24 @@ QUnit.test('ChemicalController2D combine:', function(assert){
     assert.deepEqual(chem1.texture, [10, 16, 28], "Combined texture should be [10, 16, 28]");
 });
 
+QUnit.test('ChemicalController2D split:', function(assert){
+    var chem1 = new Chemical(10.0, "chem1", "equ", 20.0, [10, 20, 40]);
+    var controller = new ChemicalController2D(chem1);
+    var chem2 = controller.split(.4);
+
+    assert.equal(chem1.mass, 4.0, "Remaining mass should be 4.0");
+    assert.equal(chem2.mass, 6.0, "Taken mass should be 6.0");
+    assert.deepEqual(chem2.name, chem1.name, "Split name should be the same as the original.")
+    assert.deepEqual(chem2.equation, chem1.equation, "Split equation should be the same as the original.")
+    assert.deepEqual(chem2.temperature, chem1.temperature, "Split temperature should be the same as the original.")
+    assert.deepEqual(chem2.texture, chem1.texture, "Split texture should be the same as the original.")
+    assert.equal(controller.split(-0.1), null, "Should be unable to split -0.1");
+    assert.equal(controller.split(1.1), null, "Should be unable to split 1.1");
+
+    controller.setChemical(null);
+    assert.equal(controller.split(0.1), null, "Should be unable to split with no chemical");
+});
+
 QUnit.todo('ChemicalController2D drawRect:', function(assert){
     var chem = new Chemical(10.0, "test chem", "equ", 20.0, [1, 2, 3]);
     var controller = new ChemicalController2D(chem);

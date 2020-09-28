@@ -11,26 +11,57 @@ class ContainerController2D extends EquipmentController2D{
     }
 
     /**
+    Determine if this Container only has residue left
+    returns: true if there is residue, false otherwise
+    */
+    hasResidue(){
+        let eq = this.equipment;
+        if(eq.contents === null) return false;
+        return eq.residue * eq.capacity >= eq.contents.mass;
+    }
+
+    /**
+    Check to see if there is any mass remaining in this Container's contents.
+    If the contents have zero mass, set the contents to null
+    returns: true if contents were set to null, false otherwise
+    */
+    checkForMass(){
+        let cont = this.equipment.contents;
+        if(cont !== null && cont.mass === 0){
+            this.equipment.setContents(null);
+            return true;
+        }
+        return false;
+    }
+
+    /**
     Pour the contents of this container into the given container. This will leave residue inside the container.
-    TODO add residue remnants
     container: The container in which to pour this containers contents
     */
     pourInto(container){
         if(this.equipment !== null && container !== null && container.hasSpace(this.equipment.contents)){
             let chem = this.pourOut();
             container.addTo(chem);
+            this.checkForMass();
         }
     }
 
     /**
     By hand, pour out the contents of this Container. This will leave residue inside the container.
-    TODO add residue remnants
-    return: The Chemical poured out of this Container
+    return: The Chemical poured out of this Container, or null if no chemical could be poured out
     */
     pourOut(){
-        let chem = this.equipment.contents;
-        this.equipment.setContents(null);
-        return chem;
+        // Do not pour out anything if the remaining contents is less than the residue percent
+        if(this.hasResidue()) return null;
+
+        // Otherwise, pour out based on residue percentage
+        let eq = this.equipment;
+        let chemController = new ChemicalController2D(eq.contents);
+
+        var splitChem = chemController.split(eq.residue);
+        this.checkForMass();
+
+        return splitChem;
     }
 
     /**
@@ -57,9 +88,11 @@ class ContainerController2D extends EquipmentController2D{
     returns: true if the chemical is within the remaining capacity of this Container, false otherwise
     */
     hasSpace(chem){
-        let cont = this.equipment.contents;
+        if(this.hasResidue()) return true;
+        let eq = this.equipment;
+        let cont = eq.contents;
         var mass = ((cont === null) ? 0 : cont.mass) + ((chem === null) ? 0 : chem.mass);
-        return mass <= this.equipment.capacity;
+        return mass <= eq.capacity;
     }
 
     /**
