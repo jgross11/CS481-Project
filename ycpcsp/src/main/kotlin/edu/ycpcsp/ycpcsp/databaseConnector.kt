@@ -19,7 +19,7 @@ fun main() {
         val st = conn.createStatement();
 
 
-        // edited this file to test the execute Query function on the database
+        // edited this file to test the execute Query function on the database. Rs isn't used but it works. TRUST ME
         var rs = st.executeUpdate("create table TEST( TestID int)")
 
     } catch (ex: SQLException) {
