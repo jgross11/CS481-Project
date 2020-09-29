@@ -92,7 +92,7 @@ class ContainerController2D extends EquipmentController2D{
     }
 
     /**
-    Clear all of the contents of the Container in this Controller.
+    Clear all of the contents of the Container in this Controller, leaving no residue
     returns: The contents removed, can be null if this container is already empty
     */
     emptyOut(){
@@ -131,8 +131,10 @@ class ContainerController2D extends EquipmentController2D{
     returns: The mass which can be put into the given Container, or null if this Container is empty
     */
     maxPourAmount(container){
-        let cont = this.equipment.contents;
-        if(cont === null) return null;
+        let eq = this.equipment;
+        if(eq === null) return null;
+        let cont = eq.contents;
+        if(cont === null || container === null) return null;
 
         var maxSpace = container.remainingSpace();
         return (cont.mass <= maxSpace) ? cont.mass : maxSpace;

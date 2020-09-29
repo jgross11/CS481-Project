@@ -4,17 +4,9 @@ var expController;
 /*
 
 TODO:
-    Test case ExperimentObject.setInstanceID
-    Change ExperimentController2D.findByName to findByID
-    Test case ContainerController2D.pourOut
-    Test case ContainerController2D.pourInto
-    Test case ContainerController2D.maxPourAmount
-    Test case ContainerController2D.remainingSpace
-    Test case ContainerController2D.emptyOut
-    Change ExperimentObject to have instanceID not name
-    ContainerController2D
-        create method to empty containers out entirely
+    Give test cases constant spacing
     Reword docs to reflect controller names
+    Should chemicals even have an id?
     Modify ExperimentController2D code to handle abstraction as described by the TO DO comments
         Set it up so that each piece of equipment has a list of interaction methods
         So it would be actor and receiver methods?
@@ -32,9 +24,9 @@ function setup(){
     experiment = new Experiment();
     expController = new ExperimentController2D(experiment);
 
-    experiment.equipment.push(new BeakerController2D(new Beaker([50, 200], [200, 200], 20.0, 50.0, 0.03, "Test Beaker 1")));
-    experiment.equipment.push(new BeakerController2D(new Beaker([300, 200], [200, 200], 20.0, 50.0, 0.03, "Test Beaker 2")));
-    experiment.equipment.push(new BeakerController2D(new Beaker([550, 200], [200, 200], 20.0, 50.0, 0.03, "Test Beaker 3")));
+    experiment.equipment.push(new BeakerController2D(new Beaker([50, 200], [200, 200], 20.0, 50.0, 0.03, 1)));
+    experiment.equipment.push(new BeakerController2D(new Beaker([300, 200], [200, 200], 20.0, 50.0, 0.03, 2)));
+    experiment.equipment.push(new BeakerController2D(new Beaker([550, 200], [200, 200], 20.0, 50.0, 0.03, 3)));
 
     let eqs = experiment.equipment;
     var ins = [];
