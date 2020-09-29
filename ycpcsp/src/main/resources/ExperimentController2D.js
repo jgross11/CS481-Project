@@ -192,7 +192,7 @@ class ExperimentController2D{
                     case '3': color = [0, 0, 255]; break;
                     default: color = null;
                 }
-                if(color !== null) eq.addTo(new Chemical(10, "" + color, "", 20, color));
+                if(color !== null) eq.addTo(new Chemical(10, "", 20, color));
                 break;
         }
     }

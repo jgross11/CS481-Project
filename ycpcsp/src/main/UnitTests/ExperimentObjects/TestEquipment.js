@@ -22,6 +22,13 @@ QUnit.test('Equipment setSize:', function(assert){
     assert.deepEqual(equip.size, [22, 23], 'size should be [22, 23]');
 });
 
+QUnit.test('Equipment setInstanceID:', function(assert){
+    var equip = new Equipment([5, 0], [4, 2], 10.0, 3, null);
+
+    equip.setInstanceID(1);
+    assert.equal(equip.instanceID, 1, 'name should be 1');
+});
+
 QUnit.test('Equipment setSprite:', function(assert){
     var equip = new Equipment([0, 0], [0, 0], 10.0, 3, null);
 

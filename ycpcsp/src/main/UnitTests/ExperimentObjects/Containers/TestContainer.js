@@ -13,7 +13,7 @@ QUnit.test('Container constructor:', function(assert){
 QUnit.test('Container setContents:', function(assert){
     var container = new Container([10, 5], [12, 20], 10.0, 200.0, 0.15, 1, null);
     assert.deepEqual(container.contents, null, 'contents should be null');
-    var chem = new Chemical(1, "name", "eq", 20, [100, 0, 0]);
+    var chem = new Chemical(1, "eq", 20, [100, 0, 0]);
     container.setContents(chem);
     assert.deepEqual(container.contents, chem, 'contents should be the same as the set contents');
 });

@@ -30,10 +30,8 @@ QUnit.test('ExperimentController2D setSelectedEquipment:', function(assert){
 QUnit.test('ExperimentController2D setInstructions:', function(assert){
     var exp = new Experiment();
     var controller = new ExperimentController2D(null);
-
     exp.equipment.push(new BeakerController2D(new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01, 1)));
     exp.equipment.push(new BeakerController2D(new Beaker([250, 200], [150, 150], 20.0, 50.0, 0.01, 2)));
-
     let eqs = exp.equipment;
     let instructions = [new InstructionController2D(new Instruction(eqs[0], eqs[1], eqs[0].pourInto))];
 
@@ -45,10 +43,8 @@ QUnit.test('ExperimentController2D setInstructions:', function(assert){
 QUnit.test('ExperimentController2D setInstructionCounter:', function(assert){
     var exp = new Experiment();
     var controller = new ExperimentController2D(null);
-
     exp.equipment.push(new BeakerController2D(new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01, 1)));
     exp.equipment.push(new BeakerController2D(new Beaker([250, 200], [150, 150], 20.0, 50.0, 0.01, 2)));
-
     let eqs = exp.equipment;
     let instructions = [];
     for(var i = 0; i < 4; i++) instructions.push(new InstructionController2D(new Instruction(eqs[0], eqs[1], eqs[0].pourInto)));
@@ -75,14 +71,12 @@ QUnit.test('ExperimentController2D setInstructionCounter:', function(assert){
 QUnit.test('ExperimentController2D nextInstruction:', function(assert){
     var exp = new Experiment();
     var controller = new ExperimentController2D(null);
-
     var beaker1 = new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01, 1);
     var beaker2 = new Beaker([250, 200], [150, 150], 20.0, 50.0, 0.01, 2);
-    beaker1.setContents(new Chemical(5, 3, "", 20.0, [0, 0, 0]));
-    beaker2.setContents(new Chemical(5, 4, "", 20.0, [0, 0, 0]));
+    beaker1.setContents(new Chemical(5, "", 20.0, [0, 0, 0]));
+    beaker2.setContents(new Chemical(5, "", 20.0, [0, 0, 0]));
     exp.equipment.push(new BeakerController2D(beaker1));
     exp.equipment.push(new BeakerController2D(beaker2));
-
     let eqs = exp.equipment;
     let instructions = [];
     for(var i = 0; i < 3; i++) instructions.push(new InstructionController2D(new Instruction(eqs[0], eqs[1], eqs[0].pourInto)));

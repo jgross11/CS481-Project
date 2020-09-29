@@ -4,8 +4,6 @@ var expController;
 /*
 
 TODO:
-    Reword docs to reflect controller names
-    Should chemicals even have an id?
     Modify ExperimentController2D code to handle abstraction as described by the TO DO comments
         Set it up so that each piece of equipment has a list of interaction methods
         So it would be actor and receiver methods?
@@ -29,11 +27,11 @@ function setup(){
 
     let eqs = experiment.equipment;
     var ins = [];
-    ins.push(new InstructionController2D(new Instruction(eqs[0], new Chemical(5, "small chem", "", 20, [255, 0, 0]), eqs[0].addTo)));
-    ins.push(new InstructionController2D(new Instruction(eqs[1], new Chemical(5, "small chem", "", 20, [0, 0, 255]), eqs[1].addTo)));
+    ins.push(new InstructionController2D(new Instruction(eqs[0], new Chemical(5, "", 20, [255, 0, 0]), eqs[0].addTo)));
+    ins.push(new InstructionController2D(new Instruction(eqs[1], new Chemical(5, "", 20, [0, 0, 255]), eqs[1].addTo)));
     ins.push(new InstructionController2D(new Instruction(eqs[0], eqs[1], eqs[0].pourInto)));
     ins.push(new InstructionController2D(new Instruction(eqs[1], eqs[2], eqs[1].pourInto)));
-    ins.push(new InstructionController2D(new Instruction(eqs[2], new Chemical(20, "big chem", "", 20, [255, 255, 255]), eqs[2].addTo)));
+    ins.push(new InstructionController2D(new Instruction(eqs[2], new Chemical(20, "", 20, [255, 255, 255]), eqs[2].addTo)));
     expController.setInstructions(ins);
 }
 

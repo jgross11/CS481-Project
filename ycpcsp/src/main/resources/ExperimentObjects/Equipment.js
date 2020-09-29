@@ -15,6 +15,7 @@ class Equipment extends ExperimentObject{
         super(mass, instanceID);
         this.position = position;
         this.size = size
+        this.instanceID = instanceID;
         this.sprite = sprite;
     }
 
@@ -32,6 +33,14 @@ class Equipment extends ExperimentObject{
     */
     setSize(size){
         this.size = size
+    }
+
+    /**
+    Set the id of this ExperimentObject
+    instanceID: The new id
+    */
+    setInstanceID(instanceID){
+        this.instanceID = instanceID;
     }
 
     /**

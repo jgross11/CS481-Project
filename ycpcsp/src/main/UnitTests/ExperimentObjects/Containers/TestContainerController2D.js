@@ -1,18 +1,20 @@
 QUnit.test('ContainerController2D constructor:', function(assert){
     var container = new Container([0, 0], [0, 0], 0, 0, 0, 2, null);
     var controller = new ContainerController2D(container);
+
     assert.equal(controller.equipment, container, "The Controller Equipment should be the given Container")
 });
 
 QUnit.test('ContainerController2D hasResidue:', function(assert){
     var container = new Beaker([0, 0], [0, 0], 100, 0.1, 0, 2);
     var controller = new BeakerController2D(container);
-    let chem = new Chemical(10.0, "chem", "eq", 20.0, null);
+    let chem = new Chemical(10.0, "eq", 20.0, null);
 
     assert.false(controller.hasResidue(), "Should have no residue by default");
 
     controller.addTo(chem);
     assert.false(controller.hasResidue(), "Should have no residue after adding chemical");
+
     controller.pourOut();
     assert.false(controller.hasResidue(), "Should have residue after pouring out chemical");
 });
@@ -20,7 +22,7 @@ QUnit.test('ContainerController2D hasResidue:', function(assert){
 QUnit.test('ContainerController2D checkForMass:', function(assert){
     var container = new Beaker([0, 0], [0, 0], 100, 0.1, 0, 2);
     var controller = new BeakerController2D(container);
-    let chem = new Chemical(10.0, "chem", "eq", 20.0, null);
+    let chem = new Chemical(10.0, "eq", 20.0, null);
 
     assert.false(controller.checkForMass(), "Should not have updated contents");
     chem.setMass(0);
@@ -29,10 +31,10 @@ QUnit.test('ContainerController2D checkForMass:', function(assert){
 });
 
 QUnit.test('ContainerController2D pourInto:', function(assert){
-    var chem1 = new Chemical(30, 1, "", 20, [100, 120, 140]);
-    var chem2 = new Chemical(20, 2, "", 20, [10, 20, 40]);
-    var chem3 = new Chemical(70, 3, "", 20, [100, 120, 140]);
-    var chem4 = new Chemical(50, 4, "", 20, [10, 20, 40]);
+    var chem1 = new Chemical(30, "", 20, [100, 120, 140]);
+    var chem2 = new Chemical(20, "", 20, [10, 20, 40]);
+    var chem3 = new Chemical(70, "", 20, [100, 120, 140]);
+    var chem4 = new Chemical(50, "", 20, [10, 20, 40]);
     var c1 = new Beaker([0, 0], [0, 0], 1, 100, 0, 5);
     c1.setContents(chem1);
     var c2 = new Beaker([0, 0], [0, 0], 0, 100, 0, 6);
@@ -77,13 +79,13 @@ QUnit.test('ContainerController2D pourInto:', function(assert){
 QUnit.test('ContainerController2D pourOut:', function(assert){
     var container = new Beaker([0, 0], [0, 0], 3, 100, 0.1, 2);
     var controller = new BeakerController2D(container);
-    var chem = new Chemical(1.0, 1, "eq", 20.0, null);
-    var chemCopy = new Chemical(1.0, 1, "eq", 20.0, null);
+    var chem = new Chemical(1.0, "eq", 20.0, null);
+    var chemCopy = new Chemical(1.0, "eq", 20.0, null);
 
     container.setContents(null);
     assert.deepEqual(controller.pourOut(), null, "Chemical should pour null when it has no contents");
 
-    container.setContents(new Chemical(1.0, 2, "eq", 20.0, null));
+    container.setContents(new Chemical(1.0, "eq", 20.0, null));
     controller.pourOut()
     assert.deepEqual(controller.pourOut(), null, "Chemical should pour null when it only has residue");
 
@@ -92,20 +94,20 @@ QUnit.test('ContainerController2D pourOut:', function(assert){
     assert.deepEqual(controller.pourOut(), chemCopy, "Chemical poured out, no params, should be equal to original contents");
     assert.equal(container.contents, null, "Container should have no chemical remaining");
 
-    chem = new Chemical(1.0, 1, "eq", 20.0, null);
-    chemCopy = new Chemical(1.0, 1, "eq", 20.0, null);
+    chem = new Chemical(1.0, "eq", 20.0, null);
+    chemCopy = new Chemical(1.0, "eq", 20.0, null);
     container.setContents(chem);
     assert.deepEqual(controller.pourOut(-1), chemCopy, "Chemical3 poured out, negative param, should be equal to original contents");
     assert.equal(container.contents, null, "Container should have no chemical remaining");
 
-    chem = new Chemical(1.0, 1, "eq", 20.0, null);
-    chemCopy = new Chemical(1.0, 1, "eq", 20.0, null);
+    chem = new Chemical(1.0, "eq", 20.0, null);
+    chemCopy = new Chemical(1.0, "eq", 20.0, null);
     container.setContents(chem);
     assert.deepEqual(controller.pourOut(2), chemCopy, "Chemical poured out, higher than real contents param, should be equal to original contents");
     assert.equal(container.contents, null, "Container should have no chemical remaining");
 
-    chem = new Chemical(1.0, 1, "eq", 20.0, null);
-    chemCopy = new Chemical(0.6, 1, "eq", 20.0, null);
+    chem = new Chemical(1.0, "eq", 20.0, null);
+    chemCopy = new Chemical(0.6, "eq", 20.0, null);
     container.setContents(chem);
     assert.deepEqual(controller.pourOut(0.6), chemCopy, "Chemical poured out, part of contents param, should be equal to new contents");
     assert.equal(container.contents.mass, 0.4, "Container should have 0.4 mass remaining");
@@ -114,8 +116,8 @@ QUnit.test('ContainerController2D pourOut:', function(assert){
 QUnit.test('ContainerController2D addTo:', function(assert){
     var container = new Beaker([0, 0], [0, 0], 0, 100, 0, 2);
     var controller = new BeakerController2D(container);
-    let chem1 = new Chemical(1.0, 3, "eq", 20.0, [200, 50, 10]);
-    let chem2 = new Chemical(1.0, 4, "eq", 20.0, [4, 4, 4]);
+    let chem1 = new Chemical(1.0, "eq", 20.0, [200, 50, 10]);
+    let chem2 = new Chemical(1.0, "eq", 20.0, [4, 4, 4]);
 
     assert.deepEqual(container.contents, null, "The container should initially be empty");
 
@@ -129,7 +131,7 @@ QUnit.test('ContainerController2D addTo:', function(assert){
 QUnit.test('ContainerController2D hasSpace:', function(assert){
     var container = new Beaker([0, 0], [0, 0], 0, 100, 0, 2, null);
     var controller = new BeakerController2D(container);
-    var chem = new Chemical(10, 3, "eq", 20.0, [0, 0, 0]);
+    var chem = new Chemical(10, "eq", 20.0, [0, 0, 0]);
 
     assert.equal(controller.emptyOut(), null, "Emptying an empty container should give null");
     assert.equal(container.contents, null, "Emptying a container should leave it with null contents");
@@ -142,11 +144,14 @@ QUnit.test('ContainerController2D hasSpace:', function(assert){
 QUnit.test('ContainerController2D hasSpace:', function(assert){
     var container = new Container([0, 0], [0, 0], 0, 10, 0, 2, null);
     var controller = new ContainerController2D(container);
-    var chem = new Chemical(11, 3, "eq", 20.0, [0, 0, 0]);
+    var chem = new Chemical(11, "eq", 20.0, [0, 0, 0]);
+
     assert.false(controller.hasSpace(chem), "Should not have space");
     assert.true(controller.hasSpace(null), "Should have space");
+
     chem.setMass(5);
     assert.true(controller.hasSpace(chem), "Should have space");
+
     chem.setMass(10);
     assert.true(controller.hasSpace(chem), "Should have space");
 });
@@ -154,7 +159,7 @@ QUnit.test('ContainerController2D hasSpace:', function(assert){
 QUnit.test('ContainerController2D remainingSpace:', function(assert){
     var container = new Beaker([0, 0], [0, 0], 0, 100, 0, 2, null);
     var controller = new BeakerController2D(container);
-    var chem = new Chemical(10, 3, "eq", 20.0, [0, 0, 0]);
+    var chem = new Chemical(10, "eq", 20.0, [0, 0, 0]);
 
     container.setContents(null);
     assert.equal(controller.remainingSpace(), 100, "With no chemicals, the remaining space should be the capacity of 100");
@@ -164,8 +169,8 @@ QUnit.test('ContainerController2D remainingSpace:', function(assert){
 });
 
 QUnit.test('ContainerController2D maxPourAmount:', function(assert){
-    var chem1 = new Chemical(70, 3, "", 20, [100, 120, 140]);
-    var chem2 = new Chemical(50, 4, "", 20, [10, 20, 40]);
+    var chem1 = new Chemical(70, "", 20, [100, 120, 140]);
+    var chem2 = new Chemical(50, "", 20, [10, 20, 40]);
     var c1 = new Beaker([0, 0], [0, 0], 1, 100, 0, 5);
     var c2 = new Beaker([0, 0], [0, 0], 0, 100, 0, 6);
     var controller1 = new BeakerController2D(null);

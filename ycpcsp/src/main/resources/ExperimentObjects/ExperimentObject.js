@@ -4,13 +4,11 @@ The abstract class representing a generic object which can exist in an Experimen
 class ExperimentObject{
 
     /**
-    Create a new ExperimentObject with the given mass and id.
+    Create a new ExperimentObject with the given mass and name.
     mass: A floating point value, the mass, in grams, of this object. TODO should mass be in grams?
-    instanceID: A unique integer specifying this ExperimentObject
     */
-    constructor(mass, instanceID){
+    constructor(mass){
         this.mass = mass;
-        this.instanceID = instanceID;
     }
 
     /**
@@ -20,13 +18,4 @@ class ExperimentObject{
     setMass(mass){
         if(isFloat(mass) && mass >= 0) this.mass = mass;
     }
-
-    /**
-    Set the id of this ExperimentObject
-    instanceID: The new id
-    */
-    setInstanceID(instanceID){
-        this.instanceID = instanceID;
-    }
-
 }
