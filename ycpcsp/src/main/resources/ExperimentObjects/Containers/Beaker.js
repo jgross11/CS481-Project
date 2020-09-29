@@ -1,10 +1,10 @@
 /**
-A standard beaker for use in experiments. Primarily for holding liquids, can also hold solids.
+A standard Beaker for use in experiments. Primarily for holding liquids, can also hold solids.
 */
 class Beaker extends Container{
 
     /**
-    Create a new Beaker object with the given position, mass, capacity, residue, name
+    Create a new Beaker object with the given position, mass, capacity, residue, id
     position: A list [x, y] of the upper left hand corner coordinates of the Beaker's location in the Experiment
     size: A list [width, height] of the size of the Equipment in pixels
     mass: A floating point value, the mass, in grams, of this Beaker

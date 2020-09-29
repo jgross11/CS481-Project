@@ -1,5 +1,5 @@
 /**
-An abstract class to handle operations on experiment objects
+An abstract class to handle operations on ExperimentObjects
 */
 class ExperimentObjectController2D{
 

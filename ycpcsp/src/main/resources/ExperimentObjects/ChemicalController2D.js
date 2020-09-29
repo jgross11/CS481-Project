@@ -1,11 +1,11 @@
 /**
-A class used to perform operations on chemicals in the context of a 2D environment
+A class used to perform operations on Chemicals in the context of a 2D environment
 */
 class ChemicalController2D extends ExperimentObjectController2D{
 
     /**
-    Create a new Controller with the given chemical
-    chemical: The chemical which this Controller will control
+    Create a new Controller with the given Chemical
+    chemical: The Chemical which this Controller will control
     */
     constructor(chemical){
         super();
@@ -20,12 +20,16 @@ class ChemicalController2D extends ExperimentObjectController2D{
         this.chemical = chemical;
     }
 
+    /**
+    Get the Chemical controlled by this Controller
+    returns: The Chemical
+    */
     getObject(){
         return this.chemical;
     }
 
     /**
-    Determine the number of moles of the chemical in this controller
+    Determine the number of moles of the Chemical in this Controller
     returns: A floating point value, the number of moles
     */
     calculateMoles(){
@@ -34,8 +38,8 @@ class ChemicalController2D extends ExperimentObjectController2D{
     }
 
     /**
-    Determine the state of matter of the chemical of this Controller.
-    The result is stored in the matterState field in the chemical
+    Determine the state of matter of the Chemical of this Controller.
+    The result is stored in the matterState field in the Chemical
     */
     calculateMatterState(){
         // TODO implement
@@ -43,8 +47,8 @@ class ChemicalController2D extends ExperimentObjectController2D{
 
     /**
     Mix another Chemical with the Chemical of this Controller, and store that Chemical in this Controller.
-    Does nothing if either chemical is null
-    chemical: The chemical to mix
+    Does nothing if either Chemical is null
+    chemical: The Chemical to mix
     returns: true if the Chemicals were combined, false otherwise
     */
     combine(chemical){
@@ -70,11 +74,11 @@ class ChemicalController2D extends ExperimentObjectController2D{
 
     /**
     Take this Chemical and split its mass into two parts.
-    this Chemical will have the given percent, the remainder will be returned.
+    This Chemical will have the given percent, the remainder will be returned.
     The returned Chemical will be completely separate from this Chemical
-    percent: The percentage of the chemical to remain in this object. Must be in the range [0, 1]
-    returns: A chemical with all the same properties as this chemical, but with the remainder of the mass
-        Also can return null if the chemical could not be split
+    percent: The percentage of the Chemical to remain in this object. Must be in the range [0, 1]
+    returns: A Chemical with all the same properties as this Chemical, but with the remainder of the mass
+        Also can return null if the Chemical could not be split
     */
     split(percent){
         let c = this.chemical
@@ -86,7 +90,7 @@ class ChemicalController2D extends ExperimentObjectController2D{
 
     /**
     Draw a rectangular representation of this Chemical.
-    This method is designed for rendering a constant width chemical with a varying height.
+    This method is designed for rendering a constant width Chemical with a varying height.
     x: The x position of where the Chemical should be drawn
     y: The y position of where the Chemical should be drawn
     fillPercent: The percentage of the total height which is filled, in range [0, 1]

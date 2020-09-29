@@ -3,15 +3,15 @@ A class for handling controlling a Container in a 2D environment
 */
 class ContainerController2D extends EquipmentController2D{
     /**
-    Create a new ContainerController to control the given container
-    container: The Container which this controller will control
+    Create a new ContainerController to control the given Container
+    container: The Container which this Controller will control
     */
     constructor(container){
         super(container);
     }
 
     /**
-    Determine if this Container only has residue left
+    Determine if the Container in this Controller only has residue left
     returns: true if there is residue, false otherwise
     */
     hasResidue(){
@@ -21,7 +21,7 @@ class ContainerController2D extends EquipmentController2D{
     }
 
     /**
-    Check to see if there is any mass remaining in this Container's contents.
+    Check to see if there is any mass remaining in this Controller's Container's contents.
     If the contents have zero mass, set the contents to null
     returns: true if contents were set to null, false otherwise
     */
@@ -35,9 +35,9 @@ class ContainerController2D extends EquipmentController2D{
     }
 
     /**
-    Pour the contents of this ContainerController into the given ContainerController. This will leave residue inside the ContainerController.
-    If the contents of this ContainerController do not fit in the given ContainerController, then as much as can fit will be poured
-    container: The ContainerController in which to pour this containers contents
+    Pour the contents of this Controller's Container into the given Controller's Container. This will leave residue inside this Controller's Container.
+    If the contents of this Controller's Container do not fit in the given Controller's Container, then as much as can fit will be poured
+    container: The ContainerController in which to pour this Controller's Container's contents
     */
     pourInto(container){
         if(this.equipment !== null && container !== null){
@@ -47,22 +47,22 @@ class ContainerController2D extends EquipmentController2D{
     }
 
     /**
-    By hand, pour out the contents of this Container. This will leave residue inside the container.
-    Cannot pour out if this container only has residue and not enough of a Chemical to pour out, or if it is empty.
-    amount: The amount to pour out of the container. Use a negative number to pour out everything. Default -1
-        If the amount specified is greater than the amount in the container, all contents is poured out.
-    return: The Chemical poured out of this Container, or null if no chemical could be poured out
+    By hand, pour out the contents of this Controller's Container. This will leave residue inside the Container.
+    Cannot pour out if this Container only has residue thus not enough of a Chemical to pour out, or if it is empty.
+    amount: The amount to pour out of this Controller's Container. Use a negative number to pour out everything. Default -1
+        If the amount specified is greater than the amount in this Controller's Container, all contents are poured out.
+    return: The Chemical poured out of this Controller's Container, or null if no Chemical could be poured out
     */
     pourOut(amount = -1){
         // Do not pour out anything if the remaining contents is less than the residue percent
-        //  and do nothing if this container is empty
+        //  and do nothing if this Controller's Container is empty
         let eq = this.equipment;
         if(this.hasResidue() || eq.contents === null) return null;
 
         // Otherwise, pour out based on residue percentage
         let chemController = new ChemicalController2D(eq.contents);
 
-        // Determine the percentage of chemical to leave in the container
+        // Determine the percentage of Chemical to leave in the Container
         var leavePercent = 1 - ((amount < 0 || amount >= eq.contents.mass) ? 1 : amount / eq.contents.mass);
         // If the percentage to leave is less than the residue, then leave only residue
         if(leavePercent < eq.residue) leavePercent = eq.residue;
@@ -74,9 +74,9 @@ class ContainerController2D extends EquipmentController2D{
     }
 
     /**
-    Add the given chemical to this container. Does nothing if the chemical cannot be placed in this container.
-    chemical: The chemical to be placed in this container
-    returns: true if the chemical was successfully added, false otherwise
+    Add the given Chemical to this Controller's Container. Does nothing if the Chemical cannot be placed in the Container.
+    chemical: The Chemical to be placed in this container
+    returns: true if the Chemical was successfully added, false otherwise
     */
     addTo(chemical){
         if(this.canContain(chemical) && this.hasSpace(chemical)){
@@ -92,8 +92,8 @@ class ContainerController2D extends EquipmentController2D{
     }
 
     /**
-    Clear all of the contents of the Container in this Controller, leaving no residue
-    returns: The contents removed, can be null if this container is already empty
+    Clear all of the contents of this Controller's Container, leaving no residue
+    returns: The contents removed, can be null if the Container is already empty
     */
     emptyOut(){
         let eq = this.equipment;
@@ -103,9 +103,9 @@ class ContainerController2D extends EquipmentController2D{
     }
 
     /**
-    Determine if this Container can hold more of a new Chemical
+    Determine if this Controller's Container can hold more of a new Chemical
     chem: The new Chemical to add
-    returns: true if the Chemical is within the remaining capacity of this Container, false otherwise
+    returns: true if the Chemical is within the remaining capacity of the Container, false otherwise
     */
     hasSpace(chem){
         if(this.hasResidue()) return true;
@@ -116,7 +116,7 @@ class ContainerController2D extends EquipmentController2D{
     }
 
     /**
-    Get the amount of space left in this container
+    Get the amount of space left in this Controller's Container
     returns: The amount of space which can still hold more Chemicals
     */
     remainingSpace(){
@@ -126,9 +126,9 @@ class ContainerController2D extends EquipmentController2D{
     }
 
     /**
-    Determine how much of the contents of this Container can be put into the given Container.
-    container: the chemical to check
-    returns: The mass which can be put into the given Container, or null if this Container is empty
+    Determine how much of the contents of this Controller's Container can be put into the given Controller's Container.
+    container: the Chemical to check
+    returns: The mass which can be put into the given Controller's Container, or null if this Controller's Container is empty
     */
     maxPourAmount(container){
         let eq = this.equipment;
@@ -141,9 +141,9 @@ class ContainerController2D extends EquipmentController2D{
     }
 
     /**
-    Determine if this container can hold the given chemical.
+    Determine if this Controller's Container can hold the given Chemical.
     chemical: The Chemical which should be tested
-    returns: true if the container can hold the chemical, false otherwise
+    returns: true if the Container can hold the Chemical, false otherwise
     */
     canContain(chemical){
         throw new Error("All ContainerController2D objects must implement canContain(chemical)");

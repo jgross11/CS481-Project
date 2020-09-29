@@ -5,7 +5,7 @@ class EquipmentController2D extends ExperimentObjectController2D{
 
     /**
     Create a new EquipmentController to control the given piece of Equipment
-    equipment: The piece of Equipment which this controller will control
+    equipment: The piece of Equipment which this Controller will control
     */
     constructor(equipment){
         super();
@@ -14,38 +14,42 @@ class EquipmentController2D extends ExperimentObjectController2D{
 
     /**
     Set the currently used Equipment for this EquipmentController
+    equipment: The piece of Equipment which will be controlled by this Controller
     */
     setEquipment(equipment){
         this.equipment = equipment;
     }
 
+    /**
+    Get the piece of Equipment controlled by this Controller
+    */
     getObject(){
         return this.equipment;
     }
 
     /**
-    Get the x coordinate of the Equipment of this controller
+    Get the x coordinate of the Equipment of this Controller
     */
     x(){
         return this.equipment.position[0];
     }
 
     /**
-    Get the y coordinate of the Equipment of this controller
+    Get the y coordinate of the Equipment of this Controller
     */
     y(){
         return this.equipment.position[1];
     }
 
     /**
-    Get the width of the Equipment of this controller
+    Get the width of the Equipment of this Controller
     */
     width(){
         return this.equipment.size[0];
     }
 
     /**
-    Get the height of the Equipment of this controller
+    Get the height of the Equipment of this Controller
     */
     height(){
         return this.equipment.size[1];
@@ -61,16 +65,16 @@ class EquipmentController2D extends ExperimentObjectController2D{
     }
 
     /**
-    Determine if a point is located inside the bounds of this piece of Equipment
+    Determine if a point is located inside the bounds of this Controller's Equipment
     pos: The point to test
-    returns: true if the point is inside this equipment, false otherwise
+    returns: true if the point is inside the Equipment, false otherwise
     */
     inBounds(pos){
         return pointInRect2D(this.toRect(), pos);
     }
 
     /**
-    Draw this piece of Equipment onto the screen in it's current position as a generic sprite
+    Draw this Controller's Equipment onto the screen in it's current position as a generic sprite
     */
     drawSprite(){
         var r = this.toRect();
@@ -78,7 +82,7 @@ class EquipmentController2D extends ExperimentObjectController2D{
     }
 
     /**
-    Draw this piece of Equipment onto the screen using P5 2D graphics
+    Draw this Controller's Equipment onto the screen using P5 2D graphics
     */
     draw(){
         this.drawSprite();

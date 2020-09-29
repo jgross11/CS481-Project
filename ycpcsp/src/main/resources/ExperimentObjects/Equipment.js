@@ -1,10 +1,10 @@
 /**
-The abstract class representing a generic piece of equipment in an Experiment
+The abstract class representing a generic piece of Equipment in an Experiment
 */
 class Equipment extends ExperimentObject{
 
     /**
-    Create a new Experiment object with the given position, mass, name, and sprite
+    Create a new ExperimentObject with the given position, mass, id, and sprite
     position: A list [x, y] of the upper left hand corner coordinates of the Equipment's location in the Experiment
     size: A list [width, height] of the size of the Equipment in pixels
     mass: A floating point value, the mass, in grams, of this piece of Equipment

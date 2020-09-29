@@ -10,21 +10,21 @@ QUnit.test('Equipment constructor:', function(assert){
 
 QUnit.test('Equipment setPosition:', function(assert){
     var equip = new Equipment([0, 0], [0, 0], 10.0, 3, null);
-    equip.setPosition([12, 13]);
 
+    equip.setPosition([12, 13]);
     assert.deepEqual(equip.position, [12, 13], 'position should be [12, 13]');
 });
 
 QUnit.test('Equipment setSize:', function(assert){
     var equip = new Equipment([0, 0], [0, 0], 10.0, 3, null);
-    equip.setSize([22, 23]);
 
+    equip.setSize([22, 23]);
     assert.deepEqual(equip.size, [22, 23], 'size should be [22, 23]');
 });
 
 QUnit.test('Equipment setSprite:', function(assert){
     var equip = new Equipment([0, 0], [0, 0], 10.0, 3, null);
-    equip.setSprite("SPRITE_BEAKER");
 
+    equip.setSprite("SPRITE_BEAKER");
     assert.equal(equip.sprite, "SPRITE_BEAKER", 'size should be SPRITE_BEAKER');
 });

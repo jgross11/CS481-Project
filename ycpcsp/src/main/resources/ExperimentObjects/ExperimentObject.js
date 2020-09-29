@@ -4,7 +4,7 @@ The abstract class representing a generic object which can exist in an Experimen
 class ExperimentObject{
 
     /**
-    Create a new ExperimentObject with the given mass and name.
+    Create a new ExperimentObject with the given mass and id.
     mass: A floating point value, the mass, in grams, of this object. TODO should mass be in grams?
     instanceID: A unique integer specifying this ExperimentObject
     */

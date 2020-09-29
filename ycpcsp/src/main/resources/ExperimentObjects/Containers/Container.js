@@ -1,10 +1,10 @@
 /**
-The abstract class representing a generic container in an Experiment
+The abstract class representing a generic Container in an Experiment
 */
 class Container extends Equipment{
 
     /**
-    Create a new, empty, Container object with the given position, mass, capacity, residue, name, and sprite
+    Create a new, empty, Container object with the given position, mass, capacity, residue, id, and sprite
     position: A list [x, y] of the upper left hand corner coordinates of the Container's location in the Experiment
     size: A list [width, height] of the size of the Equipment in pixels
     mass: A floating point value, the mass, in grams, of this Container
@@ -19,13 +19,13 @@ class Container extends Equipment{
         this.capacity = capacity;
         this.residue = residue;
 
-        // The Chemical contained by this container
+        // The Chemical contained by this Container
         this.contents = null;
     }
 
     /**
     Set the Chemical contents of this Container
-    contents: The new contents, a chemical
+    contents: The new contents, a Chemical
     */
     setContents(contents){
         this.contents = contents;

@@ -1,5 +1,5 @@
 /**
-A class that keeps track of a single Chemical. This can be a single element, or a compound
+A class that keeps track of a single Chemical. This can be a single element, or a compound.
 */
 class Chemical extends ExperimentObject{
 
@@ -9,8 +9,8 @@ class Chemical extends ExperimentObject{
     instanceID: A unique integer specifying this Chemical
     equation: A string, the equation for the components of this Chemical
     temperature: A floating point value, the temperature, in celsius, of this Chemical
-    texture: Either a list of rgb colors [red, green, blue] representing the color of this chemical
-                or an image file representing the texture of this chemical
+    texture: Either a list of rgb colors [red, green, blue] representing the color of this Chemical
+                or an image file representing the texture of this Chemical
     */
     constructor(mass, instanceID, equation, temperature, texture){
         super(mass, instanceID);
@@ -33,7 +33,7 @@ class Chemical extends ExperimentObject{
     }
 
     /**
-    Set the temperature of this chemical, this also automatically updates the state of matter
+    Set the temperature of this Chemical, this also automatically updates the state of matter
     temperature: A floating point value, the temperature, in celsius, of this Chemical
     */
     setTemperature(temperature){
@@ -44,8 +44,8 @@ class Chemical extends ExperimentObject{
 
     /**
     Set the texture to use for rendering this Chemical
-    texture: Either a list of rgb colors [red, green, blue] representing the color of this chemical
-                or an image file representing the texture of this chemical
+    texture: Either a list of rgb colors [red, green, blue] representing the color of this Chemical
+                or an image file representing the texture of this Chemical
     */
     setTexture(texture){
         this.texture = texture;

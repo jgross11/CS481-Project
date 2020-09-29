@@ -4,7 +4,6 @@ var expController;
 /*
 
 TODO:
-    Give test cases constant spacing
     Reword docs to reflect controller names
     Should chemicals even have an id?
     Modify ExperimentController2D code to handle abstraction as described by the TO DO comments
