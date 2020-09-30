@@ -24,20 +24,6 @@ fun verifyUser(email: String, userPassword: String): Boolean {
         val st = conn.createStatement()
         val rs = st.executeQuery("SELECT password FROM Database.Users WHERE email = \"$email\";")
 
-
-        //for now I will keep the nested while loop just to see example code
-        //but i need to simplify later on
-        // for each row in the result set
-        //var rsmd = rs.metaData
-        //var colmnNum = rsmd.columnCount
-//        while (rs.next()) {
-//            //prints out values in each column of the result set
-//            for(i in 1  until colmnNum+1){
-//                println(rs.getString(i))
-//            }
-//            //For now I will differentiate rows like this
-//            println("\n Next Row \n")
-//        }
         rs.next()
        return rs.getString(1).compareTo(userPassword) == 0
 
