@@ -1,6 +1,7 @@
 package edu.ycpcsp.ycpcsp
 
 import edu.ycpcsp.ycpcsp.PostDataClasses.LoginFormData
+import edu.ycpcsp.ycpcsp.PostDataClasses.LoginFormData2
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 
@@ -118,6 +119,7 @@ class WebpageController {
         return "receiveData.html"
     }
 
+
     // when user clicks submit button on 'form', sends username and password as json
     // this function will ultimately return json as well
     @PostMapping(path = ["/receiveData-submit"], consumes = ["application/json"], produces = ["application/json"])
@@ -140,5 +142,22 @@ class WebpageController {
         return loginFormData.username == "atestuser" && loginFormData.password == "atestpassword"
     }
 
+    @GetMapping("/receiveData2")
+    fun sendReceiveDataPage2() : String{
+        return "receiveData2.html"
+    }
+
+    @PostMapping(path = ["/receiveData-submit2"], consumes = ["application/json"], produces = ["application/json"])
+
+    @ResponseBody
+
+    fun testReceivingOfDataFromBackEndLongFunctionName2(@RequestBody loginFormData2: LoginFormData2) : Boolean{
+        println("Received following login information")
+
+        println(loginFormData2)
+
+
+        return loginFormData2.username == "atestuser" && loginFormData2.password == "-823606258"
+    }
 
 }
