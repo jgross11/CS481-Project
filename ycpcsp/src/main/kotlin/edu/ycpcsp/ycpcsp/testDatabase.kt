@@ -1,11 +1,26 @@
 package edu.ycpcsp.ycpcsp
 
+import edu.ycpcsp.ycpcsp.DataBase.DeleteUser
 import edu.ycpcsp.ycpcsp.DataBase.UserSignup
-import java.util.Properties
-import java.sql.*
+import java.util.Scanner
 
 fun main(){
-    val id: Int = 1;
+
+    //reader for input values
+    val reader = Scanner(System.`in`)
+
+    print("Which function do you want to use 1(delete user) or 2(user signup): ")
+    val answer: Int = reader.nextInt()
+
+    if(answer == 1){
+        print("Enter in the user id that you wish to delete: ")
+        val id = readLine()
+        DeleteUser(id)
+    }
+
+    else {
+    print("Enter in the user id that you wish to delete: ")
+    val id = readLine()
     print("First Name: ")
     val firstName = readLine()
     print("Last Name: ")
@@ -28,7 +43,7 @@ fun main(){
     val ans2 = readLine()
     print("Ans3: ")
     val ans3 = readLine()
-
-
-    UserSignup(id, firstName!!, lastName!!, email!!, password!!, organization!!, question1!!, question2!!, question3!!, ans1!!, ans2!!, ans3!!)
+        UserSignup(2, firstName!!, lastName!!, email!!, password!!, organization!!, question1!!, question2!!, question3!!, ans1!!, ans2!!, ans3!!)
+    }
 }
+

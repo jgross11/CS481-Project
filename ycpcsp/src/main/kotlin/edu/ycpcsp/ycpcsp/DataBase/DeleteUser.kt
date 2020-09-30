@@ -4,7 +4,7 @@ import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.*
 
-fun DeleteUser(){
+fun DeleteUser(id: String?){
     val connectionProps = Properties()
     connectionProps["user"] = username
     connectionProps["password"] = edu.ycpcsp.ycpcsp.DataBase.password
@@ -16,7 +16,7 @@ fun DeleteUser(){
         //Connection for the database to get it connected and then execute the query to insert the values into the database
         val conn = DriverManager.getConnection(url, connectionProps)
         val st = conn.createStatement()
-        val rs = st.executeUpdate("DROP")
+        val rs = st.executeUpdate("DELETE FROM Database.Users WHERE id = '"+id+"'")
 
     }catch (ex: SQLException) {
         // handle any errors
