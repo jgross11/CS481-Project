@@ -25,15 +25,44 @@ class WebpageController {
     }
 
     // sends signup html file to user
-    @GetMapping("signup")
+    @GetMapping("/signup")
     fun signup(): String {
         println("Sending user to signup page...")
         return "signup.html"
     }
 
+    // sends recover info html file to user
+    @GetMapping("/recoverinfo")
+    fun recoverInfo() : String{
+        println("Sending user to \"recover information\" page")
+        return "recoverinfo.html"
+    }
+
+    // handles forgotten password form post
+    @PostMapping(path=["/forgot-password-submit"], consumes = ["application/x-www-form-urlencoded"])
+    fun receiveForgottenPasswordInformation(
+            @RequestParam("email") email : String // email that was submitted
+    ) : String {
+        println("Received the following forgotten password information: ")
+        println("email: $email")
+        // TODO query for an email and process request
+        return "redirect:/recoverinfo"
+    }
+
+    // handles forgotten email form post
+    @PostMapping(path=["/forgot-email-submit"], consumes = ["application/x-www-form-urlencoded"])
+    fun receiveForgottenEmailInformation(
+            @RequestParam("sqResponse") sqResponse : String // email that was submitted
+    ) : String {
+        println("Received the following forgotten email information: ")
+        println("security question response: $sqResponse")
+        // TODO determine if given response is valid, process request
+        return "redirect:/recoverinfo"
+    }
+
     // handles signup submission post
     @PostMapping(path = ["/signup-submit"], consumes = ["application/x-www-form-urlencoded"])
-    fun addMember(@RequestParam("fname")  firstName : String,   // first name that was submitted on form
+    fun receiveSignupFormInformation(@RequestParam("fname")  firstName : String,   // first name that was submitted on form
                   @RequestParam("lname")  lastName : String,    // last name that was submitted on form
                   @RequestParam("email")  email : String,       // etc.
                   @RequestParam("password")  password : String,
@@ -63,6 +92,23 @@ class WebpageController {
         // TODO verify information is correct, doesn't already exist, etc...
 
         // TODO return to correct page i.e. to successful creation if successful, back to signup with error messages if not
+
+        // returns to home page
+        return "redirect:/"
+    }
+    @PostMapping(path = ["/login-submit"], consumes = ["application/x-www-form-urlencoded"])
+    fun login(
+                  @RequestParam("email")  email : String,
+                  @RequestParam("password")  password : String
+
+    ) : String {
+
+        // print received information
+        println("Received the following login information: ")
+        println("email: $email")
+        println("password: $password")
+
+        // TODO verify information is correct, doesn't already exist, etc...
 
         // returns to home page
         return "redirect:/"
