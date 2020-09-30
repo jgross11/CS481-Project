@@ -5,9 +5,9 @@ import java.sql.*
 
 fun main() {
     val connectionProps = Properties()
-    var username = "admin"
-    var password = "ruRkob-6zoqvu-nywryf"
-    var url = "jdbc:mysql://cs481database.c4fmzwru5eoe.us-east-2.rds.amazonaws.com:3306"
+    val username = "admin"
+    val password = "ruRkob-6zoqvu-nywryf"
+    val url = "jdbc:mysql://cs481database.c4fmzwru5eoe.us-east-2.rds.amazonaws.com:3306/Database"   // Had to make it say /Database so that it actually works
     connectionProps.put("user", username)
     connectionProps.put("password", password)
     connectionProps.put("useSSL", "false")
@@ -15,19 +15,13 @@ fun main() {
     try {
         Class.forName("com.mysql.jdbc.Driver");
 
-        var conn = DriverManager.getConnection(url, connectionProps)
-        var st = conn.createStatement();
-        var rs = st.executeQuery("select * from Database.Users")
-        // for each result
-        while (rs.next()) {
-            // for each property of each result
-            println(rs.getString(1));
-            println(rs.getString(2));
-            println(rs.getString(3));
-            println(rs.getString(4));
-            println(rs.getString(5));
-            println(rs.getString(6));
-        }
+        val conn = DriverManager.getConnection(url, connectionProps)
+        val st = conn.createStatement();
+
+
+        // edited this file to test the execute Query function on the database
+        var rs = st.executeUpdate("create table TEST( TestID int)")
+
     } catch (ex: SQLException) {
         // handle any errors
         ex.printStackTrace()
