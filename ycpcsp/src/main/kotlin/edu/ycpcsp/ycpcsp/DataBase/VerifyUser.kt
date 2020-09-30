@@ -10,7 +10,7 @@ const val password = "ruRkob-6zoqvu-nywryf"
 const val url = "jdbc:mysql://cs481database.c4fmzwru5eoe.us-east-2.rds.amazonaws.com:3306/Database"
 
 //the class as a method is currently not working
-fun verifyUser(email: String, userPassword: String): Boolean {
+fun VerifyUser(email: String, userPassword: String): Boolean {
     val connectionProps = Properties()
     connectionProps["user"] = username
     connectionProps["password"] = password
