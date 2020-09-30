@@ -68,4 +68,14 @@ function setErrorDivMessageByValue(name, errorMessage, isGood){
     document.getElementById(name+"-error").innerHTML = isGood ? "" : errorMessage;
 }
 
+function postData(address, objectToPost){
+    return fetch(address, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(objectToPost)
+    });
+}
+
 console.log("Helper function script loaded successfully!");
