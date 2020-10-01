@@ -33,3 +33,24 @@ QUnit.test('Chemical setTexture:', function(assert){
     chem.setTexture([4, 5, 6]);
     assert.deepEqual(chem.texture, [4, 5, 6], "New texture should be [4, 5, 6], was " + chem.texture);
 });
+
+QUnit.test('Chemical setConcentration:', function(assert){
+    var chem = new Chemical(5.0, "equ", 20.0, [1, 2, 3], 0.5);
+
+    assert.equal(chem.concentration, 0.5, "Initial concentration should be 0.5, was " + chem.temperature);
+
+    chem.setConcentration(1.0);
+    assert.equal(chem.concentration, 1.0, "New concentration should be 1, was " + chem.temperature);
+
+    chem.setConcentration(0);
+    assert.equal(chem.concentration, 0, "New concentration should be 0, was " + chem.temperature);
+
+    chem.setConcentration(0.3);
+    assert.equal(chem.concentration, 0.3, "New concentration should be 0.3, was " + chem.temperature);
+
+    chem.setConcentration(2);
+    assert.equal(chem.concentration, 1, "New concentration should be 1, was " + chem.temperature);
+
+    chem.setConcentration(-1);
+    assert.equal(chem.concentration, 0, "New concentration should be 1, was " + chem.temperature);
+});

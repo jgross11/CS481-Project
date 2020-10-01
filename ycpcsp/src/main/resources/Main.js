@@ -5,7 +5,6 @@ var expController;
 
 TODO:
     Create example json file for database
-    Add concentration to Chemical
     Modify ExperimentController2D code to handle abstraction as described by the TO DO comments
         Set it up so that each piece of equipment has a list of interaction methods
         So it would be actor and receiver methods?
