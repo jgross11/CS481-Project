@@ -12,6 +12,17 @@ class ExperimentController2D{
         this.selectedEquipment = null;
         this.instructions = []
         this.instructionCounter = 0;
+
+        // The list of Equipment currently placed into the lab
+        this.placedEquipment = [];
+
+        /*
+        TODO
+            Need 2 equipment lists
+                one for equipment on the lab table
+                one for all equipment which exists in the lab
+            Need list of all chemicals which can be used in the lab
+        */
     }
 
     /**
@@ -59,24 +70,23 @@ class ExperimentController2D{
     }
 
     /**
-    Bring the Experiment to its default state
+    Bring the Experiment to its default state, bringing everything out of the lab, and resetting the instructions
     */
     reset(){
-        this.experiment.equipment = [];
+        this.placedEquipment = [];
         this.selectedEquipment = null;
-        this.instructions = []
         this.instructionCounter = 0;
     }
 
     /**
-    Find a piece of equipment which contains a point
+    Find a piece of Equipment in the lab which contains a point
     p: The point, a list of [x, y] coordinates
     exclude: A specific object to ignore, or a list of objects to ignore, or null to ignore none, default null
     returns: The piece of equipment, or null if none is found
     */
     findEquipmentByPosition(p, exclude = null){
-        for(var i = 0; i < this.experiment.equipment.length; i++){
-            var eq = this.experiment.equipment[i];
+        for(var i = 0; i < this.placedEquipment.length; i++){
+            var eq = this.placedEquipment[i];
             if(eq.inBounds(p) && (exclude === null || exclude !== eq && (!Array.isArray(exclude) || !exclude.includes(eq)))){
                 return eq;
             }
@@ -90,49 +100,11 @@ class ExperimentController2D{
     returns: The found piece of Equipment, or null if none is found
     */
     findEquipmentByInstanceID(instanceID){
-        let eqs = this.experiment.equipment;
+        let eqs = this.placedEquipment;
         for(var i = 0; i < eqs.length; i++){
             if(eqs[i].equipment.instanceID === instanceID) return eqs[i];
         }
         return null;
-    }
-
-    /**
-    Draw the full Experiment to the P5 graphics
-    */
-    render(){
-        let exp = this.experiment;
-        // Draw all not selected equipment
-        for(var i = 0; i < exp.equipment.length; i++){
-            if(exp.equipment[i] !== this.selectedEquipment){
-                exp.equipment[i].draw();
-            }
-
-        }
-        // Draw the selected equipment if it exists
-        let eq = this.selectedEquipment;
-        if(eq !== null){
-            eq.draw();
-            // Draw a box around the selected equipment and draw it on top of all other equipment
-            noFill();
-            stroke(150, 150, 255, 160);
-            strokeWeight(8);
-            rect(eq.x(), eq.y(), eq.width(), eq.height());
-        }
-
-        // Draw instructions
-        fill(color(0, 0, 0));
-        noStroke();
-        textSize(18);
-        var y = 600;
-        // TODO remove text, only here for testing purposes
-        text("Click a beaker to select it", 20, y += 20);
-        text("Press 1 to put red chemical to selected beaker", 20, y += 20);
-        text("Press 2 to put green chemical to selected beaker", 20, y += 20);
-        text("Press 3 to put blue chemical to selected beaker", 20, y += 20);
-        text("Press ESC to empty the selected beaker", 20, y += 20);
-        text("Click an unselected beaker to combine the chemical in the selected beaker", 20, y += 20);
-        text("Press I to run the next instruction", 20, y += 20);
     }
 
     /**
@@ -182,6 +154,13 @@ class ExperimentController2D{
             case 'i':
                 this.nextInstruction();
                 break;
+            case 'r':
+                this.reset();
+                break;
+            case 'a':
+                // TODO this is a temporary control until beakers can be clicked and dragged in
+                this.placedEquipment = [].concat(this.experiment.equipment);
+                break;
 
             default:
                 if(eq === null) break;
@@ -195,6 +174,109 @@ class ExperimentController2D{
                 if(color !== null) eq.addTo(new Chemical(10, "", 20, color));
                 break;
         }
+    }
+
+
+    /**
+    Draw the full Experiment to the P5 graphics
+    */
+    render(){
+        // Fill in a background
+        background(120);
+        let exp = this.experiment;
+
+        // Draw the title and creator
+        fill(color(0, 0, 0));
+        noStroke();
+        textSize(24);
+        text(exp.title + " created by " + exp.creator, 10, 24);
+
+        // Draw the equipment list at the bottom
+        // TODO
+        stroke(0);
+        strokeWeight(3);
+        fill(200);
+        exp.equipment.forEach(this.drawEquipSquare);
+
+
+        // Draw the lab table
+        // TODO
+
+
+        // Draw objects on the lab table
+        // TODO
+
+
+        // Draw the disposal area
+        // TODO
+
+
+        // Draw options button
+        // TODO
+
+
+        // Draw steps button
+        // TODO
+
+
+
+        // Draw all not selected equipment
+        let placed = this.placedEquipment;
+        for(var i = 0; i < placed.length; i++){
+            if(placed[i] !== this.selectedEquipment){
+                placed[i].draw();
+            }
+        }
+        // Draw the selected equipment if it exists
+        let eq = this.selectedEquipment;
+        if(eq !== null){
+            eq.draw();
+            // Draw a box around the selected equipment and draw it on top of all other equipment
+            noFill();
+            stroke(150, 150, 255, 160);
+            strokeWeight(8);
+            rect(eq.x(), eq.y(), eq.width(), eq.height());
+        }
+
+        // Draw instructions
+        fill(color(0, 0, 0));
+        noStroke();
+        textSize(18);
+        var y = 500;
+        let x = 400;
+        // TODO remove text, only here for testing purposes
+        text("Press a to add all beakers", x, y += 20);
+        text("Click a beaker to select it", x, y += 20);
+        text("Press 1 to put red chemical to selected beaker", x, y += 20);
+        text("Press 2 to put green chemical to selected beaker", x, y += 20);
+        text("Press 3 to put blue chemical to selected beaker", x, y += 20);
+        text("Press ESC to empty the selected beaker", x, y += 20);
+        text("Click an unselected beaker to combine the chemical in the selected beaker", x, y += 20);
+        text("Press I to run the next instruction", x, y += 20);
+        text("Press R to reset the simulation", x, y += 20);
+    }
+
+    /**
+    Draw a single piece of Equipment for displaying at the bottom of the screen.
+    Draws a rectangle along with the equipment picture.
+    Set stroke and fill before calling this method
+    equip: The EquipmentController containing the equipment to be drawn
+    i: The index of the EquipmentController
+    arr: The list of equipment
+    */
+    drawEquipSquare(equip, i, arr){
+        let SIZE = 70;
+        let X_OFF = 10;
+        let Y_OFF = -10;
+
+        // TODO make method to determine these bounds
+        let x = X_OFF + i * SIZE;
+        let y = Y_OFF + CANVAS_HEIGHT - SIZE;
+        let IMG_SIZE = 0.8 * SIZE;
+        let IMG_OFF = (SIZE - IMG_SIZE) * 0.5;
+
+        rect(x, y, SIZE, SIZE);
+        image(equip.equipment.sprite, x + IMG_OFF, y + IMG_OFF, IMG_SIZE, IMG_SIZE);
     }
 
 }

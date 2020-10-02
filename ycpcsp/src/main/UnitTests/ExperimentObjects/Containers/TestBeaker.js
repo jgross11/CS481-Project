@@ -9,3 +9,9 @@ QUnit.test('Beaker constructor:', function(assert){
     assert.equal(beaker.instanceID, 0, 'instanceID should be 0');
     assert.equal(beaker.sprite, SPRITE_BEAKER, 'sprite should be SPRITE_BEAKER');
 });
+
+QUnit.test('Beaker getEquipID:', function(assert){
+    var beaker = new Beaker([8, 9], [102, 100], 5.0, 150.0, 0.2, 0);
+
+    assert.equal(beaker.getEquipID(), EQUIP_ID_BEAKER, "Beaker should have id for EQUIP_ID_BEAKER");
+});

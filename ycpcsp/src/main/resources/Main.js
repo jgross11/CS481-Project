@@ -1,66 +1,77 @@
-var experiment;
-var expController;
+var mainExperiment;
+var mainExpController;
 
 /*
 
 TODO:
-    Create example json file for database
+    Test case ExperimentController2D.placeEquipment, removeEquipment
+    Test case ExperimentController2D.drawEquip
+    Make reset method for EquipmentController
+    Make basic layout for experiment
+    Make constants for positions of unmoving features of the layout
+    Create code for Chemicals
     Modify ExperimentController2D code to handle abstraction as described by the TO DO comments
         Set it up so that each piece of equipment has a list of interaction methods
         So it would be actor and receiver methods?
 
 */
 
+// Constants for the P5 canvas
+
+// The width of the canvas being displayed
+let CANVAS_WIDTH = 1280;
+// The height of the canvas being displayed
+let CANVAS_HEIGHT = 720;
+
 
 /**
 P5.js function, called when script is initially loaded
 */
 function setup(){
-    createCanvas(800, 800);
+    createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
 
     loadImages();
-    experiment = new Experiment();
-    expController = new ExperimentController2D(experiment);
+    mainExperiment = new Experiment("Test Experiment", "Personus Namington");
+    mainExpController = new ExperimentController2D(mainExperiment);
 
-    experiment.equipment.push(new BeakerController2D(new Beaker([50, 200], [200, 200], 20.0, 50.0, 0.03, 1)));
-    experiment.equipment.push(new BeakerController2D(new Beaker([300, 200], [200, 200], 20.0, 50.0, 0.03, 2)));
-    experiment.equipment.push(new BeakerController2D(new Beaker([550, 200], [200, 200], 20.0, 50.0, 0.03, 3)));
+    mainExperiment.equipment.push(new BeakerController2D(new Beaker([50, 200], [200, 200], 20.0, 50.0, 0.03, 1)));
+    mainExperiment.equipment.push(new BeakerController2D(new Beaker([300, 200], [200, 200], 20.0, 50.0, 0.03, 2)));
+    mainExperiment.equipment.push(new BeakerController2D(new Beaker([550, 200], [200, 200], 20.0, 50.0, 0.03, 3)));
 
-    let eqs = experiment.equipment;
+    let eqs = mainExperiment.equipment;
     var ins = [];
     ins.push(new InstructionController2D(new Instruction(eqs[0], new Chemical(5, "", 20, [255, 0, 0]), eqs[0].addTo)));
     ins.push(new InstructionController2D(new Instruction(eqs[1], new Chemical(5, "", 20, [0, 0, 255]), eqs[1].addTo)));
     ins.push(new InstructionController2D(new Instruction(eqs[0], eqs[1], eqs[0].pourInto)));
     ins.push(new InstructionController2D(new Instruction(eqs[1], eqs[2], eqs[1].pourInto)));
     ins.push(new InstructionController2D(new Instruction(eqs[2], new Chemical(20, "", 20, [255, 255, 255]), eqs[2].addTo)));
-    expController.setInstructions(ins);
+    mainExpController.setInstructions(ins);
 }
 
 /**
 P5.js function, called when screen is redrawn
 */
 function draw(){
-    background(220);
-    expController.render();
+    mainExpController.render();
 }
 
 /**
 P5.js function, called when a mouse button is held down
 */
 function mousePressed(){
-    expController.mousePress();
+    mainExpController.mousePress();
 }
 
 /**
 P5.js function, called when the mouse is moved, not dragged
 */
 function mouseMoved(){
-    expController.mouseMove();
+    mainExpController.mouseMove();
 }
 
 /**
 P5.js function, called when a key on the keyboard is pressed
 */
 function keyPressed(){
-    expController.keyPress();
+    mainExpController.keyPress();
 }

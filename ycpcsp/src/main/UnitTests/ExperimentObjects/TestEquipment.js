@@ -35,3 +35,9 @@ QUnit.test('Equipment setSprite:', function(assert){
     equip.setSprite("SPRITE_BEAKER");
     assert.equal(equip.sprite, "SPRITE_BEAKER", 'size should be SPRITE_BEAKER');
 });
+
+QUnit.test('Equipment getEquipID:', function(assert){
+    var equip = new Equipment([0, 0], [0, 0], 10.0, 3);
+
+    assert.throws(equip.getEquipID, "Generic Equipment should throw an error on trying to get the EquipID");
+});

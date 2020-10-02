@@ -1,5 +1,5 @@
 QUnit.test('ExperimentController2D constructor:', function(assert){
-    var exp = new Experiment();
+    var exp = new Experiment("a title", "a name");
     var controller = new ExperimentController2D(exp);
 
     assert.equal(controller.experiment, exp, "Experiment in controller should equal the given experiment.");
@@ -9,7 +9,7 @@ QUnit.test('ExperimentController2D constructor:', function(assert){
 });
 
 QUnit.test('ExperimentController2D setExperiment:', function(assert){
-    var exp = new Experiment();
+    var exp = new Experiment("a title", "a name");
     var controller = new ExperimentController2D(null);
 
     controller.setExperiment(exp);
@@ -18,7 +18,7 @@ QUnit.test('ExperimentController2D setExperiment:', function(assert){
 });
 
 QUnit.test('ExperimentController2D setSelectedEquipment:', function(assert){
-    var exp = new Experiment();
+    var exp = new Experiment("a title", "a name");
     var controller = new ExperimentController2D(null);
     var equip = new EquipmentController2D(new Equipment([0, 0], [1, 1], 0, 1, null));
 
@@ -28,7 +28,7 @@ QUnit.test('ExperimentController2D setSelectedEquipment:', function(assert){
 });
 
 QUnit.test('ExperimentController2D setInstructions:', function(assert){
-    var exp = new Experiment();
+    var exp = new Experiment("a title", "a name");
     var controller = new ExperimentController2D(null);
     exp.equipment.push(new BeakerController2D(new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01, 1)));
     exp.equipment.push(new BeakerController2D(new Beaker([250, 200], [150, 150], 20.0, 50.0, 0.01, 2)));
@@ -41,7 +41,7 @@ QUnit.test('ExperimentController2D setInstructions:', function(assert){
 });
 
 QUnit.test('ExperimentController2D setInstructionCounter:', function(assert){
-    var exp = new Experiment();
+    var exp = new Experiment("a title", "a name");
     var controller = new ExperimentController2D(null);
     exp.equipment.push(new BeakerController2D(new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01, 1)));
     exp.equipment.push(new BeakerController2D(new Beaker([250, 200], [150, 150], 20.0, 50.0, 0.01, 2)));
@@ -69,7 +69,7 @@ QUnit.test('ExperimentController2D setInstructionCounter:', function(assert){
 });
 
 QUnit.test('ExperimentController2D nextInstruction:', function(assert){
-    var exp = new Experiment();
+    var exp = new Experiment("a title", "a name");
     var controller = new ExperimentController2D(null);
     var beaker1 = new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01, 1);
     var beaker2 = new Beaker([250, 200], [150, 150], 20.0, 50.0, 0.01, 2);
@@ -98,7 +98,7 @@ QUnit.test('ExperimentController2D nextInstruction:', function(assert){
 });
 
 QUnit.test('ExperimentController2D reset:', function(assert){
-    var exp = new Experiment();
+    var exp = new Experiment("a title", "a name");
     var controller = new ExperimentController2D(exp);
     controller.reset();
 
@@ -109,7 +109,7 @@ QUnit.test('ExperimentController2D reset:', function(assert){
 });
 
 QUnit.test('ExperimentController2D findEquipmentByPosition:', function(assert){
-    var exp = new Experiment();
+    var exp = new Experiment("a title", "a name");
     var controller = new ExperimentController2D(exp);
     var beaker1 = new BeakerController2D(new Beaker([0, 0], [20, 15], 1.0, 1.0, 0.1, 1));
     var beaker2 = new BeakerController2D(new Beaker([100, 0], [20, 15], 1.0, 1.0, 0.1, 2));
@@ -141,7 +141,7 @@ QUnit.test('ExperimentController2D findEquipmentByPosition:', function(assert){
 
 
 QUnit.test('ExperimentController2D findEquipmentByInstanceID:', function(assert){
-    var exp = new Experiment();
+    var exp = new Experiment("a title", "a name");
     var controller = new ExperimentController2D(exp);
     var beaker1 = new BeakerController2D(new Beaker([0, 0], [20, 15], 1.0, 1.0, 0.1, 1));
     var beaker2 = new BeakerController2D(new Beaker([100, 0], [20, 15], 1.0, 1.0, 0.1, 2));
@@ -158,7 +158,7 @@ QUnit.test('ExperimentController2D findEquipmentByInstanceID:', function(assert)
 });
 
 QUnit.todo('ExperimentController2D render:', function(assert){
-    var exp = new Experiment();
+    var exp = new Experiment("a title", "a name");
     var controller = new ExperimentController2D(exp);
 
     controller.render();
@@ -166,7 +166,7 @@ QUnit.todo('ExperimentController2D render:', function(assert){
 });
 
 QUnit.todo('ExperimentController2D mousePress:', function(assert){
-    var exp = new Experiment();
+    var exp = new Experiment("a title", "a name");
     var controller = new ExperimentController2D(exp);
 
     controller.mousePress();
@@ -174,7 +174,7 @@ QUnit.todo('ExperimentController2D mousePress:', function(assert){
 });
 
 QUnit.todo('ExperimentController2D mouseMove:', function(assert){
-    var exp = new Experiment();
+    var exp = new Experiment("a title", "a name");
     var controller = new ExperimentController2D(exp);
 
     controller.mouseMove();
@@ -182,7 +182,7 @@ QUnit.todo('ExperimentController2D mouseMove:', function(assert){
 });
 
 QUnit.todo('ExperimentController2D keyPress:', function(assert){
-    var exp = new Experiment();
+    var exp = new Experiment("a title", "a name");
     var controller = new ExperimentController2D(exp);
 
     controller.keyPress();
