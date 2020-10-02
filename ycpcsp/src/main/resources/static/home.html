@@ -85,16 +85,20 @@
     </style>
 </head>
 <body>
+<script src="helperFunctions.js"></script>
+
 <div class="dropdown">
     <button class="dropbtn">Login</button>
     <div class="dropdown-content">
         <form id="login-form" name="login-form" action="/login-submit" method="post">
         <label for="email">Email:</label><br>
             <input type="text" id="email" name="email"><br>
+            <div id="email-error"></div><br>
             <label for="password">Password:</label><br>
+            <div id="password-error"></div><br>
             <input type="password" id="password" name="password"><br>
-            <input value="Sign in" type="button" id="verifyInformationButton" name="verifyInformationButton" onclick="verifyInformation()">
-            <a href="/signup.html">Sign up.</a><br>
+            <input value="Sign in" type="button" id="verifyInformationButton" name="verifyInformationButton" onclick="submitLoginInformation()">
+            <a href="/signup">Sign up.</a><br>
         </form>
     </div>
 </div>
@@ -131,11 +135,19 @@
 </body>
 
 <script>
-    console.log("Loaded verification script");
-    function verifyInformation(){
-        // TODO actually verify...
-        console.log("Verifying information...");
-        document.getElementById("login-form").submit();
+    function submitLoginInformation(){
+        var emailDiv = getAndTrimById("email")
+        var email = emailDiv.value;
+        var password = document.getElementById("password").value;
+        var emailGood = verifyInformation(email, TYPE_EMAIL);
+        var passGood = password.length != 0;
+        if(emailGood && passGood){
+            document.getElementById("login-form").submit();
+        }
+        else{
+            setErrorDivMessageByValue("email", "Please enter a valid email.", emailGood);
+            setErrorDivMessageByValue("password", "Please enter a valid password.", passGood);
+        }
     }
 
 </script>

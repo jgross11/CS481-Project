@@ -57,5 +57,4 @@ data class User(var firstName : String = "UNKNOWN",
     fun getFullname() : String{
         return "$firstName $lastName"
     }
-
 }

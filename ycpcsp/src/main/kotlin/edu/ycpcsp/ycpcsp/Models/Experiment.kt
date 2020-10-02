@@ -28,5 +28,4 @@ data class Experiment(
         }
         return result
     }
-
 }
