@@ -17,7 +17,7 @@ fun DeleteUser(id: String?){
         val conn = DriverManager.getConnection(url, connectionProps)
         val st = conn.createStatement()
         val rs = st.executeUpdate("DELETE FROM Database.Users WHERE id = '"+id+"'")
-
+x
     }catch (ex: SQLException) {
         // handle any errors
         ex.printStackTrace()
