@@ -198,3 +198,15 @@ QUnit.test('ContainerController2D canContain:', function(assert){
     var controller = new ContainerController2D(new Container([0, 0], [0, 0], 0, 0, 0, "", null));
     assert.throws(controller.canContain, "A generic ContainerController2D object should throw an error on canContain");
 });
+
+
+QUnit.test('ContainerController2D reset:', function(assert){
+    var chem = new Chemical(70, "", 20, [100, 120, 140]);
+    var controller = new ContainerController2D(new Container([0, 0], [0, 0], 0, 0, 0, "", null));
+    controller.equipment.setContents(chem);
+
+    assert.deepEqual(controller.equipment.contents, chem, "Before resetting, controller's container should have the set Chemical.");
+
+    controller.reset();
+    assert.deepEqual(controller.equipment.contents, null, "After resetting, controller's container should have null.");
+});

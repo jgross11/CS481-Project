@@ -11,7 +11,7 @@ class ContainerController2D extends EquipmentController2D{
     }
 
     /**
-    Determine if the Container in this Controller only has residue left
+    Determine if this Controller's Container only has residue left
     returns: true if there is residue, false otherwise
     */
     hasResidue(){
@@ -48,7 +48,7 @@ class ContainerController2D extends EquipmentController2D{
 
     /**
     By hand, pour out the contents of this Controller's Container. This will leave residue inside the Container.
-    Cannot pour out if this Container only has residue thus not enough of a Chemical to pour out, or if it is empty.
+    Cannot pour out if this Controller's Container only has residue thus not enough of a Chemical to pour out, or if it is empty.
     amount: The amount to pour out of this Controller's Container. Use a negative number to pour out everything. Default -1
         If the amount specified is greater than the amount in this Controller's Container, all contents are poured out.
     return: The Chemical poured out of this Controller's Container, or null if no Chemical could be poured out
@@ -74,7 +74,7 @@ class ContainerController2D extends EquipmentController2D{
     }
 
     /**
-    Add the given Chemical to this Controller's Container. Does nothing if the Chemical cannot be placed in the Container.
+    Add the given Chemical to this Controller's Container. Does nothing if the Chemical cannot be placed in this Controller's Container.
     chemical: The Chemical to be placed in this container
     returns: true if the Chemical was successfully added, false otherwise
     */
@@ -147,6 +147,13 @@ class ContainerController2D extends EquipmentController2D{
     */
     canContain(chemical){
         throw new Error("All ContainerController2D objects must implement canContain(chemical)");
+    }
+
+    /**
+    Reset the Container of this Controller by removing all of its contents
+    */
+    reset(){
+        this.emptyOut();
     }
 
 }

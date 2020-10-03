@@ -73,7 +73,12 @@ QUnit.test('EquipmentController2D inBounds:', function(assert){
     assert.true(controller.inBounds([15, 0]), "Point on right edge of object should be in bounds");
     assert.true(controller.inBounds([12, -20]), "Point on top edge of object should be in bounds");
     assert.true(controller.inBounds([12, 10]), "Point on bottom edge of object should be in bounds");
+});
 
+QUnit.test('EquipmentController2D reset:', function(assert){
+    var equip = new Equipment([10, -20], [5, 30], 5.0, 2, null);
+    var controller = new EquipmentController2D(equip);
+    assert.throws(controller.reset, "A generic EquipmentController2D object should throw an error on unimplemented reset");
 });
 
 QUnit.todo('EquipmentController2D drawSprite:', function(assert){

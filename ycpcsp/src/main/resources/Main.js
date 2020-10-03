@@ -4,11 +4,12 @@ var mainExpController;
 /*
 
 TODO:
-    Test case ExperimentController2D.placeEquipment, removeEquipment
-    Test case ExperimentController2D.drawEquip
-    Make reset method for EquipmentController
+    Disallow ExperimentController2D.addEquipment, placeEquipment from adding duplicate entries
+        update test cases
     Make basic layout for experiment
-    Make constants for positions of unmoving features of the layout
+        Make constants for positions of unmoving features of the layout
+        Allow equipment to be clicked and dragged to be added to the Experiment
+        Make Equipment already in the Experiment not show up in the Equipment list
     Create code for Chemicals
     Modify ExperimentController2D code to handle abstraction as described by the TO DO comments
         Set it up so that each piece of equipment has a list of interaction methods

@@ -12,7 +12,7 @@ class InstructionController2D{
     }
 
     /**
-    Set the current instruction for this Controller
+    Set this Controller's Instruction
     instruction: the Instruction to use for this Controller
     */
     setInstruction(instruction){
@@ -20,7 +20,7 @@ class InstructionController2D{
     }
 
     /**
-    Cause the actor of the Instruction of this Controller to perform its action on the receiver
+    Cause the actor of this Controller's Instruction to perform its action on the receiver
     */
     activate(){
         let ins = this.instruction;

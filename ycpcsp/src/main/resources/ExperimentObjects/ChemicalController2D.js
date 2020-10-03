@@ -13,7 +13,7 @@ class ChemicalController2D extends ExperimentObjectController2D{
     }
 
     /**
-    Set the Chemical controlled by this Controller
+    Set this Controller's Chemical
     chemical: The Chemical to set
     */
     setChemical(chemical){
@@ -21,7 +21,7 @@ class ChemicalController2D extends ExperimentObjectController2D{
     }
 
     /**
-    Get the Chemical controlled by this Controller
+    Get this Controller's Chemical
     returns: The Chemical
     */
     getObject(){
@@ -29,7 +29,7 @@ class ChemicalController2D extends ExperimentObjectController2D{
     }
 
     /**
-    Determine the number of moles of the Chemical in this Controller
+    Determine the number of moles of this Controller's Chemical
     returns: A floating point value, the number of moles
     */
     calculateMoles(){
@@ -38,7 +38,7 @@ class ChemicalController2D extends ExperimentObjectController2D{
     }
 
     /**
-    Determine the state of matter of the Chemical of this Controller.
+    Determine the state of matter of this Controller's Chemical.
     The result is stored in the matterState field in the Chemical
     */
     calculateMatterState(){
@@ -46,7 +46,7 @@ class ChemicalController2D extends ExperimentObjectController2D{
     }
 
     /**
-    Mix another Chemical with the Chemical of this Controller, and store that Chemical in this Controller.
+    Mix another Chemical with this Controller's Chemical, and store that Chemical in this Controller.
     Does nothing if either Chemical is null
     chemical: The Chemical to mix
     returns: true if the Chemicals were combined, false otherwise
@@ -73,11 +73,11 @@ class ChemicalController2D extends ExperimentObjectController2D{
     }
 
     /**
-    Take this Chemical and split its mass into two parts.
-    This Chemical will have the given percent, the remainder will be returned.
-    The returned Chemical will be completely separate from this Chemical
+    Take this Controller's Chemical and split its mass into two parts.
+    this Controller's Chemical will have the given percent, the remainder will be returned.
+    The returned Chemical will be completely separate from this Controller's Chemical
     percent: The percentage of the Chemical to remain in this object. Must be in the range [0, 1]
-    returns: A Chemical with all the same properties as this Chemical, but with the remainder of the mass
+    returns: A Chemical with all the same properties as this Controller's Chemical, but with the remainder of the mass
         Also can return null if the Chemical could not be split
     */
     split(percent){
@@ -89,7 +89,7 @@ class ChemicalController2D extends ExperimentObjectController2D{
     }
 
     /**
-    Draw a rectangular representation of this Chemical.
+    Draw a rectangular representation of this Controller's Chemical.
     This method is designed for rendering a constant width Chemical with a varying height.
     x: The x position of where the Chemical should be drawn
     y: The y position of where the Chemical should be drawn

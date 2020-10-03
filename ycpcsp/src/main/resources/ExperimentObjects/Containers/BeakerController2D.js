@@ -11,7 +11,7 @@ class BeakerController2D extends ContainerController2D{
     }
 
     /**
-    Determine if the Beaker of this Controller can contain the given Chemical.
+    Determine if this Controller's Beaker can contain the given Chemical.
     chemical: The Chemical to test if it can be contained
     */
     canContain(chemical){
@@ -19,7 +19,7 @@ class BeakerController2D extends ContainerController2D{
     }
 
     /**
-    Draw the Beaker along with its name
+    Draw this Controller's Beaker along with its data
     */
     draw(){
         // Draw the color of the Chemical, if one exists

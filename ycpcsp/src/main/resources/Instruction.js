@@ -4,7 +4,7 @@ A class which keeps track of the responsible objects for an instruction in an ex
 class Instruction{
 
     /**
-    Create a new instruction for an Experiment, which describes what an actor will do to a receiver
+    Create a new Instruction for an Experiment, which describes what an actor will do to a receiver
     actor: The ExperimentObject which will act on the receiver
     receiver: The ExperimentObject which will be acted upon by the actor
     action: The function of the actor which will be performed on the receiver,

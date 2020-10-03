@@ -36,7 +36,7 @@ class Equipment extends ExperimentObject{
     }
 
     /**
-    Set the id of this ExperimentObject
+    Set the id of this piece of Equipment
     instanceID: The new id
     */
     setInstanceID(instanceID){

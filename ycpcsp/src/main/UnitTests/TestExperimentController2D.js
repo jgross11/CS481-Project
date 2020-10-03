@@ -97,6 +97,99 @@ QUnit.test('ExperimentController2D nextInstruction:', function(assert){
     assert.equal(controller.instructionCounter, 3, "Instruction should not have changed from 3");
 });
 
+QUnit.test('ExperimentController2D addEquipment:', function(assert){
+    var exp = new Experiment("a title", "a name");
+    var controller = new ExperimentController2D(exp);
+    var beaker = new BeakerController2D(new Beaker([0, 0], [20, 15], 1.0, 1.0, 0.1, 1));
+
+    assert.deepEqual(exp.equipment, [], "Experiment Equipment list should be empty.");
+    assert.deepEqual(controller.placedEquipment, [], "Controller placed Equipment list should be empty.");
+
+    controller.addEquipment(beaker);
+    assert.true(exp.equipment.includes(beaker), "Experiment should have the added beaker.");
+    assert.deepEqual(controller.placedEquipment, [], "Controller placed Equipment list should still be empty.");
+
+    controller.removeEquipment(beaker);
+    assert.deepEqual(exp.equipment, [], "Experiment Equipment list should be empty");
+    assert.deepEqual(controller.placedEquipment, [], "Controller placed Equipment list should be empty.");
+
+    controller.addEquipment(beaker, true);
+    assert.true(exp.equipment.includes(beaker), "Experiment should have the added beaker.");
+    assert.true(controller.placedEquipment.includes(beaker), "Controller placed Equipment list should have the added beaker.");
+});
+
+QUnit.test('ExperimentController2D placeEquipment:', function(assert){
+    var exp = new Experiment("a title", "a name");
+    var controller = new ExperimentController2D(exp);
+    var beaker = new BeakerController2D(new Beaker([0, 0], [20, 15], 1.0, 1.0, 0.1, 1));
+
+    controller.addEquipment(beaker);
+    assert.true(exp.equipment.includes(beaker), "Experiment should have the added beaker.");
+    assert.deepEqual(controller.placedEquipment, [], "Controller placed Equipment list should still be empty.");
+
+    controller.placeEquipment(-1);
+    assert.true(exp.equipment.includes(beaker), "Experiment should still have the added beaker.");
+    assert.deepEqual(controller.placedEquipment, [], "Controller placed Equipment list should still be empty.");
+
+    controller.placeEquipment(1);
+    assert.true(exp.equipment.includes(beaker), "Experiment should still have the added beaker.");
+    assert.deepEqual(controller.placedEquipment, [], "Controller placed Equipment list should still be empty.");
+
+    controller.placeEquipment(0);
+    assert.true(exp.equipment.includes(beaker), "Experiment should have the added beaker.");
+    assert.true(controller.placedEquipment.includes(beaker), "Controller placed Equipment list should have the added beaker.");
+});
+
+QUnit.test('ExperimentController2D removeEquipment:', function(assert){
+    var exp = new Experiment("a title", "a name");
+    var controller = new ExperimentController2D(exp);
+    var beaker = new BeakerController2D(new Beaker([0, 0], [20, 15], 1.0, 1.0, 0.1, 1));
+
+    controller.addEquipment(beaker);
+    assert.true(exp.equipment.includes(beaker), "Experiment should have the added beaker.");
+    assert.deepEqual(controller.placedEquipment, [], "Controller placed Equipment list should still be empty.");
+
+    var success = controller.removeEquipment(beaker);
+    assert.true(success, "Beaker should successfully be removed");
+    assert.deepEqual(exp.equipment, [], "Experiment Equipment list should be empty");
+    assert.deepEqual(controller.placedEquipment, [], "Controller placed Equipment list should be empty.");
+
+    var success = controller.removeEquipment(beaker);
+    assert.false(success, "Beaker removal should fail");
+    assert.deepEqual(exp.equipment, [], "Experiment Equipment list should be empty");
+    assert.deepEqual(controller.placedEquipment, [], "Controller placed Equipment list should be empty.");
+
+    controller.addEquipment(beaker, true);
+    assert.true(exp.equipment.includes(beaker), "Experiment should have the added beaker.");
+    assert.true(controller.placedEquipment.includes(beaker), "Controller placed Equipment list should have the added beaker.");
+
+    success = controller.removeEquipment(beaker);
+    assert.true(success, "Beaker should successfully be removed");
+    assert.deepEqual(exp.equipment, [], "Experiment Equipment list should be empty");
+    assert.deepEqual(controller.placedEquipment, [], "Controller placed Equipment list should be empty.");
+});
+
+QUnit.test('ExperimentController2D unPlaceEquipment:', function(assert){
+    var exp = new Experiment("a title", "a name");
+    var controller = new ExperimentController2D(exp);
+    var beaker = new BeakerController2D(new Beaker([0, 0], [20, 15], 1.0, 1.0, 0.1, 1));
+
+    controller.addEquipment(beaker, true);
+    assert.true(exp.equipment.includes(beaker), "Experiment should have the added beaker.");
+    assert.true(controller.placedEquipment.includes(beaker), "Controller placed Equipment list should have the added beaker.");
+
+    var success = controller.unPlaceEquipment(beaker);
+    assert.true(success, "Beaker should be successfully removed");
+    assert.true(exp.equipment.includes(beaker), "Experiment should have the added beaker.");
+    assert.deepEqual(controller.placedEquipment, [], "Controller placed Equipment list should not have the added beaker.");
+
+    success = controller.unPlaceEquipment(beaker);
+    assert.false(success, "Beaker should fail to be removed");
+    assert.true(exp.equipment.includes(beaker), "Experiment should have the added beaker.");
+    assert.deepEqual(controller.placedEquipment, [], "Controller placed Equipment list should not have the added beaker.");
+
+});
+
 QUnit.test('ExperimentController2D reset:', function(assert){
     var exp = new Experiment("a title", "a name");
     var controller = new ExperimentController2D(exp);
@@ -116,11 +209,11 @@ QUnit.test('ExperimentController2D findEquipmentByPosition:', function(assert){
     var beaker3 = new BeakerController2D(new Beaker([45, 100], [20, 15], 1.0, 1.0, 0.1, 3));
     var beaker4 = new BeakerController2D(new Beaker([45, 200], [20, 15], 1.0, 1.0, 0.1, 4));
     var beaker5 = new BeakerController2D(new Beaker([45, 210], [20, 15], 1.0, 1.0, 0.1, 5));
-    controller.experiment.equipment.push(beaker1);
-    controller.experiment.equipment.push(beaker2);
-    controller.experiment.equipment.push(beaker3);
-    controller.experiment.equipment.push(beaker4);
-    controller.experiment.equipment.push(beaker5);
+    controller.addEquipment(beaker1, true);
+    controller.addEquipment(beaker2, true);
+    controller.addEquipment(beaker3, true);
+    controller.addEquipment(beaker4, true);
+    controller.addEquipment(beaker5, true);
 
     assert.deepEqual(controller.findEquipmentByPosition([5, 5]), beaker1, "Should find the first beaker.");
     assert.deepEqual(controller.findEquipmentByPosition([105, 5]), beaker2, "Should find the second beaker.");
@@ -146,23 +239,15 @@ QUnit.test('ExperimentController2D findEquipmentByInstanceID:', function(assert)
     var beaker1 = new BeakerController2D(new Beaker([0, 0], [20, 15], 1.0, 1.0, 0.1, 1));
     var beaker2 = new BeakerController2D(new Beaker([100, 0], [20, 15], 1.0, 1.0, 0.1, 2));
     var beaker3 = new BeakerController2D(new Beaker([45, 100], [20, 15], 1.0, 1.0, 0.1, 3));
-    controller.experiment.equipment.push(beaker1);
-    controller.experiment.equipment.push(beaker2);
-    controller.experiment.equipment.push(beaker3);
+    controller.addEquipment(beaker1, true);
+    controller.addEquipment(beaker2, true);
+    controller.addEquipment(beaker3, true);
 
     assert.deepEqual(controller.findEquipmentByInstanceID(1), beaker1, "Should find the first beaker.");
     assert.deepEqual(controller.findEquipmentByInstanceID(2), beaker2, "Should find the second beaker.");
     assert.deepEqual(controller.findEquipmentByInstanceID(3), beaker3, "Should find the third beaker.");
     assert.deepEqual(controller.findEquipmentByInstanceID(4), null, "Should find null.");
 
-});
-
-QUnit.todo('ExperimentController2D render:', function(assert){
-    var exp = new Experiment("a title", "a name");
-    var controller = new ExperimentController2D(exp);
-
-    controller.render();
-    assert.true(false);
 });
 
 QUnit.todo('ExperimentController2D mousePress:', function(assert){
@@ -186,5 +271,21 @@ QUnit.todo('ExperimentController2D keyPress:', function(assert){
     var controller = new ExperimentController2D(exp);
 
     controller.keyPress();
+    assert.true(false);
+});
+
+QUnit.todo('ExperimentController2D render:', function(assert){
+    var exp = new Experiment("a title", "a name");
+    var controller = new ExperimentController2D(exp);
+
+    controller.render();
+    assert.true(false);
+});
+
+QUnit.todo('ExperimentController2D drawEquipSquare:', function(assert){
+    var exp = new Experiment("a title", "a name");
+    var controller = new ExperimentController2D(exp);
+
+    controller.drawEquipSquare();
     assert.true(false);
 });

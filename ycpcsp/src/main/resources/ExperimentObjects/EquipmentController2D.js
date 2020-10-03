@@ -21,35 +21,35 @@ class EquipmentController2D extends ExperimentObjectController2D{
     }
 
     /**
-    Get the piece of Equipment controlled by this Controller
+    Get this Controller's Equipment
     */
     getObject(){
         return this.equipment;
     }
 
     /**
-    Get the x coordinate of the Equipment of this Controller
+    Get the x coordinate of this Controller's Equipment
     */
     x(){
         return this.equipment.position[0];
     }
 
     /**
-    Get the y coordinate of the Equipment of this Controller
+    Get the y coordinate of this Controller's Equipment
     */
     y(){
         return this.equipment.position[1];
     }
 
     /**
-    Get the width of the Equipment of this Controller
+    Get the width of this Controller's Equipment
     */
     width(){
         return this.equipment.size[0];
     }
 
     /**
-    Get the height of the Equipment of this Controller
+    Get the height of this Controller's Equipment
     */
     height(){
         return this.equipment.size[1];
@@ -71,6 +71,13 @@ class EquipmentController2D extends ExperimentObjectController2D{
     */
     inBounds(pos){
         return pointInRect2D(this.toRect(), pos);
+    }
+
+    /**
+    Reset this Controller's Equipment to a default state
+    */
+    reset(){
+        throw new Error("All EquipmentController2D objects must implement reset");
     }
 
     /**

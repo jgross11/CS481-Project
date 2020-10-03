@@ -1,10 +1,10 @@
 /**
-An object used to keep track of all of the components in an experiment
+An object used to keep track of all of the components in an Experiment
 */
 class Experiment{
 
     /**
-    Create an empty experiment with the given title and creator name.
+    Create an empty Experiment with the given title and creator name.
     title: A string, the title of this Experiment
     creator: A string, the name of the creator of this Experiment
     */

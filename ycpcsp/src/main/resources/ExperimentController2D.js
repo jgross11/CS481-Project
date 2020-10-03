@@ -1,11 +1,11 @@
 /**
-A Controller used to control an experiment in a 2D space
+A Controller used to control an Experiment in a 2D space
 */
 class ExperimentController2D{
 
     /**
-    Create an empty Controller.
-    experiment: The experiment which will be controlled by this Controller
+    Create an empty Controller for the given Experiment, also resets the Experiment
+    experiment: The Experiment which will be controlled by this Controller
     */
     constructor(experiment){
         this.experiment = experiment;
@@ -23,10 +23,11 @@ class ExperimentController2D{
                 one for all equipment which exists in the lab
             Need list of all chemicals which can be used in the lab
         */
+        this.reset();
     }
 
     /**
-    Set the Experiment currently controller by this Controller
+    Set this Controller's Experiment
     experiment: The Experiment to set for this Controller
     */
     setExperiment(experiment){
@@ -34,14 +35,14 @@ class ExperimentController2D{
     }
 
     /**
-    Set the equipment which this controller has selected
+    Set the Equipment which this Controller has selected
     */
     setSelectedEquipment(selected){
         this.selectedEquipment = selected;
     }
 
     /**
-    Set the list of instructions for use in this Experiment.
+    Set the list of Instructions for use in this Controller's Experiment.
     Instructions determine the intended course of action for the Experiment.
     Each instruction should bring the Experiment from beginning to end, one step at a time.
     instructions: the list of instructions
@@ -51,7 +52,7 @@ class ExperimentController2D{
     }
 
     /**
-    Set the current instruction index which this Experiment is on
+    Set the current instruction index which this Controller is on
     instructions: The current instruction index, if this is an invalid index, this method does nothing
     */
     setInstructionCounter(instructionCounter){
@@ -60,7 +61,7 @@ class ExperimentController2D{
     }
 
     /**
-    Perform the next Instruction to happen for this Experiment
+    Perform the next Instruction to happen for this Controller
     */
     nextInstruction(){
         if(this.instructionCounter < this.instructions.length){
@@ -70,16 +71,75 @@ class ExperimentController2D{
     }
 
     /**
-    Bring the Experiment to its default state, bringing everything out of the lab, and resetting the instructions
+    Add a new piece of Equipment to this Controller's Experiment
+    equipment: The EquipmentController with the Equipment to add
+    place: true to also place the given Equipment into the Experiment, false to just store it, default false
+    */
+    addEquipment(equipment, place = false){
+        let eqs = this.experiment.equipment;
+        eqs.push(equipment);
+        if(place) this.placeEquipment(eqs.length - 1);
+    }
+
+    /**
+    Place a piece of Equipment to the placed list of this Controller.
+    Does nothing if the index is not in the range of the list
+    index: The index of the piece of Equipment from the Experiment of this Controller to add to the placed list
+    */
+    placeEquipment(index){
+        let eqs = this.experiment.equipment;
+        if(index < 0 || index > eqs.length - 1) return;
+        this.placedEquipment.push(eqs[index]);
+    }
+
+    /**
+    Remove a piece of equipment from this Controller's Experiment.
+    Does nothing if the equipment is not in the array
+    equipment: The Equipment to remove
+    returns: true if the Equipment was removed, false otherwise
+    */
+    removeEquipment(equipment){
+        this.unPlaceEquipment(equipment);
+
+        let eqs = this.experiment.equipment;
+        var index = eqs.indexOf(equipment);
+        if(index !== -1){
+            eqs.splice(index, 1);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+    Remove a piece of Equipment from the Equipment placed in the Controller, but not this Controller's Experiment
+        list of this Controller's Experiment's Equipment
+    equipment: The Equipment to remove
+    */
+    unPlaceEquipment(equipment){
+        var index = this.placedEquipment.indexOf(equipment);
+        if(index !== -1){
+            this.placedEquipment.splice(index, 1);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+    Bring the Experiment to its default state, bringing everything out of the Experiment, resetting the instructions, and resetting all equipment
     */
     reset(){
         this.placedEquipment = [];
         this.selectedEquipment = null;
         this.instructionCounter = 0;
+        if(this.experiment === null) return;
+        let eqs = this.experiment.equipment;
+        for(var i = 0; i < eqs.length; i++){
+            eqs[i].reset();
+        }
     }
 
     /**
-    Find a piece of Equipment in the lab which contains a point
+    Find a piece of Equipment in the lab which contains a point of the Equipment placed in this Controller's placed Equipment
     p: The point, a list of [x, y] coordinates
     exclude: A specific object to ignore, or a list of objects to ignore, or null to ignore none, default null
     returns: The piece of equipment, or null if none is found
@@ -95,7 +155,7 @@ class ExperimentController2D{
     }
 
     /**
-    Get a piece of equipment with the matching name
+    Get a piece of equipment with the matching name of the equipment placed in this Controller's placed Equipment
     instanceID: The instanceID of the object to search
     returns: The found piece of Equipment, or null if none is found
     */
