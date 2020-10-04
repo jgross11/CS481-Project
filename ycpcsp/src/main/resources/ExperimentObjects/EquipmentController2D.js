@@ -89,19 +89,17 @@ class EquipmentController2D extends ExperimentObjectController2D{
     }
 
     /**
-    Draw this Controller's Equipment to the given graphics in it's current position as a generic sprite.
-    graphics: The P5 graphics to use
+    Draw this Controller's Equipment onto the screen in it's current position as a generic sprite
     */
-    drawSprite(graphics){
+    drawSprite(){
         var r = this.toRect();
-        graphics.image(this.equipment.sprite, r[0], r[1], r[2], r[3]);
+        image(this.equipment.sprite, r[0], r[1], r[2], r[3]);
     }
 
     /**
     Draw this Controller's Equipment onto the screen using P5 2D graphics
-    graphics: The P5 graphics to use
     */
-    draw(graphics){
-        this.drawSprite(graphics);
+    draw(){
+        this.drawSprite();
     }
 }
