@@ -4,12 +4,14 @@ var mainExpController;
 /*
 
 TODO:
-    Test case: ExperimentController2D.experimentMouseX, experimentMouseY, experimentMousePos
+    Test case: ExperimentController2D.experimentMouseX, experimentMouseY, experimentMousePos, equipSquareBounds,
+        mouseRelease, mouseDragged
+    Test case: EquipmentController2D.setCenter
     Make basic layout for Experiment
-        Allow equipment to be clicked and dragged to be added to the Experiment
+        Split mouse and keyboard input into separate methods
+        Make clicking based on left click specifically
         Make Equipment already in the Experiment not show up in the Equipment list
         Split Experiment render code into individual methods
-        Make constants for positions of unmoving features of the layout
     Add camera panning
         Use x and y camera coordinates in the ExperimentController2D
         Use P5 translate for graphics
@@ -33,9 +35,9 @@ function setup(){
     mainExperiment = new Experiment("Test Experiment", "Personus Namington");
     mainExpController = new ExperimentController2D(mainExperiment, true);
 
-    mainExperiment.equipment.push(new BeakerController2D(new Beaker([50, 200], [200, 200], 20.0, 50.0, 0.03, 1)));
-    mainExperiment.equipment.push(new BeakerController2D(new Beaker([300, 200], [200, 200], 20.0, 50.0, 0.03, 2)));
-    mainExperiment.equipment.push(new BeakerController2D(new Beaker([550, 200], [200, 200], 20.0, 50.0, 0.03, 3)));
+    mainExperiment.equipment.push(new BeakerController2D(new Beaker([50, 200], [100, 100], 20.0, 50.0, 0.03, 1)));
+    mainExperiment.equipment.push(new BeakerController2D(new Beaker([300, 200], [100, 100], 20.0, 50.0, 0.03, 2)));
+    mainExperiment.equipment.push(new BeakerController2D(new Beaker([550, 200], [100, 100], 20.0, 50.0, 0.03, 3)));
 
     let chem1 = new ChemicalController2D(new Chemical(5, "", 20, [255, 0, 0]));
     let chem2 = new ChemicalController2D(new Chemical(5, "", 20, [0, 0, 255]));
@@ -66,10 +68,24 @@ function mousePressed(){
 }
 
 /**
+P5.js function, called when a mouse button is let go
+*/
+function mouseReleased(){
+    mainExpController.mouseRelease();
+}
+
+/**
 P5.js function, called when the mouse is moved, not dragged
 */
 function mouseMoved(){
     mainExpController.mouseMove();
+}
+
+/**
+P5.js function, called when the mouse is dragged, not moved
+*/
+function mouseDragged(){
+    mainExpController.mouseDrag();
 }
 
 /**

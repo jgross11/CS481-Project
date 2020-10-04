@@ -10,3 +10,7 @@ let EXP_BOUNDS = [0, 100, CANVAS_WIDTH, CANVAS_HEIGHT - 200];
 
 // The size, width and height, of a box rendered for the available Equipment display
 let EXP_EQUIP_BOX_SIZE = 70;
+// The x axis offset, for a box rendered for the available Equipment display
+let EXP_EQUIP_BOX_OFF_X = 10;
+// The y axis offset, for a box rendered for the available Equipment display
+let EXP_EQUIP_BOX_OFF_Y = -10;

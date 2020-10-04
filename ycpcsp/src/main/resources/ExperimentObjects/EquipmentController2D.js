@@ -64,6 +64,15 @@ class EquipmentController2D extends ExperimentObjectController2D{
     }
 
     /**
+    Set the center position of this Controller's Equipment
+    x: The x coordinate for the new center
+    x: The y coordinate for the new center
+    */
+    setCenter(x, y){
+        this.equipment.setPosition([x - this.width() / 2, y - this.height() / 2]);
+    }
+
+    /**
     Get the rectangular bounds of this Controller's Equipment as a rectangle
     returns: the bounds as a list of 4 floating point values [x, y, width, height],
         x and y are the upper left hand corner

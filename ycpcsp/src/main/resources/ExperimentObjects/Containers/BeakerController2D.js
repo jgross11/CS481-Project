@@ -39,11 +39,7 @@ class BeakerController2D extends ContainerController2D{
         graphics.fill(color(0, 0, 0));
         graphics.noStroke();
         graphics.textSize(15);
-        graphics.text("Beaker, ID: " + eq.instanceID, this.x() + 25, this.y() + this.height() / 2)
-        var mass = "mass: "
-        mass += (eq.contents === null) ? 0 : eq.contents.mass.toFixed(2);
-        mass += " / " + eq.capacity;
-        graphics.text(mass, this.x() + 25, this.y() + this.height() / 2 + 18)
+        graphics.text("ID: " + eq.instanceID, this.x() + 25, this.y() + this.height() / 2)
     }
 
 }

@@ -11,6 +11,7 @@ class ExperimentController2D{
     constructor(experiment, graphics = false){
         this.experiment = experiment;
         this.selectedEquipment = null;
+        this.placingEquipment = null;
         this.instructions = []
         this.instructionCounter = 0;
 
@@ -213,14 +214,57 @@ class ExperimentController2D{
         // If there is a selected object, check for another piece of Equipment, combine the chemicals if one is found,
         //  and unselect the original
         let select = this.selectedEquipment;
-        if(select !== null){
-            // TODO modify this so that this particular set of calls is only made for beakers
-            select.pourInto(this.findEquipmentByPosition(this.experimentMousePos(), select));
-            this.setSelectedEquipment(null);
+        let expMouse = this.experimentMousePos();
+        let mouse = [mouseX, mouseY];
+
+        // If the mouse is inside the rendered Experiment, check for mouse behavior inside the rendered Experiment
+        if(pointInRect2D(EXP_BOUNDS, mouse)){
+            if(select !== null){
+                // TODO modify this so that this particular set of calls is only made for beakers
+                select.pourInto(this.findEquipmentByPosition(expMouse, select));
+                this.setSelectedEquipment(null);
+            }
+            // Otherwise, determine which object is selected by the mouse, if any
+            else{
+                this.setSelectedEquipment(this.findEquipmentByPosition(expMouse));
+            }
         }
-        // Otherwise, determine which object is selected by the mouse, if any
+        // Otherwise, handle clicking outside the rendered Experiment
         else{
-            this.setSelectedEquipment(this.findEquipmentByPosition(this.experimentMousePos()));
+            let eqs = this.experiment.equipment;
+            let place = this.placingEquipment;
+            // If the Equipment to be inserted to the Experiment is not selected, attempt to select a piece of
+            //  Equipment from the equipment squares
+            if(place === null){
+                // Check for if the mouse clicked on an Equipment square
+                for(var i = 0; i < eqs.length; i++){
+                    let r = this.equipSquareBounds(i);
+                    if(pointInRect2D(r, mouse)){
+                        this.placingEquipment = eqs[i];
+                        this.placingEquipment.setCenter(mouseX, mouseY);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+    Call when the mouse is released
+    */
+    mouseRelease(){
+        let place = this.placingEquipment;
+        // If the Equipment to be inserted has been selected, attempt to insert it
+        if(place !== null){
+            let expMouse = this.experimentMousePos();
+            let eqs = this.experiment.equipment;
+            // If the mouse is inside the experiment, add the equipment
+            if(pointInRect2D(EXP_BOUNDS, expMouse)){
+                place.setCenter(expMouse[0], expMouse[1]);
+                this.placeEquipment(eqs.indexOf(place)); // TODO handle indexOf = -1 case
+            }
+            // Otherwise, let go of the inserting equipment
+            this.placingEquipment = null;
         }
     }
 
@@ -232,6 +276,17 @@ class ExperimentController2D{
         //if(this.selectedEquipment !== null){
         //    this.selectedEquipment.equipment.setPosition(this.experimentMousePos());
         //}
+    }
+
+    /**
+    Call when the mouse is dragged
+    */
+    mouseDrag(){
+        // If the equipment to be placed is selected, update it's position
+        let place = this.placingEquipment;
+        if(place !== null){
+            place.setCenter(mouseX, mouseY);
+        }
     }
 
     /**
@@ -284,10 +339,6 @@ class ExperimentController2D{
     render(){
         if(this.graphics === null) return;
 
-        // Fill in a background
-        background(120);
-
-
         // Convenience variables for rendering
         let exp = this.experiment;
         let placed = this.placedEquipment;
@@ -296,16 +347,19 @@ class ExperimentController2D{
         let expG = this.experimentGraphics;
         let g = this.graphics;
 
+        // Fill in a background
+        g.background(120);
+
         // Draw the area containing the interactable portion of the Experiment
         expG.background(230);
 
         // Draw the lab table
         // TODO
 
-
-        // Draw objects on the lab table
+        // Draw the disposal area
         // TODO
 
+        // Draw objects on the lab table
         // Draw all not selected equipment
         for(var i = 0; i < placed.length; i++){
             if(placed[i] !== this.selectedEquipment){
@@ -323,17 +377,6 @@ class ExperimentController2D{
             expG.rect(eq.x(), eq.y(), eq.width(), eq.height());
         }
 
-        // Draw the final image of the lab to the main canvas
-        g.stroke(0);
-        g.strokeWeight(4);
-        g.noFill();
-        g.rect(r[0], r[1], r[2], r[3]);
-        g.image(expG, r[0], r[1]);
-
-
-        // Draw the disposal area
-        // TODO
-
 
         // Draw options button
         // TODO
@@ -341,6 +384,13 @@ class ExperimentController2D{
 
         // Draw steps button
         // TODO
+
+        // Draw the final image of the lab to the main canvas
+        g.stroke(0);
+        g.strokeWeight(4);
+        g.noFill();
+        g.rect(r[0], r[1], r[2], r[3]);
+        g.image(expG, r[0], r[1]);
 
         // Draw the title and creator
         g.fill(color(0, 0, 0));
@@ -355,6 +405,13 @@ class ExperimentController2D{
         g.fill(200);
         for(var i = 0; i < eqs.length; i++){
             this.drawEquipSquare(eqs[i], i);
+        }
+
+        // Draw the equipment to be placed in the Experiment
+
+        let place = this.placingEquipment;
+        if(place !== null){
+            place.drawSprite(this.graphics);
         }
 
 
@@ -388,19 +445,25 @@ class ExperimentController2D{
     */
     drawEquipSquare(equip, i){
         let SIZE = EXP_EQUIP_BOX_SIZE;
-        // TODO make constants for these
-        let X_OFF = 10;
-        let Y_OFF = -10;
 
-        // TODO make method to determine these bounds
-        let x = X_OFF + i * SIZE;
-        let y = Y_OFF + CANVAS_HEIGHT - SIZE;
+        let r = this.equipSquareBounds(i);
         let IMG_SIZE = 0.8 * SIZE;
         let IMG_OFF = (SIZE - IMG_SIZE) * 0.5;
 
         let g = this.graphics;
-        g.rect(x, y, SIZE, SIZE);
-        g.image(equip.equipment.sprite, x + IMG_OFF, y + IMG_OFF, IMG_SIZE, IMG_SIZE);
+        g.rect(r[0], r[1], r[2], r[3]);
+        g.image(equip.equipment.sprite, r[0] + IMG_OFF, r[1] + IMG_OFF, IMG_SIZE, IMG_SIZE);
+    }
+
+    /**
+    Get the rectangular bounds of a square representing a piece of available Equipment
+    i: The index of the square
+    */
+    equipSquareBounds(i){
+        let SIZE = EXP_EQUIP_BOX_SIZE;
+        let x = EXP_EQUIP_BOX_OFF_X + i * SIZE;
+        let y = EXP_EQUIP_BOX_OFF_Y + CANVAS_HEIGHT - SIZE;
+        return [x, y, SIZE, SIZE];
     }
 
 }
