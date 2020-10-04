@@ -4,12 +4,22 @@ var mainExpController;
 /*
 
 TODO:
-    Disallow ExperimentController2D.addEquipment, placeEquipment from adding duplicate entries
-        update test cases
+    Make a copy method for ChemicalController2D, use it for method split
+    Test case ChemicalController2D.copy
+    Test case ExperimentObjectController2D.canPlace
+    Test case EquipmentController2D.canPlace
+    Test case ChemicalController2D.canPlace
+    Test case ExperimentController2D.nextInstruction
+    Allow instructions to have a null receiver, update test cases
     Make basic layout for experiment
         Make constants for positions of unmoving features of the layout
         Allow equipment to be clicked and dragged to be added to the Experiment
         Make Equipment already in the Experiment not show up in the Equipment list
+    Add camera panning
+        Use x and y camera coordinates in the ExperimentController2D
+        Use P5 translate for graphics
+        Create global function to get x and y mouse positions
+    Optimize performance of searching for adding and removing Equipment, pick a better data structure
     Create code for Chemicals
     Modify ExperimentController2D code to handle abstraction as described by the TO DO comments
         Set it up so that each piece of equipment has a list of interaction methods
@@ -39,13 +49,17 @@ function setup(){
     mainExperiment.equipment.push(new BeakerController2D(new Beaker([300, 200], [200, 200], 20.0, 50.0, 0.03, 2)));
     mainExperiment.equipment.push(new BeakerController2D(new Beaker([550, 200], [200, 200], 20.0, 50.0, 0.03, 3)));
 
+    let chem1 = new ChemicalController2D(new Chemical(5, "", 20, [255, 0, 0]));
+    let chem2 = new ChemicalController2D(new Chemical(5, "", 20, [0, 0, 255]));
+    let chem3 = new ChemicalController2D(new Chemical(20, "", 20, [255, 255, 255]));
+
     let eqs = mainExperiment.equipment;
     var ins = [];
-    ins.push(new InstructionController2D(new Instruction(eqs[0], new Chemical(5, "", 20, [255, 0, 0]), eqs[0].addTo)));
-    ins.push(new InstructionController2D(new Instruction(eqs[1], new Chemical(5, "", 20, [0, 0, 255]), eqs[1].addTo)));
+    ins.push(new InstructionController2D(new Instruction(eqs[0], chem1, eqs[0].addTo)));
+    ins.push(new InstructionController2D(new Instruction(eqs[1], chem2, eqs[1].addTo)));
     ins.push(new InstructionController2D(new Instruction(eqs[0], eqs[1], eqs[0].pourInto)));
     ins.push(new InstructionController2D(new Instruction(eqs[1], eqs[2], eqs[1].pourInto)));
-    ins.push(new InstructionController2D(new Instruction(eqs[2], new Chemical(20, "", 20, [255, 255, 255]), eqs[2].addTo)));
+    ins.push(new InstructionController2D(new Instruction(eqs[2], chem3, eqs[2].addTo)));
     mainExpController.setInstructions(ins);
 }
 

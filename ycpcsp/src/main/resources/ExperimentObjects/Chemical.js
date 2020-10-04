@@ -21,9 +21,6 @@ class Chemical extends ExperimentObject{
 
         // The current state of matter for this Chemical, based on temperature
         this.matterState = null;
-
-        var controller = new ChemicalController2D(this);
-        controller.calculateMoles();
     }
 
     /**
@@ -35,13 +32,11 @@ class Chemical extends ExperimentObject{
     }
 
     /**
-    Set the temperature of this Chemical, this also automatically updates the state of matter
+    Set the temperature of this Chemical
     temperature: A floating point value, the temperature, in celsius, of this Chemical
     */
     setTemperature(temperature){
         this.temperature = temperature;
-        var control = new ChemicalController2D(this);
-        control.calculateMoles();
     }
 
     /**

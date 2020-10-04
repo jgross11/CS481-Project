@@ -28,6 +28,14 @@ class EquipmentController2D extends ExperimentObjectController2D{
     }
 
     /**
+    Determine if this Controller's Equipment can be placed down on its own, all Equipment can be placed on its own.
+    returns: true, always
+    */
+    canPlace(){
+        return true;
+    }
+
+    /**
     Get the x coordinate of this Controller's Equipment
     */
     x(){

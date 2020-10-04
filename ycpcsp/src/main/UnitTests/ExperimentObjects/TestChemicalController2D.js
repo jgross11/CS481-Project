@@ -39,13 +39,20 @@ QUnit.todo('ChemicalController2D calculateMatterState:', function(assert){
 QUnit.test('ChemicalController2D combine:', function(assert){
     var chem1 = new Chemical(6.0, "equ", 20.0, [10, 20, 40]);
     var chem2 = new Chemical(4.0, "equ", 20.0, [10, 10, 10]);
-    var controller = new ChemicalController2D(null);
+    var control1 = new ChemicalController2D(null);
+    var control2 = new ChemicalController2D(null);
 
-    assert.false(controller.combine(null), "Combine should fail");
-    assert.false(controller.combine(chem2), "Combine should fail");
+    assert.false(control1.combine(null), "Combine should fail");
 
-    controller.setChemical(chem1);
-    var result = controller.combine(chem2);
+    control1.setChemical(chem1);
+    assert.false(control1.combine(control2), "Combine should fail");
+
+    control1.setChemical(null);
+    control2.setChemical(chem2);
+    assert.false(control1.combine(control2), "Combine should fail");
+
+    control1.setChemical(chem1);
+    var result = control1.combine(control2);
     assert.true(result, "Combine should be successful");
     assert.equal(chem1.mass, 10.0, "Combined mass should be 15.0");
     assert.deepEqual(chem1.texture, [10, 16, 28], "Combined texture should be [10, 16, 28]");

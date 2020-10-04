@@ -70,16 +70,18 @@ QUnit.test('ExperimentController2D setInstructionCounter:', function(assert){
 
 QUnit.test('ExperimentController2D nextInstruction:', function(assert){
     var exp = new Experiment("a title", "a name");
-    var controller = new ExperimentController2D(null);
+    var controller = new ExperimentController2D(exp);
     var beaker1 = new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01, 1);
     var beaker2 = new Beaker([250, 200], [150, 150], 20.0, 50.0, 0.01, 2);
     beaker1.setContents(new Chemical(5, "", 20.0, [0, 0, 0]));
     beaker2.setContents(new Chemical(5, "", 20.0, [0, 0, 0]));
-    exp.equipment.push(new BeakerController2D(beaker1));
-    exp.equipment.push(new BeakerController2D(beaker2));
+    controller.addEquipment(new BeakerController2D(beaker1), true);
+    controller.addEquipment(new BeakerController2D(beaker2), true);
     let eqs = exp.equipment;
     let instructions = [];
-    for(var i = 0; i < 3; i++) instructions.push(new InstructionController2D(new Instruction(eqs[0], eqs[1], eqs[0].pourInto)));
+    for(var i = 0; i < 2; i++) instructions.push(new InstructionController2D(new Instruction(eqs[0], eqs[1], eqs[0].pourInto)));
+    var chemControl = new ChemicalController2D(new Chemical(1, "", 20.0, [0, 0, 0]));
+    instructions.push(new InstructionController2D(new Instruction(eqs[0], chemControl, eqs[0].addTo)));
 
     controller.setInstructions(instructions);
     assert.equal(controller.instructionCounter, 0, "Instruction should be on 0");
@@ -91,7 +93,7 @@ QUnit.test('ExperimentController2D nextInstruction:', function(assert){
     assert.equal(controller.instructionCounter, 2, "Instruction should be on 2");
 
     controller.nextInstruction();
-    assert.equal(controller.instructionCounter, 3, "Instruction should not have changed from 3");
+    assert.equal(controller.instructionCounter, 3, "Instruction should be on 3, ending the instruction list");
 
     controller.nextInstruction();
     assert.equal(controller.instructionCounter, 3, "Instruction should not have changed from 3");
@@ -108,6 +110,10 @@ QUnit.test('ExperimentController2D addEquipment:', function(assert){
     controller.addEquipment(beaker);
     assert.true(exp.equipment.includes(beaker), "Experiment should have the added beaker.");
     assert.deepEqual(controller.placedEquipment, [], "Controller placed Equipment list should still be empty.");
+
+    controller.addEquipment(beaker);
+    assert.true(exp.equipment.includes(beaker), "Experiment should have the added beaker.");
+    assert.equal(exp.equipment.length, 1, "Experiment should have only one beaker");
 
     controller.removeEquipment(beaker);
     assert.deepEqual(exp.equipment, [], "Experiment Equipment list should be empty");
@@ -138,6 +144,10 @@ QUnit.test('ExperimentController2D placeEquipment:', function(assert){
     controller.placeEquipment(0);
     assert.true(exp.equipment.includes(beaker), "Experiment should have the added beaker.");
     assert.true(controller.placedEquipment.includes(beaker), "Controller placed Equipment list should have the added beaker.");
+
+    controller.placeEquipment(0);
+    assert.true(controller.placedEquipment.includes(beaker), "Controller placed Equipment list should have the added beaker.");
+    assert.equal(controller.placedEquipment.length, 1, "Controller placed Equipment list should have only one beaker.");
 });
 
 QUnit.test('ExperimentController2D removeEquipment:', function(assert){

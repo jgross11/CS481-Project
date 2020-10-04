@@ -29,6 +29,15 @@ class ChemicalController2D extends ExperimentObjectController2D{
     }
 
     /**
+    Determine if this Controller's Chemical can be placed down on its own. Chemicals cannot be placed on their own.
+    returns: false, always
+    */
+    canPlace(){
+        return false;
+    }
+
+
+    /**
     Determine the number of moles of this Controller's Chemical
     returns: A floating point value, the number of moles
     */
@@ -48,11 +57,12 @@ class ChemicalController2D extends ExperimentObjectController2D{
     /**
     Mix another Chemical with this Controller's Chemical, and store that Chemical in this Controller.
     Does nothing if either Chemical is null
-    chemical: The Chemical to mix
+    chemical: The Controller with the Chemical to mix
     returns: true if the Chemicals were combined, false otherwise
     */
     combine(chemical){
-        let c1 = chemical;
+        if(chemical === null) return false;
+        let c1 = chemical.chemical;
         let c2 = this.chemical;
         if(c1 === null || c2 === null) return false;
 
@@ -83,7 +93,7 @@ class ChemicalController2D extends ExperimentObjectController2D{
     split(percent){
         let c = this.chemical
         if(percent < 0 || percent > 1 || c === null) return null;
-        var chem = new Chemical(c.mass * (1 - percent), c.equation, c.temperature, c.texture, c.concentration);
+        var chem = new Chemical(c.mass * (1 - percent), c.equation, c.temperature, c.texture, c.concentration); // TODO make and use copy method
         c.setMass(c.mass * percent);
         return chem;
     }

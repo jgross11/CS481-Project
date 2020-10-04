@@ -62,23 +62,33 @@ class ExperimentController2D{
 
     /**
     Perform the next Instruction to happen for this Controller
+    Does nothing if the Equipment needed for the Instruction has not been placed
     */
     nextInstruction(){
         if(this.instructionCounter < this.instructions.length){
-            this.instructions[this.instructionCounter].activate();
+            let insC = this.instructions[this.instructionCounter];
+            let ins = insC.instruction;
+            let eqs = this.placedEquipment;
+
+            // Check to ensure that the Instruction's ExperimentObject has been placed in the lab, if possible
+            //  if either object can be placed and it's not placed, do nothing
+            if((ins.actor.canPlace() !== eqs.includes(ins.actor)) ||
+               (ins.receiver.canPlace() !== eqs.includes(ins.receiver))) return;
+
+            insC.activate();
             this.instructionCounter++;
         }
     }
 
     /**
-    Add a new piece of Equipment to this Controller's Experiment
+    Add a new piece of Equipment to this Controller's Experiment. If the Equipment already exists, it is not added a second time
     equipment: The EquipmentController with the Equipment to add
     place: true to also place the given Equipment into the Experiment, false to just store it, default false
     */
     addEquipment(equipment, place = false){
         let eqs = this.experiment.equipment;
-        eqs.push(equipment);
-        if(place) this.placeEquipment(eqs.length - 1);
+        if(!eqs.includes(equipment)) eqs.push(equipment);
+        if(place) this.placeEquipment(eqs.indexOf(equipment));
     }
 
     /**
@@ -88,8 +98,10 @@ class ExperimentController2D{
     */
     placeEquipment(index){
         let eqs = this.experiment.equipment;
+        let pEqs = this.placedEquipment;
         if(index < 0 || index > eqs.length - 1) return;
-        this.placedEquipment.push(eqs[index]);
+        let toAdd = eqs[index];
+        if(!pEqs.includes(toAdd)) pEqs.push(toAdd);
     }
 
     /**
@@ -201,6 +213,7 @@ class ExperimentController2D{
     keyPress(){
         // Option should only work for Container objects
         let eq = this.selectedEquipment;
+        let eqs = this.experiment.equipment;
         // Empty the beaker
         // TODO modify this so that the calls under ESCAPE and key default are only made for beakers
         switch(keyCode){
@@ -217,10 +230,11 @@ class ExperimentController2D{
             case 'r':
                 this.reset();
                 break;
-            case 'a':
-                // TODO this is a temporary control until beakers can be clicked and dragged in
-                this.placedEquipment = [].concat(this.experiment.equipment);
-                break;
+
+            // TODO this is a temporary control until beakers can be clicked and dragged in
+            case 'z': this.placeEquipment(0); break;
+            case 'x': this.placeEquipment(1); break;
+            case 'c': this.placeEquipment(2); break;
 
             default:
                 if(eq === null) break;
@@ -231,7 +245,7 @@ class ExperimentController2D{
                     case '3': color = [0, 0, 255]; break;
                     default: color = null;
                 }
-                if(color !== null) eq.addTo(new Chemical(10, "", 20, color));
+                if(color !== null) eq.addTo(new ChemicalController2D(new Chemical(10, "", 20, color)));
                 break;
         }
     }
@@ -305,7 +319,7 @@ class ExperimentController2D{
         var y = 500;
         let x = 400;
         // TODO remove text, only here for testing purposes
-        text("Press a to add all beakers", x, y += 20);
+        text("Press z, x, c to add beaker 1, 2, 3 respectively", x, y += 20);
         text("Click a beaker to select it", x, y += 20);
         text("Press 1 to put red chemical to selected beaker", x, y += 20);
         text("Press 2 to put green chemical to selected beaker", x, y += 20);

@@ -8,7 +8,7 @@ QUnit.test('ContainerController2D constructor:', function(assert){
 QUnit.test('ContainerController2D hasResidue:', function(assert){
     var container = new Beaker([0, 0], [0, 0], 100, 0.1, 0, 2);
     var controller = new BeakerController2D(container);
-    let chem = new Chemical(10.0, "eq", 20.0, null);
+    let chem = new ChemicalController2D(new Chemical(10.0, "eq", 20.0, null));
 
     assert.false(controller.hasResidue(), "Should have no residue by default");
 
@@ -118,13 +118,15 @@ QUnit.test('ContainerController2D addTo:', function(assert){
     var controller = new BeakerController2D(container);
     let chem1 = new Chemical(1.0, "eq", 20.0, [200, 50, 10]);
     let chem2 = new Chemical(1.0, "eq", 20.0, [4, 4, 4]);
+    let chemControl1 = new ChemicalController2D(chem1);
+    let chemControl2 = new ChemicalController2D(chem2);
 
     assert.deepEqual(container.contents, null, "The container should initially be empty");
 
-    controller.addTo(chem1);
+    controller.addTo(chemControl1);
     assert.deepEqual(container.contents, chem1, "The container should contain chemical 1");
 
-    controller.addTo(chem2);
+    controller.addTo(chemControl2);
     assert.deepEqual(container.contents.texture, [102, 27, 7], "The container should contain a mix of chemical 1 and 2");
 });
 
