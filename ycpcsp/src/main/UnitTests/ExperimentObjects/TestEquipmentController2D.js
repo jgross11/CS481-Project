@@ -21,7 +21,13 @@ QUnit.test('EquipmentController2D getObject:', function(assert){
     var controller = new EquipmentController2D(equip);
 
     assert.equal(controller.getObject(), equip, "The Object of the Controller should match the assigned Equipment");
+});
 
+QUnit.test('EquipmentController2D canPlace:', function(assert){
+    var equip = new Equipment([0, 0], [0, 0], 5.0, 2, null);
+    var controller = new EquipmentController2D(equip);
+
+    assert.true(controller.canPlace(), "All EquipmentController objects should be placeable by default");
 });
 
 QUnit.test('EquipmentController2D x:', function(assert){

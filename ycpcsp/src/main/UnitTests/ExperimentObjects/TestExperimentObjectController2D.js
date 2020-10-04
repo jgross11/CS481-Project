@@ -9,3 +9,9 @@ QUnit.test('ExperimentObjectController2D getObject:', function(assert){
 
     assert.throws(controller.getObject, "A generic ExperimentObjectController2D object should throw an error");
 });
+
+QUnit.test('ExperimentObjectController2D canPlace:', function(assert){
+    let controller = new ExperimentObjectController2D();
+
+    assert.throws(controller.canPlace, "A generic ExperimentObjectController2D object should throw an error");
+});

@@ -4,13 +4,6 @@ var mainExpController;
 /*
 
 TODO:
-    Make a copy method for ChemicalController2D, use it for method split
-    Test case ChemicalController2D.copy
-    Test case ExperimentObjectController2D.canPlace
-    Test case EquipmentController2D.canPlace
-    Test case ChemicalController2D.canPlace
-    Test case ExperimentController2D.nextInstruction
-    Allow instructions to have a null receiver, update test cases
     Make basic layout for experiment
         Make constants for positions of unmoving features of the layout
         Allow equipment to be clicked and dragged to be added to the Experiment

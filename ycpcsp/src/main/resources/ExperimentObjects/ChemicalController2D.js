@@ -93,9 +93,19 @@ class ChemicalController2D extends ExperimentObjectController2D{
     split(percent){
         let c = this.chemical
         if(percent < 0 || percent > 1 || c === null) return null;
-        var chem = new Chemical(c.mass * (1 - percent), c.equation, c.temperature, c.texture, c.concentration); // TODO make and use copy method
+        var chem = this.copyChem();
+        chem.setMass(chem.mass * (1 - percent));
         c.setMass(c.mass * percent);
         return chem;
+    }
+
+    /**
+    Make an exact copy of this Controller's Chemical
+    returns: The Chemical copy
+    */
+    copyChem(){
+        let c = this.chemical
+        return new Chemical(c.mass, c.equation, c.temperature, c.texture, c.concentration);
     }
 
     /**

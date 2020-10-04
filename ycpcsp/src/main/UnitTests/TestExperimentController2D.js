@@ -97,6 +97,28 @@ QUnit.test('ExperimentController2D nextInstruction:', function(assert){
 
     controller.nextInstruction();
     assert.equal(controller.instructionCounter, 3, "Instruction should not have changed from 3");
+
+    controller.reset();
+    assert.equal(controller.instructionCounter, 0, "Instruction should be on 0 after reset");
+
+    controller.nextInstruction();
+    assert.equal(controller.instructionCounter, 0, "Instruction should still be on 0 without placed beakers");
+
+    controller.placeEquipment(0);
+    controller.placeEquipment(1);
+    controller.nextInstruction();
+    assert.equal(controller.instructionCounter, 1, "Instruction should be on 1 after placing beakers");
+
+    controller.nextInstruction();
+    assert.equal(controller.instructionCounter, 2, "Instruction should be on 2");
+
+    controller.unPlaceEquipment(eqs[0]);
+    controller.nextInstruction();
+    assert.equal(controller.instructionCounter, 2, "Instruction should still be on 2 without beaker 0 in the Experiment");
+
+    controller.placeEquipment(0);
+    controller.nextInstruction();
+    assert.equal(controller.instructionCounter, 3, "Instruction should be on 3 with beaker 0 in the Experiment");
 });
 
 QUnit.test('ExperimentController2D addEquipment:', function(assert){

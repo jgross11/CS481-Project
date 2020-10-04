@@ -22,6 +22,13 @@ QUnit.test('ChemicalController2D getObject:', function(assert){
     assert.equal(controller.getObject(), chem, "The object obtained should be the same as the Chemical in the Controller.");
 });
 
+QUnit.test('ChemicalController2D canPlace:', function(assert){
+    var chem = new Chemical(10.0, "equ", 20.0, [1, 2, 3]);
+    var controller = new ChemicalController2D(chem);
+
+    assert.false(controller.canPlace(), "All ChemicalController objects should be not placeable by default");
+});
+
 QUnit.todo('ChemicalController2D calculateMoles:', function(assert){
     var chem = new Chemical(10.0, "equ", 20.0, [1, 2, 3]);
     var controller = new ChemicalController2D(chem);
@@ -74,6 +81,13 @@ QUnit.test('ChemicalController2D split:', function(assert){
 
     controller.setChemical(null);
     assert.equal(controller.split(0.1), null, "Should be unable to split with no chemical");
+});
+
+QUnit.test('ChemicalController2D copyChem:', function(assert){
+    var chem = new Chemical(10.0, "equ", 20.0, [1, 2, 3]);
+    var controller = new ChemicalController2D(chem);
+    var copied = controller.copyChem();
+    assert.deepEqual(chem, copied, "Copied chemical should be identical to original chemical");
 });
 
 QUnit.todo('ChemicalController2D drawRect:', function(assert){
