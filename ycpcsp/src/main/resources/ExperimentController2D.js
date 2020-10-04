@@ -6,10 +6,9 @@ class ExperimentController2D{
     /**
     Create an empty Controller for the given Experiment, also resets the Experiment
     experiment: The Experiment which will be controlled by this Controller
-    graphics: The main graphics object to use for rendering this Controller's Experiment.
-        Use null to not do rendering. Default null
+    graphics: true to set up graphics for this controller, false otherwise
     */
-    constructor(experiment, graphics = null){
+    constructor(experiment, graphics = false){
         this.experiment = experiment;
         this.selectedEquipment = null;
         this.instructions = []
@@ -18,10 +17,10 @@ class ExperimentController2D{
         // The list of Equipment currently placed into the lab
         this.placedEquipment = [];
 
-        this.graphics = graphics;
+        this.graphics = graphics ? createGraphics(CANVAS_WIDTH, CANVAS_HEIGHT) : null;
         // Create a P5 graphics object to use for rendering the Experiment
         var r = EXP_BOUNDS;
-        this.experimentGraphics = (graphics === null) ? null : createGraphics(r[2], r[3]);
+        this.experimentGraphics = graphics ? createGraphics(r[2], r[3]) : null;
 
         /*
         TODO
@@ -295,6 +294,7 @@ class ExperimentController2D{
         let eqs = exp.equipment;
         let r = EXP_BOUNDS;
         let expG = this.experimentGraphics;
+        let g = this.graphics;
 
         // Draw the area containing the interactable portion of the Experiment
         expG.background(230);
@@ -324,11 +324,11 @@ class ExperimentController2D{
         }
 
         // Draw the final image of the lab to the main canvas
-        stroke(0);
-        strokeWeight(4);
-        noFill();
-        rect(r[0], r[1], r[2], r[3]);
-        image(expG, r[0], r[1]);
+        g.stroke(0);
+        g.strokeWeight(4);
+        g.noFill();
+        g.rect(r[0], r[1], r[2], r[3]);
+        g.image(expG, r[0], r[1]);
 
 
         // Draw the disposal area
@@ -343,37 +343,40 @@ class ExperimentController2D{
         // TODO
 
         // Draw the title and creator
-        fill(color(0, 0, 0));
-        noStroke();
-        textSize(24);
-        text(exp.title + " created by " + exp.creator, 10, 24);
+        g.fill(color(0, 0, 0));
+        g.noStroke();
+        g.textSize(24);
+        g.text(exp.title + " created by " + exp.creator, 10, 24);
 
         // Draw the equipment list at the bottom
         // TODO
-        stroke(0);
-        strokeWeight(3);
-        fill(200);
+        g.stroke(0);
+        g.strokeWeight(3);
+        g.fill(200);
         for(var i = 0; i < eqs.length; i++){
             this.drawEquipSquare(eqs[i], i);
         }
 
 
         // Draw instructions
-        fill(color(0, 0, 0));
-        noStroke();
-        textSize(18);
+        g.fill(color(0, 0, 0));
+        g.noStroke();
+        g.textSize(18);
         var y = 500;
         let x = 400;
         // TODO remove text, only here for testing purposes
-        text("Press z, x, c to add beaker 1, 2, 3 respectively", x, y += 20);
-        text("Click a beaker to select it", x, y += 20);
-        text("Press 1 to put red chemical to selected beaker", x, y += 20);
-        text("Press 2 to put green chemical to selected beaker", x, y += 20);
-        text("Press 3 to put blue chemical to selected beaker", x, y += 20);
-        text("Press ESC to empty the selected beaker", x, y += 20);
-        text("Click an unselected beaker to combine the chemical in the selected beaker", x, y += 20);
-        text("Press I to run the next instruction", x, y += 20);
-        text("Press R to reset the simulation", x, y += 20);
+        g.text("Press z, x, c to add beaker 1, 2, 3 respectively", x, y += 20);
+        g.text("Click a beaker to select it", x, y += 20);
+        g.text("Press 1 to put red chemical to selected beaker", x, y += 20);
+        g.text("Press 2 to put green chemical to selected beaker", x, y += 20);
+        g.text("Press 3 to put blue chemical to selected beaker", x, y += 20);
+        g.text("Press ESC to empty the selected beaker", x, y += 20);
+        g.text("Click an unselected beaker to combine the chemical in the selected beaker", x, y += 20);
+        g.text("Press I to run the next instruction", x, y += 20);
+        g.text("Press R to reset the simulation", x, y += 20);
+
+        // Draw the final graphics image to the canvas
+        image(g, 0, 0);
     }
 
     /**

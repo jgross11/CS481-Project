@@ -27,11 +27,11 @@ TODO:
 P5.js function, called when script is initially loaded
 */
 function setup(){
-    let graphics = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
+    createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
 
     loadImages();
     mainExperiment = new Experiment("Test Experiment", "Personus Namington");
-    mainExpController = new ExperimentController2D(mainExperiment, graphics);
+    mainExpController = new ExperimentController2D(mainExperiment, true);
 
     mainExperiment.equipment.push(new BeakerController2D(new Beaker([50, 200], [200, 200], 20.0, 50.0, 0.03, 1)));
     mainExperiment.equipment.push(new BeakerController2D(new Beaker([300, 200], [200, 200], 20.0, 50.0, 0.03, 2)));
