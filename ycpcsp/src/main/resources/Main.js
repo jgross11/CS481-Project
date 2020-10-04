@@ -4,14 +4,17 @@ var mainExpController;
 /*
 
 TODO:
-    Make basic layout for experiment
-        Make constants for positions of unmoving features of the layout
+    Test case: ExperimentController2D.experimentMouseX, experimentMouseY, experimentMousePos
+    Make basic layout for Experiment
         Allow equipment to be clicked and dragged to be added to the Experiment
         Make Equipment already in the Experiment not show up in the Equipment list
+        Split Experiment render code into individual methods
+        Make constants for positions of unmoving features of the layout
     Add camera panning
         Use x and y camera coordinates in the ExperimentController2D
         Use P5 translate for graphics
         Create global function to get x and y mouse positions
+        Objects which will not be on the screen should not be rendered, i.e. a renderBounds() method
     Optimize performance of searching for adding and removing Equipment, pick a better data structure
     Create code for Chemicals
     Modify ExperimentController2D code to handle abstraction as described by the TO DO comments
@@ -20,23 +23,15 @@ TODO:
 
 */
 
-// Constants for the P5 canvas
-
-// The width of the canvas being displayed
-let CANVAS_WIDTH = 1280;
-// The height of the canvas being displayed
-let CANVAS_HEIGHT = 720;
-
-
 /**
 P5.js function, called when script is initially loaded
 */
 function setup(){
-    createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
+    let graphics = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
 
     loadImages();
     mainExperiment = new Experiment("Test Experiment", "Personus Namington");
-    mainExpController = new ExperimentController2D(mainExperiment);
+    mainExpController = new ExperimentController2D(mainExperiment, graphics);
 
     mainExperiment.equipment.push(new BeakerController2D(new Beaker([50, 200], [200, 200], 20.0, 50.0, 0.03, 1)));
     mainExperiment.equipment.push(new BeakerController2D(new Beaker([300, 200], [200, 200], 20.0, 50.0, 0.03, 2)));

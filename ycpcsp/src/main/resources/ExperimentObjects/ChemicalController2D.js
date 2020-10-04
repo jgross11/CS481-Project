@@ -117,15 +117,16 @@ class ChemicalController2D extends ExperimentObjectController2D{
     width: The width of the rectangle
     baseHeight: The height before the fillPercent is applied
     heightOffset: The percentage of the height which cannot be filled
+    graphics: The P5 graphics to use
     */
-    drawRect(x, y, fillPercent, width, baseHeight, heightOffset){
+    drawRect(x, y, fillPercent, width, baseHeight, heightOffset, graphics){
         let tex = this.chemical.texture;
         if(tex !== null){
-            fill(color(tex));
-            noStroke();
+            graphics.fill(color(tex));
+            graphics.noStroke();
             let h = baseHeight;
             let oh = h * (1 - heightOffset);
-            rect(x, y + h * heightOffset + oh * (1 - fillPercent), width, oh * fillPercent);
+            graphics.rect(x, y + h * heightOffset + oh * (1 - fillPercent), width, oh * fillPercent);
         }
     }
 

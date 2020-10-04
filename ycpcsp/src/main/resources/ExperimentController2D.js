@@ -6,8 +6,10 @@ class ExperimentController2D{
     /**
     Create an empty Controller for the given Experiment, also resets the Experiment
     experiment: The Experiment which will be controlled by this Controller
+    graphics: The main graphics object to use for rendering this Controller's Experiment.
+        Use null to not do rendering. Default null
     */
-    constructor(experiment){
+    constructor(experiment, graphics = null){
         this.experiment = experiment;
         this.selectedEquipment = null;
         this.instructions = []
@@ -15,6 +17,11 @@ class ExperimentController2D{
 
         // The list of Equipment currently placed into the lab
         this.placedEquipment = [];
+
+        this.graphics = graphics;
+        // Create a P5 graphics object to use for rendering the Experiment
+        var r = EXP_BOUNDS;
+        this.experimentGraphics = (graphics === null) ? null : createGraphics(r[2], r[3]);
 
         /*
         TODO
@@ -180,6 +187,27 @@ class ExperimentController2D{
     }
 
     /**
+    Get the x position of the mouse based on the position of the rendered Experiment
+    */
+    experimentMouseX(){
+        return mouseX - EXP_BOUNDS[0];
+    }
+
+    /**
+    Get the y position of the mouse based on the position of the rendered Experiment
+    */
+    experimentMouseY(){
+        return mouseY - EXP_BOUNDS[1];
+    }
+
+    /**
+    Get the y position of the mouse based on the position of the rendered Experiment
+    */
+    experimentMousePos(){
+        return [this.experimentMouseX(), this.experimentMouseY()];
+    }
+
+    /**
     Call when the mouse is pressed
     */
     mousePress(){
@@ -188,12 +216,12 @@ class ExperimentController2D{
         let select = this.selectedEquipment;
         if(select !== null){
             // TODO modify this so that this particular set of calls is only made for beakers
-            select.pourInto(this.findEquipmentByPosition([mouseX, mouseY], select));
+            select.pourInto(this.findEquipmentByPosition(this.experimentMousePos(), select));
             this.setSelectedEquipment(null);
         }
         // Otherwise, determine which object is selected by the mouse, if any
         else{
-            this.setSelectedEquipment(this.findEquipmentByPosition([mouseX, mouseY]));
+            this.setSelectedEquipment(this.findEquipmentByPosition(this.experimentMousePos()));
         }
     }
 
@@ -202,9 +230,9 @@ class ExperimentController2D{
     */
     mouseMove(){
         // TODO add this back in to allow mouse movement
-        // if(this.selectedEquipment !== null){
-        //     this.selectedEquipment.equipment.setPosition([mouseX, mouseY]);
-        // }
+        //if(this.selectedEquipment !== null){
+        //    this.selectedEquipment.equipment.setPosition(this.experimentMousePos());
+        //}
     }
 
     /**
@@ -255,23 +283,21 @@ class ExperimentController2D{
     Draw the full Experiment to the P5 graphics
     */
     render(){
+        if(this.graphics === null) return;
+
         // Fill in a background
         background(120);
+
+
+        // Convenience variables for rendering
         let exp = this.experiment;
+        let placed = this.placedEquipment;
+        let eqs = exp.equipment;
+        let r = EXP_BOUNDS;
+        let expG = this.experimentGraphics;
 
-        // Draw the title and creator
-        fill(color(0, 0, 0));
-        noStroke();
-        textSize(24);
-        text(exp.title + " created by " + exp.creator, 10, 24);
-
-        // Draw the equipment list at the bottom
-        // TODO
-        stroke(0);
-        strokeWeight(3);
-        fill(200);
-        exp.equipment.forEach(this.drawEquipSquare);
-
+        // Draw the area containing the interactable portion of the Experiment
+        expG.background(230);
 
         // Draw the lab table
         // TODO
@@ -279,6 +305,30 @@ class ExperimentController2D{
 
         // Draw objects on the lab table
         // TODO
+
+        // Draw all not selected equipment
+        for(var i = 0; i < placed.length; i++){
+            if(placed[i] !== this.selectedEquipment){
+                placed[i].draw(expG);
+            }
+        }
+        // Draw the selected equipment if it exists
+        let eq = this.selectedEquipment;
+        if(eq !== null){
+            eq.draw(expG);
+            // Draw a box around the selected equipment and draw it on top of all other equipment
+            expG.noFill();
+            expG.stroke(150, 150, 255, 160);
+            expG.strokeWeight(8);
+            expG.rect(eq.x(), eq.y(), eq.width(), eq.height());
+        }
+
+        // Draw the final image of the lab to the main canvas
+        stroke(0);
+        strokeWeight(4);
+        noFill();
+        rect(r[0], r[1], r[2], r[3]);
+        image(expG, r[0], r[1]);
 
 
         // Draw the disposal area
@@ -292,25 +342,21 @@ class ExperimentController2D{
         // Draw steps button
         // TODO
 
+        // Draw the title and creator
+        fill(color(0, 0, 0));
+        noStroke();
+        textSize(24);
+        text(exp.title + " created by " + exp.creator, 10, 24);
 
+        // Draw the equipment list at the bottom
+        // TODO
+        stroke(0);
+        strokeWeight(3);
+        fill(200);
+        for(var i = 0; i < eqs.length; i++){
+            this.drawEquipSquare(eqs[i], i);
+        }
 
-        // Draw all not selected equipment
-        let placed = this.placedEquipment;
-        for(var i = 0; i < placed.length; i++){
-            if(placed[i] !== this.selectedEquipment){
-                placed[i].draw();
-            }
-        }
-        // Draw the selected equipment if it exists
-        let eq = this.selectedEquipment;
-        if(eq !== null){
-            eq.draw();
-            // Draw a box around the selected equipment and draw it on top of all other equipment
-            noFill();
-            stroke(150, 150, 255, 160);
-            strokeWeight(8);
-            rect(eq.x(), eq.y(), eq.width(), eq.height());
-        }
 
         // Draw instructions
         fill(color(0, 0, 0));
@@ -336,10 +382,10 @@ class ExperimentController2D{
     Set stroke and fill before calling this method
     equip: The EquipmentController containing the equipment to be drawn
     i: The index of the EquipmentController
-    arr: The list of equipment
     */
-    drawEquipSquare(equip, i, arr){
-        let SIZE = 70;
+    drawEquipSquare(equip, i){
+        let SIZE = EXP_EQUIP_BOX_SIZE;
+        // TODO make constants for these
         let X_OFF = 10;
         let Y_OFF = -10;
 
@@ -349,8 +395,9 @@ class ExperimentController2D{
         let IMG_SIZE = 0.8 * SIZE;
         let IMG_OFF = (SIZE - IMG_SIZE) * 0.5;
 
-        rect(x, y, SIZE, SIZE);
-        image(equip.equipment.sprite, x + IMG_OFF, y + IMG_OFF, IMG_SIZE, IMG_SIZE);
+        let g = this.graphics;
+        g.rect(x, y, SIZE, SIZE);
+        g.image(equip.equipment.sprite, x + IMG_OFF, y + IMG_OFF, IMG_SIZE, IMG_SIZE);
     }
 
 }

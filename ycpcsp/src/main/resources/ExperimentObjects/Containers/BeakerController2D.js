@@ -20,29 +20,30 @@ class BeakerController2D extends ContainerController2D{
 
     /**
     Draw this Controller's Beaker along with its data
+    graphics: The P5 graphics to use
     */
-    draw(){
+    draw(graphics){
         // Draw the color of the Chemical, if one exists
         let eq = this.equipment;
         let chem = eq.contents;
         if(chem !== null){
             let chemController = new ChemicalController2D(chem);
             let w = this.width();
-            chemController.drawRect(this.x() + w * .12, this.y(), chem.mass / eq.capacity, w * .85, this.height(), 0.2);
+            chemController.drawRect(this.x() + w * .12, this.y(), chem.mass / eq.capacity, w * .85, this.height(), 0.2, graphics);
         }
 
         // Draw the base Beaker sprite
-        super.draw();
+        super.draw(graphics);
 
         // Draw the text
-        fill(color(0, 0, 0));
-        noStroke();
-        textSize(15);
-        text("Beaker, ID: " + eq.instanceID, this.x() + 25, this.y() + this.height() / 2)
+        graphics.fill(color(0, 0, 0));
+        graphics.noStroke();
+        graphics.textSize(15);
+        graphics.text("Beaker, ID: " + eq.instanceID, this.x() + 25, this.y() + this.height() / 2)
         var mass = "mass: "
         mass += (eq.contents === null) ? 0 : eq.contents.mass.toFixed(2);
         mass += " / " + eq.capacity;
-        text(mass, this.x() + 25, this.y() + this.height() / 2 + 18)
+        graphics.text(mass, this.x() + 25, this.y() + this.height() / 2 + 18)
     }
 
 }
