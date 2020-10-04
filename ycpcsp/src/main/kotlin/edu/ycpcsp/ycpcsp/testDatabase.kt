@@ -3,6 +3,7 @@ package edu.ycpcsp.ycpcsp
 import edu.ycpcsp.ycpcsp.DataBase.DeleteUser
 import edu.ycpcsp.ycpcsp.DataBase.UserProfile
 import edu.ycpcsp.ycpcsp.DataBase.UserSignup
+import edu.ycpcsp.ycpcsp.DataBase.VerifyUser
 import java.util.Scanner
 
 fun main(){
@@ -47,10 +48,19 @@ fun main(){
         UserSignup(2, firstName!!, lastName!!, email!!, password!!, organization!!, question1!!, question2!!, question3!!, ans1!!, ans2!!, ans3!!)
     }
 
-    else{
+    else if (answer == 3){
         print("Enter in the user id that you wish to lookup: ")
         val id = readLine()
         UserProfile(id)
+    }
+
+    else if (answer == 4){
+        print("Enter username: ")
+        val username = readLine()
+        print("Enter password: ")
+        val password = readLine()
+
+        VerifyUser(username!!, password!!)
     }
 }
 
