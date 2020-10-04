@@ -1,68 +1,42 @@
 /**
-An object used to keep track of all of the components in an experiment
+An object used to keep track of all of the components in an Experiment
 */
 class Experiment{
 
     /**
-    Create an empty experiment.
+    Create an empty Experiment with the given title and creator name.
+    title: A string, the title of this Experiment
+    creator: A string, the name of the creator of this Experiment
     */
-    constructor(){
-        this.reset();
-    }
-
-    /**
-    Bring the experiment to its default state
-    */
-    reset(){
-        // The list of Equipment in this Experiment
+    constructor(title, creator){
+        // The list of EquipmentControllers in this Experiment
         this.equipment = [];
-        this.selectedEquipment = null;
+
+        this.title = title;
+        this.creator = creator;
     }
 
     /**
-    Bring the experiment to the next step
+    Set the current list of EquipmentControllers used by this Experiment.
+    Also updates the list keeping track of equipment types
+    equipment: The list of EquipmentControllers to set for this Experiment
     */
-    runStep(){
-        // TODO implement
+    setEquipment(equipment){
+        this.equipment = equipment;
     }
 
     /**
-    Draw the full Experiment to the P5 graphics
+    Set the title of this Experiment
     */
-    render(){
-        for(var i = 0; i < this.equipment.length; i++){
-            this.equipment[i].draw();
-        }
+    setTitle(title){
+        this.title = title;
     }
 
     /**
-    Call when the mouse is pressed
+    Set the creator name of this Experiment
     */
-    mousePress(){
-        // If there is a selected object, unselect it
-        if(this.selectedEquipment !== null){
-            this.selectedEquipment = null;
-        }
-        // Otherwise, determine which object is selected by the mouse, if any
-        else{
-            this.selectedEquipment = null;
-            for(var i = 0; i < this.equipment.length; i++){
-                var eq = this.equipment[i];
-                if(eq.inBounds([mouseX, mouseY])){
-                    this.selectedEquipment = eq;
-                    break;
-                }
-            }
-        }
-    }
-
-    /**
-    Call when the mouse is moved
-    */
-    mouseMove(){
-        if(this.selectedEquipment !== null){
-            this.selectedEquipment.setPosition([mouseX, mouseY]);
-        }
+    setCreator(creator){
+        this.creator = creator;
     }
 
 }

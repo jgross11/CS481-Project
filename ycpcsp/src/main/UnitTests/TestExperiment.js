@@ -1,32 +1,34 @@
 QUnit.test('Experiment constructor:', function(assert){
-    var exp = new Experiment();
+    var exp = new Experiment("The Title", "The Name");
 
     assert.deepEqual(exp.equipment, [], 'equipment should be []');
-    assert.equal(exp.selectedEquipment, null, 'selectedEquipment should be null');
+    assert.equal(exp.title, "The Title", 'title should be "The Title"');
+    assert.equal(exp.creator, "The Name", 'creator should be "The Name"');
 });
 
-QUnit.test('Experiment reset:', function(assert){
+QUnit.test('Experiment setEquipment:', function(assert){
     var exp = new Experiment();
-    exp.reset();
+    var equip = new Equipment([0, 0], [100, 100], 1, 1, null);
 
-    assert.deepEqual(exp.equipment, [], 'equipment should be []');
-    assert.equal(exp.selectedEquipment, null, 'selectedEquipment should be null');
+    exp.setEquipment([equip]);
+    assert.deepEqual(exp.equipment, [equip],
+        "Given Equipment list should be equal to Equipment list in the experiment");
 });
 
-QUnit.todo('Experiment runStep:', function(assert){
-    var exp = new Experiment();
-    exp.runStep();
-    assert.true(false);
+QUnit.test('Experiment setName:', function(assert){
+    var exp = new Experiment("The Title", "The Name");
+
+    assert.equal(exp.title, "The Title", 'Initial title should be "The Title"');
+
+    exp.setTitle("New");
+    assert.equal(exp.title, "New", 'New title should be "New"');
 });
 
-QUnit.todo('Experiment render:', function(assert){
-    var exp = new Experiment();
-    exp.render();
-    assert.true(false);
-});
+QUnit.test('Experiment setCreator:', function(assert){
+    var exp = new Experiment("The Title", "The Name");
 
-QUnit.todo('Experiment mousePress:', function(assert){
-    var exp = new Experiment();
-    exp.mousePress();
-    assert.true(false);
+    assert.equal(exp.creator, "The Name", 'Initial creator should be "The Name"');
+
+    exp.setCreator("Create");
+    assert.equal(exp.creator, "Create", 'New creator should be "Create"');
 });
