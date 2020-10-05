@@ -4,8 +4,11 @@ var mainExpController;
 /*
 
 TODO:
+    Test case: EquipmentBox
+    Test case: EquipmentBoxList
     Test case: ExperimentController2D.experimentMouseX, experimentMouseY, experimentMousePos, equipSquareBounds,
         mouseRelease, mouseDragged
+        addEquipment, removeEquipment
     Test case: EquipmentController2D.setCenter
     Make basic layout for Experiment
         Split mouse and keyboard input into separate methods
@@ -35,9 +38,9 @@ function setup(){
     mainExperiment = new Experiment("Test Experiment", "Personus Namington");
     mainExpController = new ExperimentController2D(mainExperiment, true);
 
-    mainExperiment.equipment.push(new BeakerController2D(new Beaker([50, 200], [100, 100], 20.0, 50.0, 0.03, 1)));
-    mainExperiment.equipment.push(new BeakerController2D(new Beaker([300, 200], [100, 100], 20.0, 50.0, 0.03, 2)));
-    mainExperiment.equipment.push(new BeakerController2D(new Beaker([550, 200], [100, 100], 20.0, 50.0, 0.03, 3)));
+    mainExpController.addEquipment(new BeakerController2D(new Beaker([50, 200], [100, 100], 20.0, 50.0, 0.03, 1)));
+    mainExpController.addEquipment(new BeakerController2D(new Beaker([300, 200], [100, 100], 20.0, 50.0, 0.03, 2)));
+    mainExpController.addEquipment(new BeakerController2D(new Beaker([550, 200], [100, 100], 20.0, 50.0, 0.03, 3)));
 
     let chem1 = new ChemicalController2D(new Chemical(5, "", 20, [255, 0, 0]));
     let chem2 = new ChemicalController2D(new Chemical(5, "", 20, [0, 0, 255]));
