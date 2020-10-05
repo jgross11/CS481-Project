@@ -18,7 +18,7 @@ class Experiment{
 
     /**
     Set the current list of EquipmentControllers used by this Experiment.
-    Also updates the list keeping track of equipment types
+    Also updates the list keeping track of Equipment types
     equipment: The list of EquipmentControllers to set for this Experiment
     */
     setEquipment(equipment){

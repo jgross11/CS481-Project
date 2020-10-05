@@ -36,10 +36,11 @@ class ExperimentController2D{
     }
 
     /**
-    Set the Equipment which this Controller has selected
+    Set the EquipmentController which this Controller has selected
+    selectControl: The EquipmentController to set
     */
-    setSelectedEquipment(selected){
-        this.selectedEquipment = selected;
+    setSelectedEquipment(selectControl){
+        this.selectedEquipment = selectControl;
     }
 
     /**
@@ -83,16 +84,16 @@ class ExperimentController2D{
 
     /**
     Add a new piece of Equipment to this Controller's Experiment. If the Equipment already exists, it is not added a second time
-    equipment: The EquipmentController with the Equipment to add
+    equipControl: The EquipmentController with the Equipment to add
     place: true to also place the given Equipment into the Experiment, false to just store it, default false
     */
-    addEquipment(equipment, place = false){
+    addEquipment(equipControl, place = false){
         let eqs = this.experiment.equipment;
-        if(!eqs.includes(equipment)){
-            eqs.push(equipment);
-            if(!place) this.equipmentBoxes.add(equipment);
+        if(!eqs.includes(equipControl)){
+            eqs.push(equipControl);
+            if(!place) this.equipmentBoxes.add(equipControl);
         }
-        if(place) this.placeEquipment(eqs.indexOf(equipment));
+        if(place) this.placeEquipment(eqs.indexOf(equipControl));
     }
 
     /**
@@ -111,29 +112,29 @@ class ExperimentController2D{
     /**
     Remove a piece of equipment from this Controller's Experiment.
     Does nothing if the equipment is not in the array
-    equipment: The Equipment to remove
+    equipControl: The EquipmentController to remove
     returns: true if the Equipment was removed, false otherwise
     */
-    removeEquipment(equipment){
-        this.unPlaceEquipment(equipment);
+    removeEquipment(equipControl){
+        this.unPlaceEquipment(equipControl);
 
         let eqs = this.experiment.equipment;
-        var index = eqs.indexOf(equipment);
+        var index = eqs.indexOf(equipControl);
         if(index !== -1){
             eqs.splice(index, 1);
-            this.equipmentBoxes.remove(equipment)
+            this.equipmentBoxes.remove(equipControl)
             return true;
         }
         return false;
     }
 
     /**
-    Remove a piece of Equipment from the Equipment placed in the Controller, but not this Controller's Experiment
-        list of this Controller's Experiment's Equipment
-    equipment: The Equipment to remove
+    Remove an EquipmentController from the EquipmentControllers placed in this ExperimentController,
+        but not this ExperimentController's Experiment.
+    equipControl: The EquipmentController to remove
     */
-    unPlaceEquipment(equipment){
-        var index = this.placedEquipment.indexOf(equipment);
+    unPlaceEquipment(equipControl){
+        var index = this.placedEquipment.indexOf(equipControl);
         if(index !== -1){
             this.placedEquipment.splice(index, 1);
             return true;
@@ -430,7 +431,7 @@ class EquipmentBoxList{
     get(i){
         let b = this.boxes[i];
         if(b === undefined) return b;
-        return this.boxes[i].equipment;
+        return this.boxes[i].equipControl;
     }
 
     /**
@@ -445,7 +446,7 @@ class EquipmentBoxList{
                 let r = b.bounds();
                 if(pointInRect2D(r, mouse)){
                     this.selected = b;
-                    this.selected.equipment.setCenter(mouse[0], mouse[1]);
+                    this.selected.equipControl.setCenter(mouse[0], mouse[1]);
                     return true;
                 }
             }
@@ -475,7 +476,7 @@ class EquipmentBoxList{
     */
     remove(equip){
         for(var i = 0; i < this.boxes.length; i++){
-            if(this.boxes[i].equipment === equip){
+            if(this.boxes[i].equipControl === equip){
                 this.boxes.splice(i, 1);
                 return true;
             }
@@ -486,22 +487,22 @@ class EquipmentBoxList{
     /**
     Place the EquipmentController2D to the selected EquipmentBox into the given ExperimentController2D
     Also deselect the selected box.
-    experiment: The ExperimentController2D to add the Controller to
+    expControl: The ExperimentController2D to add the Controller to
     returns: true if the Controller was added, false otherwise
     */
-    place(experiment){
+    place(expControl){
         let sel = this.selected;
         var success = false;
         if(sel !== null){
-            let expMouse = experiment.experimentMousePos();
-            this.selected.equipment.setCenter(expMouse[0], expMouse[1]);
-            let eqs = experiment.experiment.equipment;
+            let expMouse = expControl.experimentMousePos();
+            sel.equipControl.setCenter(expMouse[0], expMouse[1]);
+            let eqs = expControl.experiment.equipment;
 
-            let index = eqs.indexOf(sel.equipment);
+            let index = eqs.indexOf(sel.equipControl);
             if(index < 0) return false;
-            experiment.placeEquipment(index);
+            expControl.placeEquipment(index);
 
-            this.remove(sel.equipment);
+            this.remove(sel.equipControl);
             success = true;
         }
         // Let go of the inserting equipment
@@ -515,7 +516,7 @@ class EquipmentBoxList{
     */
     updateSelectPos(){
         if(this.selected !== null){
-            this.selected.equipment.setCenter(mouseX, mouseY);
+            this.selected.equipControl.setCenter(mouseX, mouseY);
             return true;
         }
         return false;
@@ -538,7 +539,7 @@ class EquipmentBoxList{
     drawSelected(g){
         let sel = this.selected;
         if(sel !== null){
-            sel.equipment.drawSprite(g);
+            sel.equipControl.drawSprite(g);
         }
     }
 
@@ -551,20 +552,20 @@ class EquipmentBox{
 
     /**
     Create a new EquipmentBox to handle drawing and mouse input for an Equipment box
-    equipment: The EquipmentController2D holding the Equipment to be rendered
+    equipControl: The EquipmentController2D holding the Equipment to be rendered
     index: The index position where this Box should be rendered
     */
-    constructor(equipment, index){
-        this.equipment = equipment;
+    constructor(equipControl, index){
+        this.equipControl = equipControl;
         this.index = index;
     }
 
     /**
     Set the EquipmentController2D used by this EquipmentBox
-    equipment: The EquipmentController2D to set
+    equipControl: The EquipmentController2D to set
     */
-    setEquipment(equipment){
-        this.equipment = equipment;
+    setEquipment(equipControl){
+        this.equipControl = equipControl;
     }
 
     /**
@@ -589,7 +590,7 @@ class EquipmentBox{
         let IMG_OFF = (SIZE - IMG_SIZE) * 0.5;
 
         g.rect(r[0], r[1], r[2], r[3]);
-        g.image(this.equipment.equipment.sprite, r[0] + IMG_OFF, r[1] + IMG_OFF, IMG_SIZE, IMG_SIZE);
+        g.image(this.equipControl.equipment.sprite, r[0] + IMG_OFF, r[1] + IMG_OFF, IMG_SIZE, IMG_SIZE);
     }
 
     /**

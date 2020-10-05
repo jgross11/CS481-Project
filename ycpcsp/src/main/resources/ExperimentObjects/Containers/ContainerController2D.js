@@ -37,12 +37,12 @@ class ContainerController2D extends EquipmentController2D{
     /**
     Pour the contents of this Controller's Container into the given Controller's Container. This will leave residue inside this Controller's Container.
     If the contents of this Controller's Container do not fit in the given Controller's Container, then as much as can fit will be poured
-    container: The ContainerController in which to pour this Controller's Container's contents
+    contControl: The ContainerController in which to pour this Controller's Container's contents
     */
-    pourInto(container){
-        if(this.equipment !== null && container !== null){
-            let chem = this.pourOut(this.maxPourAmount(container));
-            container.addTo(new ChemicalController2D(chem));
+    pourInto(contControl){
+        if(this.equipment !== null && contControl !== null){
+            let chem = this.pourOut(this.maxPourAmount(contControl));
+            contControl.addTo(new ChemicalController2D(chem));
         }
     }
 
@@ -75,16 +75,16 @@ class ContainerController2D extends EquipmentController2D{
 
     /**
     Add the given Controller's Chemical to this Controller's Container. Does nothing if the Chemical cannot be placed in this Controller's Container.
-    chemical: The Controller who's Chemical will be placed in this container
+    chemControl: The Controller who's Chemical will be placed in this container
     returns: true if the Controller's Chemical was successfully added, false otherwise
     */
-    addTo(chemical){
-        let chem = chemical.chemical
+    addTo(chemControl){
+        let chem = chemControl.chemical
         if(this.canContain(chem) && this.hasSpace(chem)){
             if(this.equipment.contents === null) this.equipment.setContents(chem);
             else{
                 var chemController = new ChemicalController2D(this.equipment.contents);
-                chemController.combine(chemical);
+                chemController.combine(chemControl);
                 this.checkForMass();
             }
             return true;
@@ -128,16 +128,16 @@ class ContainerController2D extends EquipmentController2D{
 
     /**
     Determine how much of the contents of this Controller's Container can be put into the given Controller's Container.
-    container: the Controller to check
+    contControl: the Controller to check
     returns: The mass which can be put into the given Controller's Container, or null if this Controller's Container is empty
     */
-    maxPourAmount(container){
+    maxPourAmount(contControl){
         let eq = this.equipment;
         if(eq === null) return null;
         let cont = eq.contents;
-        if(cont === null || container === null) return null;
+        if(cont === null || contControl === null) return null;
 
-        var maxSpace = container.remainingSpace();
+        var maxSpace = contControl.remainingSpace();
         return (cont.mass <= maxSpace) ? cont.mass : maxSpace;
     }
 

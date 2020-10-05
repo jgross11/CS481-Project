@@ -4,7 +4,6 @@ var mainExpController;
 /*
 
 TODO:
-    Rename parameter names to reflect which ones are controllers
     Make basic layout for Experiment
         Make rendering constants
         Split mouse and keyboard input into separate methods
@@ -18,6 +17,7 @@ TODO:
         Use P5 translate for graphics
         Create global function to get x and y mouse positions
         Objects which will not be on the screen should not be rendered, i.e. a renderBounds() method
+        Objects in the experiment should be forced to stay within the experiment bounds
     Optimize performance of searching for adding and removing Equipment, pick a better data structure
     Create code for Chemicals
     Modify ExperimentController2D code to handle abstraction as described by the TO DO comments
