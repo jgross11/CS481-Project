@@ -58,6 +58,15 @@ QUnit.test('EquipmentController2D height:', function(assert){
     assert.equal(controller.height(), 3, "Height should be 3");
 });
 
+QUnit.test('EquipmentController2D setCenter:', function(assert){
+    var equip = new Equipment([0, 0], [20, 30], 5.0, 2, null);
+    var controller = new EquipmentController2D(equip);
+    controller.setCenter(50, 100);
+
+    assert.equal(equip.position[0], 40, "Center x position should be 40");
+    assert.equal(equip.position[1], 85, "Center y position should be 85");
+});
+
 QUnit.test('EquipmentController2D toRect:', function(assert){
     var equip = new Equipment([12, 14], [58, 29], 5.0, 2, null);
     var controller = new EquipmentController2D(equip);

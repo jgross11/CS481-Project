@@ -4,17 +4,15 @@ var mainExpController;
 /*
 
 TODO:
-    Test case: EquipmentBox
-    Test case: EquipmentBoxList
-    Test case: ExperimentController2D.experimentMouseX, experimentMouseY, experimentMousePos, equipSquareBounds,
-        mouseRelease, mouseDragged
-        addEquipment, removeEquipment
-    Test case: EquipmentController2D.setCenter
+    Rename parameter names to reflect which ones are controllers
     Make basic layout for Experiment
+        Make rendering constants
         Split mouse and keyboard input into separate methods
         Make clicking based on left click specifically
+        Update clicking and dragging to change indexes for ExperimentBoxes when they are removed from the list
         Make Equipment already in the Experiment not show up in the Equipment list
         Split Experiment render code into individual methods
+        Store and display list of available Chemicals
     Add camera panning
         Use x and y camera coordinates in the ExperimentController2D
         Use P5 translate for graphics

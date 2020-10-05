@@ -24,10 +24,6 @@ class ExperimentController2D{
         var r = EXP_BOUNDS;
         this.experimentGraphics = graphics ? createGraphics(r[2], r[3]) : null;
 
-        /*
-        TODO
-            Need list of all chemicals which can be used in the lab
-        */
         this.reset();
     }
 
@@ -94,7 +90,7 @@ class ExperimentController2D{
         let eqs = this.experiment.equipment;
         if(!eqs.includes(equipment)){
             eqs.push(equipment);
-            this.equipmentBoxes.add(equipment);
+            if(!place) this.equipmentBoxes.add(equipment);
         }
         if(place) this.placeEquipment(eqs.indexOf(equipment));
     }
@@ -157,7 +153,7 @@ class ExperimentController2D{
         let eqs = this.experiment.equipment;
         for(var i = 0; i < eqs.length; i++){
             eqs[i].reset();
-            boxes.add(eqs[i]);
+            this.equipmentBoxes.add(eqs[i]);
         }
     }
 
@@ -266,7 +262,7 @@ class ExperimentController2D{
     */
     mouseDrag(){
         // If the equipment to be placed is selected, update it's position
-        this.equipmentBoxes.updateSelectPos(this);
+        this.equipmentBoxes.updateSelectPos();
     }
 
     /**
@@ -427,12 +423,14 @@ class EquipmentBoxList{
     }
 
     /**
-    Get the EquipmentBox with the given index
+    Get the EquipmentController2D of the EquipmentBox with the given index
     i: The index
     returns: The EquipmentBox
     */
     get(i){
-        return this.boxes[i];
+        let b = this.boxes[i];
+        if(b === undefined) return b;
+        return this.boxes[i].equipment;
     }
 
     /**
@@ -443,7 +441,7 @@ class EquipmentBoxList{
         if(this.selected === null){
             let mouse = [mouseX, mouseY];
             for(var i = 0; i < this.boxes.length; i++){
-                let b = this.get(i);
+                let b = this.boxes[i];
                 let r = b.bounds();
                 if(pointInRect2D(r, mouse)){
                     this.selected = b;
@@ -453,6 +451,13 @@ class EquipmentBoxList{
             }
         }
         return false;
+    }
+
+    /**
+    Deselect the currently selected box
+    */
+    unselect(){
+        this.selected = null;
     }
 
     /**
@@ -480,6 +485,7 @@ class EquipmentBoxList{
 
     /**
     Place the EquipmentController2D to the selected EquipmentBox into the given ExperimentController2D
+    Also deselect the selected box.
     experiment: The ExperimentController2D to add the Controller to
     returns: true if the Controller was added, false otherwise
     */
@@ -490,23 +496,29 @@ class EquipmentBoxList{
             let expMouse = experiment.experimentMousePos();
             this.selected.equipment.setCenter(expMouse[0], expMouse[1]);
             let eqs = experiment.experiment.equipment;
-            experiment.placeEquipment(eqs.indexOf(sel.equipment)); // TODO account for indexOf === -1
+
+            let index = eqs.indexOf(sel.equipment);
+            if(index < 0) return false;
+            experiment.placeEquipment(index);
+
             this.remove(sel.equipment);
             success = true;
         }
         // Let go of the inserting equipment
-        this.selected = null;
+        this.unselect();
         return success;
     }
 
     /**
     Set the center of the selected EquipmentBox to the mouse position
-    experiment: The experiment to base the position of the EquipmentBox
+    returns: true if the position was updated, false otherwise
     */
-    updateSelectPos(experiment){
+    updateSelectPos(){
         if(this.selected !== null){
             this.selected.equipment.setCenter(mouseX, mouseY);
+            return true;
         }
+        return false;
     }
 
     /**
