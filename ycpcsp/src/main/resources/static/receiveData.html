@@ -84,8 +84,10 @@
                 sessionStorage.setItem("username", user.username);
                 sessionStorage.setItem("password", user.password);
 
+                postData('receiveData-submit', data)
+
                 // for example, go to homepage
-                window.location.href = "/";
+                //window.location.href = "/";
             }
             else{
                 document.getElementById("error").innerHTML = "invalid login";
@@ -111,8 +113,10 @@
                 sessionStorage.setItem("username", user.username);
                 sessionStorage.setItem("password", user.password);
 
+                console.log(data)
+
                 // for example, go to homepage
-                window.location.href = "/";
+                //window.location.href = "/";
             }
             else{
                 document.getElementById("error").innerHTML = "invalid login";

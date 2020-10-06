@@ -6,6 +6,7 @@ package edu.ycpcsp.ycpcsp.Models
  */
 
 data class EquipmentObject(var _name : String) : ExperimentObject(_name) {
+
     override fun toString(): String {
         return name
     }

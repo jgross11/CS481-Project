@@ -11,9 +11,11 @@ data class Experiment(
                     var numSteps : Int
                     )
 {
-    var steps : Array<Step>
+    var steps : Array<Step> = Array<Step>(numSteps){Step(-1, EquipmentObject("NULL OBJECT"), EquipmentObject("NULL OBJECT"))}
+
+    constructor() : this("NULL", "NULL MCNULL", "NULL", 0){}
+
     init{
-        steps = Array<Step>(numSteps){Step(-1, ExperimentObject("NULL OBJECT"), ExperimentObject("NULL OBJECT"))}
         name = "\"$name\""
     }
 

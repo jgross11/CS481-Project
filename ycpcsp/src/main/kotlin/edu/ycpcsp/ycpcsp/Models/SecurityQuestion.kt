@@ -4,7 +4,7 @@ data class SecurityQuestion(var questionIndex : Int, var answer : String) {
     var question : String = ""
 
     constructor() : this(-1, ""){
-        answer = ""
+
     }
     init{
         if(questionIndex != -1)

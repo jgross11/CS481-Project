@@ -1,9 +1,11 @@
 package edu.ycpcsp.ycpcsp
 
+import edu.ycpcsp.ycpcsp.Models.*
 import edu.ycpcsp.ycpcsp.PostDataClasses.LoginFormData
 import edu.ycpcsp.ycpcsp.PostDataClasses.LoginFormData2
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
+import javax.servlet.http.HttpSession
 
 
 /**
@@ -131,15 +133,48 @@ class WebpageController {
     // which in this case is just what was submitted as json from the form
     // which in this case is something like
     // {username: [value], password: [value]}
-    fun testReceivingOfDataFromBackEndLongFunctionName(@RequestBody loginFormData: LoginFormData) : Boolean{
-        println("Received following login information")
+    fun testReceivingOfDataFromBackEndLongFunctionName(@RequestBody user : User, session : HttpSession) : User{
+        println("Received following information")
         // should print the User Kotlin object .toString()
         // for an output like: username | password
-        println(loginFormData)
+        // println(loginFormData)
+
+        // println(user.toString())
 
         // if we are sure we have a valid user object, we can query database, etc. and then return whatever result
         // to be interpreted by the front end
-        return loginFormData.username == "atestuser" && loginFormData.password == "atestpassword"
+        if(user.firstName != "Josh") {
+            println("making new user")
+            var user = User("Josh", "Gross", "jgross11@ycp.edu", "123123123", "York College of Pennsylvania")
+            var sq1 = SecurityQuestion(0, "Tippy")
+            var sq2 = SecurityQuestion(1, "Wouldn't you like to know, weather boy?")
+            var sq3 = SecurityQuestion(1, "Still not telling")
+            user.securityQuestions[0] = sq1
+            user.securityQuestions[1] = sq2
+            user.securityQuestions[2] = sq3
+            // create water object
+            var water = ChemicalObject("H2O", 1.0f, 0.0f)
+
+            // create beaker object
+            var beaker = EquipmentObject("10mL Beaker")
+
+            // create a step between water and a beaker
+            var waterInBeakerStep = Step(1, water, beaker)
+            var experiment = Experiment("Adding water to a beaker", user.getFullname(), "water, beaker", 1)
+            experiment.addStep(waterInBeakerStep, 0)
+            user.experiments[0] = experiment
+            return user
+        }
+        return user
+        /*
+        return if(loginFormData.username == "atestuser" && loginFormData.password == "atestpass"){
+            session.setAttribute("username", loginFormData.username)
+            session.setAttribute("password", loginFormData.password)
+            true
+        }
+        else{
+            false
+        }*/
     }
 
     @GetMapping("/receiveData2")
@@ -150,14 +185,12 @@ class WebpageController {
     @PostMapping(path = ["/receiveData-submit2"], consumes = ["application/json"], produces = ["application/json"])
 
     @ResponseBody
-
     fun testReceivingOfDataFromBackEndLongFunctionName2(@RequestBody loginFormData2: LoginFormData2) : Boolean{
         println("Received following login information")
 
         println(loginFormData2)
 
-
-        return loginFormData2.username == "atestuser" && loginFormData2.password == "-823606258"
+        return (loginFormData2.username == "atestuser" && loginFormData2.password == "-823606258")
     }
 
 }
