@@ -4,12 +4,9 @@ var mainExpController;
 /*
 
 TODO:
+    Test cases: ExperimentController2D.selectedEquipFunction, setMovingEquipment
     Make basic layout for Experiment
-        Make rendering constants
-        Split mouse and keyboard input into separate methods
-        Make clicking based on left click specifically
         Update clicking and dragging to change indexes for ExperimentBoxes when they are removed from the list
-        Make Equipment already in the Experiment not show up in the Equipment list
         Split Experiment render code into individual methods
         Store and display list of available Chemicals
     Add camera panning
@@ -94,4 +91,12 @@ P5.js function, called when a key on the keyboard is pressed
 */
 function keyPressed(){
     mainExpController.keyPress();
+}
+
+/**
+Function to stop the right click menu from showing up
+*/
+document.oncontextmenu = function(){
+    // TODO still should activate this normally when mouse is not inside P5 canvas
+    return false;
 }

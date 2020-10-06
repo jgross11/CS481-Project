@@ -14,3 +14,5 @@ let EXP_EQUIP_BOX_SIZE = 70;
 let EXP_EQUIP_BOX_OFF_X = 10;
 // The y axis offset, for a box rendered for the available Equipment display
 let EXP_EQUIP_BOX_OFF_Y = -10;
+// The relative size of drawn sprites on the Equipment display
+let EXP_EQUIP_BOX_SPRITE_SIZE = 0.8;

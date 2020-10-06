@@ -10,7 +10,15 @@ class ExperimentController2D{
     */
     constructor(experiment, graphics = false){
         this.experiment = experiment;
+
+        // The EquipmentController2D object which is being selected for interactions
         this.selectedEquipment = null;
+
+        // The EquipmentController2D object which is being selected and moved by the mouse
+        this.movingEquipment = null;
+        // The position of the mouse when the EquipmentController2D was when selecting it for movement
+        this.movingEquipAnchor = [0, 0];
+
         this.instructions = []
         this.instructionCounter = 0;
 
@@ -36,11 +44,24 @@ class ExperimentController2D{
     }
 
     /**
-    Set the EquipmentController which this Controller has selected
+    Set the EquipmentController which this ExperimentController has selected
     selectControl: The EquipmentController to set
     */
     setSelectedEquipment(selectControl){
         this.selectedEquipment = selectControl;
+    }
+
+    /**
+    Set the EquipmentController which this ExperimentController has chosen for movement with the mouse
+    moveControl: The EquipmentController to set
+    */
+    setMovingEquipment(moveControl){
+        this.movingEquipment = moveControl;
+        if(this.movingEquipment !== null){
+            let p = this.movingEquipment.equipment.position;
+            let m = this.experimentMousePos();
+            this.movingEquipAnchor = [p[0] - m[0], p[1] - m[1]];
+        }
     }
 
     /**
@@ -209,31 +230,44 @@ class ExperimentController2D{
     }
 
     /**
+    Call to activate a specific function on the selected EquipmentController
+    func: The function to use TODO define how this variable will be used
+    */
+    selectedEquipFunction(func){
+        // TODO modify this so that this particular set of calls is only made for beakers
+        this.selectedEquipment.pourInto(this.findEquipmentByPosition(this.experimentMousePos(), select));
+        this.setSelectedEquipment(null);
+    }
+
+    /**
     Call when the mouse is pressed
     */
     mousePress(){
-        // If there is a selected object, check for another piece of Equipment, combine the chemicals if one is found,
-        //  and unselect the original
-        let select = this.selectedEquipment;
-        let expMouse = this.experimentMousePos();
+        // Convenience variables
         let mouse = [mouseX, mouseY];
+        let expMouse = this.experimentMousePos();
+        let inExpBounds = pointInRect2D(EXP_BOUNDS, mouse);
+        let isSelect = this.selectedEquipment !== null;
 
-        // If the mouse is inside the rendered Experiment, check for mouse behavior inside the rendered Experiment
-        if(pointInRect2D(EXP_BOUNDS, mouse)){
-            if(select !== null){
-                // TODO modify this so that this particular set of calls is only made for beakers
-                select.pourInto(this.findEquipmentByPosition(expMouse, select));
-                this.setSelectedEquipment(null);
+        // Handle left click, for moving objects
+        if(mouseButton === LEFT){
+            // If the mouse is outside the bounds, attempt to select an EquipmentBox
+            if(!inExpBounds){
+                this.equipmentBoxes.selectBox();
             }
-            // Otherwise, determine which object is selected by the mouse, if any
-            else{
-                this.setSelectedEquipment(this.findEquipmentByPosition(expMouse));
-            }
+            // If there is no selection made for movement, make a selection
+            if(this.movingEquipment === null) this.setMovingEquipment(this.findEquipmentByPosition(expMouse));
         }
-        // Otherwise, handle clicking outside the rendered Experiment
-        else{
-            // Check for if the mouse clicked on an Equipment square, select one if it did
-            this.equipmentBoxes.selectBox();
+
+        // Handle right click, for selecting objects
+        else if(mouseButton === RIGHT){
+            // If in the Experiment bounds, check for object interaction
+            if(inExpBounds){
+                // If an object is selected, run a function on it
+                if(isSelect) this.selectedEquipFunction(null);
+                // Otherwise, attempt to select a piece of Equipment
+                else this.setSelectedEquipment(this.findEquipmentByPosition(expMouse));
+            }
         }
     }
 
@@ -241,10 +275,13 @@ class ExperimentController2D{
     Call when the mouse is released
     */
     mouseRelease(){
-        let eqs = this.experiment.equipment;
-        // If the mouse is inside the experiment, add the equipment
-        if(pointInRect2D(EXP_BOUNDS, [mouseX, mouseY])){
-            this.equipmentBoxes.place(this);
+        // Handle left click, for moving objects
+        if(mouseButton === LEFT){
+            // If the mouse is inside the experiment, attempt to add the Equipment from the Equipment boxes
+            if(pointInRect2D(EXP_BOUNDS, [mouseX, mouseY])){
+                this.equipmentBoxes.place(this);
+            }
+            this.setMovingEquipment(null);
         }
     }
 
@@ -252,10 +289,6 @@ class ExperimentController2D{
     Call when the mouse is moved
     */
     mouseMove(){
-        // TODO add this back in to allow mouse movement
-        //if(this.selectedEquipment !== null){
-        //    this.selectedEquipment.equipment.setPosition(this.experimentMousePos());
-        //}
     }
 
     /**
@@ -264,6 +297,14 @@ class ExperimentController2D{
     mouseDrag(){
         // If the equipment to be placed is selected, update it's position
         this.equipmentBoxes.updateSelectPos();
+
+        // Update the position of the object being moved by the mouse
+        if(this.movingEquipment !== null){
+            var pos = this.experimentMousePos();
+            pos[0] += this.movingEquipAnchor[0];
+            pos[1] += this.movingEquipAnchor[1];
+            this.movingEquipment.equipment.setPosition(pos);
+        }
     }
 
     /**
@@ -289,11 +330,6 @@ class ExperimentController2D{
             case 'r':
                 this.reset();
                 break;
-
-            // TODO this is a temporary control until beakers can be clicked and dragged in
-            case 'z': this.placeEquipment(0); break;
-            case 'x': this.placeEquipment(1); break;
-            case 'c': this.placeEquipment(2); break;
 
             default:
                 if(eq === null) break;
@@ -354,6 +390,22 @@ class ExperimentController2D{
             expG.rect(sel.x(), sel.y(), sel.width(), sel.height());
         }
 
+        // TODO remove, only here for testing purposes
+        // Draw instructions
+        expG.fill(color(0, 0, 0));
+        expG.noStroke();
+        expG.textSize(18);
+        var y = 410;
+        let x = 650;
+        expG.text("Left click a beaker to move it", x, y += 20);
+        expG.text("Right click a beaker to select it", x, y += 20);
+        expG.text("Press 1 to put red chemical to selected beaker", x, y += 20);
+        expG.text("Press 2 to put green chemical to selected beaker", x, y += 20);
+        expG.text("Press 3 to put blue chemical to selected beaker", x, y += 20);
+        expG.text("Press ESC to empty the selected beaker", x, y += 20);
+        expG.text("Click an unselected beaker to combine the chemical in the selected beaker", x, y += 20);
+        expG.text("Press I to run the next instruction", x, y += 20);
+        expG.text("Press R to reset the simulation", x, y += 20);
 
         // Draw options button
         // TODO
@@ -383,24 +435,6 @@ class ExperimentController2D{
 
         // Draw the equipment to be placed in the Experiment
         this.equipmentBoxes.drawSelected(g);
-
-
-        // Draw instructions
-        g.fill(color(0, 0, 0));
-        g.noStroke();
-        g.textSize(18);
-        var y = 500;
-        let x = 400;
-        // TODO remove text, only here for testing purposes
-        g.text("Press z, x, c to add beaker 1, 2, 3 respectively", x, y += 20);
-        g.text("Click a beaker to select it", x, y += 20);
-        g.text("Press 1 to put red chemical to selected beaker", x, y += 20);
-        g.text("Press 2 to put green chemical to selected beaker", x, y += 20);
-        g.text("Press 3 to put blue chemical to selected beaker", x, y += 20);
-        g.text("Press ESC to empty the selected beaker", x, y += 20);
-        g.text("Click an unselected beaker to combine the chemical in the selected beaker", x, y += 20);
-        g.text("Press I to run the next instruction", x, y += 20);
-        g.text("Press R to reset the simulation", x, y += 20);
 
         // Draw the final graphics image to the canvas
         image(g, 0, 0);
@@ -580,13 +614,14 @@ class EquipmentBox{
     Draw a single piece of Equipment for displaying at the bottom of the screen.
     Draws a rectangle along with the equipment picture.
     Set stroke and fill before calling this method
-    g: The P5 grahpics object to use for rendering
+    g: The P5 graphics object to use for rendering
     */
     draw(g){
         let SIZE = EXP_EQUIP_BOX_SIZE;
 
         let r = this.bounds();
-        let IMG_SIZE = 0.8 * SIZE;
+        let IMG_SIZE = EXP_EQUIP_BOX_SPRITE_SIZE * SIZE;
+        // 0.5 constant for centering, not adjustable
         let IMG_OFF = (SIZE - IMG_SIZE) * 0.5;
 
         g.rect(r[0], r[1], r[2], r[3]);
