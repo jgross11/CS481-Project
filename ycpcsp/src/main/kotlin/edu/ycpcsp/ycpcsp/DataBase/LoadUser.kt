@@ -6,11 +6,11 @@ import java.util.*
 import edu.ycpcsp.ycpcsp.Models.*
 
 //enum class UserFields {FirstName, LastName, Email, Password, School}
-var FirstName = 0
-var LastName = 1
-var Email = 2
-var Password = 3
-var School = 4
+var FirstName = 1
+var LastName = 2
+var Email = 3
+var Password = 4
+var School = 5
 
 fun loadUser(email: String): User? {
     val serverCredentials = serverCredential()
@@ -29,7 +29,7 @@ fun loadUser(email: String): User? {
 
         val conn = DriverManager.getConnection(url, connectionProps)
         val st = conn.createStatement()
-        val rs = st.executeQuery("SELECT firstName, lastName, organization FROM Database.Users where email = \"$email\";")
+        val rs = st.executeQuery("SELECT * FROM Database.Users where email = \"$email\";")
 
         rs.next()
 
