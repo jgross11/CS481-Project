@@ -1,24 +1,24 @@
 package edu.ycpcsp.ycpcsp
 
-import edu.ycpcsp.ycpcsp.DataBase.LoadUser
-import edu.ycpcsp.ycpcsp.DataBase.VerifyUser
+import edu.ycpcsp.ycpcsp.DataBase.loadUser
+import edu.ycpcsp.ycpcsp.DataBase.verifyUser
 
 fun main(){
-    //TODO this section of code tests VerifyUser.kt
+    //TODO this section of code tests verifyUser.kt
     val email = "test@test.com"
     val userPassword = "1234"
-    println("=============================End VerifyUser Test=============================")
-    if(VerifyUser(email, userPassword)){
+    println("=============================End verifyUser Test=============================")
+    if(verifyUser(email, userPassword)){
         println("Test verifyUser is working")
     } else{
         println("Error verifyUser does not work")
     }
-    println("=============================End VerifyUser Test=============================")
+    println("=============================End verifyUser Test=============================")
 
-    //TODO this section of code tests LoadUser
-    var userEntries : MutableList<String> = LoadUser(email)
+    //TODO this section of code tests loadUser
+    var userEntries : MutableList<String> = loadUser(email)
     var testCompare : Array<String> = arrayOf("test", "Name", "test-inc")
-    println("=============================Begin LoadUser Test=============================")
+    println("=============================Begin loadUser Test=============================")
     if(userEntries.isNotEmpty()) {
         for (i in 0 until userEntries.size) {
             if (userEntries[i].compareTo(testCompare[i]) == 0) {
@@ -29,6 +29,6 @@ fun main(){
         }
     }
     println()
-    println("=============================End LoadUser Test=============================")
+    println("=============================End loadUser Test=============================")
 }
 

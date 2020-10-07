@@ -4,7 +4,7 @@ import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.*
 
-fun LoadUser(email: String): MutableList<String> {
+fun loadUser(email: String): MutableList<String> {
     val connectionProps = Properties()
     connectionProps["user"] = username
     connectionProps["password"] = password
