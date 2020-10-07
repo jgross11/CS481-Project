@@ -4,12 +4,16 @@ import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.*
 
-//apparently naming a const val keeps it global across kotlin classes?
-
-
-
 //the class as a method is currently not working
 fun verifyUser(email: String, userPassword: String): Boolean {
+//    val serverCredentials = serverCredential()
+//    val username = serverCredentials?.get(0)
+//    val password = serverCredentials?.get(1)
+//    val url = serverCredentials?.get(2)
+    val username = "admin"
+    val password = "ruRkob-6zoqvu-nywryf"
+    val url = "jdbc:mysql://cs481database.c4fmzwru5eoe.us-east-2.rds.amazonaws.com:3306/Database"
+
     val connectionProps = Properties()
     connectionProps["user"] = username
     connectionProps["password"] = password
@@ -33,6 +37,6 @@ fun verifyUser(email: String, userPassword: String): Boolean {
         // handle any errors
         ex.printStackTrace()
     }
-    //this false statement is just so the program stops getting angry with me
+    //returns false if there is no
     return false
 }

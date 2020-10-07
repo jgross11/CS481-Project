@@ -5,7 +5,7 @@ import edu.ycpcsp.ycpcsp.DataBase.verifyUser
 
 fun main(){
     //TODO this section of code tests verifyUser.kt
-    val email = "test@test.com"
+    val email = "test@yeet.com"
     val userPassword = "1234"
     println("=============================End verifyUser Test=============================")
     if(verifyUser(email, userPassword)){
@@ -16,17 +16,14 @@ fun main(){
     println("=============================End verifyUser Test=============================")
 
     //TODO this section of code tests loadUser
-    var userEntries : MutableList<String> = loadUser(email)
-    var testCompare : Array<String> = arrayOf("test", "Name", "test-inc")
+    var testUser = loadUser(email)
+    var testCompare : Array<String> = arrayOf("Test", "Name")
     println("=============================Begin loadUser Test=============================")
-    if(userEntries.isNotEmpty()) {
-        for (i in 0 until userEntries.size) {
-            if (userEntries[i].compareTo(testCompare[i]) == 0) {
-                print(" This is working ")
-            } else {
-                print(" not working ")
-            }
-        }
+    if(testUser != null) {
+        assert(testUser.firstName.compareTo(testCompare[0]) == 0)
+        assert(testUser.lastName.compareTo(testCompare[1]) == 0)
+        println("loadUser works just fine")
+
     }
     println()
     println("=============================End loadUser Test=============================")
