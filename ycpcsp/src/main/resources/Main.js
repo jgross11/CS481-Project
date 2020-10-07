@@ -4,9 +4,12 @@ var mainExpController;
 /*
 
 TODO:
+    Create code for Chemicals, display a Chemical tab
+    Make proper layout page with home button
     Test cases: ExperimentController2D.selectedEquipFunction, setMovingEquipment
     Move beaker specific code to BeakerController, func should be an ID
     Make test cases use a before method
+    Make a better way of Chemicals in Instructions to keep their stats so they don't change, or maybe have a reset?
     Make basic layout for Experiment
         Update clicking and dragging to change indexes for ExperimentBoxes when they are removed from the list
         Split Experiment render code into individual methods
@@ -17,8 +20,8 @@ TODO:
         Create global function to get x and y mouse positions
         Objects which will not be on the screen should not be rendered, i.e. a renderBounds() method
         Objects in the experiment should be forced to stay within the experiment bounds
+    Allow chemicals to be disposed
     Optimize performance of searching for adding and removing Equipment, pick a better data structure
-    Create code for Chemicals
     Modify ExperimentController2D code to handle abstraction as described by the TO DO comments
         Set it up so that each piece of equipment has a list of interaction methods
         So it would be actor and receiver methods?
