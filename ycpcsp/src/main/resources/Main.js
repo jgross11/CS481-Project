@@ -5,6 +5,8 @@ var mainExpController;
 
 TODO:
     Test cases: ExperimentController2D.selectedEquipFunction, setMovingEquipment
+    Move beaker specific code to BeakerController, func should be an ID
+    Make test cases use a before method
     Make basic layout for Experiment
         Update clicking and dragging to change indexes for ExperimentBoxes when they are removed from the list
         Split Experiment render code into individual methods

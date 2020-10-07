@@ -171,6 +171,7 @@ class ExperimentController2D{
         this.equipmentBoxes = new EquipmentBoxList();
         this.selectedEquipment = null;
         this.instructionCounter = 0;
+        // TODO after calling reset, instructions don't work, fix this
         if(this.experiment === null) return;
         let eqs = this.experiment.equipment;
         for(var i = 0; i < eqs.length; i++){
@@ -280,6 +281,9 @@ class ExperimentController2D{
             // If the mouse is inside the experiment, attempt to add the Equipment from the Equipment boxes
             if(pointInRect2D(EXP_BOUNDS, [mouseX, mouseY])){
                 this.equipmentBoxes.place(this);
+            }
+            else{
+                this.equipmentBoxes.unselect();
             }
             this.setMovingEquipment(null);
         }
@@ -533,11 +537,12 @@ class EquipmentBoxList{
             let eqs = expControl.experiment.equipment;
 
             let index = eqs.indexOf(sel.equipControl);
-            if(index < 0) return false;
-            expControl.placeEquipment(index);
-
-            this.remove(sel.equipControl);
-            success = true;
+            if(index < 0) success = false;
+            else{
+                expControl.placeEquipment(index);
+                this.remove(sel.equipControl);
+                success = true;
+            }
         }
         // Let go of the inserting equipment
         this.unselect();

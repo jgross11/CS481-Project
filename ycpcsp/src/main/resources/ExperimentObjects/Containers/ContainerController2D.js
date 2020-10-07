@@ -74,17 +74,21 @@ class ContainerController2D extends EquipmentController2D{
     }
 
     /**
-    Add the given Controller's Chemical to this Controller's Container. Does nothing if the Chemical cannot be placed in this Controller's Container.
+    Add a copy of the given Controller's Chemical to this Controller's Container. Does nothing if the Chemical cannot be placed in this Controller's Container.
     chemControl: The Controller who's Chemical will be placed in this container
     returns: true if the Controller's Chemical was successfully added, false otherwise
     */
     addTo(chemControl){
-        let chem = chemControl.chemical
+        let chem = chemControl.copyChem();
+        let copyControl = new ChemicalController2D(chem);
+
         if(this.canContain(chem) && this.hasSpace(chem)){
-            if(this.equipment.contents === null) this.equipment.setContents(chem);
+            if(this.equipment.contents === null){
+                this.equipment.setContents(chem);
+            }
             else{
-                var chemController = new ChemicalController2D(this.equipment.contents);
-                chemController.combine(chemControl);
+                var thisChemControl = new ChemicalController2D(this.equipment.contents);
+                thisChemControl.combine(copyControl);
                 this.checkForMass();
             }
             return true;
