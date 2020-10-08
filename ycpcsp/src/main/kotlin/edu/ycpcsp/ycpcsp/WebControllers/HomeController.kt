@@ -15,7 +15,7 @@ class HomeController {
 
     // sends homepage html file to user
     @GetMapping("/", "/home")
-    fun home(): String{
+    fun sendHomePage(): String{
         println("Sending user to home page...")
         return "home.html"
     }
