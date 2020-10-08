@@ -149,8 +149,6 @@
                 email: email,
                 password: password
             };
-            console.log("POSTing");
-            console.log(user);
             postData('login-submit', user).then(function(data){
                 console.log(data);
                 // TODO handle logic
