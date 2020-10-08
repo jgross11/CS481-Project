@@ -13,7 +13,7 @@ data class Experiment(
 {
     var steps : Array<Step>
     init{
-        steps = Array<Step>(numSteps){Step(-1, ExperimentObject("NULL OBJECT"), ExperimentObject("NULL OBJECT"))}
+        steps = Array<Step>(numSteps){Step(-1, ExperimentObject(-1), ExperimentObject(-1))}
         name = "\"$name\""
     }
 

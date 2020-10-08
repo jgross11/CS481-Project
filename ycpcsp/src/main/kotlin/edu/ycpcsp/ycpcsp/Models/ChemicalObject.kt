@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName
 @JsonTypeName("chemical")
 
 data class ChemicalObject(
-                        var _name : String,
+                        var _name : Int,
                         var quantity : Float,
                         var concentration : Float
                         ) : ExperimentObject(_name)
