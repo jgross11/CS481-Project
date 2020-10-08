@@ -2,6 +2,7 @@
 
 <link href="Signup.css" rel = "stylesheet" type="text/css">
 <script src="helperFunctions.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.12.0/js/md5.min.js"></script>
 <form id="signup-form" name="signup-form" action="/signup-submit" method="post">
     <label for="fname">First name:</label><br>
     <div name="fname-error" id="fname-error"></div><br>
@@ -92,7 +93,24 @@
 
             // if every condition is satisfied, then submit the information
             if(fnameGood && lnameGood && emailGood && passwordGood && confirmPasswordGood && passwordsMatch && schoolGood && sq1aGood && sq2aGood && sq3aGood && securityQuestionsAreUnique){
-                document.getElementById("signup-form").submit();
+                var formData = {
+                    firstName: fname.value,
+                    lastName: lname.value,
+                    email: email.value,
+                    password: md5(password.value),
+                    school: school.value,
+                    sq1: sq1.selectedIndex,
+                    sq1a: sq1a.value,
+                    sq2: sq2.selectedIndex,
+                    sq2a: sq2a.value,
+                    sq3: sq3.selectedIndex,
+                    sq3a: sq3a.value
+                };
+                console.log(formData);
+                postData('signup-submit', formData).then(function(data){
+                    console.log(data);
+                    // TODO handle logic
+                });
             }
             // create applicable errors
             else{
