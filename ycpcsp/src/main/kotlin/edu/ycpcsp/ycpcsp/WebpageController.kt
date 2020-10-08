@@ -42,7 +42,7 @@ class WebpageController {
     @GetMapping("/simulation")
     fun simulation() : String{
         println("Sending user to \"simulation\" page")
-        return "beakerDemo.html"
+        return "simulator.html"
     }
 
     // handles forgotten password form post

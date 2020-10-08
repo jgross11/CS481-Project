@@ -32,7 +32,8 @@ TODO:
 P5.js function, called when script is initially loaded
 */
 function setup(){
-    createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
+    let canvas = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
+    canvas.position(50, 50, "relative");
 
     loadImages();
     mainExperiment = new Experiment("Test Experiment", "Personus Namington");
