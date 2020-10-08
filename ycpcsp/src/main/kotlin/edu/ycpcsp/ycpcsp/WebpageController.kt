@@ -38,6 +38,13 @@ class WebpageController {
         return "recoverinfo.html"
     }
 
+    // sends recover info html file to user
+    @GetMapping("/simulation")
+    fun simulation() : String{
+        println("Sending user to \"simulation\" page")
+        return "beakerDemo.html"
+    }
+
     // handles forgotten password form post
     @PostMapping(path=["/forgot-password-submit"], consumes = ["application/x-www-form-urlencoded"])
     fun receiveForgottenPasswordInformation(
