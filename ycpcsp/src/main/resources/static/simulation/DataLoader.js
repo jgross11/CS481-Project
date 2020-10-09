@@ -1,3 +1,5 @@
+let SESSION_EXPERIMENT_NAME = "experimentData";
+
 /**
 Function to load data from the session storage
 */
@@ -13,25 +15,19 @@ async function loadSessionData(){
         into a usable format, and then the logic handling
         a good / bad response is executed.
     */
+    let experiment = getTestJSON();
+    sessionStorage.setItem(SESSION_EXPERIMENT_NAME, JSON.stringify(experiment));
 
-    let experiment = {
-        title: "TestName1",
-        creator: "Maker"
-    }
-
-    postData('simulation-data', experiment).then(function(data){
-        console.log("data: "); // TODO
-        console.log(data); // TODO
+    /*postData('simulation-data', experiment).then(function(data){
         // successful login - store login info in session
         if(data){
             // store user information in session info
             sessionStorage.setItem("experimentData", data);
         }
         else{
-        console.log("failed to load data"); // TODO
+            console.log("Failed to load experiment data");
         }
-    });
-
+    });*/
 }
 /*
 POSTs an object to a mapping and returns the obtained response
@@ -111,6 +107,7 @@ function parseExperiment(rawData){
 
 /**
 Helper function for sorting an array
+TODO move to Utils.js?
 */
 function sortByKey(array, key){
     return array.sort(function(a, b){

@@ -38,7 +38,7 @@ class WebpageController {
         return "recoverinfo.html"
     }
 
-    // sends recover info html file to user
+    // Sends user to the Simulation page
     @GetMapping("/simulation")
     fun simulation() : String{
         println("Sending user to \"simulation\" page")

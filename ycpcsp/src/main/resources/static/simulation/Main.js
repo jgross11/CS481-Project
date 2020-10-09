@@ -42,10 +42,12 @@ function setup(){
     // First load image assets
     loadImages();
 
-    // TODO load JSON experiment data from the backend
-    //loadSessionData();
+    // Grab data from session storage
+    loadSessionData();
+    let data = JSON.parse(sessionStorage.getItem(SESSION_EXPERIMENT_NAME));
 
-    let mainExperiment = parseExperiment(getTestJSON());
+    //let mainExperiment = parseExperiment(getTestJSON());
+    let mainExperiment = parseExperiment(data);
 
     let canvas = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
     canvas.position(50, 50, "relative");
