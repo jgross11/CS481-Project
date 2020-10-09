@@ -4,19 +4,16 @@ var mainExpController;
 /*
 
 TODO:
-    Make parser for backend json to front end Experiment
-    Make a file of constants for object ids for equipment in DataLoader
-    Make a file of constants for object ids for chemicals in DataLoader
-    Make constants for function ids in ContainerController
     Test cases ExperimentObjectController2D.idToFunc
     Test cases ChemicalController2D.idToFunc
     Test cases ContainerController2D.idToFunc
     Test cases Experiment.setChemicals, constructor(update with chemicals)
     Test cases DataLoader
+    Allow backend to send a json file to session storage
     Make parser for front end Experiment to backend json
     Make proper layout page with home button
-    Create code for Chemicals, display a Chemical tab
     Test cases: ExperimentController2D.selectedEquipFunction, setMovingEquipment
+    Create code for Chemicals, display a Chemical tab
     Move beaker specific code to BeakerController, func should be an ID
     Make test cases use a before method
     Make a better way of Chemicals in Instructions to keep their stats so they don't change, or maybe have a reset?

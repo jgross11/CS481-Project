@@ -16,12 +16,4 @@ class Beaker extends Container{
     constructor(position, size, mass, capacity, residue, instanceID){
         super(position, size, mass, capacity, residue, instanceID, SPRITE_BEAKER);
     }
-
-    /**
-    Get the type ID for beaker
-    returns: The ID
-    */
-    getEquipID(){
-        return EQUIP_ID_BEAKER;
-    }
 }

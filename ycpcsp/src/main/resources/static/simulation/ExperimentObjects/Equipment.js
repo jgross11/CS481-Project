@@ -51,12 +51,4 @@ class Equipment extends ExperimentObject{
         this.sprite = sprite;
     }
 
-    /**
-    Get the ID for the type of this piece of Equipment
-    returns: The ID
-    */
-    getEquipID(){
-        throw new Error("All Equipment must implement getEquipID");
-    }
-
 }

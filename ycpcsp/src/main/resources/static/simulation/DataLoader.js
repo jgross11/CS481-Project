@@ -130,7 +130,7 @@ returns: The Equipment, or null if an invalid ID is given
 function idToEquipment(id, instanceID){
     switch(id){
         // Default beaker
-        case 1: return new BeakerController2D(new Beaker([50, 200], [100, 100], 20.0, 50.0, 0.03, instanceID));
+        case ID_EQUIP_BEAKER_TEST: return new BeakerController2D(new Beaker([50, 200], [100, 100], 20.0, 50.0, 0.03, instanceID));
         default: return null;
     }
 }
@@ -146,9 +146,9 @@ function idToChemical(id, mass, concentration){
     var chem;
     switch(id){
         // Test chemicals
-        case 1: chem = new Chemical(5, "", 20, [255, 0, 0]); break;
-        case 2: chem = new Chemical(5, "", 20, [0, 0, 255]); break;
-        case 3: chem = new Chemical(20, "", 20, [255, 255, 255]); break;
+        case ID_CHEM_TEST_SMALL_RED: chem = new Chemical(5, "", 20, [255, 0, 0]); break;
+        case ID_CHEM_TEST_SMALL_BLUE: chem = new Chemical(5, "", 20, [0, 0, 255]); break;
+        case ID_CHEM_TEST_LARGE_WHITE: chem = new Chemical(20, "", 20, [255, 255, 255]); break;
         default: return null;
     }
     return new ChemicalController2D(chem);

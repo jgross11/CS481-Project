@@ -17,8 +17,8 @@ class ContainerController2D extends EquipmentController2D{
     */
     idToFunc(id){
         switch(id){
-            case 2: return this.addTo;
-            case 1: return this.pourInto;
+            case ID_FUNC_CONTAINER_POUR_INTO: return this.pourInto;
+            case ID_FUNC_CONTAINER_ADD_TO: return this.addTo;
         }
     }
 
