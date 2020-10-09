@@ -36,6 +36,14 @@ class ChemicalController2D extends ExperimentObjectController2D{
         return false;
     }
 
+    /**
+    Convert the given id to its corresponding function
+    id: The id to convert
+    returns: The function of the id
+    */
+    idToFunc(id){
+        return null;
+    }
 
     /**
     Determine the number of moles of this Controller's Chemical

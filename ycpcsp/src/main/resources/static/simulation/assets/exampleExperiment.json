@@ -70,9 +70,5 @@
 				"functionID": 0
 			}
 		]
-	},
-
-	"This is not data": "this is for comments, this file isn't meant for actual use",
-	"1": "functionID is the function that gets called",
-	"2": "Each instance of a chemical is stored with it's specific mass and concentration, these instances only need to exist for steps",
+	}
 }

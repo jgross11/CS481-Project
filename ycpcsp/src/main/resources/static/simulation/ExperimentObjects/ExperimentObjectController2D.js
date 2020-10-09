@@ -10,6 +10,7 @@ class ExperimentObjectController2D{
 
     /**
     Get the ExperimentObject controlled by this Controller
+    Always throws an error, instances of this object must implement this method.
     */
     getObject(){
         throw new Error("All ExperimentObjectController2D objects must implement getObject");
@@ -17,10 +18,19 @@ class ExperimentObjectController2D{
 
     /**
     Determine if this Controller's ExperimentObject can be placed down on its own
-    returns: true if the ExperimentObject can be placed down, false otherwise
+    Always throws an error, instances of this object must implement this method.
     */
     canPlace(){
         throw new Error("All ExperimentObjectController2D objects must implement canPlace");
+    }
+
+    /**
+    Convert the given id to its corresponding function
+    id: The id to convert
+    Always throws an error, instances of this object must implement this method.
+    */
+    idToFunc(id){
+        throw new Error("All ExperimentObjectController2D objects must implement idToFunc");
     }
 
 }

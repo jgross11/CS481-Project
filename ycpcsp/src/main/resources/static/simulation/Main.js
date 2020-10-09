@@ -4,8 +4,18 @@ var mainExpController;
 /*
 
 TODO:
-    Create code for Chemicals, display a Chemical tab
+    Make parser for backend json to front end Experiment
+    Make a file of constants for object ids for equipment in DataLoader
+    Make a file of constants for object ids for chemicals in DataLoader
+    Make constants for function ids in ContainerController
+    Test cases ExperimentObjectController2D.idToFunc
+    Test cases ChemicalController2D.idToFunc
+    Test cases ContainerController2D.idToFunc
+    Test cases Experiment.setChemicals, constructor(update with chemicals)
+    Test cases DataLoader
+    Make parser for front end Experiment to backend json
     Make proper layout page with home button
+    Create code for Chemicals, display a Chemical tab
     Test cases: ExperimentController2D.selectedEquipFunction, setMovingEquipment
     Move beaker specific code to BeakerController, func should be an ID
     Make test cases use a before method
@@ -32,29 +42,18 @@ TODO:
 P5.js function, called when script is initially loaded
 */
 function setup(){
+    // First load image assets
+    loadImages();
+
+    // TODO load JSON experiment data from the backend
+    //loadSessionData();
+
+    let mainExperiment = parseExperiment(getTestJSON());
+
     let canvas = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
     canvas.position(50, 50, "relative");
 
-    loadImages();
-    mainExperiment = new Experiment("Test Experiment", "Personus Namington");
     mainExpController = new ExperimentController2D(mainExperiment, true);
-
-    mainExpController.addEquipment(new BeakerController2D(new Beaker([50, 200], [100, 100], 20.0, 50.0, 0.03, 1)));
-    mainExpController.addEquipment(new BeakerController2D(new Beaker([300, 200], [100, 100], 20.0, 50.0, 0.03, 2)));
-    mainExpController.addEquipment(new BeakerController2D(new Beaker([550, 200], [100, 100], 20.0, 50.0, 0.03, 3)));
-
-    let chem1 = new ChemicalController2D(new Chemical(5, "", 20, [255, 0, 0]));
-    let chem2 = new ChemicalController2D(new Chemical(5, "", 20, [0, 0, 255]));
-    let chem3 = new ChemicalController2D(new Chemical(20, "", 20, [255, 255, 255]));
-
-    let eqs = mainExperiment.equipment;
-    var ins = [];
-    ins.push(new InstructionController2D(new Instruction(eqs[0], chem1, eqs[0].addTo)));
-    ins.push(new InstructionController2D(new Instruction(eqs[1], chem2, eqs[1].addTo)));
-    ins.push(new InstructionController2D(new Instruction(eqs[0], eqs[1], eqs[0].pourInto)));
-    ins.push(new InstructionController2D(new Instruction(eqs[1], eqs[2], eqs[1].pourInto)));
-    ins.push(new InstructionController2D(new Instruction(eqs[2], chem3, eqs[2].addTo)));
-    mainExpController.setInstructions(ins);
 }
 
 /**

@@ -19,7 +19,6 @@ class ExperimentController2D{
         // The position of the mouse when the EquipmentController2D was when selecting it for movement
         this.movingEquipAnchor = [0, 0];
 
-        this.instructions = []
         this.instructionCounter = 0;
 
         this.equipmentBoxes = new EquipmentBoxList();
@@ -65,21 +64,12 @@ class ExperimentController2D{
     }
 
     /**
-    Set the list of Instructions for use in this Controller's Experiment.
-    Instructions determine the intended course of action for the Experiment.
-    Each instruction should bring the Experiment from beginning to end, one step at a time.
-    instructions: the list of instructions
-    */
-    setInstructions(instructions){
-        this.instructions = instructions;
-    }
-
-    /**
     Set the current instruction index which this Controller is on
     instructions: The current instruction index, if this is an invalid index, this method does nothing
     */
     setInstructionCounter(instructionCounter){
-        if(instructionCounter < 0 || instructionCounter > this.instructions.length - 1) return;
+        let instructions = this.experiment.instructions;
+        if(instructionCounter < 0 || instructionCounter > instructions.length - 1) return;
         this.instructionCounter = instructionCounter;
     }
 
@@ -88,8 +78,9 @@ class ExperimentController2D{
     Does nothing if the Equipment needed for the Instruction has not been placed
     */
     nextInstruction(){
-        if(this.instructionCounter < this.instructions.length){
-            let insC = this.instructions[this.instructionCounter];
+        let instructions = this.experiment.instructions;
+        if(this.instructionCounter < instructions.length){
+            let insC = instructions[this.instructionCounter];
             let ins = insC.instruction;
             let eqs = this.placedEquipment;
 

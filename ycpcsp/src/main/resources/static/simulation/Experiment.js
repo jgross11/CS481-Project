@@ -12,17 +12,40 @@ class Experiment{
         // The list of EquipmentControllers in this Experiment
         this.equipment = [];
 
+        // The list of Chemicals used by this Experiment
+        this.chemicals = [];
+
+        // The instructions for running this Experiment
+        this.instructions = []
+
         this.title = title;
         this.creator = creator;
     }
 
     /**
     Set the current list of EquipmentControllers used by this Experiment.
-    Also updates the list keeping track of Equipment types
     equipment: The list of EquipmentControllers to set for this Experiment
     */
     setEquipment(equipment){
         this.equipment = equipment;
+    }
+
+    /**
+    Set the current list of Chemicals used by this Experiment.
+    equipment: The list of Chemicals to set for this Experiment
+    */
+    setChemicals(chemicals){
+        this.chemicals = chemicals;
+    }
+
+    /**
+    Set the list of Instructions for use in this Experiment.
+    Instructions determine the intended course of action for the Experiment.
+    Instructions should bring the Experiment from beginning to end, one step at a time.
+    instructions: the list of instructions
+    */
+    setInstructions(instructions){
+        this.instructions = instructions;
     }
 
     /**
