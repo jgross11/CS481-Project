@@ -28,6 +28,10 @@ data class User(var firstName : String = "UNKNOWN",
 
     }
 
+    // 'null' constructor TODO make this redundant please...
+    constructor() : this("", "", "","","") {}
+
+
     /**
      *  Custom toString function in form of
      *  lastName, firstName
