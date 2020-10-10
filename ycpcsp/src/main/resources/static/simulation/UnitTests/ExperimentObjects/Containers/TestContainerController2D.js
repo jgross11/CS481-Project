@@ -5,6 +5,13 @@ QUnit.test('ContainerController2D constructor:', function(assert){
     assert.equal(controller.equipment, container, "The Controller Equipment should be the given Container")
 });
 
+QUnit.test('ContainerController2D idToFunc:', function(assert){
+    var controller = new ChemicalController2D(null);
+
+    assert.equal(controller.idToFunc(ID_FUNC_CONTAINER_POUR_INTO), controller.pourInto, "Should get the function pourInto");
+    assert.equal(controller.idToFunc(ID_FUNC_CONTAINER_ADD_TO), controller.addTo, "Should get the function addTo");
+});
+
 QUnit.test('ContainerController2D hasResidue:', function(assert){
     var container = new Beaker([0, 0], [0, 0], 100, 0.1, 0, 2);
     var controller = new BeakerController2D(container);

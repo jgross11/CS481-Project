@@ -42,7 +42,9 @@ class ChemicalController2D extends ExperimentObjectController2D{
     returns: The function of the id
     */
     idToFunc(id){
-        return null;
+        switch(id){
+            default: return null;
+        }
     }
 
     /**

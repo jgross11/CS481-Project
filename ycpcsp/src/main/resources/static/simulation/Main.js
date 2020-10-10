@@ -4,18 +4,13 @@ var mainExpController;
 /*
 
 TODO:
-    Test cases ExperimentObjectController2D.idToFunc
-    Test cases ChemicalController2D.idToFunc
-    Test cases ContainerController2D.idToFunc
-    Test cases Experiment.setChemicals, constructor(update with chemicals)
-    Test cases DataLoader
-    Test cases InstanceID
-    Allow backend to send a json file to session storage
     Make parser for front end Experiment to backend json
+    Allow backend to send a json file to session storage
     Remove instanceID parameter, replace it with an instanceID incrementer
     Make proper layout page with home button
     Test cases: ExperimentController2D.selectedEquipFunction, setMovingEquipment
     Create code for Chemicals, display a Chemical tab
+    Allow equipment and chemicals to be disposed
     Move beaker specific code to BeakerController, func should be an ID
     Make test cases use a before method
     Make a better way of Chemicals in Instructions to keep their stats so they don't change, or maybe have a reset?
@@ -29,7 +24,6 @@ TODO:
         Create global function to get x and y mouse positions
         Objects which will not be on the screen should not be rendered, i.e. a renderBounds() method
         Objects in the experiment should be forced to stay within the experiment bounds
-    Allow chemicals to be disposed
     Optimize performance of searching for adding and removing Equipment, pick a better data structure
     Modify ExperimentController2D code to handle abstraction as described by the TO DO comments
         Set it up so that each piece of equipment has a list of interaction methods

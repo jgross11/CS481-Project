@@ -7,11 +7,17 @@ QUnit.test('ExperimentObjectController2D constructor:', function(assert){
 QUnit.test('ExperimentObjectController2D getObject:', function(assert){
     let controller = new ExperimentObjectController2D();
 
-    assert.throws(controller.getObject, "A generic ExperimentObjectController2D object should throw an error");
+    assert.throws(controller.getObject, "All ExperimentObjectController2D objects must implement getObject:");
 });
 
 QUnit.test('ExperimentObjectController2D canPlace:', function(assert){
     let controller = new ExperimentObjectController2D();
 
-    assert.throws(controller.canPlace, "A generic ExperimentObjectController2D object should throw an error");
+    assert.throws(controller.getObject, "All ExperimentObjectController2D objects must implement canPlace");
+});
+
+QUnit.test('ExperimentObjectController2D idToFunc:', function(assert){
+    let controller = new ExperimentObjectController2D();
+
+    assert.throws(controller.getObject, "All ExperimentObjectController2D objects must implement idToFunc");
 });

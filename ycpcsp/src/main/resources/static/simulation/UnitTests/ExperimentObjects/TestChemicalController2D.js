@@ -22,6 +22,14 @@ QUnit.test('ChemicalController2D getObject:', function(assert){
     assert.equal(controller.getObject(), chem, "The object obtained should be the same as the Chemical in the Controller.");
 });
 
+QUnit.test('ChemicalController2D idToFunc:', function(assert){
+    var controller = new ChemicalController2D(null);
+
+    assert.equal(controller.idToFunc(0), null, "ChemicalController2D should not have any function ids");
+    assert.equal(controller.idToFunc(1), null, "ChemicalController2D should not have any function ids");
+    assert.equal(controller.idToFunc(2), null, "ChemicalController2D should not have any function ids");
+});
+
 QUnit.test('ChemicalController2D canPlace:', function(assert){
     var chem = new Chemical(10.0, "equ", 20.0, [1, 2, 3]);
     var controller = new ChemicalController2D(chem);

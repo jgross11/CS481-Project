@@ -40,10 +40,25 @@ function parseExperiment(rawData){
     // Create the base Experiment with the title and creator
     let exp = new Experiment(rawData.title, rawData.creator);
 
+    // Set the Equipment in the Experiment from the raw data
+    exp.setEquipment(parseEquipment(rawData.equipment));
 
-    // Get Equipment
-    let rawEquips = rawData.equipment;
+    // Set the Chemicals in the Experiment from the raw data
+    exp.setChemicals(parseChemicals(rawData.chemicals));
 
+    // Set the Instructions in the Experiment from the raw data
+    exp.setInstructions(parseInstructions(exp.equipment, exp.chemicals, rawData.steps));
+
+    // Return the parsed object
+    return exp;
+}
+
+/**
+Parse out the Equipment from the given json list of Equipment
+rawEquips: The list of Equipment
+return: A list of parsed EquipmentController2D objects
+*/
+function parseEquipment(rawEquips){
     // Parse all of the Equipment out of the json
     let equips = [];
     for(var i = 0; i < rawEquips.length; i++){
@@ -59,26 +74,32 @@ function parseExperiment(rawData){
             equips.push(idToEquipment(id, nextInstanceID()));
         }
     }
-    // Set the Equipment in the Experiment
-    exp.setEquipment(equips);
+    return equips;
+}
 
-
-    // Get Chemicals
-    let rawChems = rawData.chemicals;
-
+/**
+Parse out the Chemicals from the given json list of Chemicals
+rawChems: The list of Chemicals
+return: A list of parsed ChemicalController2D objects
+*/
+function parseChemicals(rawChems){
     // Parse all of the Chemicals out of the json
     let chems = [];
     for(var i = 0; i < rawChems.length; i++){
         let rawChem = rawChems[i];
         chems.push(idToChemical(rawChem.id, rawChem.mass, rawChem.concentration));
     }
-    // Set the Chemicals in the Experiment
-    exp.setChemicals(chems);
+    return chems;
+}
 
-
-    // Get Instructions
-    let rawIns = rawData.steps;
-
+/**
+Parse out the Instructions from the given json list of Instructions
+rawIns: The list of Instructions
+equips: The parsed list of EquipmentController2D objects for the instructions to reference
+chems: The parsed list of ChemicalController2D objects for the instructions to reference
+return: A list of parsed InstructionController2D objects
+*/
+function parseInstructions(equips, chems, rawIns){
     // Parse the Instructions in the Experiment
     let instructions = [];
     for(var i = 0; i < rawIns.length; i++){
@@ -89,11 +110,7 @@ function parseExperiment(rawData){
 
         instructions.push(new InstructionController2D(new Instruction(act, rec, func)));
     }
-    // Set the Instructions in the Experiment
-    exp.setInstructions(instructions);
-
-    // Return the parsed object
-    return exp;
+    return instructions;
 }
 
 /**

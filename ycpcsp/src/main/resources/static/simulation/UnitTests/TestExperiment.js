@@ -1,19 +1,33 @@
 QUnit.test('Experiment constructor:', function(assert){
     var exp = new Experiment("The Title", "The Name");
 
-    assert.deepEqual(exp.equipment, [], 'equipment should be []');
+    assert.deepEqual(exp.equipment, [], 'equipment should be empty');
+    assert.deepEqual(exp.chemicals, [], 'chemicals should be empty');
     assert.deepEqual(exp.instructions, [], "instructions should be empty.");
     assert.equal(exp.title, "The Title", 'title should be "The Title"');
     assert.equal(exp.creator, "The Name", 'creator should be "The Name"');
 });
 
 QUnit.test('Experiment setEquipment:', function(assert){
-    var exp = new Experiment();
+    var exp = new Experiment("The Title", "The Name");
     var equip = new Equipment([0, 0], [100, 100], 1, 1, null);
 
     exp.setEquipment([equip]);
     assert.deepEqual(exp.equipment, [equip],
         "Given Equipment list should be equal to Equipment list in the experiment");
+});
+
+QUnit.test('Experiment setChemicals:', function(assert){
+    var exp = new Experiment("The Title", "The Name");
+    var chems = [
+        new ChemicalController2D(new Chemical(5, "", 20.0, [0, 0, 0])),
+        new ChemicalController2D(new Chemical(25, "", 10.0, [1, 40, 20])),
+        new ChemicalController2D(new Chemical(30, "", 5.0, [1, 33, 7])),
+    ]
+
+    exp.setChemicals(chems);
+    assert.deepEqual(exp.chemicals, chems,
+        "Given Chemical list should be equal to Chemical list in the experiment");
 });
 
 QUnit.test('ExperimentController2D setInstructions:', function(assert){

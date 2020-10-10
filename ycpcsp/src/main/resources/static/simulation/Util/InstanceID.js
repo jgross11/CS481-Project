@@ -5,5 +5,5 @@ var currentInstanceID = 0;
 Get the next instance ID which can be used for an ExperimentObject
 */
 function nextInstanceID(){
-    return ++currentInstanceID;
+    return currentInstanceID++;
 }
