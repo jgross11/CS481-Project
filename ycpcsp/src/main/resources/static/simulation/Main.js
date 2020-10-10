@@ -9,8 +9,10 @@ TODO:
     Test cases ContainerController2D.idToFunc
     Test cases Experiment.setChemicals, constructor(update with chemicals)
     Test cases DataLoader
+    Test cases InstanceID
     Allow backend to send a json file to session storage
     Make parser for front end Experiment to backend json
+    Remove instanceID parameter, replace it with an instanceID incrementer
     Make proper layout page with home button
     Test cases: ExperimentController2D.selectedEquipFunction, setMovingEquipment
     Create code for Chemicals, display a Chemical tab
@@ -44,9 +46,9 @@ function setup(){
 
     // Grab data from session storage
     loadSessionData();
+    //let data = sessionStorage.getItem(SESSION_EXPERIMENT_NAME);
     let data = JSON.parse(sessionStorage.getItem(SESSION_EXPERIMENT_NAME));
 
-    //let mainExperiment = parseExperiment(getTestJSON());
     let mainExperiment = parseExperiment(data);
 
     let canvas = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);

@@ -18,31 +18,17 @@ async function loadSessionData(){
     let experiment = getTestJSON();
     sessionStorage.setItem(SESSION_EXPERIMENT_NAME, JSON.stringify(experiment));
 
-    /*postData('simulation-data', experiment).then(function(data){
+
+    postData('simulation-data', experiment).then(function(data){
         // successful login - store login info in session
         if(data){
             // store user information in session info
-            sessionStorage.setItem("experimentData", data);
+            sessionStorage.setItem(SESSION_EXPERIMENT_NAME, data);
         }
         else{
             console.log("Failed to load experiment data");
         }
-    });*/
-}
-/*
-POSTs an object to a mapping and returns the obtained response
-address: the mapping to POST to
-objectToPost: the object to be submitted to the backend
-returns: the responses' information, in JS, rather than JSON form
-*/
-async function postData(address, objectToPost){
-    return await (await fetch(address, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(objectToPost)
-    })).json();
+    });
 }
 
 /**
@@ -54,47 +40,52 @@ function parseExperiment(rawData){
     // Create the base Experiment with the title and creator
     let exp = new Experiment(rawData.title, rawData.creator);
 
-    // create a dictionary for Equipment and Chemicals
-    let objDict = {};
+
+    // Get Equipment
+    let rawEquips = rawData.equipment;
 
     // Parse all of the Equipment out of the json
-    let rawEquips = rawData.equipment;
     let equips = [];
     for(var i = 0; i < rawEquips.length; i++){
+        // Get the Equipment
         let rawEq = rawEquips[i];
-        let eq = idToEquipment(rawEq.objectID, rawEq.instanceID);
-        equips.push(eq);
-        objDict[rawEq.instanceID] = eq;
+
+        // Get the attributes
+        var amount = rawEq.amount;
+        var id = rawEq.object_ID;
+
+        // Create the appropriate Equipment
+        for(var j = 0; j < amount; j++){
+            equips.push(idToEquipment(id, nextInstanceID()));
+        }
     }
     // Set the Equipment in the Experiment
     exp.setEquipment(equips);
 
 
-    // Parse all of the Chemicals out of the json
+    // Get Chemicals
     let rawChems = rawData.chemicals;
+
+    // Parse all of the Chemicals out of the json
     let chems = [];
-    let chemDict = {};
     for(var i = 0; i < rawChems.length; i++){
         let rawChem = rawChems[i];
-        let chem = idToChemical(rawChem.objectID, rawChem.mass, rawChem.concentration);
-        chems.push(chem);
-        objDict[rawChem.instanceID] = chem;
+        chems.push(idToChemical(rawChem.id, rawChem.mass, rawChem.concentration));
     }
     // Set the Chemicals in the Experiment
     exp.setChemicals(chems);
 
 
-    // Get and sort the instructions by their step order
-    let rawIns = rawData.instructions;
-    sortByKey(rawIns, "step number");
+    // Get Instructions
+    let rawIns = rawData.steps;
 
     // Parse the Instructions in the Experiment
     let instructions = [];
     for(var i = 0; i < rawIns.length; i++){
         let ins = rawIns[i];
-        let act = objDict[ins.actorID];
-        let rec = objDict[ins.receiverID];
-        let func = act.idToFunc(ins.functionID);
+        let act = (ins.actor_ID) ? equips[ins.actor_index] : chems[ins.actor_index];
+        let rec = (ins.receiver_ID) ? equips[ins.receiver_index] : chems[ins.receiver_index];
+        let func = act.idToFunc(ins.function_ID);
 
         instructions.push(new InstructionController2D(new Instruction(act, rec, func)));
     }
@@ -103,19 +94,6 @@ function parseExperiment(rawData){
 
     // Return the parsed object
     return exp;
-}
-
-/**
-Helper function for sorting an array
-TODO move to Utils.js?
-*/
-function sortByKey(array, key){
-    return array.sort(function(a, b){
-        var x = a[key];
-        var y = b[key];
-        if(x < y) return -1;
-        return (x > y) ? 1 : 0;
-    });
 }
 
 /**
@@ -156,75 +134,72 @@ Temporary function for getting a test JSON file
 */
 function getTestJSON(){
     return {
-    	"title": "Color combine lab",
-    	"creator": "Zaq",
-    	"equipment": [
-    		{
-    			"objectID": 1,
-    			"instanceID": 0
-    		},
-    		{
-    			"objectID": 1,
-    			"instanceID": 1
-    		},
-    		{
-    			"objectID": 1,
-    			"instanceID": 2
-    		}
-    	],
-
-    	"chemicals": [
-    		{
-    			"objectID": 1,
-    			"instanceID": 3,
-    			"mass": 5,
-    			"concentration": 1
-    		},
-    		{
-    			"objectID": 2,
-    			"instanceID": 4,
-    			"mass": 5,
-    			"concentration": 1
-    		},
-    		{
-    			"objectID": 3,
-    			"instanceID": 5,
-    			"mass": 20,
-    			"concentration": 1
-    		}
-    	],
-
-    	"instructions": [
-    		{
-    			"step number": 1,
-    			"actorID": 1,
-    			"receiverID": 4,
-    			"functionID": 2
-    		},
-    		{
-    			"step number": 0,
-    			"actorID": 0,
-    			"receiverID": 3,
-    			"functionID": 2
-    		},
-    		{
-    			"step number": 2,
-    			"actorID": 0,
-    			"receiverID": 1,
-    			"functionID": 1
-    		},
-    		{
-    			"step number": 3,
-    			"actorID": 1,
-    			"receiverID": 2,
-    			"functionID": 1
-    		},
-    		{
-    			"step number": 4,
-    			"actorID": 2,
-    			"receiverID": 5,
-    			"functionID": 2
-    		}
-    	]
+    	"title": "Color",
+        "creator": "Zaq",
+        "equipment": [
+        	{
+        		"object_ID": 1,
+        		"amount": 3
+        	}
+        ],
+        "chemicals": [
+        	{
+        		"id": 1,
+        		"mass": 5,
+        		"concentration": 1
+        	},
+        	{
+        		"id": 2,
+        		"mass": 5,
+        		"concentration": 1
+        	},
+        	{
+        		"id": 3,
+        		"mass": 20,
+        		"concentration": 1
+        	}
+        ],
+        "steps": [
+        	{
+        		"step_number": 0,
+        		"actor_index": 0,
+        		"actor_ID": true,
+        		"receiver_index": 0,
+        		"receiver_ID": false,
+        		"function_ID": 2
+        	},
+        	{
+        		"step_number": 1,
+        		"actor_index": 1,
+        		"actor_ID": true,
+        		"receiver_index": 1,
+        		"receiver_ID": false,
+        		"function_ID": 2
+        	},
+        	{
+        		"step_number": 2,
+        		"actor_index": 0,
+        		"actor_ID": true,
+        		"receiver_index": 1,
+        		"receiver_ID": true,
+        		"function_ID": 1
+        	},
+        	{
+        		"step_number": 3,
+        		"actor_index": 1,
+        		"actor_ID": true,
+        		"receiver_index": 2,
+        		"receiver_ID": true,
+        		"function_ID": 1
+        	},
+        	{
+        		"step_number": 4,
+        		"actor_index": 2,
+        		"actor_ID": true,
+        		"receiver_index": 2,
+        		"receiver_ID": false,
+        		"function_ID": 2
+        	}
+        ]
     }
 }
