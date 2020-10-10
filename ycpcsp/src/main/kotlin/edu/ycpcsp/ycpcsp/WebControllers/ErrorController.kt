@@ -1,4 +1,4 @@
-package edu.ycpcsp.ycpcsp
+package edu.ycpcsp.ycpcsp.WebControllers
 
 
 import org.springframework.boot.web.servlet.error.ErrorController

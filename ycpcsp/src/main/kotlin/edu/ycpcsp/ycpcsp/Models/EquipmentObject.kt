@@ -1,12 +1,17 @@
 package edu.ycpcsp.ycpcsp.Models
 
+import com.fasterxml.jackson.annotation.JsonTypeName
+
 /**
  *  Class that represents a piece of equipment in experiment
  *  Contains: name, inherited from ExperimentObject
  */
 
-data class EquipmentObject(var _name : String) : ExperimentObject(_name) {
+@JsonTypeName("equipment")
+
+data class EquipmentObject(var _name : Int) : ExperimentObject(_name) {
+
     override fun toString(): String {
-        return name
+        return "$name"
     }
 }

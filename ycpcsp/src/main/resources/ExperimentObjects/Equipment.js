@@ -1,20 +1,21 @@
 /**
-The abstract class representing a generic piece of equipment in an Experiment
+The abstract class representing a generic piece of Equipment in an Experiment
 */
 class Equipment extends ExperimentObject{
 
     /**
-    Create a new Experiment object with the given position, mass, name, and sprite
+    Create a new ExperimentObject with the given position, mass, id, and sprite
     position: A list [x, y] of the upper left hand corner coordinates of the Equipment's location in the Experiment
     size: A list [width, height] of the size of the Equipment in pixels
     mass: A floating point value, the mass, in grams, of this piece of Equipment
-    name: As a string, the name given to this specific instance of this piece of Equipment
+    instanceID: A unique integer specifying this piece of Equipment
     sprite: A P5 image file used to display this piece of Equipment
     */
-    constructor(position, size, mass, name, sprite){
-        super(mass, name);
+    constructor(position, size, mass, instanceID, sprite){
+        super(mass, instanceID);
         this.position = position;
         this.size = size
+        this.instanceID = instanceID;
         this.sprite = sprite;
     }
 
@@ -35,6 +36,14 @@ class Equipment extends ExperimentObject{
     }
 
     /**
+    Set the id of this piece of Equipment
+    instanceID: The new id
+    */
+    setInstanceID(instanceID){
+        this.instanceID = instanceID;
+    }
+
+    /**
     Set the sprite which will be used to display this piece of Equipment
     sprite: The new sprite, a P5 image file
     */
@@ -43,25 +52,11 @@ class Equipment extends ExperimentObject{
     }
 
     /**
-    Determine if a point is located inside the bounds of this piece of Equipment
+    Get the ID for the type of this piece of Equipment
+    returns: The ID
     */
-    inBounds(pos){
-        var cx = pos[0];
-        var cy = pos[1];
-        var x = this.position[0];
-        var y = this.position[1];
-        var w = this.size[0];
-        var h = this.size[1];
-        return x <= cx && cx <= x + w && y <= cy && cy <= y + h;
-    }
-
-    /**
-    Draw this piece of Equipment onto the screen using P5 2D graphics
-    */
-    draw(){
-        var p = this.position;
-        var s = this.size;
-        image(this.sprite, p[0], p[1], s[0], s[1]);
+    getEquipID(){
+        throw new Error("All Equipment must implement getEquipID");
     }
 
 }
