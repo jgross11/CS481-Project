@@ -1,6 +1,6 @@
 QUnit.test('Instruction constructor:', function(assert){
-    var beaker1 = new Beaker([0, 0], [0, 0], 1, 100, 0, 1);
-    var beaker2 = new Beaker([0, 0], [0, 0], 1, 100, 0, 2);
+    var beaker1 = new Beaker([0, 0], [0, 0], 1, 100, 0);
+    var beaker2 = new Beaker([0, 0], [0, 0], 1, 100, 0);
     var ins = new Instruction(beaker1, beaker2, beaker1.pourInto);
 
     assert.equal(ins.actor, beaker1, "Given actor should be beaker1");
@@ -9,8 +9,8 @@ QUnit.test('Instruction constructor:', function(assert){
 });
 
 QUnit.test('Instruction setActor:', function(assert){
-    var beaker1 = new Beaker([0, 0], [0, 0], 1, 100, 0, 1);
-    var beaker2 = new Beaker([0, 0], [0, 0], 1, 100, 0, 2);
+    var beaker1 = new Beaker([0, 0], [0, 0], 1, 100, 0);
+    var beaker2 = new Beaker([0, 0], [0, 0], 1, 100, 0);
     var ins = new Instruction(null, beaker2, beaker1.pourInto);
 
     assert.equal(ins.actor, null, "Actor should be null");
@@ -20,8 +20,8 @@ QUnit.test('Instruction setActor:', function(assert){
 });
 
 QUnit.test('Instruction setActor:', function(assert){
-    var beaker1 = new Beaker([0, 0], [0, 0], 1, 100, 0, 1);
-    var beaker2 = new Beaker([0, 0], [0, 0], 1, 100, 0, 2);
+    var beaker1 = new Beaker([0, 0], [0, 0], 1, 100, 0);
+    var beaker2 = new Beaker([0, 0], [0, 0], 1, 100, 0);
     var ins = new Instruction(beaker1, null, beaker1.pourInto);
 
     assert.equal(ins.receiver, null, "Receiver should be null");
@@ -31,8 +31,8 @@ QUnit.test('Instruction setActor:', function(assert){
 });
 
 QUnit.test('Instruction setAction:', function(assert){
-    var beaker1 = new Beaker([0, 0], [0, 0], 1, 100, 0, 1);
-    var beaker2 = new Beaker([0, 0], [0, 0], 1, 100, 0, 2);
+    var beaker1 = new Beaker([0, 0], [0, 0], 1, 100, 0);
+    var beaker2 = new Beaker([0, 0], [0, 0], 1, 100, 0);
     var ins = new Instruction(beaker1, beaker2, null);
 
     assert.equal(ins.action, null, "Action should be null");

@@ -11,11 +11,10 @@ class Container extends Equipment{
     capacity: A floating point value, the maximum amount of contents which this Container can hold
     residue: A floating point value in range [0-1], the percentage of this Container's capacity
         which will be left behind when the contents of this Container are poured out.
-    instanceID: A unique integer specifying this Container
     sprite: A P5 image file used to display this piece of Container
     */
-    constructor(position, size, mass, capacity, residue, instanceID, sprite){
-        super(position, size, mass, instanceID, sprite);
+    constructor(position, size, mass, capacity, residue, sprite){
+        super(position, size, mass, sprite);
         this.capacity = capacity;
         this.residue = residue;
 

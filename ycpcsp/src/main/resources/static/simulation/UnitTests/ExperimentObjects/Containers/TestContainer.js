@@ -1,5 +1,6 @@
 QUnit.test('Container constructor:', function(assert){
-    var container = new Container([10, 5], [12, 20], 10.0, 200.0, 0.15, 1, null);
+    currentInstanceID = 1;
+    var container = new Container([10, 5], [12, 20], 10.0, 200.0, 0.15, null);
 
     assert.deepEqual(container.position, [10, 5], 'position should be [10, 5]');
     assert.deepEqual(container.size, [12, 20], 'size should be [12, 20]');
@@ -11,7 +12,7 @@ QUnit.test('Container constructor:', function(assert){
 });
 
 QUnit.test('Container setContents:', function(assert){
-    var container = new Container([10, 5], [12, 20], 10.0, 200.0, 0.15, 1, null);
+    var container = new Container([10, 5], [12, 20], 10.0, 200.0, 0.15, null);
     assert.deepEqual(container.contents, null, 'contents should be null');
     var chem = new Chemical(1, "eq", 20, [100, 0, 0]);
     container.setContents(chem);
@@ -19,13 +20,13 @@ QUnit.test('Container setContents:', function(assert){
 });
 
 QUnit.test('Container setCapacity:', function(assert){
-    var container = new Container([10, 5], [12, 20], 10.0, 200.0, 0.15, 1, null);
+    var container = new Container([10, 5], [12, 20], 10.0, 200.0, 0.15, null);
     container.setCapacity(100.0);
     assert.equal(container.capacity, 100.0, 'capacity should be 100.0');
 });
 
 QUnit.test('Container setResidue:', function(assert){
-    var container = new Container([10, 5], [12, 20], 10.0, 200.0, 0.15, 1, null);
+    var container = new Container([10, 5], [12, 20], 10.0, 200.0, 0.15, null);
     container.setResidue(0.05);
     assert.equal(container.residue, 0.05, 'residue should be 0.05');
 });

@@ -10,7 +10,7 @@ QUnit.test('Experiment constructor:', function(assert){
 
 QUnit.test('Experiment setEquipment:', function(assert){
     var exp = new Experiment("The Title", "The Name");
-    var equip = new Equipment([0, 0], [100, 100], 1, 1, null);
+    var equip = new Equipment([0, 0], [100, 100], 1, null);
 
     exp.setEquipment([equip]);
     assert.deepEqual(exp.equipment, [equip],
@@ -32,8 +32,8 @@ QUnit.test('Experiment setChemicals:', function(assert){
 
 QUnit.test('ExperimentController2D setInstructions:', function(assert){
     var exp = new Experiment("a title", "a name");
-    exp.equipment.push(new BeakerController2D(new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01, 1)));
-    exp.equipment.push(new BeakerController2D(new Beaker([250, 200], [150, 150], 20.0, 50.0, 0.01, 2)));
+    exp.equipment.push(new BeakerController2D(new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01)));
+    exp.equipment.push(new BeakerController2D(new Beaker([250, 200], [150, 150], 20.0, 50.0, 0.01)));
     let eqs = exp.equipment;
     let instructions = [new InstructionController2D(new Instruction(eqs[0], eqs[1], eqs[0].pourInto))];
 

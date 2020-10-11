@@ -89,7 +89,7 @@ function parseEquipment(rawEquips){
 
         // Create the appropriate Equipment
         for(var j = 0; j < amount; j++){
-            equips.push(idToEquipment(id, nextInstanceID()));
+            equips.push(idToEquipment(id));
         }
     }
     return equips;
@@ -135,39 +135,6 @@ function parseInstructions(equips, chems, rawIns){
         instructions.push(new InstructionController2D(new Instruction(act, rec, func)));
     }
     return instructions;
-}
-
-/**
-Take an integer ID and convert it to a valid piece of Equipment
-id: The integer id
-instanceID: The instance ID of the Equipment
-returns: The Equipment, or null if an invalid ID is given
-*/
-function idToEquipment(id, instanceID){
-    switch(id){
-        // Default beaker
-        case ID_EQUIP_BEAKER_TEST: return new BeakerController2D(new Beaker([50, 200], [100, 100], 20.0, 50.0, 0.03, instanceID));
-        default: return null;
-    }
-}
-
-/**
-Take an integer ID and convert it to a valid Chemical
-id: The integer id
-mass: The mass of the Chemical
-concentration: The concentration of the Chemical
-returns: The Equipment, or null if an invalid ID is given
-*/
-function idToChemical(id, mass, concentration){
-    var chem;
-    switch(id){
-        // Test chemicals
-        case ID_CHEM_TEST_SMALL_RED: chem = new Chemical(5, "R", 20, [255, 0, 0]); break;
-        case ID_CHEM_TEST_SMALL_BLUE: chem = new Chemical(5, "B", 20, [0, 0, 255]); break;
-        case ID_CHEM_TEST_LARGE_WHITE: chem = new Chemical(20, "W", 20, [255, 255, 255]); break;
-        default: return null;
-    }
-    return new ChemicalController2D(chem);
 }
 
 /**

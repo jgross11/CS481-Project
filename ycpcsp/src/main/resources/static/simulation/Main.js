@@ -4,17 +4,15 @@ var mainExpController;
 /*
 
 TODO:
-    Move idToEquipment and idToChemical to be in the same place as Equipment and Chemical id conversion functions
     Allow backend to send a json file to session storage
-    Remove instanceID parameter, replace it with an instanceID incrementer
     Refactor instructions to steps
+    Make test cases use a before method
     Create a method to render a static loading screen while the simulator loads
     Make proper layout page with home button
     Test cases: ExperimentController2D.selectedEquipFunction, setMovingEquipment
     Create code for Chemicals, display a Chemical tab
     Allow equipment and chemicals to be disposed
     Move beaker specific code to BeakerController, func should be an ID
-    Make test cases use a before method
     Make a better way of Chemicals in Instructions to keep their stats so they don't change, or maybe have a reset?
     Make basic layout for Experiment
         Update clicking and dragging to change indexes for ExperimentBoxes when they are removed from the list

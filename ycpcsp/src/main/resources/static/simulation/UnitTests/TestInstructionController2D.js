@@ -1,6 +1,6 @@
 QUnit.test('InstructionController2D constructor:', function(assert){
-    var beaker1 = new BeakerController2D(new Beaker([0, 0], [0, 0], 1, 100, 0, 3));
-    var beaker2 = new BeakerController2D(new Beaker([0, 0], [0, 0], 1, 100, 0, 4));
+    var beaker1 = new BeakerController2D(new Beaker([0, 0], [0, 0], 1, 100, 0));
+    var beaker2 = new BeakerController2D(new Beaker([0, 0], [0, 0], 1, 100, 0));
     var ins = new Instruction(beaker1, beaker2, beaker1.pourInto);
     var controller = new InstructionController2D(ins);
 
@@ -8,8 +8,8 @@ QUnit.test('InstructionController2D constructor:', function(assert){
 });
 
 QUnit.test('InstructionController2D setInstruction:', function(assert){
-    var beaker1 = new BeakerController2D(new Beaker([0, 0], [0, 0], 1, 100, 0, 3));
-    var beaker2 = new BeakerController2D(new Beaker([0, 0], [0, 0], 1, 100, 0, 4));
+    var beaker1 = new BeakerController2D(new Beaker([0, 0], [0, 0], 1, 100, 0));
+    var beaker2 = new BeakerController2D(new Beaker([0, 0], [0, 0], 1, 100, 0));
     var ins = new Instruction(beaker1, beaker2, beaker1.pourInto);
     var controller = new InstructionController2D(null);
 
@@ -20,8 +20,8 @@ QUnit.test('InstructionController2D setInstruction:', function(assert){
 });
 
 QUnit.test('InstructionController2D activate:', function(assert){
-    var beaker1 = new BeakerController2D(new Beaker([0, 0], [0, 0], 1, 100, 0, 3));
-    var beaker2 = new BeakerController2D(new Beaker([0, 0], [0, 0], 1, 100, 0, 4));
+    var beaker1 = new BeakerController2D(new Beaker([0, 0], [0, 0], 1, 100, 0));
+    var beaker2 = new BeakerController2D(new Beaker([0, 0], [0, 0], 1, 100, 0));
     var ins = new Instruction(beaker1, beaker2, beaker1.pourInto);
     var controller = new InstructionController2D(ins);
     var chem1 = new Chemical(6.0, "equ", 20.0, [10, 20, 40]);

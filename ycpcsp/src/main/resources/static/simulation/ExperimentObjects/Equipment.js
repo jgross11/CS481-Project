@@ -8,14 +8,13 @@ class Equipment extends ExperimentObject{
     position: A list [x, y] of the upper left hand corner coordinates of the Equipment's location in the Experiment
     size: A list [width, height] of the size of the Equipment in pixels
     mass: A floating point value, the mass, in grams, of this piece of Equipment
-    instanceID: A unique integer specifying this piece of Equipment
     sprite: A P5 image file used to display this piece of Equipment
     */
-    constructor(position, size, mass, instanceID, sprite){
-        super(mass, instanceID);
+    constructor(position, size, mass, sprite){
+        super(mass);
         this.position = position;
         this.size = size
-        this.instanceID = instanceID;
+        this.instanceID = nextInstanceID();
         this.sprite = sprite;
     }
 
