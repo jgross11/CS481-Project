@@ -1,5 +1,23 @@
 let SESSION_EXPERIMENT_NAME = "experimentData";
 
+// Constants for the fields of JSON for Experiment parsing to JSON
+let EXP_JSON_TITLE = "title";
+let EXP_JSON_CREATOR = "creator";
+let EXP_JSON_EQUIPMENT = "equipment";
+let EXP_JSON_EQUIP_OBJ_ID = "object_ID";
+let EXP_JSON_EQUIP_AMOUNT = "amount";
+let EXP_JSON_CHEMICALS = "chemicals";
+let EXP_JSON_CHEM_ID = "id";
+let EXP_JSON_CHEM_MASS = "mass";
+let EXP_JSON_CHEM_CONCENTRATION = "concentration";
+let EXP_JSON_INSTRUCTIONS = "steps";
+let EXP_JSON_INS_STEP_NUM = "step_number";
+let EXP_JSON_INS_ACTOR_INDEX = "actor_index";
+let EXP_JSON_INS_ACTOR_IS_EQUIP = "actor_ID";
+let EXP_JSON_INS_RECEIVER_INDEX = "receiver_index";
+let EXP_JSON_INS_RECEIVER_IS_EQUIP = "receiver_ID";
+let EXP_JSON_INS_FUNC_ID = "function_ID";
+
 /**
 Function to load data from the session storage
 */
@@ -38,16 +56,16 @@ returns: The Experiment object
 */
 function parseExperiment(rawData){
     // Create the base Experiment with the title and creator
-    let exp = new Experiment(rawData.title, rawData.creator);
+    let exp = new Experiment(rawData[EXP_JSON_TITLE], rawData[EXP_JSON_CREATOR]);
 
     // Set the Equipment in the Experiment from the raw data
-    exp.setEquipment(parseEquipment(rawData.equipment));
+    exp.setEquipment(parseEquipment(rawData[EXP_JSON_EQUIPMENT]));
 
     // Set the Chemicals in the Experiment from the raw data
-    exp.setChemicals(parseChemicals(rawData.chemicals));
+    exp.setChemicals(parseChemicals(rawData[EXP_JSON_CHEMICALS]));
 
     // Set the Instructions in the Experiment from the raw data
-    exp.setInstructions(parseInstructions(exp.equipment, exp.chemicals, rawData.steps));
+    exp.setInstructions(parseInstructions(exp.equipment, exp.chemicals, rawData[EXP_JSON_INSTRUCTIONS]));
 
     // Return the parsed object
     return exp;
@@ -66,8 +84,8 @@ function parseEquipment(rawEquips){
         let rawEq = rawEquips[i];
 
         // Get the attributes
-        var amount = rawEq.amount;
-        var id = rawEq.object_ID;
+        var amount = rawEq[EXP_JSON_EQUIP_AMOUNT];
+        var id = rawEq[EXP_JSON_EQUIP_OBJ_ID];
 
         // Create the appropriate Equipment
         for(var j = 0; j < amount; j++){
@@ -87,7 +105,11 @@ function parseChemicals(rawChems){
     let chems = [];
     for(var i = 0; i < rawChems.length; i++){
         let rawChem = rawChems[i];
-        chems.push(idToChemical(rawChem.id, rawChem.mass, rawChem.concentration));
+        chems.push(idToChemical(
+            rawChem[EXP_JSON_CHEM_ID],
+            rawChem[EXP_JSON_CHEM_MASS],
+            rawChem[EXP_JSON_CHEM_CONCENTRATION]
+        ));
     }
     return chems;
 }
@@ -104,9 +126,11 @@ function parseInstructions(equips, chems, rawIns){
     let instructions = [];
     for(var i = 0; i < rawIns.length; i++){
         let ins = rawIns[i];
-        let act = (ins.actor_ID) ? equips[ins.actor_index] : chems[ins.actor_index];
-        let rec = (ins.receiver_ID) ? equips[ins.receiver_index] : chems[ins.receiver_index];
-        let func = act.idToFunc(ins.function_ID);
+        let actI = ins[EXP_JSON_INS_ACTOR_INDEX];
+        let recI = ins[EXP_JSON_INS_ACTOR_INDEX];
+        let act = (ins[EXP_JSON_INS_ACTOR_IS_EQUIP]) ? equips[actI] : chems[actI];
+        let rec = (ins[EXP_JSON_INS_RECEIVER_IS_EQUIP]) ? equips[recI] : chems[recI];
+        let func = act.idToFunc(ins[EXP_JSON_INS_FUNC_ID]);
 
         instructions.push(new InstructionController2D(new Instruction(act, rec, func)));
     }
@@ -154,8 +178,8 @@ returns: The json object
 function experimentToJSON(exp){
     // Get the basic information
     let expJSON = {};
-    expJSON.title = exp.title;
-    expJSON.creator = exp.creator;
+    expJSON[EXP_JSON_TITLE] = exp.title;
+    expJSON[EXP_JSON_CREATOR] = exp.creator;
 
     // Get the Equipment
     let equips = [];
@@ -167,25 +191,26 @@ function experimentToJSON(exp){
         else equipTypes[id] = 1;
     });
     for(var key in equipTypes){
-        equips.push({
-            "object_ID": parseInt(key),
-            "amount": equipTypes[key]
-        });
+        let newEquip = {};
+        newEquip[EXP_JSON_EQUIP_OBJ_ID] = parseInt(key);
+        newEquip[EXP_JSON_EQUIP_AMOUNT] = equipTypes[key];
+        equips.push(newEquip);
     }
-    expJSON.equipment = equips;
+    expJSON[EXP_JSON_EQUIPMENT] = equips;
 
 
     // Get the Chemicals
     let chems = [];
     exp.chemicals.forEach(function(chemCont){
         let chem = chemCont.chemical;
-        chems.push({
-            "id": chem.getID(),
-            "mass": chem.mass,
-            "concentration": chem.concentration
-        });
+
+        let newChem = {};
+        newChem[EXP_JSON_CHEM_ID] = chem.getID();
+        newChem[EXP_JSON_CHEM_MASS] = chem.mass;
+        newChem[EXP_JSON_CHEM_CONCENTRATION] = chem.concentration;
+        chems.push(newChem);
     });
-    expJSON.chemicals = chems;
+    expJSON[EXP_JSON_CHEMICALS] = chems;
 
 
     // Get the Instructions
@@ -205,16 +230,16 @@ function experimentToJSON(exp){
 
         let action = ins.action;
 
-        instructions.push({
-            "step_number": index,
-            "actor_index": actI,
-            "actor_ID": actEquip,
-            "receiver_index": recI,
-            "receiver_ID": recEquip,
-            "function_ID": act.funcToId(action)
-        });
+        let newIns = {};
+        newIns[EXP_JSON_INS_STEP_NUM] = index;
+        newIns[EXP_JSON_INS_ACTOR_INDEX] = actI;
+        newIns[EXP_JSON_INS_ACTOR_IS_EQUIP] = actEquip;
+        newIns[EXP_JSON_INS_RECEIVER_INDEX] = recI;
+        newIns[EXP_JSON_INS_RECEIVER_IS_EQUIP] = recEquip;
+        newIns[EXP_JSON_INS_FUNC_ID] = act.funcToId(action);
+        instructions.push(newIns);
     });
-    expJSON.steps = instructions;
+    expJSON[EXP_JSON_INSTRUCTIONS] = instructions;
 
     return expJSON;
 }
@@ -223,73 +248,61 @@ function experimentToJSON(exp){
 Temporary function for getting a test JSON file
 */
 function getTestJSON(){
-    return {
-    	"title": "Color",
-        "creator": "Zaq",
-        "equipment": [
-        	{
-        		"object_ID": 1,
-        		"amount": 3
-        	}
-        ],
-        "chemicals": [
-        	{
-        		"id": 1,
-        		"mass": 5,
-        		"concentration": 1
-        	},
-        	{
-        		"id": 2,
-        		"mass": 5,
-        		"concentration": 1
-        	},
-        	{
-        		"id": 3,
-        		"mass": 20,
-        		"concentration": 1
-        	}
-        ],
-        "steps": [
-        	{
-        		"step_number": 0,
-        		"actor_index": 0,
-        		"actor_ID": true,
-        		"receiver_index": 0,
-        		"receiver_ID": false,
-        		"function_ID": 2
-        	},
-        	{
-        		"step_number": 1,
-        		"actor_index": 1,
-        		"actor_ID": true,
-        		"receiver_index": 1,
-        		"receiver_ID": false,
-        		"function_ID": 2
-        	},
-        	{
-        		"step_number": 2,
-        		"actor_index": 0,
-        		"actor_ID": true,
-        		"receiver_index": 1,
-        		"receiver_ID": true,
-        		"function_ID": 1
-        	},
-        	{
-        		"step_number": 3,
-        		"actor_index": 1,
-        		"actor_ID": true,
-        		"receiver_index": 2,
-        		"receiver_ID": true,
-        		"function_ID": 1
-        	},
-        	{
-        		"step_number": 4,
-        		"actor_index": 2,
-        		"actor_ID": true,
-        		"receiver_index": 2,
-        		"receiver_ID": false,
-        		"function_ID": 2
-        	}
-        ]
-    }
+    let exp = {};
+    exp[EXP_JSON_TITLE] = "Color";
+    exp[EXP_JSON_CREATOR] = "Zaq";
+
+    let equips = [];
+    let equip = {}
+    equip[EXP_JSON_EQUIP_OBJ_ID] = 1;
+    equip[EXP_JSON_EQUIP_AMOUNT] = 3;
+    equips.push(equip);
+    exp[EXP_JSON_EQUIPMENT] = equips;
+
+    let chems = [{}, {}, {}];
+    chems[0][EXP_JSON_CHEM_ID] = 1;
+    chems[0][EXP_JSON_CHEM_MASS] = 5;
+    chems[0][EXP_JSON_CHEM_CONCENTRATION] = 1;
+    chems[1][EXP_JSON_CHEM_ID] = 2;
+    chems[1][EXP_JSON_CHEM_MASS] = 5;
+    chems[1][EXP_JSON_CHEM_CONCENTRATION] = 1;
+    chems[2][EXP_JSON_CHEM_ID] = 3;
+    chems[2][EXP_JSON_CHEM_MASS] = 20;
+    chems[2][EXP_JSON_CHEM_CONCENTRATION] = 1;
+    exp[EXP_JSON_CHEMICALS] = chems;
+
+    let steps = [{}, {}, {}, {}, {}];
+    steps[0][EXP_JSON_INS_STEP_NUM] = 0;
+    steps[0][EXP_JSON_INS_ACTOR_INDEX] = 0;
+    steps[0][EXP_JSON_INS_ACTOR_IS_EQUIP] = true;
+    steps[0][EXP_JSON_INS_RECEIVER_INDEX] = 0;
+    steps[0][EXP_JSON_INS_RECEIVER_IS_EQUIP] = false;
+    steps[0][EXP_JSON_INS_FUNC_ID] = 2;
+    steps[1][EXP_JSON_INS_STEP_NUM] = 1;
+    steps[1][EXP_JSON_INS_ACTOR_INDEX] = 1;
+    steps[1][EXP_JSON_INS_ACTOR_IS_EQUIP] = true;
+    steps[1][EXP_JSON_INS_RECEIVER_INDEX] = 1;
+    steps[1][EXP_JSON_INS_RECEIVER_IS_EQUIP] = false;
+    steps[1][EXP_JSON_INS_FUNC_ID] = 2;
+    steps[2][EXP_JSON_INS_STEP_NUM] = 2;
+    steps[2][EXP_JSON_INS_ACTOR_INDEX] = 0;
+    steps[2][EXP_JSON_INS_ACTOR_IS_EQUIP] = true;
+    steps[2][EXP_JSON_INS_RECEIVER_INDEX] = 1;
+    steps[2][EXP_JSON_INS_RECEIVER_IS_EQUIP] = true;
+    steps[2][EXP_JSON_INS_FUNC_ID] = 1;
+    steps[3][EXP_JSON_INS_STEP_NUM] = 3;
+    steps[3][EXP_JSON_INS_ACTOR_INDEX] = 1;
+    steps[3][EXP_JSON_INS_ACTOR_IS_EQUIP] = true;
+    steps[3][EXP_JSON_INS_RECEIVER_INDEX] = 2;
+    steps[3][EXP_JSON_INS_RECEIVER_IS_EQUIP] = true;
+    steps[3][EXP_JSON_INS_FUNC_ID] = 1;
+    steps[4][EXP_JSON_INS_STEP_NUM] = 4;
+    steps[4][EXP_JSON_INS_ACTOR_INDEX] = 2;
+    steps[4][EXP_JSON_INS_ACTOR_IS_EQUIP] = true;
+    steps[4][EXP_JSON_INS_RECEIVER_INDEX] = 2;
+    steps[4][EXP_JSON_INS_RECEIVER_IS_EQUIP] = false;
+    steps[4][EXP_JSON_INS_FUNC_ID] = 2;
+    exp[EXP_JSON_INSTRUCTIONS] = steps;
+
+    return exp;
 }

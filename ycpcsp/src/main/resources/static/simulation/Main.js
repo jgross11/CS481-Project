@@ -4,11 +4,11 @@ var mainExpController;
 /*
 
 TODO:
-    Make constants for JSON variable names, use bracket notation
     Move idToEquipment and idToChemical to be in the same place as Equipment and Chemical id conversion functions
     Allow backend to send a json file to session storage
     Remove instanceID parameter, replace it with an instanceID incrementer
     Refactor instructions to steps
+    Create a method to render a static loading screen while the simulator loads
     Make proper layout page with home button
     Test cases: ExperimentController2D.selectedEquipFunction, setMovingEquipment
     Create code for Chemicals, display a Chemical tab
@@ -37,15 +37,16 @@ TODO:
 P5.js function, called when script is initially loaded
 */
 function setup(){
+
     // First load image assets
     loadImages();
 
-
     let testData = getTestJSON();
-    console.log(testData); // TODO
+    //console.log(testData); // TODO
     let exp = parseExperiment(testData);
-    console.log(exp); // TODO
-    console.log(experimentToJSON(exp)); // TODO
+    //console.log(exp); // TODO
+    let expJSON = experimentToJSON(exp);
+    //console.log(expJSON); // TODO
 
     // Grab data from session storage
     loadSessionData();
