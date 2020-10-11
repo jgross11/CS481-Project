@@ -196,11 +196,11 @@ function experimentToJSON(exp){
         let ins = insCont.instruction;
 
         let act = ins.actor;
-        let actEquip = act instanceof EquipmentController2D; // TODO find a better way than instanceof
+        let actEquip = act instanceof EquipmentController2D;
         let actI = (actEquip) ? eqs.indexOf(act) : chs.indexOf(act);
 
         let rec = ins.receiver;
-        let recEquip = rec instanceof EquipmentController2D; // TODO find a better way than instanceof
+        let recEquip = rec instanceof EquipmentController2D;
         let recI = (recEquip) ? eqs.indexOf(rec) : chs.indexOf(rec);
 
         let action = ins.action;

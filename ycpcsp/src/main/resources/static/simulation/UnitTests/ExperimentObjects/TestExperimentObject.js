@@ -18,3 +18,9 @@ QUnit.test('ExperimentObject setMass:', function(assert){
     obj.setMass(0.0);
     assert.equal(obj.mass, 0.0, "mass should be 0.0");
 });
+
+QUnit.test('ExperimentObject getID:', function(assert){
+    var obj = new ExperimentObject(5);
+
+    assert.throws(obj.getID, "Generic ExperimentObject objects should throw error on getID");
+});

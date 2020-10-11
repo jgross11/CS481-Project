@@ -19,6 +19,7 @@ class ContainerController2D extends EquipmentController2D{
         switch(id){
             case ID_FUNC_CONTAINER_POUR_INTO: return this.pourInto;
             case ID_FUNC_CONTAINER_ADD_TO: return this.addTo;
+            default: return null;
         }
     }
 
@@ -31,6 +32,7 @@ class ContainerController2D extends EquipmentController2D{
         switch(func){
             case this.pourInto: return ID_FUNC_CONTAINER_POUR_INTO;
             case this.addTo: return ID_FUNC_CONTAINER_ADD_TO;
+            default: return null;
         }
     }
 

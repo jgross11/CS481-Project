@@ -19,5 +19,11 @@ QUnit.test('ExperimentObjectController2D canPlace:', function(assert){
 QUnit.test('ExperimentObjectController2D idToFunc:', function(assert){
     let controller = new ExperimentObjectController2D();
 
-    assert.throws(controller.getObject, "All ExperimentObjectController2D objects must implement idToFunc");
+    assert.throws(controller.idToFunc, "All ExperimentObjectController2D objects must implement idToFunc");
+});
+
+QUnit.test('ExperimentObjectController2D idToFunc:', function(assert){
+    let controller = new ExperimentObjectController2D();
+
+    assert.throws(controller.idToFunc, "All ExperimentObjectController2D objects must implement idToFunc");
 });

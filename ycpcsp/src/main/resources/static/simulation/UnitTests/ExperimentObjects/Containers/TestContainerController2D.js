@@ -6,10 +6,17 @@ QUnit.test('ContainerController2D constructor:', function(assert){
 });
 
 QUnit.test('ContainerController2D idToFunc:', function(assert){
-    var controller = new ChemicalController2D(null);
+    var controller = new ContainerController2D(null);
 
     assert.equal(controller.idToFunc(ID_FUNC_CONTAINER_POUR_INTO), controller.pourInto, "Should get the function pourInto");
     assert.equal(controller.idToFunc(ID_FUNC_CONTAINER_ADD_TO), controller.addTo, "Should get the function addTo");
+});
+
+QUnit.test('ContainerController2D funcToId:', function(assert){
+    var controller = new ContainerController2D(null);
+
+    assert.equal(controller.funcToId(controller.pourInto), ID_FUNC_CONTAINER_POUR_INTO, "Should get the ID for pourInto");
+    assert.equal(controller.funcToId(controller.addTo), ID_FUNC_CONTAINER_ADD_TO, "Should get the ID for addTo");
 });
 
 QUnit.test('ContainerController2D hasResidue:', function(assert){
@@ -137,7 +144,7 @@ QUnit.test('ContainerController2D addTo:', function(assert){
     assert.deepEqual(container.contents.texture, [102, 27, 7], "The container should contain a mix of chemical 1 and 2");
 });
 
-QUnit.test('ContainerController2D hasSpace:', function(assert){
+QUnit.test('ContainerController2D emptyOut:', function(assert){
     var container = new Beaker([0, 0], [0, 0], 0, 100, 0, 2, null);
     var controller = new BeakerController2D(container);
     var chem = new Chemical(10, "eq", 20.0, [0, 0, 0]);

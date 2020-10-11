@@ -4,11 +4,8 @@ var mainExpController;
 /*
 
 TODO:
-    Test cases ExperimentObject.getID, Chemical.getID, Beaker.getID
-    Test cases ExperimentObjectController2D.funcToId, ChemicalController2D.funcToId, ContainerController2D.funcToId
-    Test cases experimentToJSON
-    Make parser for front end Experiment to backend json
-    Make constants for JSON variable names?
+    Make constants for JSON variable names, use bracket notation
+    Move idToEquipment and idToChemical to be in the same place as Equipment and Chemical id conversion functions
     Allow backend to send a json file to session storage
     Remove instanceID parameter, replace it with an instanceID incrementer
     Refactor instructions to steps

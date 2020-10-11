@@ -313,23 +313,26 @@ QUnit.test('ExperimentController2D findEquipmentByInstanceID:', function(assert)
     assert.deepEqual(controller.findEquipmentByInstanceID(4), null, "Should find null.");
 });
 
-QUnit.todo('ExperimentController2D experimentMouseX:', function(assert){
+QUnit.test('ExperimentController2D experimentMouseX:', function(assert){
     var exp = new Experiment("a title", "a name");
+    var controller = new ExperimentController2D(exp);
     mouseX = 100;
-    assert.equal(exp.experimentMouseX(), 100 - EXP_BOUNDS[0], "Experiment mouse position for X should translate left by the x coordinate of the experiment.");
+    assert.equal(controller.experimentMouseX(), 100 - EXP_BOUNDS[0], "Experiment mouse position for X should translate left by the x coordinate of the experiment.");
 });
 
-QUnit.todo('ExperimentController2D experimentMouseY:', function(assert){
+QUnit.test('ExperimentController2D experimentMouseY:', function(assert){
     var exp = new Experiment("a title", "a name");
+    var controller = new ExperimentController2D(exp);
     mouseY = 300;
-    assert.equal(exp.experimentMouseY(), 300 - EXP_BOUNDS[1], "Experiment mouse position for X should translate left by the x coordinate of the experiment.");
+    assert.equal(controller.experimentMouseY(), 300 - EXP_BOUNDS[1], "Experiment mouse position for X should translate left by the x coordinate of the experiment.");
 });
 
-QUnit.todo('ExperimentController2D experimentMousePos:', function(assert){
+QUnit.test('ExperimentController2D experimentMousePos:', function(assert){
     var exp = new Experiment("a title", "a name");
-    var pos = exp.experimentMousePos();
-    assert.equal(pos[0], exp.experimentMouseX(), "Index 0 of pos should be the x mouse coordinate.");
-    assert.equal(pos[1], exp.experimentMouseY(), "Index 1 of pos should be the y mouse coordinate.");
+    var controller = new ExperimentController2D(exp);
+    var pos = controller.experimentMousePos();
+    assert.equal(pos[0], controller.experimentMouseX(), "Index 0 of pos should be the x mouse coordinate.");
+    assert.equal(pos[1], controller.experimentMouseY(), "Index 1 of pos should be the y mouse coordinate.");
 });
 
 QUnit.todo('ExperimentController2D mousePress:', function(assert){
