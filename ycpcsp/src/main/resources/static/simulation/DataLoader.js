@@ -138,12 +138,85 @@ function idToChemical(id, mass, concentration){
     var chem;
     switch(id){
         // Test chemicals
-        case ID_CHEM_TEST_SMALL_RED: chem = new Chemical(5, "", 20, [255, 0, 0]); break;
-        case ID_CHEM_TEST_SMALL_BLUE: chem = new Chemical(5, "", 20, [0, 0, 255]); break;
-        case ID_CHEM_TEST_LARGE_WHITE: chem = new Chemical(20, "", 20, [255, 255, 255]); break;
+        case ID_CHEM_TEST_SMALL_RED: chem = new Chemical(5, "R", 20, [255, 0, 0]); break;
+        case ID_CHEM_TEST_SMALL_BLUE: chem = new Chemical(5, "B", 20, [0, 0, 255]); break;
+        case ID_CHEM_TEST_LARGE_WHITE: chem = new Chemical(20, "W", 20, [255, 255, 255]); break;
         default: return null;
     }
     return new ChemicalController2D(chem);
+}
+
+/**
+Create a simplified json version of an Experiment
+exp): The Experiment to convert
+returns: The json object
+*/
+function experimentToJSON(exp){
+    // Get the basic information
+    let expJSON = {};
+    expJSON.title = exp.title;
+    expJSON.creator = exp.creator;
+
+    // Get the Equipment
+    let equips = [];
+    let equipTypes = {};
+    exp.equipment.forEach(function(eqCont){
+        let eq = eqCont.equipment;
+        let id = eq.getID();
+        if(id in equipTypes) equipTypes[id]++;
+        else equipTypes[id] = 1;
+    });
+    for(var key in equipTypes){
+        equips.push({
+            "object_ID": parseInt(key),
+            "amount": equipTypes[key]
+        });
+    }
+    expJSON.equipment = equips;
+
+
+    // Get the Chemicals
+    let chems = [];
+    exp.chemicals.forEach(function(chemCont){
+        let chem = chemCont.chemical;
+        chems.push({
+            "id": chem.getID(),
+            "mass": chem.mass,
+            "concentration": chem.concentration
+        });
+    });
+    expJSON.chemicals = chems;
+
+
+    // Get the Instructions
+    let instructions = [];
+    exp.instructions.forEach(function(insCont, index){
+        let eqs = exp.equipment;
+        let chs = exp.chemicals;
+        let ins = insCont.instruction;
+
+        let act = ins.actor;
+        let actEquip = act instanceof EquipmentController2D; // TODO find a better way than instanceof
+        let actI = (actEquip) ? eqs.indexOf(act) : chs.indexOf(act);
+
+        let rec = ins.receiver;
+        let recEquip = rec instanceof EquipmentController2D; // TODO find a better way than instanceof
+        let recI = (recEquip) ? eqs.indexOf(rec) : chs.indexOf(rec);
+
+        let action = ins.action;
+
+        instructions.push({
+            "step_number": index,
+            "actor_index": actI,
+            "actor_ID": actEquip,
+            "receiver_index": recI,
+            "receiver_ID": recEquip,
+            "function_ID": act.funcToId(action)
+        });
+    });
+    expJSON.steps = instructions;
+
+    return expJSON;
 }
 
 /**

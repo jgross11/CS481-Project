@@ -23,6 +23,18 @@ class ContainerController2D extends EquipmentController2D{
     }
 
     /**
+    Convert the given function to its corresponding id
+    func: The function to convert
+    returns: The id of the function
+    */
+    funcToId(func){
+        switch(func){
+            case this.pourInto: return ID_FUNC_CONTAINER_POUR_INTO;
+            case this.addTo: return ID_FUNC_CONTAINER_ADD_TO;
+        }
+    }
+
+    /**
     Determine if this Controller's Container only has residue left
     returns: true if there is residue, false otherwise
     */

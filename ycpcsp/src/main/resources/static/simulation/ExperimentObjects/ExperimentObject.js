@@ -18,4 +18,12 @@ class ExperimentObject{
     setMass(mass){
         if(isFloat(mass) && mass >= 0) this.mass = mass;
     }
+
+    /**
+    Get the ID representing this ExperimentObject
+    */
+    getID(){
+        throw new Error("All ExperimentObject objects must implement getID");
+    }
+
 }

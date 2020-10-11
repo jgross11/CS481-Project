@@ -4,9 +4,14 @@ var mainExpController;
 /*
 
 TODO:
+    Test cases ExperimentObject.getID, Chemical.getID, Beaker.getID
+    Test cases ExperimentObjectController2D.funcToId, ChemicalController2D.funcToId, ContainerController2D.funcToId
+    Test cases experimentToJSON
     Make parser for front end Experiment to backend json
+    Make constants for JSON variable names?
     Allow backend to send a json file to session storage
     Remove instanceID parameter, replace it with an instanceID incrementer
+    Refactor instructions to steps
     Make proper layout page with home button
     Test cases: ExperimentController2D.selectedEquipFunction, setMovingEquipment
     Create code for Chemicals, display a Chemical tab
@@ -37,6 +42,13 @@ P5.js function, called when script is initially loaded
 function setup(){
     // First load image assets
     loadImages();
+
+
+    let testData = getTestJSON();
+    console.log(testData); // TODO
+    let exp = parseExperiment(testData);
+    console.log(exp); // TODO
+    console.log(experimentToJSON(exp)); // TODO
 
     // Grab data from session storage
     loadSessionData();

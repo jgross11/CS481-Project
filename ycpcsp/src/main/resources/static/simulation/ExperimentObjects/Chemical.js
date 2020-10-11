@@ -59,4 +59,15 @@ class Chemical extends ExperimentObject{
         this.concentration = concentration;
     }
 
+    /**
+    Get the ID representing this Chemical type
+    */
+    getID(){
+        switch(this.equation){
+            case "R": return ID_CHEM_TEST_SMALL_RED;
+            case "B": return ID_CHEM_TEST_SMALL_BLUE;
+            case "W": return ID_CHEM_TEST_LARGE_WHITE;
+            default: return null;
+        }
+    }
 }

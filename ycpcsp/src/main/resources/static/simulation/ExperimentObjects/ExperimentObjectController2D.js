@@ -33,4 +33,13 @@ class ExperimentObjectController2D{
         throw new Error("All ExperimentObjectController2D objects must implement idToFunc");
     }
 
+    /**
+    Convert the given function to its corresponding id
+    func: The function to convert
+    Always throws an error, instances of this object must implement this method.
+    */
+    funcToId(func){
+        throw new Error("All ExperimentObjectController2D objects must implement funcToId");
+    }
+
 }

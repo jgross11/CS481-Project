@@ -37,6 +37,10 @@ QUnit.test('DataLoader idToChemical:', function(assert){
         "Should create a ChemicalController2D");
 });
 
+QUnit.todo('DataLoader experimentToJSON:', function(assert){
+    assert.false(true);
+});
+
 QUnit.test('DataLoader getTestJSON:', function(assert){
     let data = getTestJSON();
     assert.notEqual(data, null, "Test json should not be null");
