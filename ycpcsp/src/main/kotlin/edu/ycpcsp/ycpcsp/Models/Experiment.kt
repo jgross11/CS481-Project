@@ -5,20 +5,15 @@ package edu.ycpcsp.ycpcsp.Models
  *  Contains a name, the creator's name, and tags
  */
 data class Experiment(
-                    var name : String,
-                    var creatorName : String,
-                    var tags : String,
-                    var numSteps : Int
-                    )
+        var name : String,
+        var creatorName : String,
+        var tags : String,
+        var numSteps : Int
+)
 {
-    var steps : Array<Step> = Array<Step>(numSteps){Step(-1, EquipmentObject("NULL OBJECT"), EquipmentObject("NULL OBJECT"))}
-
-    constructor() : this("NULL", "NULL MCNULL", "NULL", 0){}
-
+    var steps : Array<Step>
     init{
-
         steps = Array<Step>(numSteps){Step(-1, ExperimentObject(-1), ExperimentObject(-1))}
-
         name = "\"$name\""
     }
 

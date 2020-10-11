@@ -12,7 +12,7 @@ data class User(var firstName : String = "UNKNOWN",
                 var email : String = "UNKNOWN",
                 var password : String = "UNKNOWN",
                 var school : String = "UNKNOWN"
-                )
+)
 {
     // init questions, experiment, recent experiment arrays as empty
     var securityQuestions : Array<SecurityQuestion> = arrayOf<SecurityQuestion>()
@@ -25,7 +25,7 @@ data class User(var firstName : String = "UNKNOWN",
         firstName = firstName.capitalize()
         lastName = lastName.capitalize()
         securityQuestions = Array(3){SecurityQuestion()}
-        experiments  = Array(1){Experiment()}
+
     }
 
     // 'null' constructor TODO make this redundant please...

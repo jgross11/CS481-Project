@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile Page</title>
+</head>
+<body>
+Email:
+<a href="/home">Home</a><br>
+
+
+<div id="email"></div>
+First Name:
+<div id="Firstname"></div>
+Last Name:
+<div id="Lastname"></div>
+School/Org
+<div id="School"></div>
+</body>
+<script>
+    // obtain user information from session
+    var username = String(sessionStorage.getItem("username"));
+    console.log("Logged in as: ")
+    console.log(username);
+    if(username){
+        var Firstname;
+        var Lastname;
+        var School;
+        document.getElementById("email").innerHTML = username;
+        document.getElementById("Firstname").innerHTML =Firstname;
+        document.getElementById("Lastname").innerHTML = Lastname;
+        document.getElementById("School").innerHTML = School;
+
+    }else{
+        window.location.href = "/";
+
+    }
+
+</script>
+
+</html>

@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
  *  Includes: name
  */
 
-
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
@@ -26,10 +25,7 @@ open class ExperimentObject (_name : Int)
 {
     var name : Int = _name
 
-
-    constructor(name : Object) : this(name as String){
-
+    override fun toString(): String {
+        return "ERROR: ExperimentObject.toString was called - you meant to call toString of the subclass. Fix that. "
     }
-
-    abstract override fun toString(): String
 }

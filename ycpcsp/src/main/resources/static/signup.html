@@ -57,6 +57,13 @@
 </form>
 
 <script>
+
+    var username = String(sessionStorage.getItem("username"));
+    console.log("Logged in as: ")
+    console.log(username);
+    if(username) {
+        sessionStorage.clear();
+    }
         console.log("Loaded verification script");
 
         function verifySignupInformation(){
@@ -142,6 +149,7 @@
 
             }
         }
+
 
     </script>
 </html>
