@@ -32,10 +32,10 @@ class Tests
         println(user.toString())
 
         // create water object
-        var water = ChemicalObject("H2O", 1.0f, 0.0f)
+        var water = ChemicalObject(101, 1.0f, 0.0f)
 
         // create beaker object
-        var beaker = EquipmentObject("10mL Beaker")
+        var beaker = EquipmentObject(3)
 
         // create a step between water and a beaker
         var waterInBeakerStep = Step(1, water, beaker)

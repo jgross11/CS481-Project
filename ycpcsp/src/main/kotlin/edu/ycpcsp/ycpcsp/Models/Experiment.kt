@@ -16,6 +16,9 @@ data class Experiment(
     constructor() : this("NULL", "NULL MCNULL", "NULL", 0){}
 
     init{
+
+        steps = Array<Step>(numSteps){Step(-1, ExperimentObject(-1), ExperimentObject(-1))}
+
         name = "\"$name\""
     }
 
@@ -30,5 +33,4 @@ data class Experiment(
         }
         return result
     }
-
 }

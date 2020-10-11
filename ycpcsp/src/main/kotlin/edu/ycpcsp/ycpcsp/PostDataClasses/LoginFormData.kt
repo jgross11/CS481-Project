@@ -26,9 +26,3 @@ class LoginFormData2 (var username : String, var password : String){
 
 
 
-
-
-
-
-
-

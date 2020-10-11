@@ -69,10 +69,7 @@ function setErrorDivMessageByValue(name, errorMessage, isGood){
 }
 
 /*
-POSTs an object to a mapping and returns the obtained response
-address: the mapping to POST to
-objectToPost: the object to be submitted to the backend
-returns: the responses' information, in JS, rather than JSON form
+
 */
 async function postData(address, objectToPost){
     return await (await fetch(address, {

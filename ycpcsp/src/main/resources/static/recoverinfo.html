@@ -41,7 +41,10 @@
 
             // verify given email is valid
             if(verifyInformation(email.value, TYPE_EMAIL)){
-                document.getElementById("forgot-password-form").submit();
+                postData('forgot-password-email-submit', email).then(function(data){
+                    console.log(data);
+                    // TODO handle logic
+                });
             }
             else{
                 document.getElementById("email-error").innerHTML = "Please enter a valid email.";
@@ -64,7 +67,19 @@
                    If an account doesn't exist with given f / l name, notify user and offer a signup link.
                 */
 
-                // CURRENTLY, assumes information was correct to simulate creation of security question div generation
+                var formData = {
+                    firstName : fname.value,
+                    lastName : lname.value
+                };
+
+                postData('forgot-email-submit', formData).then(function(data){
+                    console.log(data);
+                    // TODO handle logic
+                });
+
+                /*
+                // NOTE: the following is only for reference purposes and will eventually be deleted.
+                // assumes information was correct to simulate creation of security question div generation
                 // security question html code
 
                 // security question
@@ -84,6 +99,8 @@
 
                 // create div on page
                 document.getElementById("forgot-email-form").appendChild(sqDiv);
+
+                */
             }
             else{
                 setErrorDivMessageByValue("fname", "Please enter your first name.", fnameGood);

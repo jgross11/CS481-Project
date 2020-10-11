@@ -28,6 +28,10 @@ data class User(var firstName : String = "UNKNOWN",
         experiments  = Array(1){Experiment()}
     }
 
+    // 'null' constructor TODO make this redundant please...
+    constructor() : this("", "", "","","") {}
+
+
     /**
      *  Custom toString function in form of
      *  lastName, firstName
@@ -57,5 +61,4 @@ data class User(var firstName : String = "UNKNOWN",
     fun getFullname() : String{
         return "$firstName $lastName"
     }
-
 }
