@@ -21,6 +21,11 @@ data class Experiment(
         steps[index] = step
     }
 
+    // null constructor
+    constructor() : this("NULL", "NULL", "NULL", 0){
+
+    }
+
     override fun toString(): String {
         var result = "$name, made by $creatorName, with tags: $tags\n"
         for(step in steps){
