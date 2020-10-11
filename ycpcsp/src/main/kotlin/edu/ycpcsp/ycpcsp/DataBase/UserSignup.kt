@@ -6,9 +6,15 @@ import java.util.*
 
 
 fun UserSignup(id : Int, firstName: String, lastName: String, email: String, password: String, organization: String, question1: String, question2: String, question3: String, ans1: String, ans2: String, ans3: String){
+    val serverCredentials = serverCredential()
+    val username = serverCredentials?.get(0)
+    val password = serverCredentials?.get(1)
+    val url = serverCredentials?.get(2)
+
+
     val connectionProps = Properties()
     connectionProps["user"] = username
-    connectionProps["password"] = edu.ycpcsp.ycpcsp.DataBase.password
+    connectionProps["password"] = password
     connectionProps["useSSL"] = "false"
 
     try{

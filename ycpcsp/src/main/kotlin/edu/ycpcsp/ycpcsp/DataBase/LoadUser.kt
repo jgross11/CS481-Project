@@ -1,15 +1,28 @@
+
 package edu.ycpcsp.ycpcsp.DataBase
 
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.*
+import edu.ycpcsp.ycpcsp.Models.*
 
-fun loadUser(email: String): MutableList<String> {
+//enum class UserFields {FirstName, LastName, Email, Password, School}
+var FirstName = 1
+var LastName = 2
+var Email = 3
+var Password = 4
+var School = 5
+
+fun loadUser(email: String): User? {
+    val serverCredentials = serverCredential()
+    val username = serverCredentials?.get(0)
+    val password = serverCredentials?.get(1)
+    val url = serverCredentials?.get(2)
+
     val connectionProps = Properties()
     connectionProps["user"] = username
     connectionProps["password"] = password
     connectionProps["useSSL"] = "false"
-    var userEntries : MutableList<String> = mutableListOf()
 
     try {
         //test class fails here
@@ -17,24 +30,11 @@ fun loadUser(email: String): MutableList<String> {
 
         val conn = DriverManager.getConnection(url, connectionProps)
         val st = conn.createStatement()
-        val rs = st.executeQuery("SELECT firstName, lastName, organization FROM Database.Users where email = \"$email\";")
+        val rs = st.executeQuery("SELECT * FROM Database.Users where email = \"$email\";")
 
-        //for now I will keep the nested while loop just to see example code
-        //but i need to simplify later on
-        // for each row in the result set
-        val rsmd = rs.metaData
-        val colmnNum = rsmd.columnCount
+        rs.next()
 
-        while (rs.next()) {
-            //prints out values in each column of the result set
-            for(i in 1  until colmnNum+1){
-                //will print out every entry of the columns for one row
-                //println(rs.getString(i))
-                //adds strings into an array
-                userEntries.add(rs.getString(i))
-            }
-        }
-        return userEntries
+        return User(rs.getString(FirstName),rs.getString(LastName),rs.getString(Email),rs.getString(Password),rs.getString(School))
     } catch (ex: SQLException) {
         // handle any errors
         ex.printStackTrace()
@@ -42,5 +42,5 @@ fun loadUser(email: String): MutableList<String> {
         // handle any errors
         ex.printStackTrace()
     }
-    return userEntries
+    return null
 }
