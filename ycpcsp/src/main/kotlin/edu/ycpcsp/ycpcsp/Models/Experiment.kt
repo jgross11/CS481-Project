@@ -5,26 +5,26 @@ package edu.ycpcsp.ycpcsp.Models
  *  Contains a name, the creator's name, and tags
  */
 data class Experiment(
-                    var name : String,
-                    var creatorName : String,
-                    var tags : String,
-                    var numSteps : Int
+                    var title : String
                     )
 {
-    var steps : Array<Step>
-    init{
-        steps = Array<Step>(numSteps){Step(-1, ExperimentObject("NULL OBJECT"), ExperimentObject("NULL OBJECT"))}
-        name = "\"$name\""
-    }
+    var equipment : Array<EquipmentObject> = arrayOf<EquipmentObject>()
+    var chemicals : Array<ChemicalObject> = arrayOf<ChemicalObject>()
+    var steps : Array<Step> = arrayOf<Step>()
 
     fun addStep(step : Step, index : Int){
         steps[index] = step
     }
 
+    // null constructor
+    constructor() : this("NULL"){
+
+    }
+
     override fun toString(): String {
-        var result = "$name, made by $creatorName, with tags: $tags\n"
+        var result = "$title, made by\n"
         for(step in steps){
-            result += "${step.toString()}"
+            result += "$step.toString()"
         }
         return result
     }

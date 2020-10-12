@@ -86,9 +86,13 @@
 </head>
 <body>
 <script src="helperFunctions.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.12.0/js/md5.min.js"></script>
 
 <div class="dropdown">
     <button class="dropbtn">Login</button>
+
+    <a href="/simulation" class="dropbtn">Enter Simulator</a>
+
     <div class="dropdown-content">
         <form id="login-form" name="login-form" action="/login-submit" method="post">
         <label for="email">Email:</label><br>
@@ -139,10 +143,19 @@
         var emailDiv = getAndTrimById("email")
         var email = emailDiv.value;
         var password = document.getElementById("password").value;
+        // hash password
         var emailGood = verifyInformation(email, TYPE_EMAIL);
         var passGood = password.length != 0;
         if(emailGood && passGood){
-            document.getElementById("login-form").submit();
+            password = md5(password);
+            var user = {
+                email: email,
+                password: password
+            };
+            postData('login-submit', user).then(function(data){
+                console.log(data);
+                // TODO handle logic
+            });
         }
         else{
             setErrorDivMessageByValue("email", "Please enter a valid email.", emailGood);

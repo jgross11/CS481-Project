@@ -68,4 +68,21 @@ function setErrorDivMessageByValue(name, errorMessage, isGood){
     document.getElementById(name+"-error").innerHTML = isGood ? "" : errorMessage;
 }
 
+/*
+POSTs data to an address on the backend as JSON, receives JSON response
+and deJSONs the response into a JS promise object
+address: the backend address to POST to
+objectToPost: the JS object to send as JSON
+return: the POST response as a JS promise object
+*/
+async function postData(address, objectToPost){
+    return await (await fetch(address, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(objectToPost)
+    })).json();
+}
+
 console.log("Helper function script loaded successfully!");
