@@ -25,9 +25,7 @@ fun VerifyUser(email: String, userPassword: String): Boolean {
         val rs = st.executeQuery("SELECT password FROM Database.Users WHERE email = \"$email\";")
 
         rs.next()
-       if(rs.getString(1).compareTo(userPassword) == 0){
-           print("Successful login!")
-       }
+       return rs.getString(1).compareTo(userPassword) == 0
 
     } catch (ex: SQLException) {
         // handle any errors

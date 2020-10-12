@@ -10,10 +10,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName
 
 @JsonTypeName("equipment")
 
-data class EquipmentObject(
-                        var _name : Int,
-                        var object_ID  : Int
-                        ) : ExperimentObject(_name) {
+data class EquipmentObject(var _name : Int) : ExperimentObject(_name) {
 
     override fun toString(): String {
         return "$name"

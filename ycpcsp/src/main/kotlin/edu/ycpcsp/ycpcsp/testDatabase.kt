@@ -1,6 +1,7 @@
 package edu.ycpcsp.ycpcsp
 
-import edu.ycpcsp.ycpcsp.DataBase.*
+import edu.ycpcsp.ycpcsp.DataBase.DeleteUser
+import edu.ycpcsp.ycpcsp.DataBase.UserSignup
 import java.util.Scanner
 
 fun main(){
@@ -17,7 +18,7 @@ fun main(){
         DeleteUser(id)
     }
 
-    else if (answer == 2) {
+    else {
     print("Enter in the user id that you wish to delete: ")
     val id = readLine()
     print("First Name: ")
@@ -43,27 +44,6 @@ fun main(){
     print("Ans3: ")
     val ans3 = readLine()
         UserSignup(2, firstName!!, lastName!!, email!!, password!!, organization!!, question1!!, question2!!, question3!!, ans1!!, ans2!!, ans3!!)
-    }
-
-    else if (answer == 3){
-        print("Enter in the user id that you wish to lookup: ")
-        val id = readLine()
-        UserProfile(id)
-    }
-
-    else if (answer == 4){
-        print("Enter username: ")
-        val username = readLine()
-        print("Enter password: ")
-        val password = readLine()
-
-        VerifyUser(username!!, password!!)
-    }
-
-    else if(answer ==5){
-        print("Enter in the id of experiment: ")
-        val id = readLine()
-        print(LoadExperiment(id!!))
     }
 }
 

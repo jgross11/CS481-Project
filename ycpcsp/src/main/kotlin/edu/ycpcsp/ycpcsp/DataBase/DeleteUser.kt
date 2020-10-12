@@ -4,7 +4,7 @@ import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.*
 
-fun DeleteUser(id: String?): Boolean{
+fun DeleteUser(id: String?){
     val connectionProps = Properties()
     connectionProps["user"] = username
     connectionProps["password"] = edu.ycpcsp.ycpcsp.DataBase.password
@@ -17,9 +17,6 @@ fun DeleteUser(id: String?): Boolean{
         val conn = DriverManager.getConnection(url, connectionProps)
         val st = conn.createStatement()
         val rs = st.executeUpdate("DELETE FROM Database.Users WHERE id = '"+id+"'")
-
-        return true
-
     }catch (ex: SQLException) {
         // handle any errors
         ex.printStackTrace()
@@ -27,6 +24,4 @@ fun DeleteUser(id: String?): Boolean{
         // handle any errors
         ex.printStackTrace()
     }
-
-    return false
 }

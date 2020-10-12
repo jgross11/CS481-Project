@@ -5,7 +5,7 @@ import java.sql.SQLException
 import java.util.*
 
 
-fun UserSignup(id : Int, firstName: String, lastName: String, email: String, password: String, organization: String, question1: String, question2: String, question3: String, ans1: String, ans2: String, ans3: String): Boolean {
+fun UserSignup(id : Int, firstName: String, lastName: String, email: String, password: String, organization: String, question1: String, question2: String, question3: String, ans1: String, ans2: String, ans3: String){
     val connectionProps = Properties()
     connectionProps["user"] = username
     connectionProps["password"] = edu.ycpcsp.ycpcsp.DataBase.password
@@ -17,11 +17,8 @@ fun UserSignup(id : Int, firstName: String, lastName: String, email: String, pas
         //Connection for the database to get it connected and then execute the query to insert the values into the database
         val conn = DriverManager.getConnection(url, connectionProps)
         val st = conn.createStatement()
-        val rs = st.executeUpdate("INSERT INTO Database.Users (firstName, lastName, email, password, organization, question1, question2, question3, ans1, ans2, ans3)" +
-        " VALUES('"+firstName+"', '"+lastName+"','"+email+"','"+password+"','"+organization+"','"+question1+"','"+question2+"','"+question3+"', '"+ans1+"', '"+ans2+"', '"+ans3+"')")
-
-        return true
-
+        val rs = st.executeUpdate("INSERT INTO Database.Users (id, firstName, lastName, email, password, organization, question1, question2, question3, ans1, ans2, ans3)" +
+        " VALUES('"+id+"','"+firstName+"', '"+lastName+"','"+email+"','"+password+"','"+organization+"','"+question1+"','"+question2+"','"+question3+"', '"+ans1+"', '"+ans2+"', '"+ans3+"')")
     } catch (ex: SQLException) {
         // handle any errors
         ex.printStackTrace()
@@ -29,6 +26,4 @@ fun UserSignup(id : Int, firstName: String, lastName: String, email: String, pas
         // handle any errors
         ex.printStackTrace()
     }
-
-    return false
 }
