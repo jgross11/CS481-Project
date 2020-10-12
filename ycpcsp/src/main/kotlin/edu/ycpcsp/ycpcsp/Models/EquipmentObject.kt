@@ -11,7 +11,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName
 
 data class EquipmentObject(
                         var _name : Int,
-                        var object_ID  : Int
+                        var object_ID  : Int,
+                        var amount : Int
                         ) : ExperimentObject(_name) {
 
     override fun toString(): String {
