@@ -19,18 +19,14 @@ School/Org
 </body>
 <script>
     // obtain user information from session
-    var username = String(sessionStorage.getItem("username"));
+    var username = String(sessionStorage.getItem("username", user.username));
     console.log("Logged in as: ")
     console.log(username);
     if(username){
-        var Firstname;
-        var Lastname;
-        var School;
-        document.getElementById("email").innerHTML = username;
-        document.getElementById("Firstname").innerHTML =Firstname;
-        document.getElementById("Lastname").innerHTML = Lastname;
-        document.getElementById("School").innerHTML = School;
-
+        document.getElementById("email").innerHTML = String(sessionStorage.getItem("username", user.username));
+        document.getElementById("Firstname").innerHTML = String(sessionStorage.getItem("firstName", user.firstName));
+        document.getElementById("Lastname").innerHTML = String(sessionStorage.getItem("lastName", user.lastName));
+        document.getElementById("School").innerHTML = String(sessionStorage.getItem("school", user.school));
     }else{
         window.location.href = "/";
 
