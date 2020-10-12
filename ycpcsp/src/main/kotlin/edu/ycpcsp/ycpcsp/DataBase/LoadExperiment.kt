@@ -43,7 +43,7 @@ fun LoadExperiment(id: String) : Experiment {
         ex.printStackTrace()
     }
 
-    return Experiment("null", "null", "null", 0)
+    return Experiment("null", "null")
 }
 
 
