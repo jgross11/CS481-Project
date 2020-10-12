@@ -1,23 +1,17 @@
-
 package edu.ycpcsp.ycpcsp.DataBase
 
+import edu.ycpcsp.ycpcsp.Models.User
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.*
-import edu.ycpcsp.ycpcsp.Models.*
 
-//enum class UserFields {FirstName, LastName, Email, Password, School}
-var FirstName = 1
-var LastName = 2
-var Email = 3
-var Password = 4
-var School = 5
-
-fun LoadUser(email: String): User? {
+fun ModifyUser(user: User): Boolean {
     val serverCredentials = serverCredential()
     val username = serverCredentials?.get(0)
     val password = serverCredentials?.get(1)
     val url = serverCredentials?.get(2)
+
+    val email = user.email
 
     val connectionProps = Properties()
     connectionProps["user"] = username
@@ -30,17 +24,21 @@ fun LoadUser(email: String): User? {
 
         val conn = DriverManager.getConnection(url, connectionProps)
         val st = conn.createStatement()
-        val rs = st.executeQuery("SELECT * FROM Database.Users where email = \"$email\";")
+        val rs = st.executeQuery("update Database.Users" +
+                "SET firstname = \'${user.firstName}\', lastname =\'${user.lastName}\', password = \'${user.password}\', organization = \'${user.school}\'" +
+                "WHERE email = \'${user.email}\';")
 
         try{
             rs.next()
-            return User(rs.getString(FirstName),rs.getString(LastName),rs.getString(Email),rs.getString(Password),rs.getString(School))
+            //The method will return true if the query was able to successful update the desired User row
+            return true
         } catch (ex: SQLException){
             println("Error the query returned with a null result set. The query must have been entered incorrectly")
             ex.printStackTrace()
         }
-        return null
+        //The method will return false if the query was unsuccessful
 
+        return false
     } catch (ex: SQLException) {
         // handle any errors
         ex.printStackTrace()
@@ -48,5 +46,6 @@ fun LoadUser(email: String): User? {
         // handle any errors
         ex.printStackTrace()
     }
-    return null
+    //return false if the query was not successful
+    return false
 }

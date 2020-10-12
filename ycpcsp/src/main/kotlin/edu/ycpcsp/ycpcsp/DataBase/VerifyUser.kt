@@ -4,7 +4,7 @@ import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.*
 
-fun verifyUser(email: String, userPassword: String): Boolean {
+fun VerifyUser(email: String, userPassword: String): Boolean {
     val serverCredentials = serverCredential()
     val username = serverCredentials?.get(0)
     val password = serverCredentials?.get(1)
@@ -23,8 +23,14 @@ fun verifyUser(email: String, userPassword: String): Boolean {
         val st = conn.createStatement()
         val rs = st.executeQuery("SELECT password FROM Database.Users WHERE email = \"$email\";")
 
-        rs.next()
-       return rs.getString(1).compareTo(userPassword) == 0
+        try{
+            rs.next()
+            return rs.getString(1).compareTo(userPassword) == 0
+        } catch (ex: SQLException){
+            println("Error the query returned with a null result set. The query must have been entered incorrectly")
+            ex.printStackTrace()
+        }
+        return false
 
     } catch (ex: SQLException) {
         // handle any errors

@@ -1,4 +1,3 @@
-
 package edu.ycpcsp.ycpcsp.DataBase
 
 import java.sql.DriverManager
@@ -6,14 +5,8 @@ import java.sql.SQLException
 import java.util.*
 import edu.ycpcsp.ycpcsp.Models.*
 
-//enum class UserFields {FirstName, LastName, Email, Password, School}
-var FirstName = 1
-var LastName = 2
-var Email = 3
-var Password = 4
-var School = 5
 
-fun LoadUser(email: String): User? {
+fun verifySecurityQuestion(email: String, securityQuestion: SecurityQuestion): Boolean {
     val serverCredentials = serverCredential()
     val username = serverCredentials?.get(0)
     val password = serverCredentials?.get(1)
@@ -30,17 +23,19 @@ fun LoadUser(email: String): User? {
 
         val conn = DriverManager.getConnection(url, connectionProps)
         val st = conn.createStatement()
-        val rs = st.executeQuery("SELECT * FROM Database.Users where email = \"$email\";")
+        val rs = st.executeQuery("SELECT ans"+securityQuestion.questionIndex+" FROM Database.Users where email = \"$email\";")
 
         try{
             rs.next()
-            return User(rs.getString(FirstName),rs.getString(LastName),rs.getString(Email),rs.getString(Password),rs.getString(School))
+            return rs.getString(1).compareTo(securityQuestion.answer) == 0
         } catch (ex: SQLException){
             println("Error the query returned with a null result set. The query must have been entered incorrectly")
             ex.printStackTrace()
         }
-        return null
+        return false
 
+        //This means the query failed to find anything
+        return false
     } catch (ex: SQLException) {
         // handle any errors
         ex.printStackTrace()
@@ -48,5 +43,6 @@ fun LoadUser(email: String): User? {
         // handle any errors
         ex.printStackTrace()
     }
-    return null
+    //This means that the result was not the same
+    return false
 }
