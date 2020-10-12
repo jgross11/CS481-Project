@@ -4,9 +4,6 @@ var mainExpController;
 /*
 
 TODO:
-    Allow backend to send a json file to session storage
-    Refactor instructions to steps
-    Make test cases use a before method
     Create a method to render a static loading screen while the simulator loads
     Make proper layout page with home button
     Test cases: ExperimentController2D.selectedEquipFunction, setMovingEquipment

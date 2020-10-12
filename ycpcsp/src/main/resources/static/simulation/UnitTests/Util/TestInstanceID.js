@@ -1,4 +1,9 @@
-QUnit.test("InstanceID nextInstanceID:", function(assert){
+QUnit.module("InstanceID", {
+    beforeEach: function(){
+    }
+});
+
+QUnit.test("nextInstanceID:", function(assert){
     currentInstanceID = 0;
     assert.equal(nextInstanceID(), 0, "First ID should be 0");
     assert.equal(nextInstanceID(), 1, "Second ID should be 1");

@@ -1,7 +1,13 @@
-QUnit.test('Beaker constructor:', function(assert){
-    currentInstanceID = 0;
-    var beaker = new Beaker([8, 9], [102, 100], 5.0, 150.0, 0.2);
+var beaker;
 
+QUnit.module("Beaker", {
+    beforeEach: function(){
+        currentInstanceID = 0;
+        beaker = new Beaker([8, 9], [102, 100], 5.0, 150.0, 0.2);
+    }
+});
+
+QUnit.test('constructor:', function(assert){
     assert.deepEqual(beaker.position, [8, 9], 'position should be [8, 9]');
     assert.deepEqual(beaker.size, [102, 100], 'size should be [102, 100]');
     assert.equal(beaker.mass, 5.0, 'mass should be 5.0');
@@ -11,8 +17,6 @@ QUnit.test('Beaker constructor:', function(assert){
     assert.equal(beaker.sprite, SPRITE_BEAKER, 'sprite should be SPRITE_BEAKER');
 });
 
-QUnit.test('Beaker getID:', function(assert){
-    var beaker = new Beaker([8, 9], [102, 100], 5.0, 150.0, 0.2);
-
+QUnit.test('getID:', function(assert){
     assert.equal(beaker.getID(), ID_EQUIP_BEAKER_TEST, 'Should get the correct ID for beaker');
 });

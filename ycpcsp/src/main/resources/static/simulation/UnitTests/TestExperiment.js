@@ -1,6 +1,17 @@
-QUnit.test('Experiment constructor:', function(assert){
-    var exp = new Experiment("The Title", "The Name");
+var exp;
+var beaker1;
+var beaker2;
 
+QUnit.module("Experiment", {
+    beforeEach: function(){
+        exp = new Experiment("The Title", "The Name");
+        equip = new Equipment([0, 0], [100, 100], 1, null);
+        beaker1 = new BeakerController2D(new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01));
+        beaker2 = new BeakerController2D(new Beaker([250, 200], [150, 150], 20.0, 50.0, 0.01));
+    }
+});
+
+QUnit.test('constructor:', function(assert){
     assert.deepEqual(exp.equipment, [], 'equipment should be empty');
     assert.deepEqual(exp.chemicals, [], 'chemicals should be empty');
     assert.deepEqual(exp.instructions, [], "instructions should be empty.");
@@ -8,17 +19,13 @@ QUnit.test('Experiment constructor:', function(assert){
     assert.equal(exp.creator, "The Name", 'creator should be "The Name"');
 });
 
-QUnit.test('Experiment setEquipment:', function(assert){
-    var exp = new Experiment("The Title", "The Name");
-    var equip = new Equipment([0, 0], [100, 100], 1, null);
-
-    exp.setEquipment([equip]);
-    assert.deepEqual(exp.equipment, [equip],
+QUnit.test('setEquipment:', function(assert){
+    exp.setEquipment([beaker1, beaker2]);
+    assert.deepEqual(exp.equipment, [beaker1, beaker2],
         "Given Equipment list should be equal to Equipment list in the experiment");
 });
 
-QUnit.test('Experiment setChemicals:', function(assert){
-    var exp = new Experiment("The Title", "The Name");
+QUnit.test('setChemicals:', function(assert){
     var chems = [
         new ChemicalController2D(new Chemical(5, "", 20.0, [0, 0, 0])),
         new ChemicalController2D(new Chemical(25, "", 10.0, [1, 40, 20])),
@@ -30,10 +37,9 @@ QUnit.test('Experiment setChemicals:', function(assert){
         "Given Chemical list should be equal to Chemical list in the experiment");
 });
 
-QUnit.test('ExperimentController2D setInstructions:', function(assert){
-    var exp = new Experiment("a title", "a name");
-    exp.equipment.push(new BeakerController2D(new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01)));
-    exp.equipment.push(new BeakerController2D(new Beaker([250, 200], [150, 150], 20.0, 50.0, 0.01)));
+QUnit.test('setInstructions:', function(assert){
+    exp.equipment.push(beaker1);
+    exp.equipment.push(beaker2);
     let eqs = exp.equipment;
     let instructions = [new InstructionController2D(new Instruction(eqs[0], eqs[1], eqs[0].pourInto))];
 
@@ -42,18 +48,14 @@ QUnit.test('ExperimentController2D setInstructions:', function(assert){
         "Instructions in Experiment should equal the set Instructions.");
 });
 
-QUnit.test('Experiment setName:', function(assert){
-    var exp = new Experiment("The Title", "The Name");
-
+QUnit.test('setName:', function(assert){
     assert.equal(exp.title, "The Title", 'Initial title should be "The Title"');
 
     exp.setTitle("New");
     assert.equal(exp.title, "New", 'New title should be "New"');
 });
 
-QUnit.test('Experiment setCreator:', function(assert){
-    var exp = new Experiment("The Title", "The Name");
-
+QUnit.test('setCreator:', function(assert){
     assert.equal(exp.creator, "The Name", 'Initial creator should be "The Name"');
 
     exp.setCreator("Create");

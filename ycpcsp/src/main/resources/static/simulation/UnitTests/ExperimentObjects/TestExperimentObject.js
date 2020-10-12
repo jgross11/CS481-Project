@@ -1,11 +1,16 @@
-QUnit.test('ExperimentObject constructor:', function(assert){
-    var obj = new ExperimentObject(5.0);
+var obj;
 
+QUnit.module("ExperimentObject", {
+    beforeEach: function(){
+        obj = new ExperimentObject(5.0);
+    }
+});
+
+QUnit.test('constructor:', function(assert){
     assert.equal(obj.mass, 5.0, "mass should be 5.0");
 });
 
-QUnit.test('ExperimentObject setMass:', function(assert){
-    var obj = new ExperimentObject(5);
+QUnit.test('setMass:', function(assert){
     obj.setMass(10.0);
     assert.equal(obj.mass, 10.0, "mass should be 10.0");
 
@@ -19,8 +24,6 @@ QUnit.test('ExperimentObject setMass:', function(assert){
     assert.equal(obj.mass, 0.0, "mass should be 0.0");
 });
 
-QUnit.test('ExperimentObject getID:', function(assert){
-    var obj = new ExperimentObject(5);
-
+QUnit.test('getID:', function(assert){
     assert.throws(obj.getID, "Generic ExperimentObject objects should throw error on getID");
 });

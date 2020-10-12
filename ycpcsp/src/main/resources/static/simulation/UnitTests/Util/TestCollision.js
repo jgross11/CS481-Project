@@ -1,4 +1,9 @@
-QUnit.test('Collision pointInRect2D:', function(assert){
+QUnit.module("Collision", {
+    beforeEach: function(){
+    }
+});
+
+QUnit.test('pointInRect2D:', function(assert){
     var bounds = [10, -20, 5, 30];
 
     assert.false(pointInRect2D(bounds, [0, 0]), "Point left of rect should be out of bounds");

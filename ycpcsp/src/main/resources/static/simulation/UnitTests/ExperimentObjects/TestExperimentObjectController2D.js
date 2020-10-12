@@ -1,29 +1,27 @@
-QUnit.test('ExperimentObjectController2D constructor:', function(assert){
-    let controller = new ExperimentObjectController2D();
+var controller;
 
+QUnit.module("ExperimentObjectController2D", {
+    beforeEach: function(){
+        controller = new ExperimentObjectController2D();
+    }
+});
+
+QUnit.test('constructor:', function(assert){
     assert.expect(0);
 });
 
-QUnit.test('ExperimentObjectController2D getObject:', function(assert){
-    let controller = new ExperimentObjectController2D();
-
+QUnit.test('getObject:', function(assert){
     assert.throws(controller.getObject, "All ExperimentObjectController2D objects must implement getObject:");
 });
 
-QUnit.test('ExperimentObjectController2D canPlace:', function(assert){
-    let controller = new ExperimentObjectController2D();
-
+QUnit.test('canPlace:', function(assert){
     assert.throws(controller.getObject, "All ExperimentObjectController2D objects must implement canPlace");
 });
 
-QUnit.test('ExperimentObjectController2D idToFunc:', function(assert){
-    let controller = new ExperimentObjectController2D();
-
+QUnit.test('idToFunc:', function(assert){
     assert.throws(controller.idToFunc, "All ExperimentObjectController2D objects must implement idToFunc");
 });
 
-QUnit.test('ExperimentObjectController2D idToFunc:', function(assert){
-    let controller = new ExperimentObjectController2D();
-
+QUnit.test('idToFunc:', function(assert){
     assert.throws(controller.idToFunc, "All ExperimentObjectController2D objects must implement idToFunc");
 });
