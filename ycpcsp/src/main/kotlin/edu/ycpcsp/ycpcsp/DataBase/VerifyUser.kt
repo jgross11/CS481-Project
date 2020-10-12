@@ -1,5 +1,6 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
+import edu.ycpcsp.ycpcsp.PostDataClasses.LoginFormData
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.*
@@ -10,7 +11,7 @@ const val password = "ruRkob-6zoqvu-nywryf"
 const val url = "jdbc:mysql://cs481database.c4fmzwru5eoe.us-east-2.rds.amazonaws.com:3306/Database"
 
 //the class as a method is currently not working
-fun VerifyUser(email: String, userPassword: String): Boolean {
+fun VerifyUser(loginFormData: LoginFormData): Boolean {
     val connectionProps = Properties()
     connectionProps["user"] = username
     connectionProps["password"] = password
@@ -22,11 +23,11 @@ fun VerifyUser(email: String, userPassword: String): Boolean {
 
         val conn = DriverManager.getConnection(url, connectionProps)
         val st = conn.createStatement()
-        val rs = st.executeQuery("SELECT password FROM Database.Users WHERE email = \"$email\";")
+        val rs = st.executeQuery("SELECT password FROM Database.Users WHERE email = \"${loginFormData.email}\";")
 
         rs.next()
-       if(rs.getString(1).compareTo(userPassword) == 0){
-           print("Successful login!")
+       if(rs.getString(1).compareTo(loginFormData.password) == 0){
+           return true
        }
 
     } catch (ex: SQLException) {
