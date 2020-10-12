@@ -141,8 +141,8 @@
 
 <script>
     // obtain user information from session
-    var username = String(sessionStorage.getItem("username"));
-    var password = String(sessionStorage.getItem("password"));
+    var username = String(sessionStorage.getItem("username", user.username));
+    var password = String(sessionStorage.getItem("password", user.password));
     console.log("Logged in as: ")
     console.log(username);
 
