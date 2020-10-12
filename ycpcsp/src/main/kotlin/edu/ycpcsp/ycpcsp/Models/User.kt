@@ -1,5 +1,7 @@
 package edu.ycpcsp.ycpcsp.Models
 
+import edu.ycpcsp.ycpcsp.PostDataClasses.SignupFormData
+
 /**
  *  Class that contains DB information pertaining to a user of the website
  *  stores information such as name, email, school, etc.
@@ -43,7 +45,6 @@ data class User(var firstName : String = "UNKNOWN",
      */
     override fun toString() : String{
 
-        if (this == null) return "null"
         var result = ""
         result += "$lastName, $firstName \n$email  $password \n$school\n"
         for(securityQuestion in securityQuestions){
@@ -58,7 +59,18 @@ data class User(var firstName : String = "UNKNOWN",
         return result
     }
 
-    fun getFullname() : String{
+    fun getFullName() : String{
         return "$firstName $lastName"
+    }
+
+    fun setContentsFromForm(signupFormData: SignupFormData) {
+        firstName = signupFormData.firstName
+        lastName = signupFormData.lastName
+        email = signupFormData.email
+        password = signupFormData.password
+        school = signupFormData.school
+        securityQuestions[0] = SecurityQuestion(signupFormData.sq1, signupFormData.sq1a)
+        securityQuestions[1] = SecurityQuestion(signupFormData.sq2, signupFormData.sq2a)
+        securityQuestions[2] = SecurityQuestion(signupFormData.sq3, signupFormData.sq3a)
     }
 }
