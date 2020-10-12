@@ -162,7 +162,7 @@ class ExperimentController2D{
         this.equipmentBoxes = new EquipmentBoxList();
         this.selectedEquipment = null;
         this.instructionCounter = 0;
-        // TODO after calling reset, instructions don't work, fix this
+
         if(this.experiment === null) return;
         let eqs = this.experiment.equipment;
         for(var i = 0; i < eqs.length; i++){
@@ -223,12 +223,13 @@ class ExperimentController2D{
 
     /**
     Call to activate a specific function on the selected EquipmentController
-    func: The function to use TODO define how this variable will be used
+    id: The function ID to use for the selected EquipmentController
     */
-    selectedEquipFunction(func){
-        // TODO modify this so that this particular set of calls is only made for beakers
-        this.selectedEquipment.pourInto(this.findEquipmentByPosition(this.experimentMousePos(), select));
-        this.setSelectedEquipment(null);
+    selectedEquipFunction(id){
+        let select = this.selectedEquipment;
+        let func = select.idToFunc(id);
+        let param = this.findEquipmentByPosition(this.experimentMousePos(), select);
+        func.bind(select, param)();
     }
 
     /**
@@ -256,7 +257,11 @@ class ExperimentController2D{
             // If in the Experiment bounds, check for object interaction
             if(inExpBounds){
                 // If an object is selected, run a function on it
-                if(isSelect) this.selectedEquipFunction(null);
+                if(isSelect){
+                    // TODO allow multiple constants to exist here. The user selects an action when the iniitally right click
+                    this.selectedEquipFunction(ID_FUNC_CONTAINER_POUR_INTO);
+                    this.setSelectedEquipment(null);
+                }
                 // Otherwise, attempt to select a piece of Equipment
                 else this.setSelectedEquipment(this.findEquipmentByPosition(expMouse));
             }
