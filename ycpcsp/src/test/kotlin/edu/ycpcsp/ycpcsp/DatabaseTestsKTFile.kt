@@ -36,9 +36,10 @@ fun main(){
     println("=============================Begin Modify User Test=============================")
 
     var originalUser = LoadUser(email)
-    var modifyUser = User("firstname", "lastname", "test@test.com", "1234", "High")
+    var modifyUser = User("Firstname", "Lastname", "test@test.com", "1234", "TheBest")
     if(ModifyUser(modifyUser)){
         if(originalUser != null){
+            //if you wish to verify whether or not the ModifyUser is actually working comment out the line below
             ModifyUser(originalUser)
         }
         println("Modify User successfully ran")

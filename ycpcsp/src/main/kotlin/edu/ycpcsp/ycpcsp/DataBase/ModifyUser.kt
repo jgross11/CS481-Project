@@ -24,12 +24,11 @@ fun ModifyUser(user: User): Boolean {
 
         val conn = DriverManager.getConnection(url, connectionProps)
         val st = conn.createStatement()
-        val rs = st.executeQuery("update Database.Users" +
-                "SET firstname = \'${user.firstName}\', lastname =\'${user.lastName}\', password = \'${user.password}\', organization = \'${user.school}\'" +
+        val rs = st.executeUpdate("update Database.Users " +
+                "SET firstName = \'${user.firstName}\', lastName =\'${user.lastName}\', password = \'${user.password}\', organization = \'${user.school}\'" +
                 "WHERE email = \'${user.email}\';")
 
         try{
-            rs.next()
             //The method will return true if the query was able to successful update the desired User row
             return true
         } catch (ex: SQLException){

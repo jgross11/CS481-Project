@@ -7,11 +7,11 @@ import java.util.*
 import edu.ycpcsp.ycpcsp.Models.*
 
 //enum class UserFields {FirstName, LastName, Email, Password, School}
-var FirstName = 1
-var LastName = 2
-var Email = 3
-var Password = 4
-var School = 5
+var FirstName = 2
+var LastName = 3
+var Email = 4
+var Password = 5
+var School = 6
 
 fun LoadUser(email: String): User? {
     val serverCredentials = serverCredential()
