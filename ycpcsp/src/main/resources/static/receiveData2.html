@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.12.0/js/md5.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<input type=text" id="username"><br>
+<input type="password" id="password"><br>
+<input type="button" value="Receive Data" onclick="submitAndReceiveData2()">
+<div id="error"></div>
+</form>
+</body>
+
+<script>
+
+    // backend communication functions must be async
+    async function submitAndReceiveData2(){
+
+        // get username, password from form
+        var formUsername = document.getElementById("username").value;
+        var pass = document.getElementById("password").value;
+
+        // function to hash password
+
+        var formPassword = md5(pass);
+
+        // construct 'user' object for easy json stringification
+        var user = {
+            username: formUsername,
+            password: formPassword //password is hashed
+        };
+
+        // submit to server and get info back
+        let response = await fetch('/receiveData-submit2', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        });
+
+        // decode information and display to user
+        var result = await response.json();
+        console.log("login success: " + result);
+
+        // successful login - store login info in session
+        if(result){
+
+            // store user information in session info
+            // TODO determine way to store user object, rather than parts
+            sessionStorage.setItem("username", user.username);
+            sessionStorage.setItem("password", user.password);
+
+            // for example, go to homepage
+            window.location.href = "/";
+        }
+        else{
+            document.getElementById("error").innerHTML = "invalid login";
+        }
+    }
+</script>
+</html>
