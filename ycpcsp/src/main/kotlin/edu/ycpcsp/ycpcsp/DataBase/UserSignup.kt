@@ -5,7 +5,7 @@ import java.sql.SQLException
 import java.util.*
 
 
-fun UserSignup(id : Int, firstName: String, lastName: String, email: String, password: String, organization: String, question1: String, question2: String, question3: String, ans1: String, ans2: String, ans3: String){
+fun UserSignup(id : Int, firstName: String, lastName: String, email: String, password: String, organization: String, question1: String, question2: String, question3: String, ans1: String, ans2: String, ans3: String): Boolean {
     val connectionProps = Properties()
     connectionProps["user"] = username
     connectionProps["password"] = edu.ycpcsp.ycpcsp.DataBase.password
@@ -19,6 +19,9 @@ fun UserSignup(id : Int, firstName: String, lastName: String, email: String, pas
         val st = conn.createStatement()
         val rs = st.executeUpdate("INSERT INTO Database.Users (id, firstName, lastName, email, password, organization, question1, question2, question3, ans1, ans2, ans3)" +
         " VALUES('"+id+"','"+firstName+"', '"+lastName+"','"+email+"','"+password+"','"+organization+"','"+question1+"','"+question2+"','"+question3+"', '"+ans1+"', '"+ans2+"', '"+ans3+"')")
+
+        return true
+
     } catch (ex: SQLException) {
         // handle any errors
         ex.printStackTrace()
@@ -26,4 +29,6 @@ fun UserSignup(id : Int, firstName: String, lastName: String, email: String, pas
         // handle any errors
         ex.printStackTrace()
     }
+
+    return false
 }

@@ -1,9 +1,6 @@
 package edu.ycpcsp.ycpcsp
 
-import edu.ycpcsp.ycpcsp.DataBase.DeleteUser
-import edu.ycpcsp.ycpcsp.DataBase.UserProfile
-import edu.ycpcsp.ycpcsp.DataBase.UserSignup
-import edu.ycpcsp.ycpcsp.DataBase.VerifyUser
+import edu.ycpcsp.ycpcsp.DataBase.*
 import java.util.Scanner
 
 fun main(){
@@ -61,6 +58,12 @@ fun main(){
         val password = readLine()
 
         VerifyUser(username!!, password!!)
+    }
+
+    else if(answer ==5){
+        print("Enter in the id of experiment: ")
+        val id = readLine()
+        LoadExperiment(id!!)
     }
 }
 
