@@ -33,7 +33,7 @@ fun LoadExperiment(id: String) : Experiment {
         rs2.last()
         val numSteps = rs2.row
 
-        return Experiment(title.toString(), creatorName, tags.toString(), numSteps)
+
 
     } catch (ex: SQLException) {
         // handle any errors
