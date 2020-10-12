@@ -20,11 +20,12 @@ fun LoadExperiment(id: String) : Experiment {
         val st = conn.createStatement()
         val rs = st.executeQuery("Select title, tags, firstName, lastName from Database.Experiments join Database.Users on Database.Experiments.creatorID = Database.Users.UserID where ExperimentsID = \"$id\" ")
         val array = arrayOfNulls<String?>(13)// make empty array to store the values of the database in but make it 13
-        val rs2 = st.executeQuery("Select StepsID from Database.Steps where StepsID = \"$id\"")
         rs.next()
         for(x in 1..4){
            array[x] = rs.getString(x)
         }
+
+        val rs2 = st.executeQuery("Select StepsID from Database.Steps where StepsID = \"$id\"")
 
         val title = array[1]
         val tags = array[2]
@@ -32,7 +33,7 @@ fun LoadExperiment(id: String) : Experiment {
         rs2.last()
         val numSteps = rs2.row
 
-        return Experiment(title!!, creatorName, tags!!, numSteps)
+        return Experiment(title.toString(), creatorName, tags.toString(), numSteps)
 
     } catch (ex: SQLException) {
         // handle any errors
