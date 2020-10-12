@@ -139,6 +139,24 @@
 </body>
 
 <script>
+
+    checkForLogin();
+
+    function checkForLogin(){
+        // attempt to get user information from session
+        var user = JSON.parse(sessionStorage.getItem("user"));
+        console.log("HELLO");
+        console.log(user);
+        // logged in
+        if(user != null){
+            document.write("Logged in as: " + user.lastName + ", " + user.firstName);
+        }
+        // not logged in
+        else{
+            document.write("Not currently signed in");
+        }
+    }
+
     function submitLoginInformation(){
         var emailDiv = getAndTrimById("email")
         var email = emailDiv.value;
@@ -154,7 +172,14 @@
             };
             postData('login-submit', user).then(function(data){
                 console.log(data);
-                // TODO handle logic
+                var user = data;
+                if(user.firstName != ""){
+                    sessionStorage.setItem("user", JSON.stringify(user));
+                    window.location.href = "/";
+                }
+                else{
+                    setErrorDivMessageByValue("email", "LOGIN FAILED", false);
+                }
             });
         }
         else{
