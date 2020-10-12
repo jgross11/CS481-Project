@@ -2,36 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Profile Page</title>
+    <title>Profile | YCPCSP</title>
 </head>
 <body>
-Email:
-<a href="/home">Home</a><br>
-
-
-<div id="email"></div>
-First Name:
-<div id="Firstname"></div>
-Last Name:
-<div id="Lastname"></div>
-School/Org
-<div id="School"></div>
+        <!--TODO: Get the info from the UserProfile function to display the users information-->
 </body>
-<script>
-    // obtain user information from session
-    var username = String(sessionStorage.getItem("username", user.username));
-    console.log("Logged in as: ")
-    console.log(username);
-    if(username){
-        document.getElementById("email").innerHTML = String(sessionStorage.getItem("username", user.username));
-        document.getElementById("Firstname").innerHTML = String(sessionStorage.getItem("firstName", user.firstName));
-        document.getElementById("Lastname").innerHTML = String(sessionStorage.getItem("lastName", user.lastName));
-        document.getElementById("School").innerHTML = String(sessionStorage.getItem("school", user.school));
-    }else{
-        window.location.href = "/";
-
-    }
-
-</script>
-
 </html>
