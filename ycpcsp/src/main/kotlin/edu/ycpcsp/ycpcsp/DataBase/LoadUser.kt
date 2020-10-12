@@ -13,7 +13,7 @@ var Email = 4
 var Password = 5
 var School = 6
 
-fun LoadUser(email: String): User? {
+fun LoadUser(email: String): User {
     val serverCredentials = serverCredential()
     val username = serverCredentials?.get(0)
     val password = serverCredentials?.get(1)
@@ -39,7 +39,7 @@ fun LoadUser(email: String): User? {
             println("Error the query returned with a null result set. The query must have been entered incorrectly")
             ex.printStackTrace()
         }
-        return null
+        return User()
 
     } catch (ex: SQLException) {
         // handle any errors
@@ -48,5 +48,5 @@ fun LoadUser(email: String): User? {
         // handle any errors
         ex.printStackTrace()
     }
-    return null
+    return User()
 }
