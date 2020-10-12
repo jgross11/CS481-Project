@@ -1,1 +1,0 @@
-let EQUIP_ID_BEAKER = 1;
