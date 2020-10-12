@@ -10,10 +10,10 @@ import com.fasterxml.jackson.annotation.JsonTypeName
 @JsonTypeName("chemical")
 
 data class ChemicalObject(
-                        var type_id : Int,
+                        var _name : Int,
                         var quantity : Float,
                         var concentration : Float
-                        ) : ExperimentObject(type_id)
+                        ) : ExperimentObject(_name)
 {
     override fun toString(): String {
         return "$name: quantity=$quantity, concentration=$concentration"
