@@ -1,3 +1,4 @@
+
 package edu.ycpcsp.ycpcsp.DataBase
 
 import java.sql.DriverManager
@@ -5,9 +6,14 @@ import java.sql.SQLException
 import java.util.*
 
 fun DeleteUser(id: String?){
+    val serverCredentials = serverCredential()
+    val username = serverCredentials?.get(0)
+    val password = serverCredentials?.get(1)
+    val url = serverCredentials?.get(2)
+
     val connectionProps = Properties()
     connectionProps["user"] = username
-    connectionProps["password"] = edu.ycpcsp.ycpcsp.DataBase.password
+    connectionProps["password"] = password
     connectionProps["useSSL"] = "false"
 
     try {
