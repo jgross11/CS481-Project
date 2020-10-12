@@ -17,8 +17,8 @@ fun UserSignup(id : Int, firstName: String, lastName: String, email: String, pas
         //Connection for the database to get it connected and then execute the query to insert the values into the database
         val conn = DriverManager.getConnection(url, connectionProps)
         val st = conn.createStatement()
-        val rs = st.executeUpdate("INSERT INTO Database.Users (id, firstName, lastName, email, password, organization, question1, question2, question3, ans1, ans2, ans3)" +
-        " VALUES('"+id+"','"+firstName+"', '"+lastName+"','"+email+"','"+password+"','"+organization+"','"+question1+"','"+question2+"','"+question3+"', '"+ans1+"', '"+ans2+"', '"+ans3+"')")
+        val rs = st.executeUpdate("INSERT INTO Database.Users (firstName, lastName, email, password, organization, question1, question2, question3, ans1, ans2, ans3)" +
+        " VALUES('"+firstName+"', '"+lastName+"','"+email+"','"+password+"','"+organization+"','"+question1+"','"+question2+"','"+question3+"', '"+ans1+"', '"+ans2+"', '"+ans3+"')")
 
         return true
 
