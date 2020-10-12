@@ -1,17 +1,16 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
-import edu.ycpcsp.ycpcsp.Models.User
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.*
+import edu.ycpcsp.ycpcsp.Models.*
 
-fun ModifyUser(user: User): Boolean {
+
+fun createExperiment(experiment: Experiment): Boolean {
     val serverCredentials = serverCredential()
     val username = serverCredentials?.get(0)
     val password = serverCredentials?.get(1)
     val url = serverCredentials?.get(2)
-
-    val email = user.email
 
     val connectionProps = Properties()
     connectionProps["user"] = username
@@ -25,18 +24,23 @@ fun ModifyUser(user: User): Boolean {
         val conn = DriverManager.getConnection(url, connectionProps)
         val st = conn.createStatement()
 
+
         try{
-            val rs = st.executeUpdate("update Database.Users " +
-                    "SET firstName = \'${user.firstName}\', lastName =\'${user.lastName}\', password = \'${user.password}\', organization = \'${user.school}\'" +
-                    "WHERE email = \'${user.email}\';")
-            //The method will return true if the query was able to successful update the desired User row
+            //Model classes have not been updated, so the execute will not work
+            var rs = st.executeUpdate("INSERT INTO Database.Experiments (title, creatorID, tags)\n" +
+                    "VALUES (\'${experiment.name}\', , 0101)")
+            for (name in experiment.steps) {
+                rs = st.executeUpdate("INSERT INTO Database.Steps (experiment_ID, step_number, actor_index, actor_ID, receiver_index, receiver_ID, functionID)\n" +
+                        "VALUES ( , 2, 0, 1, 3, 1, 3)")
+            }
+            //if the updates work this method will return false
             return true
         } catch (ex: SQLException){
             println("Error the query returned with a null result set. The query must have been entered incorrectly")
             ex.printStackTrace()
         }
-        //The method will return false if the query was unsuccessful
 
+        //This means the query failed to find anything
         return false
     } catch (ex: SQLException) {
         // handle any errors
@@ -45,6 +49,7 @@ fun ModifyUser(user: User): Boolean {
         // handle any errors
         ex.printStackTrace()
     }
-    //return false if the query was not successful
+    //This means that the result was not the same
     return false
 }
+
