@@ -12,6 +12,11 @@ const val url = "jdbc:mysql://cs481database.c4fmzwru5eoe.us-east-2.rds.amazonaws
 
 //the class as a method is currently not working
 fun VerifyUser(loginFormData: LoginFormData): Boolean {
+    val serverCredentials = serverCredential()
+    val username = serverCredentials?.get(0)
+    val password = serverCredentials?.get(1)
+    val url = serverCredentials?.get(2)
+
     val connectionProps = Properties()
     connectionProps["user"] = username
     connectionProps["password"] = password

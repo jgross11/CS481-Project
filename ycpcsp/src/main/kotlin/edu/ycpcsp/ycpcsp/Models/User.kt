@@ -9,7 +9,8 @@ import edu.ycpcsp.ycpcsp.PostDataClasses.SignupFormData
  */
 
 // primary constructor
-data class User(var firstName : String = "UNKNOWN",
+data class User(var userID : String = "UNKNOWN",
+                var firstName : String = "UNKNOWN",
                 var lastName : String = "UNKNOWN",
                 var email : String = "UNKNOWN",
                 var password : String = "UNKNOWN",
