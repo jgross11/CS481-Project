@@ -1,3 +1,4 @@
+// equipment object
 package edu.ycpcsp.ycpcsp.Models
 
 import com.fasterxml.jackson.annotation.JsonTypeName
@@ -10,12 +11,12 @@ import com.fasterxml.jackson.annotation.JsonTypeName
 @JsonTypeName("equipment")
 
 data class EquipmentObject(
-                        var _name : Int,
-                        var object_ID  : Int,
-                        var amount : Int
-                        ) : ExperimentObject(_name) {
+        var objectID  : Int,
+        var amount : Int
+) {
+
 
     override fun toString(): String {
-        return "$name"
+        return "$objectID | $amount"
     }
 }

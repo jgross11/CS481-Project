@@ -2,51 +2,73 @@ let SESSION_EXPERIMENT_NAME = "experimentData";
 
 // Constants for the fields of JSON for Experiment parsing to JSON
 let EXP_JSON_TITLE = "title";
-let EXP_JSON_CREATOR = "creator";
+let EXP_JSON_CREATOR = "creatorName";
 let EXP_JSON_EQUIPMENT = "equipment";
-let EXP_JSON_EQUIP_OBJ_ID = "object_ID";
+let EXP_JSON_EQUIP_OBJ_ID = "objectID";
 let EXP_JSON_EQUIP_AMOUNT = "amount";
 let EXP_JSON_CHEMICALS = "chemicals";
 let EXP_JSON_CHEM_ID = "id";
 let EXP_JSON_CHEM_MASS = "mass";
 let EXP_JSON_CHEM_CONCENTRATION = "concentration";
 let EXP_JSON_INSTRUCTIONS = "steps";
-let EXP_JSON_INS_STEP_NUM = "step_number";
-let EXP_JSON_INS_ACTOR_INDEX = "actor_index";
-let EXP_JSON_INS_ACTOR_IS_EQUIP = "actor_ID";
-let EXP_JSON_INS_RECEIVER_INDEX = "receiver_index";
-let EXP_JSON_INS_RECEIVER_IS_EQUIP = "receiver_ID";
-let EXP_JSON_INS_FUNC_ID = "function_ID";
-
-/**
-Function to load data from the session storage
-*/
-// backend communication functions must be async
-async function loadSessionData(){
-    /*
-        this function warrants an explanation
-        postData POSTS the user object via JSON to the address 'receiveData-submit'
-        this takes some time (obviously), and so when the server responds
-        the .then function is called, which executes an async function
-        that is given the server response. The data is then de-JSON'd
-        (the reason that the async keyword is necessary)
-        into a usable format, and then the logic handling
-        a good / bad response is executed.
-    */
-    let experiment = getTestJSON();
-    sessionStorage.setItem(SESSION_EXPERIMENT_NAME, JSON.stringify(experiment));
+let EXP_JSON_INS_STEP_NUM = "stepNumber";
+let EXP_JSON_INS_ACTOR_INDEX = "actorIndex";
+let EXP_JSON_INS_ACTOR_IS_EQUIP = "actorID";
+let EXP_JSON_INS_RECEIVER_INDEX = "receiverIndex";
+let EXP_JSON_INS_RECEIVER_IS_EQUIP = "receiverID";
+let EXP_JSON_INS_FUNC_ID = "functionID";
 
 
-    postData('simulation-data', experiment).then(function(data){
-        // successful login - store login info in session
-        if(data){
-            // store user information in session info
-            sessionStorage.setItem(SESSION_EXPERIMENT_NAME, data);
-        }
-        else{
-            console.log("Failed to load experiment data");
-        }
+function submitTestExperimentToBackend(){
+    let testJSON = getTestJSON();
+    console.log("test JSON: ");
+    console.log(testJSON);
+    let user = JSON.parse(sessionStorage.getItem("user"));
+    // TODO CHECK IF USER EXISTS, NOTIFY THAT SIGNUP MUST HAPPEN BEFORE EXP CAN BE SAVED
+    let userAndExperiment = {
+        user: user,
+        experiment: testJSON
+    };
+    postData("save-new-simulation", userAndExperiment).then(function(response){
+        console.log("received following response upon submitting experiment: ");
+        console.log(response);
     });
+}
+
+function loadSessionData(){
+    // ##################
+    // ##################
+    // ################## THE FOLLOWING CONTAINS LOGIC TO LOAD EXPERIMENT FROM BACKEND GIVEN ID
+    // ################## OR HANDLE (not done currently) NEW EXPERIMENT LOADING / NO EXPERIMENT ID FOUND
+    // ##################
+    // ##################
+
+    // determine if a simulation is being loaded, or
+    // a new one needs to be created
+    let simulationToLoadID = parseInt(sessionStorage.getItem("simulationToLoad"));
+    console.log(simulationToLoadID);
+    if(simulationToLoadID == -1){
+        console.log("loading blank experiment");
+        sessionStorage.setItem("experimentData", JSON.stringify(experimentToJSON(new Experiment("", ""))));
+    } else{
+        // POST experiment ID to search
+        console.log("fetching experiment with ID: " + simulationToLoadID);
+        postData("simulation-data", simulationToLoadID).then(function(expData){
+            console.log("received following when querying for experiment with ID: " + simulationToLoadID);
+            console.log(expData);
+            // valid experiment ID
+            if(expData.creatorName != ""){
+                console.log("Experiment data as JS object: ");
+                console.log(exp);
+                sessionStorage.setItem(SESSION_EXPERIMENT_NAME, JSON.stringify(expData));
+            }
+            else{
+                // TODO experiment ID was invalid,
+                // handle appropriately...
+                console.log("Experiment ID invalid, no results found");
+            }
+        });
+    }
 }
 
 /**
@@ -127,7 +149,7 @@ function parseInstructions(equips, chems, rawIns){
     for(var i = 0; i < rawIns.length; i++){
         let ins = rawIns[i];
         let actI = ins[EXP_JSON_INS_ACTOR_INDEX];
-        let recI = ins[EXP_JSON_INS_ACTOR_INDEX];
+        let recI = ins[EXP_JSON_INS_RECEIVER_INDEX];
         let act = (ins[EXP_JSON_INS_ACTOR_IS_EQUIP]) ? equips[actI] : chems[actI];
         let rec = (ins[EXP_JSON_INS_RECEIVER_IS_EQUIP]) ? equips[recI] : chems[recI];
         let func = act.idToFunc(ins[EXP_JSON_INS_FUNC_ID]);
@@ -244,31 +266,31 @@ function getTestJSON(){
     steps[0][EXP_JSON_INS_ACTOR_IS_EQUIP] = true;
     steps[0][EXP_JSON_INS_RECEIVER_INDEX] = 0;
     steps[0][EXP_JSON_INS_RECEIVER_IS_EQUIP] = false;
-    steps[0][EXP_JSON_INS_FUNC_ID] = 2;
+    steps[0][EXP_JSON_INS_FUNC_ID] = ID_FUNC_CONTAINER_ADD_TO;
     steps[1][EXP_JSON_INS_STEP_NUM] = 1;
     steps[1][EXP_JSON_INS_ACTOR_INDEX] = 1;
     steps[1][EXP_JSON_INS_ACTOR_IS_EQUIP] = true;
     steps[1][EXP_JSON_INS_RECEIVER_INDEX] = 1;
     steps[1][EXP_JSON_INS_RECEIVER_IS_EQUIP] = false;
-    steps[1][EXP_JSON_INS_FUNC_ID] = 2;
+    steps[1][EXP_JSON_INS_FUNC_ID] = ID_FUNC_CONTAINER_ADD_TO;
     steps[2][EXP_JSON_INS_STEP_NUM] = 2;
     steps[2][EXP_JSON_INS_ACTOR_INDEX] = 0;
     steps[2][EXP_JSON_INS_ACTOR_IS_EQUIP] = true;
     steps[2][EXP_JSON_INS_RECEIVER_INDEX] = 1;
     steps[2][EXP_JSON_INS_RECEIVER_IS_EQUIP] = true;
-    steps[2][EXP_JSON_INS_FUNC_ID] = 1;
+    steps[2][EXP_JSON_INS_FUNC_ID] = ID_FUNC_CONTAINER_POUR_INTO;
     steps[3][EXP_JSON_INS_STEP_NUM] = 3;
     steps[3][EXP_JSON_INS_ACTOR_INDEX] = 1;
     steps[3][EXP_JSON_INS_ACTOR_IS_EQUIP] = true;
     steps[3][EXP_JSON_INS_RECEIVER_INDEX] = 2;
     steps[3][EXP_JSON_INS_RECEIVER_IS_EQUIP] = true;
-    steps[3][EXP_JSON_INS_FUNC_ID] = 1;
+    steps[3][EXP_JSON_INS_FUNC_ID] = ID_FUNC_CONTAINER_POUR_INTO;
     steps[4][EXP_JSON_INS_STEP_NUM] = 4;
     steps[4][EXP_JSON_INS_ACTOR_INDEX] = 2;
     steps[4][EXP_JSON_INS_ACTOR_IS_EQUIP] = true;
     steps[4][EXP_JSON_INS_RECEIVER_INDEX] = 2;
     steps[4][EXP_JSON_INS_RECEIVER_IS_EQUIP] = false;
-    steps[4][EXP_JSON_INS_FUNC_ID] = 2;
+    steps[4][EXP_JSON_INS_FUNC_ID] = ID_FUNC_CONTAINER_ADD_TO;
     exp[EXP_JSON_INSTRUCTIONS] = steps;
 
     return exp;

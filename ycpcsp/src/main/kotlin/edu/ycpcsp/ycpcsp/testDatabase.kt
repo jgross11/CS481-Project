@@ -65,7 +65,7 @@ fun main(){
     else if(answer ==5){
         print("Enter in the id of experiment: ")
         val id = readLine()
-        print(LoadExperiment(id!!))
+        LoadExperiment(id!!)
     }
 }
 
