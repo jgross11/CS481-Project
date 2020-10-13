@@ -62,9 +62,38 @@ QUnit.test('setExperiment:', function(assert){
 });
 
 QUnit.test('setSelectedEquipment:', function(assert){
+    controller.setSelectedEquipment(null);
+    assert.equal(controller.selectedEquipment, null,
+        "Selected Equipment in Controller should be null.");
+
     controller.setSelectedEquipment(beakerControl1);
     assert.equal(controller.selectedEquipment, beakerControl1,
-        "Equipment in Controller should equal the set Equipment.");
+        "Selected Equipment in Controller should be the set Equipment.");
+});
+
+QUnit.test('setMovingEquipment:', function(assert){
+    controller.movingEquipAnchor = null;
+    controller.setMovingEquipment(null);
+    assert.equal(controller.movingEquipment, null,
+        "Moving Equipment in Controller should be null.");
+    assert.equal(controller.movingEquipAnchor, null,
+        "Moving Equipment anchor in Controller should still be null.");
+
+    mouseX = 5;
+    mouseY = 4;
+    controller.setMovingEquipment(beakerControl3);
+    assert.equal(controller.movingEquipment, beakerControl3,
+        "Moving Equipment in Controller should be null.");
+    assert.deepEqual(controller.movingEquipAnchor, [40 + EXP_BOUNDS[0], 96 + EXP_BOUNDS[1]],
+        "Moving Equipment anchor in Controller should have been set based on the mouse position.");
+
+    mouseX = -15;
+    mouseY = 20;
+    controller.setMovingEquipment(beakerControl3);
+    assert.equal(controller.movingEquipment, beakerControl3,
+        "Moving Equipment in Controller should be null.");
+    assert.deepEqual(controller.movingEquipAnchor, [60 + EXP_BOUNDS[0], 80 + EXP_BOUNDS[1]],
+        "Moving Equipment anchor in Controller should have been set based on the mouse position.");
 });
 
 QUnit.test('setInstructionCounter:', function(assert){
@@ -327,6 +356,41 @@ QUnit.test('experimentMousePos:', function(assert){
     var pos = controller.experimentMousePos();
     assert.equal(pos[0], controller.experimentMouseX(), "Index 0 of pos should be the x mouse coordinate.");
     assert.equal(pos[1], controller.experimentMouseY(), "Index 1 of pos should be the y mouse coordinate.");
+});
+
+QUnit.test('selectedEquipFunction:', function(assert){
+    var result;
+    controller.addEquipment(beakerControl1, true);
+    controller.addEquipment(beakerControl2, true);
+    beaker1.setContents(chem);
+    var goodX = 105 + EXP_BOUNDS[0];
+    var goodY = 5 + EXP_BOUNDS[1];
+    var badX = -1000;
+    var badY = -1000;
+
+    controller.setSelectedEquipment(beakerControl1);
+    mouseX = goodX;
+    mouseY = goodY;
+    result = controller.selectedEquipFunction(null);
+    assert.false(result, "Calling the function without a valid function should fail.");
+
+    controller.setSelectedEquipment(null);
+    mouseX = goodX;
+    mouseY = goodY;
+    result = controller.selectedEquipFunction(ID_FUNC_CONTAINER_POUR_INTO);
+    assert.false(result, "Calling the function without selected equipment should fail.");
+
+    controller.setSelectedEquipment(beakerControl1);
+    mouseX = badX;
+    mouseY = badY;
+    result = controller.selectedEquipFunction(ID_FUNC_CONTAINER_POUR_INTO);
+    assert.false(result, "Calling the function without a valid equipment in selection range should fail.");
+
+    controller.setSelectedEquipment(beakerControl1);
+    mouseX = goodX;
+    mouseY = goodY;
+    result = controller.selectedEquipFunction(ID_FUNC_CONTAINER_POUR_INTO);
+    assert.true(result, "Calling the function with valid setup should succeed.");
 });
 
 QUnit.todo('mousePress:', function(assert){

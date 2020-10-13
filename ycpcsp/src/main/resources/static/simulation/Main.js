@@ -4,10 +4,9 @@ var mainExpController;
 /*
 
 TODO:
-    Test cases: ExperimentController2D.selectedEquipFunction, setMovingEquipment
-    Allow users to select different actions for each piece of equipment
     Make proper layout page with home button
     Create code for Chemicals, display a Chemical tab
+    Allow users to select different actions for each piece of equipment
     Allow equipment and chemicals to be disposed
     Make a better way of Chemicals in Instructions to keep their stats so they don't change, or maybe have a reset?
     Add camera panning
@@ -31,7 +30,7 @@ function setup(){
     // Create the canvas
     let canvas = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
     canvas.position(50, 50, "relative");
-    
+
     // First load image assets
     loadImages();
 

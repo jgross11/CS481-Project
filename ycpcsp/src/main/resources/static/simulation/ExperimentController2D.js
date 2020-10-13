@@ -224,12 +224,17 @@ class ExperimentController2D{
     /**
     Call to activate a specific function on the selected EquipmentController
     id: The function ID to use for the selected EquipmentController
+    returns: true if the function is activated, false otherwise
     */
     selectedEquipFunction(id){
         let select = this.selectedEquipment;
+        if(select === null || select === undefined) return false;
         let func = select.idToFunc(id);
+        if(func === null || func === undefined) return false;
         let param = this.findEquipmentByPosition(this.experimentMousePos(), select);
+        if(param === null || param === undefined) return false;
         func.bind(select, param)();
+        return true;
     }
 
     /**
@@ -258,7 +263,7 @@ class ExperimentController2D{
             if(inExpBounds){
                 // If an object is selected, run a function on it
                 if(isSelect){
-                    // TODO allow multiple constants to exist here. The user selects an action when the iniitally right click
+                    // TODO allow multiple constants to exist here. The user selects an action when the initially right click
                     this.selectedEquipFunction(ID_FUNC_CONTAINER_POUR_INTO);
                     this.setSelectedEquipment(null);
                 }
