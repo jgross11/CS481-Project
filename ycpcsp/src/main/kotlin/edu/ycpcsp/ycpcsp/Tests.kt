@@ -33,10 +33,10 @@ fun main(args : Array<String>){
     println(user.toString())
 
     // create water object
-    var water = ChemicalObject(101, 1.0f, 0.0f)
+    var water = ChemicalObject(101, 1.0, 0.0)
 
     // create beaker object
-    var beaker = EquipmentObject(0, 0, 0)
+    var beaker = EquipmentObject(0, 0)
 
     // create a step between water and a beaker
     var waterInBeakerStep = Step(1, 0, true, 0, false, 0)
