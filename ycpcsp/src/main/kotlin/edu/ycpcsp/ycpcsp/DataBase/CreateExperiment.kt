@@ -75,4 +75,3 @@ fun CreateExperiment(userAndExperiment: UserAndExperiment): Boolean {
     //This means that the result was not the same
     return false
 }
-
