@@ -6,7 +6,8 @@ import java.sql.SQLException
 import java.util.*
 import edu.ycpcsp.ycpcsp.Models.*
 
-//enum class UserFields {FirstName, LastName, Email, Password, School}
+//enum class UserFields { UserID, FirstName, LastName, Email, Password, School}
+var UserID = 1
 var FirstName = 2
 var LastName = 3
 var Email = 4
@@ -34,7 +35,7 @@ fun LoadUser(email: String): User {
 
         try{
             rs.next()
-            return User(rs.getString(FirstName),rs.getString(LastName),rs.getString(Email),rs.getString(Password),rs.getString(School))
+            return User(rs.getString(UserID), rs.getString(FirstName),rs.getString(LastName),rs.getString(Email),rs.getString(Password),rs.getString(School))
         } catch (ex: SQLException){
             println("Error the query returned with a null result set. The query must have been entered incorrectly")
             ex.printStackTrace()
