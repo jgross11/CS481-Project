@@ -470,7 +470,7 @@ class EquipmentBoxList{
     get(i){
         let b = this.boxes[i];
         if(b === undefined) return b;
-        return this.boxes[i].equipControl;
+        return this.boxes[i].objControl;
     }
 
     /**
@@ -485,7 +485,7 @@ class EquipmentBoxList{
                 let r = b.bounds();
                 if(pointInRect2D(r, mouse)){
                     this.selected = b;
-                    this.selected.equipControl.setCenter(mouse[0], mouse[1]);
+                    this.selected.objControl.setCenter(mouse[0], mouse[1]);
                     return true;
                 }
             }
@@ -515,7 +515,7 @@ class EquipmentBoxList{
     */
     remove(equip){
         for(var i = 0; i < this.boxes.length; i++){
-            if(this.boxes[i].equipControl === equip){
+            if(this.boxes[i].objControl === equip){
                 this.boxes.splice(i, 1);
                 return true;
             }
@@ -534,14 +534,14 @@ class EquipmentBoxList{
         var success = false;
         if(sel !== null){
             let expMouse = expControl.experimentMousePos();
-            sel.equipControl.setCenter(expMouse[0], expMouse[1]);
+            sel.objControl.setCenter(expMouse[0], expMouse[1]);
             let eqs = expControl.experiment.equipment;
 
-            let index = eqs.indexOf(sel.equipControl);
+            let index = eqs.indexOf(sel.objControl);
             if(index < 0) success = false;
             else{
                 expControl.placeEquipment(index);
-                this.remove(sel.equipControl);
+                this.remove(sel.objControl);
                 success = true;
             }
         }
@@ -556,7 +556,7 @@ class EquipmentBoxList{
     */
     updateSelectPos(){
         if(this.selected !== null){
-            this.selected.equipControl.setCenter(mouseX, mouseY);
+            this.selected.objControl.setCenter(mouseX, mouseY);
             return true;
         }
         return false;
@@ -579,33 +579,33 @@ class EquipmentBoxList{
     drawSelected(g){
         let sel = this.selected;
         if(sel !== null){
-            sel.equipControl.drawSprite(g);
+            sel.objControl.drawSprite(g);
         }
     }
 
 }
 
-/**
-A helper object used by ExperimentController2D for allowing the user to click and drag Equipment into the Experiment
-*/
-class EquipmentBox{
 
+/**
+A helper object used by BoxLists for displaying and interacting with Experiment elements
+*/
+class DisplayBox{
     /**
     Create a new EquipmentBox to handle drawing and mouse input for an Equipment box
-    equipControl: The EquipmentController2D holding the Equipment to be rendered
+    objControl: The EquipmentController2D holding the Equipment to be rendered
     index: The index position where this Box should be rendered
     */
-    constructor(equipControl, index){
-        this.equipControl = equipControl;
+    constructor(objControl, index){
+        this.objControl = objControl;
         this.index = index;
     }
 
     /**
     Set the EquipmentController2D used by this EquipmentBox
-    equipControl: The EquipmentController2D to set
+    objControl: The EquipmentController2D to set
     */
-    setEquipment(equipControl){
-        this.equipControl = equipControl;
+    setEquipment(objControl){
+        this.objControl = objControl;
     }
 
     /**
@@ -631,7 +631,14 @@ class EquipmentBox{
         let IMG_OFF = (SIZE - IMG_SIZE) * 0.5;
 
         g.rect(r[0], r[1], r[2], r[3]);
-        g.image(this.equipControl.equipment.sprite, r[0] + IMG_OFF, r[1] + IMG_OFF, IMG_SIZE, IMG_SIZE);
+        g.image(this.getImage(), r[0] + IMG_OFF, r[1] + IMG_OFF, IMG_SIZE, IMG_SIZE);
+    }
+
+    /**
+    Get the Square image which will be used to display this Box
+    */
+    getImage(){
+        return this.objControl.equipment.sprite;
     }
 
     /**
@@ -645,4 +652,35 @@ class EquipmentBox{
         return [x, y, SIZE, SIZE];
     }
 
+}
+
+
+/**
+A helper object used by EquipmentBoxList for allowing the user to click and drag Equipment into the Experiment
+*/
+class EquipmentBox extends DisplayBox{
+    constructor(objControl, index){
+        super(objControl, index);
+    }
+
+    getImage(){
+        return this.objControl.equipment.sprite;
+    }
+}
+
+
+/**
+A helper object used by ChemicalBoxList for allowing the user to select Chemicals from a tab
+*/
+class ChemicalBox extends DisplayBox{
+    constructor(objControl, index){
+        super(objControl, index);
+        this.graphics = createGraphics(EXP_EQUIP_BOX_SIZE, EXP_EQUIP_BOX_SIZE);
+    }
+
+    getImage(){
+        this.graphics.fill(255);
+        this.objControl.drawRect(0, 0, 1, EXP_EQUIP_BOX_SIZE, EXP_EQUIP_BOX_SIZE, 0, this.graphics)
+        return this.graphics;
+    }
 }

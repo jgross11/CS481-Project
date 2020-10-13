@@ -4,11 +4,15 @@ var mainExpController;
 /*
 
 TODO:
-    Make proper layout page with home button
     Create code for Chemicals, display a Chemical tab
+        Make a key toggle showing and interacting with chemicals vs equipment
+        Click on a chemical to be able to add it to a beaker, use func ids
+    Test cases ChemicalBox, EquipmentBox.getImage, DisplayBox
+        Need to allow them to turn graphics on or off
     Allow users to select different actions for each piece of equipment
     Allow equipment and chemicals to be disposed
     Make a better way of Chemicals in Instructions to keep their stats so they don't change, or maybe have a reset?
+    Make proper layout page with home button
     Add camera panning
         Use x and y camera coordinates in the ExperimentController2D
         Use P5 translate for graphics
@@ -35,11 +39,11 @@ function setup(){
     loadImages();
 
     let testData = getTestJSON();
-    //console.log(testData); // TODO
+    console.log(testData); // TODO
     let exp = parseExperiment(testData);
-    //console.log(exp); // TODO
+    console.log(exp); // TODO
     let expJSON = experimentToJSON(exp);
-    //console.log(expJSON); // TODO
+    console.log(expJSON); // TODO
 
     // Grab data from session storage
     loadSessionData();
