@@ -18,36 +18,57 @@ let EXP_JSON_INS_RECEIVER_INDEX = "receiverIndex";
 let EXP_JSON_INS_RECEIVER_IS_EQUIP = "receiverID";
 let EXP_JSON_INS_FUNC_ID = "functionID";
 
-/**
-Function to load data from the session storage
-*/
-// backend communication functions must be async
-async function loadSessionData(){
-    /*
-        this function warrants an explanation
-        postData POSTS the user object via JSON to the address 'receiveData-submit'
-        this takes some time (obviously), and so when the server responds
-        the .then function is called, which executes an async function
-        that is given the server response. The data is then de-JSON'd
-        (the reason that the async keyword is necessary)
-        into a usable format, and then the logic handling
-        a good / bad response is executed.
-    */
-    let experiment = getTestJSON();
-    sessionStorage.setItem(SESSION_EXPERIMENT_NAME, JSON.stringify(experiment));
 
-    /*
-    postData('simulation-data', experiment).then(function(data){
-        // successful login - store login info in session
-        if(data){
-            // store user information in session info
-            sessionStorage.setItem(SESSION_EXPERIMENT_NAME, data);
-        }
-        else{
-            console.log("Failed to load experiment data");
-        }
+function submitTestExperimentToBackend(){
+    let testJSON = getTestJSON();
+    console.log("test JSON: ");
+    console.log(testJSON);
+    let user = JSON.parse(sessionStorage.getItem("user"));
+    // TODO CHECK IF USER EXISTS, NOTIFY THAT SIGNUP MUST HAPPEN BEFORE EXP CAN BE SAVED
+    let userAndExperiment = {
+        user: user,
+        experiment: testJSON
+    };
+    postData("save-new-simulation", userAndExperiment).then(function(response){
+        console.log("received following response upon submitting experiment: ");
+        console.log(response);
     });
-    */
+}
+
+function loadSessionData(){
+    // ##################
+    // ##################
+    // ################## THE FOLLOWING CONTAINS LOGIC TO LOAD EXPERIMENT FROM BACKEND GIVEN ID
+    // ################## OR HANDLE (not done currently) NEW EXPERIMENT LOADING / NO EXPERIMENT ID FOUND
+    // ##################
+    // ##################
+
+    // determine if a simulation is being loaded, or
+    // a new one needs to be created
+    let simulationToLoadID = parseInt(sessionStorage.getItem("simulationToLoad"));
+    console.log(simulationToLoadID);
+    if(simulationToLoadID == -1){
+        console.log("loading blank experiment");
+        sessionStorage.setItem("experimentData", JSON.stringify(experimentToJSON(new Experiment("", ""))));
+    } else{
+        // POST experiment ID to search
+        console.log("fetching experiment with ID: " + simulationToLoadID);
+        postData("simulation-data", simulationToLoadID).then(function(expData){
+            console.log("received following when querying for experiment with ID: " + simulationToLoadID);
+            console.log(expData);
+            // valid experiment ID
+            if(expData.creatorName != ""){
+                console.log("Experiment data as JS object: ");
+                console.log(exp);
+                sessionStorage.setItem(SESSION_EXPERIMENT_NAME, JSON.stringify(expData));
+            }
+            else{
+                // TODO experiment ID was invalid,
+                // handle appropriately...
+                console.log("Experiment ID invalid, no results found");
+            }
+        });
+    }
 }
 
 /**
@@ -216,7 +237,6 @@ function experimentToJSON(exp){
 Temporary function for getting a test JSON file
 */
 function getTestJSON(){
-    // TODO BACKEND NOT RECEIVING CREATOR NAME... IS IT LOST HERE?
     let exp = {};
     exp[EXP_JSON_TITLE] = "Color";
     exp[EXP_JSON_CREATOR] = "Zaq";
