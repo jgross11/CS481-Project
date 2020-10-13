@@ -4,9 +4,11 @@ import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.*
 import edu.ycpcsp.ycpcsp.Models.*
+import edu.ycpcsp.ycpcsp.PostDataClasses.UserAndExperiment
+import java.sql.Statement
 
 
-fun createExperiment(experiment: Experiment): Boolean {
+fun CreateExperiment(userAndExperiment: UserAndExperiment): Boolean {
     val serverCredentials = serverCredential()
     val username = serverCredentials?.get(0)
     val password = serverCredentials?.get(1)
@@ -27,12 +29,33 @@ fun createExperiment(experiment: Experiment): Boolean {
 
         try{
             //Model classes have not been updated, so the execute will not work
-            var rs = st.executeUpdate("INSERT INTO Database.Experiments (title, creatorID, tags)\n" +
-                    "VALUES (\'${experiment.title}\', , 0101)")
-            for (name in experiment.steps) {
-                rs = st.executeUpdate("INSERT INTO Database.Steps (experiment_ID, step_number, actor_index, actor_ID, receiver_index, receiver_ID, functionID)\n" +
-                        "VALUES ( , 2, 0, 1, 3, 1, 3)")
+            st.executeUpdate("INSERT INTO Database.Experiments (title, creatorID, tags)\n" +
+                    "VALUES (\'${userAndExperiment.experiment.title}\', ${userAndExperiment.user.id}, 0101)", Statement.RETURN_GENERATED_KEYS)
+            // should be the generated experiment ID
+            var rs = st.generatedKeys
+            var newExperimentKey = -1
+            if(rs.next()){
+                newExperimentKey = rs.getInt(1)
             }
+            println(newExperimentKey)
+
+            // insert steps
+            for (step in userAndExperiment.experiment.steps) {
+                st.executeUpdate("INSERT INTO Database.Steps (experiment_ID, step_number, actor_index, actor_ID, receiver_index, receiver_ID, functionID)\n" +
+                        "VALUES ($newExperimentKey, ${step.stepNumber}, ${step.actorIndex}, ${step.actorID}, ${step.receiverIndex}, ${step.receiverID}, ${step.functionID})")
+            }
+
+            // TODO insert chemicals
+            for(chemical in userAndExperiment.experiment.chemicals){
+                st.executeUpdate("INSERT INTO Database.Chemicals (experiment_ID, type_id, mass, concentration)\n" +
+                        "VALUES ($newExperimentKey, ${chemical.typeId}, ${chemical.quantity}, ${chemical.concentration})")
+            }
+            // TODO insert equipment
+            for(equipment in userAndExperiment.experiment.equipment){
+                st.executeUpdate("INSERT INTO Database.Equipments (experiment_ID, name, object_ID, amount)\n" +
+                        "VALUES ($newExperimentKey, \"why do we have this field\", ${equipment.objectID}, ${equipment.amount})")
+            }
+            // TODO ensure all queries actually execute and handle errors accordingly
             //if the updates work this method will return false
             return true
         } catch (ex: SQLException){
