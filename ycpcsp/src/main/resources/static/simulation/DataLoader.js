@@ -2,21 +2,21 @@ let SESSION_EXPERIMENT_NAME = "experimentData";
 
 // Constants for the fields of JSON for Experiment parsing to JSON
 let EXP_JSON_TITLE = "title";
-let EXP_JSON_CREATOR = "creator";
+let EXP_JSON_CREATOR = "creatorName";
 let EXP_JSON_EQUIPMENT = "equipment";
-let EXP_JSON_EQUIP_OBJ_ID = "object_ID";
+let EXP_JSON_EQUIP_OBJ_ID = "objectID";
 let EXP_JSON_EQUIP_AMOUNT = "amount";
 let EXP_JSON_CHEMICALS = "chemicals";
 let EXP_JSON_CHEM_ID = "id";
 let EXP_JSON_CHEM_MASS = "mass";
 let EXP_JSON_CHEM_CONCENTRATION = "concentration";
 let EXP_JSON_INSTRUCTIONS = "steps";
-let EXP_JSON_INS_STEP_NUM = "step_number";
-let EXP_JSON_INS_ACTOR_INDEX = "actor_index";
-let EXP_JSON_INS_ACTOR_IS_EQUIP = "actor_ID";
-let EXP_JSON_INS_RECEIVER_INDEX = "receiver_index";
-let EXP_JSON_INS_RECEIVER_IS_EQUIP = "receiver_ID";
-let EXP_JSON_INS_FUNC_ID = "function_ID";
+let EXP_JSON_INS_STEP_NUM = "stepNumber";
+let EXP_JSON_INS_ACTOR_INDEX = "actorIndex";
+let EXP_JSON_INS_ACTOR_IS_EQUIP = "actorID";
+let EXP_JSON_INS_RECEIVER_INDEX = "receiverIndex";
+let EXP_JSON_INS_RECEIVER_IS_EQUIP = "receiverID";
+let EXP_JSON_INS_FUNC_ID = "functionID";
 
 /**
 Function to load data from the session storage
@@ -36,7 +36,7 @@ async function loadSessionData(){
     let experiment = getTestJSON();
     sessionStorage.setItem(SESSION_EXPERIMENT_NAME, JSON.stringify(experiment));
 
-
+    /*
     postData('simulation-data', experiment).then(function(data){
         // successful login - store login info in session
         if(data){
@@ -47,6 +47,7 @@ async function loadSessionData(){
             console.log("Failed to load experiment data");
         }
     });
+    */
 }
 
 /**
@@ -215,6 +216,7 @@ function experimentToJSON(exp){
 Temporary function for getting a test JSON file
 */
 function getTestJSON(){
+    // TODO BACKEND NOT RECEIVING CREATOR NAME... IS IT LOST HERE?
     let exp = {};
     exp[EXP_JSON_TITLE] = "Color";
     exp[EXP_JSON_CREATOR] = "Zaq";

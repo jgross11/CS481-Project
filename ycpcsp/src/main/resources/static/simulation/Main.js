@@ -38,12 +38,34 @@ function setup(){
     // First load image assets
     loadImages();
 
+
+    /*
+
+    // determine if a simulation is being loaded, or
+    // a new one needs to be created
+    let simulationToLoadID = sessionStorage.getItem("simulationToLoad");
+    if(simulationToLoadID == -1){
+        // TODO load blank experiment or whatever
+        console.log("loading blank experiment");
+    } else{
+        // POST experiment ID to search
+        console.log("fetching experiment with ID: " + simulationToLoadID);
+        postData("simulation-data", simulationToLoadID).then(function(data){
+            console.log("received following when querying for experiment with ID: " + simulationToLoadID);
+            console.log(data);
+        });
+    }
     let testData = getTestJSON();
+    console.log("test JSON(?): ");
     console.log(testData); // TODO
     let exp = parseExperiment(testData);
+    console.log("test JS(?): ");
     console.log(exp); // TODO
     let expJSON = experimentToJSON(exp);
+    console.log("test JSON(?): ");
     console.log(expJSON); // TODO
+
+    */
 
     // Grab data from session storage
     loadSessionData();

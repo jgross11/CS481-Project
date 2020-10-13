@@ -5,12 +5,15 @@ package edu.ycpcsp.ycpcsp.Models
  *  Includes: step number, actor object, and receiver object
  */
 
-data class Step( var id : Short,
-                 var actor : ExperimentObject,
-                 var receiver : ExperimentObject
+data class Step( var stepNumber : Int,
+                 var actorIndex : Int,
+                 var actorID : Boolean,
+                 var receiverIndex : Int,
+                 var receiverID : Boolean,
+                 var functionID : Int
                 )
 {
     override fun toString() : String{
-        return "\nStep $id\n${actor.toString()}\nacts on\n${receiver.toString()}\n"
+        return "\nStep $stepNumber\n$actorIndex\nacts on\n$receiverIndex\n"
     }
 }

@@ -90,9 +90,6 @@
 
 <div class="dropdown">
     <button class="dropbtn">Login</button>
-
-    <a href="/simulation" class="dropbtn">Enter Simulator</a>
-
     <div class="dropdown-content">
         <form id="login-form" name="login-form" action="/login-submit" method="post">
         <label for="email">Email:</label><br>
@@ -133,12 +130,32 @@
 
     </div>
 </div>
-
+<br><br><br>
+<input value="New Simulation" type="button" id="newSimulationButton" name="newSimulationButton" onclick="loadSimulation(-1)"><br>
+<input value="Existing Simulation" type="button" id="loadSimulationButton" name="loadSimulationButton" onclick="loadSimulation(21)"><br>
 
 
 </body>
 
 <script>
+
+    checkForLogin();
+
+    function checkForLogin(){
+        // attempt to get user information from session
+        var user = JSON.parse(sessionStorage.getItem("user"));
+        console.log("HELLO");
+        console.log(user);
+        // logged in
+        if(user != null){
+            document.write("Logged in as: " + user.lastName + ", " + user.firstName);
+        }
+        // not logged in
+        else{
+            document.write("Not currently signed in");
+        }
+    }
+
     function submitLoginInformation(){
         var emailDiv = getAndTrimById("email")
         var email = emailDiv.value;
@@ -154,7 +171,14 @@
             };
             postData('login-submit', user).then(function(data){
                 console.log(data);
-                // TODO handle logic
+                var user = data;
+                if(user.firstName != ""){
+                    sessionStorage.setItem("user", JSON.stringify(user));
+                    window.location.href = "/";
+                }
+                else{
+                    setErrorDivMessageByValue("email", "LOGIN FAILED", false);
+                }
             });
         }
         else{
@@ -163,5 +187,9 @@
         }
     }
 
+    function loadSimulation(simulationID){
+        sessionStorage.setItem("simulationToLoad", simulationID);
+        window.location.href = "/simulation";
+    }
 </script>
 </html>
