@@ -48,7 +48,7 @@ fun CreateExperiment(userAndExperiment: UserAndExperiment): Boolean {
             // TODO insert chemicals
             for(chemical in userAndExperiment.experiment.chemicals){
                 st.executeUpdate("INSERT INTO Database.Chemicals (experiment_ID, type_id, mass, concentration)\n" +
-                        "VALUES ($newExperimentKey, ${chemical.typeId}, ${chemical.quantity}, ${chemical.concentration})")
+                        "VALUES ($newExperimentKey, ${chemical.id}, ${chemical.mass}, ${chemical.concentration})")
             }
             // TODO insert equipment
             for(equipment in userAndExperiment.experiment.equipment){
