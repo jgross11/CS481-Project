@@ -11,8 +11,54 @@
         <a href="/" class="button">Home</a>
     </div>
 </body>
-
 <script src="./helperFunctions.js"></script>
+
+<script>
+
+    // ##################
+    // ##################
+    // ################## THE FOLLOWING CONTAINS LOGIC TO LOAD EXPERIMENT FROM BACKEND GIVEN ID
+    // ################## OR HANDLE (not done currently) NEW EXPERIMENT LOADING / NO EXPERIMENT ID FOUND
+    // ##################
+    // ##################
+
+    // determine if a simulation is being loaded, or
+    // a new one needs to be created
+    let simulationToLoadID = parseInt(sessionStorage.getItem("simulationToLoad"));
+    if(simulationToLoadID == -1){
+        // TODO load blank experiment or whatever
+        console.log("loading blank experiment");
+    } else{
+        // POST experiment ID to search
+        console.log("fetching experiment with ID: " + simulationToLoadID);
+        postData("simulation-data", simulationToLoadID).then(function(expData){
+            console.log("received following when querying for experiment with ID: " + simulationToLoadID);
+            console.log(expData);
+            // valid experiment ID
+            if(expData.creatorName != ""){
+                let exp = parseExperiment(expData)
+                console.log("Experiment data as JS object: ");
+                console.log(exp);
+            }
+            else{
+                // TODO experiment ID was invalid,
+                // handle appropriately...
+                console.log("Experiment ID invalid, no results found");
+            }
+        });
+    }
+    /* THIS WILL BE ADDED BACK IN SOMETIME MAYBE
+    let testData = getTestJSON();
+    console.log("test JSON(?): ");
+    console.log(testData); // TODO
+    let exp = parseExperiment(testData);
+    console.log("test JS(?): ");
+    console.log(exp); // TODO
+    let expJSON = experimentToJSON(exp);
+    console.log("test JSON(?): ");
+    console.log(expJSON); // TODO
+    */
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/p5@1.1.9/lib/p5.js"></script>
 
@@ -26,6 +72,31 @@
 <script src="simulation/Main.js"></script>
 <script src="simulation/DataLoader.js"></script>
 <script src="simulation/ObjectIDs.js"></script>
+
+<script>
+    // ######
+    // ######
+    // ###### THE FOLLOWING TESTS POSTing PARSED JS EXPERIMENT TO BACKEND
+    // ######
+    // ######
+
+    function submitTestExperimentToBackend(){
+        let testJSON = getTestJSON();
+        console.log("test JSON: ");
+        console.log(testJSON);
+        let user = JSON.parse(sessionStorage.getItem("user"));
+        // TODO CHECK IF USER EXISTS, NOTIFY THAT SIGNUP MUST HAPPEN BEFORE EXP CAN BE SAVED
+        let userAndExperiment = {
+            user: user,
+            experiment: testJSON
+        };
+        postData("save-new-simulation", userAndExperiment).then(function(response){
+            console.log("received following response upon submitting experiment: ");
+            console.log(response);
+        });
+    }
+
+</script>
 
 <script src="simulation/Experiment.js"></script>
 <script src="simulation/ExperimentController2D.js"></script>
