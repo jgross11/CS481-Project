@@ -10,9 +10,14 @@ import java.util.*
 
 
 fun UserProfile (id: String?){
+    val serverCredentials = serverCredential()
+    val username = serverCredentials?.get(0)
+    val password = serverCredentials?.get(1)
+    val url = serverCredentials?.get(2)
+
     val connectionProps = Properties()
     connectionProps["user"] = username
-    connectionProps["password"] = edu.ycpcsp.ycpcsp.DataBase.password
+    connectionProps["password"] = password
     connectionProps["useSSL"] = "false"
 
     try{

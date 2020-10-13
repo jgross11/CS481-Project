@@ -9,11 +9,11 @@ fun main(){
     var email = "test@test.com"
     var userPassword = "1234"
     println("=============================Begin VerifyUser Test=============================")
-    if(VerifyUser(email, userPassword)){
+   /* if(VerifyUser(email, userPassword)){
         println("Test VerifyUser is working")
     } else{
         println("Error VerifyUser does not work")
-    }
+    }*/
     println("=============================End VerifyUser Test=============================")
 
     //TODO this section of code tests LoadUser
