@@ -13,7 +13,8 @@ data class User(var firstName : String = "UNKNOWN",
                 var lastName : String = "UNKNOWN",
                 var email : String = "UNKNOWN",
                 var password : String = "UNKNOWN",
-                var school : String = "UNKNOWN"
+                var school : String = "UNKNOWN",
+                var id : Int = -1
                 )
 {
     // init questions, experiment, recent experiment arrays as empty
@@ -31,7 +32,7 @@ data class User(var firstName : String = "UNKNOWN",
     }
 
     // 'null' constructor TODO make this redundant please...
-    constructor() : this("", "", "","","") {}
+    constructor() : this("", "", "","","", -1) {}
 
 
     /**
@@ -46,7 +47,7 @@ data class User(var firstName : String = "UNKNOWN",
     override fun toString() : String{
 
         var result = ""
-        result += "$lastName, $firstName \n$email  $password \n$school\n"
+        result += "ID $id : $lastName, $firstName \n$email  $password \n$school\n"
         for(securityQuestion in securityQuestions){
             result += "${securityQuestion.toString()}\n"
         }
