@@ -1,5 +1,5 @@
-var mainExperiment;
-var mainExpController;
+var mainExperiment = null;
+var mainExpController = null;
 
 /*
 
@@ -39,10 +39,14 @@ function setup(){
     loadImages();
 
     // Grab data from session storage
-    let data = JSON.parse(sessionStorage.getItem(SESSION_EXPERIMENT_NAME));
+    loadSessionData();
+}
 
-    let mainExperiment = parseExperiment(data);
-
+/**
+Initialize the experiment and controller objects from the session data
+*/
+function initExperiment(data){
+    mainExperiment = parseExperiment(data);
     mainExpController = new ExperimentController2D(mainExperiment, true);
 }
 
@@ -50,42 +54,42 @@ function setup(){
 P5.js function, called when screen is redrawn
 */
 function draw(){
-    mainExpController.render();
+    if(mainExpController !== null) mainExpController.render();
 }
 
 /**
 P5.js function, called when a mouse button is held down
 */
 function mousePressed(){
-    mainExpController.mousePress();
+    if(mainExpController !== null) mainExpController.mousePress();
 }
 
 /**
 P5.js function, called when a mouse button is let go
 */
 function mouseReleased(){
-    mainExpController.mouseRelease();
+    if(mainExpController !== null) mainExpController.mouseRelease();
 }
 
 /**
 P5.js function, called when the mouse is moved, not dragged
 */
 function mouseMoved(){
-    mainExpController.mouseMove();
+    if(mainExpController !== null) mainExpController.mouseMove();
 }
 
 /**
 P5.js function, called when the mouse is dragged, not moved
 */
 function mouseDragged(){
-    mainExpController.mouseDrag();
+    if(mainExpController !== null) mainExpController.mouseDrag();
 }
 
 /**
 P5.js function, called when a key on the keyboard is pressed
 */
 function keyPressed(){
-    mainExpController.keyPress();
+    if(mainExpController !== null) mainExpController.keyPress();
 }
 
 /**

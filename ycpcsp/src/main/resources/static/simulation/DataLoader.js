@@ -47,20 +47,22 @@ function loadSessionData(){
     // a new one needs to be created
     let simulationToLoadID = parseInt(sessionStorage.getItem("simulationToLoad"));
     console.log(simulationToLoadID);
+    var post = null;
     if(simulationToLoadID == -1){
         console.log("loading blank experiment");
-        sessionStorage.setItem("experimentData", JSON.stringify(experimentToJSON(new Experiment("", ""))));
+        initExperiment(experimentToJSON(new Experiment("", "")));
     } else{
         // POST experiment ID to search
         console.log("fetching experiment with ID: " + simulationToLoadID);
-        postData("simulation-data", simulationToLoadID).then(function(expData){
+        post = postData("simulation-data", simulationToLoadID);
+        post.then(function(expData){
             console.log("received following when querying for experiment with ID: " + simulationToLoadID);
             console.log(expData);
             // valid experiment ID
             if(expData.creatorName != ""){
                 console.log("Experiment data as JS object: ");
                 console.log(exp);
-                sessionStorage.setItem(SESSION_EXPERIMENT_NAME, JSON.stringify(expData));
+                initExperiment(expData);
             }
             else{
                 // TODO experiment ID was invalid,
