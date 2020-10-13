@@ -1,6 +1,9 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
+import edu.ycpcsp.ycpcsp.Models.ChemicalObject
+import edu.ycpcsp.ycpcsp.Models.EquipmentObject
 import edu.ycpcsp.ycpcsp.Models.Experiment
+import edu.ycpcsp.ycpcsp.Models.Step
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.*
@@ -18,22 +21,71 @@ fun LoadExperiment(id: String) : Experiment {
         //Connection for the database to get it connected and then execute the query to insert the values into the database
         val conn = DriverManager.getConnection(url, connectionProps)
         val st = conn.createStatement()
-        val rs = st.executeQuery("Select title, tags, firstName, lastName from Database.Experiments join Database.Users on Database.Experiments.creatorID = Database.Users.UserID where ExperimentsID = \"$id\" ")
-        val array = arrayOfNulls<String?>(13)// make empty array to store the values of the database in but make it 13
+
+
+        //Experiment Query
+        var experiment = Experiment()
+
+        //User query
+        val rs = st.executeQuery("Select Distinct title, firstName, lastName from Database.Experiments join Database.Users on Database.Experiments.creatorID = Database.Users.UserID where ExperimentsID = \"$id\" ")
+        rs.fetchSize = 2
         rs.next()
-        for(x in 1..4){
-            array[x] = rs.getString(x)
+        val title = rs.getString("title")
+        val creatorName = rs.getString("firstName") + " " + rs.getString("lastName")
+        experiment.title = title
+        experiment.creatorName = creatorName
+
+
+        //Equipment query
+        val rs2 = st.executeQuery("Select Distinct name, object_ID from Database.Equipments join Database.Experiments on Database.Experiments.ExperimentsID = Database.Equipments.experiment_ID where ExperimentsID = \"$id\" ")
+        rs2.last()
+        val num = rs2.row
+        rs2.beforeFirst()
+        rs2.fetchSize = num
+        while(rs2.next()) {
+            for (x in 1..rs2.fetchSize) {
+                val object_ID = rs2.getInt("object_ID")
+                val amount = rs2.getInt("amount")
+                experiment.equipment.add(EquipmentObject(object_ID, amount))
+            }
         }
 
-        val rs2 = st.executeQuery("Select StepsID from Database.Steps where StepsID = \"$id\"")
+        //Chemical query
+        val rs3 = st.executeQuery("Select type_id, mass, concentration from Database.Chemicals join Database.Experiments on Database.Experiments.ExperimentsID = Database.Chemicals.experiment_ID where experiment_ID = \"$id\" ")
+        rs3.last()
+        val num2 = rs3.row
+        rs3.beforeFirst()
+        rs3.fetchSize = num2
+        rs3.next()
+        for (x in 1..rs3.fetchSize) {
+            val type_id = rs3.getInt("type_id")
+            val quantity = rs3.getFloat("mass")
+            val concentration = rs3.getFloat("concentration")
+            experiment.chemicals.add(ChemicalObject(type_id, quantity, concentration))
+            rs3.next()
+        }
 
-        val title = array[1]
-        val tags = array[2]
-        val creatorName:String = array[3] + " " + array[4]
-        rs2.last()
-        val numSteps = rs2.row
+
+        //Step Query
+        val rs4 = st.executeQuery("Select Distinct step_number, actor_index, actor_ID, receiver_index, receiver_ID, functionID from Database.Steps join Database.Experiments on Database.Experiments.ExperimentsID = Database.Steps.experiment_ID where ExperimentsID = \"$id\" ")
+        rs4.last()
+        val num3 = rs4.row
+        rs4.beforeFirst()
+        rs4.fetchSize = num3
+        rs4.next()
+        for (x in 1..rs4.fetchSize) {
+            val step_number = rs4.getInt("step_number")
+            val actor_index = rs4.getInt("actor_index")
+            val actor_ID = rs4.getBoolean("actor_ID")
+            val receiver_index = rs4.getInt("receiver_index")
+            val receiver_ID = rs4.getBoolean("receiver_ID")
+            val function_ID = rs4.getInt("functionID")
+            experiment.steps.add(Step(step_number, actor_index, actor_ID, receiver_index, receiver_ID, function_ID))
+            rs4.next()
+        }
 
 
+        return experiment
 
     } catch (ex: SQLException) {
         // handle any errors
@@ -43,5 +95,5 @@ fun LoadExperiment(id: String) : Experiment {
         ex.printStackTrace()
     }
 
-    return Experiment("null", "null")
+    return Experiment()
 }
