@@ -11,13 +11,12 @@ import com.fasterxml.jackson.annotation.JsonTypeName
 @JsonTypeName("equipment")
 
 data class EquipmentObject(
-        var name : Int,
         var objectID  : Int,
         var amount : Int
 ) {
 
 
     override fun toString(): String {
-        return "$name | $objectID | $amount"
+        return "$objectID | $amount"
     }
 }
