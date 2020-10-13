@@ -128,7 +128,7 @@ function parseInstructions(equips, chems, rawIns){
     for(var i = 0; i < rawIns.length; i++){
         let ins = rawIns[i];
         let actI = ins[EXP_JSON_INS_ACTOR_INDEX];
-        let recI = ins[EXP_JSON_INS_ACTOR_INDEX];
+        let recI = ins[EXP_JSON_INS_RECEIVER_INDEX];
         let act = (ins[EXP_JSON_INS_ACTOR_IS_EQUIP]) ? equips[actI] : chems[actI];
         let rec = (ins[EXP_JSON_INS_RECEIVER_IS_EQUIP]) ? equips[recI] : chems[recI];
         let func = act.idToFunc(ins[EXP_JSON_INS_FUNC_ID]);
@@ -246,31 +246,31 @@ function getTestJSON(){
     steps[0][EXP_JSON_INS_ACTOR_IS_EQUIP] = true;
     steps[0][EXP_JSON_INS_RECEIVER_INDEX] = 0;
     steps[0][EXP_JSON_INS_RECEIVER_IS_EQUIP] = false;
-    steps[0][EXP_JSON_INS_FUNC_ID] = 2;
+    steps[0][EXP_JSON_INS_FUNC_ID] = ID_FUNC_CONTAINER_ADD_TO;
     steps[1][EXP_JSON_INS_STEP_NUM] = 1;
     steps[1][EXP_JSON_INS_ACTOR_INDEX] = 1;
     steps[1][EXP_JSON_INS_ACTOR_IS_EQUIP] = true;
     steps[1][EXP_JSON_INS_RECEIVER_INDEX] = 1;
     steps[1][EXP_JSON_INS_RECEIVER_IS_EQUIP] = false;
-    steps[1][EXP_JSON_INS_FUNC_ID] = 2;
+    steps[1][EXP_JSON_INS_FUNC_ID] = ID_FUNC_CONTAINER_ADD_TO;
     steps[2][EXP_JSON_INS_STEP_NUM] = 2;
     steps[2][EXP_JSON_INS_ACTOR_INDEX] = 0;
     steps[2][EXP_JSON_INS_ACTOR_IS_EQUIP] = true;
     steps[2][EXP_JSON_INS_RECEIVER_INDEX] = 1;
     steps[2][EXP_JSON_INS_RECEIVER_IS_EQUIP] = true;
-    steps[2][EXP_JSON_INS_FUNC_ID] = 1;
+    steps[2][EXP_JSON_INS_FUNC_ID] = ID_FUNC_CONTAINER_POUR_INTO;
     steps[3][EXP_JSON_INS_STEP_NUM] = 3;
     steps[3][EXP_JSON_INS_ACTOR_INDEX] = 1;
     steps[3][EXP_JSON_INS_ACTOR_IS_EQUIP] = true;
     steps[3][EXP_JSON_INS_RECEIVER_INDEX] = 2;
     steps[3][EXP_JSON_INS_RECEIVER_IS_EQUIP] = true;
-    steps[3][EXP_JSON_INS_FUNC_ID] = 1;
+    steps[3][EXP_JSON_INS_FUNC_ID] = ID_FUNC_CONTAINER_POUR_INTO;
     steps[4][EXP_JSON_INS_STEP_NUM] = 4;
     steps[4][EXP_JSON_INS_ACTOR_INDEX] = 2;
     steps[4][EXP_JSON_INS_ACTOR_IS_EQUIP] = true;
     steps[4][EXP_JSON_INS_RECEIVER_INDEX] = 2;
     steps[4][EXP_JSON_INS_RECEIVER_IS_EQUIP] = false;
-    steps[4][EXP_JSON_INS_FUNC_ID] = 2;
+    steps[4][EXP_JSON_INS_FUNC_ID] = ID_FUNC_CONTAINER_ADD_TO;
     exp[EXP_JSON_INSTRUCTIONS] = steps;
 
     return exp;

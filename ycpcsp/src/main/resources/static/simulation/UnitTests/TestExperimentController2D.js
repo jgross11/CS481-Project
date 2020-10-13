@@ -62,9 +62,38 @@ QUnit.test('setExperiment:', function(assert){
 });
 
 QUnit.test('setSelectedEquipment:', function(assert){
+    controller.setSelectedEquipment(null);
+    assert.equal(controller.selectedEquipment, null,
+        "Selected Equipment in Controller should be null.");
+
     controller.setSelectedEquipment(beakerControl1);
     assert.equal(controller.selectedEquipment, beakerControl1,
-        "Equipment in Controller should equal the set Equipment.");
+        "Selected Equipment in Controller should be the set Equipment.");
+});
+
+QUnit.test('setMovingEquipment:', function(assert){
+    controller.movingEquipAnchor = null;
+    controller.setMovingEquipment(null);
+    assert.equal(controller.movingEquipment, null,
+        "Moving Equipment in Controller should be null.");
+    assert.equal(controller.movingEquipAnchor, null,
+        "Moving Equipment anchor in Controller should still be null.");
+
+    mouseX = 5;
+    mouseY = 4;
+    controller.setMovingEquipment(beakerControl3);
+    assert.equal(controller.movingEquipment, beakerControl3,
+        "Moving Equipment in Controller should be null.");
+    assert.deepEqual(controller.movingEquipAnchor, [40 + EXP_BOUNDS[0], 96 + EXP_BOUNDS[1]],
+        "Moving Equipment anchor in Controller should have been set based on the mouse position.");
+
+    mouseX = -15;
+    mouseY = 20;
+    controller.setMovingEquipment(beakerControl3);
+    assert.equal(controller.movingEquipment, beakerControl3,
+        "Moving Equipment in Controller should be null.");
+    assert.deepEqual(controller.movingEquipAnchor, [60 + EXP_BOUNDS[0], 80 + EXP_BOUNDS[1]],
+        "Moving Equipment anchor in Controller should have been set based on the mouse position.");
 });
 
 QUnit.test('setInstructionCounter:', function(assert){
@@ -329,6 +358,41 @@ QUnit.test('experimentMousePos:', function(assert){
     assert.equal(pos[1], controller.experimentMouseY(), "Index 1 of pos should be the y mouse coordinate.");
 });
 
+QUnit.test('selectedEquipFunction:', function(assert){
+    var result;
+    controller.addEquipment(beakerControl1, true);
+    controller.addEquipment(beakerControl2, true);
+    beaker1.setContents(chem);
+    var goodX = 105 + EXP_BOUNDS[0];
+    var goodY = 5 + EXP_BOUNDS[1];
+    var badX = -1000;
+    var badY = -1000;
+
+    controller.setSelectedEquipment(beakerControl1);
+    mouseX = goodX;
+    mouseY = goodY;
+    result = controller.selectedEquipFunction(null);
+    assert.false(result, "Calling the function without a valid function should fail.");
+
+    controller.setSelectedEquipment(null);
+    mouseX = goodX;
+    mouseY = goodY;
+    result = controller.selectedEquipFunction(ID_FUNC_CONTAINER_POUR_INTO);
+    assert.false(result, "Calling the function without selected equipment should fail.");
+
+    controller.setSelectedEquipment(beakerControl1);
+    mouseX = badX;
+    mouseY = badY;
+    result = controller.selectedEquipFunction(ID_FUNC_CONTAINER_POUR_INTO);
+    assert.false(result, "Calling the function without a valid equipment in selection range should fail.");
+
+    controller.setSelectedEquipment(beakerControl1);
+    mouseX = goodX;
+    mouseY = goodY;
+    result = controller.selectedEquipFunction(ID_FUNC_CONTAINER_POUR_INTO);
+    assert.true(result, "Calling the function with valid setup should succeed.");
+});
+
 QUnit.todo('mousePress:', function(assert){
     controller.mousePress();
     assert.true(false);
@@ -398,7 +462,7 @@ QUnit.test('EquipmentBoxList selectBox:', function(assert){
     mouseX = b[0] + 1;
     mouseY = b[1];
     success = eList.selectBox();
-    var eq = eList.selected.equipControl
+    var eq = eList.selected.objControl
     assert.true(success, "Should be able to select a box with the mouse on first equipment");
     assert.deepEqual(eq.equipment.position, [mouseX - 5, mouseY - 10], "Coordinates should be centered on the first box index");
     assert.deepEqual(eq, beakerControl1, "Selected should contain the first beaker");
@@ -408,7 +472,7 @@ QUnit.test('EquipmentBoxList selectBox:', function(assert){
     mouseX = b[0] + 1;
     mouseY = b[1];
     success = eList.selectBox();
-    eq = eList.selected.equipControl
+    eq = eList.selected.objControl
     assert.true(success, "Should be able to select a box with the mouse on second equipment");
     assert.deepEqual(eq.equipment.position, [mouseX - 6, mouseY - 3], "Coordinates should be centered on the second box index");
     assert.deepEqual(eq, beakerControl2, "Selected should contain the second beaker");
@@ -462,7 +526,7 @@ QUnit.test('EquipmentBoxList place:', function(assert){
     mouseY = b[1];
     eList.selectBox();
     var place = controller.placedEquipment;
-    assert.deepEqual(eList.selected.equipControl, beakerControl1, "Selected should be the first Beaker");
+    assert.deepEqual(eList.selected.objControl, beakerControl1, "Selected should be the first Beaker");
     assert.equal(place.length, 0, "There should be only no elements in the Experiment before placed list after placing one");
 
     success = eList.place(controller);
@@ -486,7 +550,7 @@ QUnit.test('EquipmentBoxList updateSelectPos:', function(assert){
     mouseX = 100;
     mouseY = 200;
     success = eList.updateSelectPos();
-    let pos = eList.selected.equipControl.equipment.position;
+    let pos = eList.selected.objControl.equipment.position;
     assert.true(success, "Updating the selected position should succeed with a selection");
     assert.deepEqual(pos, [95, 190], "Should correctly center the Equipment to the mouse");
 });
@@ -501,16 +565,16 @@ QUnit.todo('EquipmentBoxList drawSelected:', function(assert){
 
 
 QUnit.test('EquipmentBox constructor:', function(assert){
-    assert.deepEqual(box1.equipControl, beakerControl1, "Equipment should be the given beaker");
+    assert.deepEqual(box1.objControl, beakerControl1, "Equipment should be the given beaker");
     assert.equal(box1.index, 1, "Index should be 1");
 });
 
 QUnit.test('EquipmentBox setEquipment:', function(assert){
     box1.setEquipment(null);
-    assert.deepEqual(box1.equipControl, null, "Equipment should be null");
+    assert.deepEqual(box1.objControl, null, "Equipment should be null");
 
     box1.setEquipment(beakerControl1);
-    assert.deepEqual(box1.equipControl, beakerControl1, "Equipment should be the set beaker");
+    assert.deepEqual(box1.objControl, beakerControl1, "Equipment should be the set beaker");
 });
 
 QUnit.test('EquipmentBox setIndex:', function(assert){

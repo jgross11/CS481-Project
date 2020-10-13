@@ -4,27 +4,26 @@ var mainExpController;
 /*
 
 TODO:
-    Create a method to render a static loading screen while the simulator loads
-    Make proper layout page with home button
-    Test cases: ExperimentController2D.selectedEquipFunction, setMovingEquipment
     Create code for Chemicals, display a Chemical tab
+        Make a key toggle showing and interacting with chemicals vs equipment
+        Click on a chemical to be able to add it to a beaker, use func ids
+    Test cases ChemicalBox, EquipmentBox.getImage, DisplayBox
+        Need to allow them to turn graphics on or off
+    Allow users to select different actions for each piece of equipment
     Allow equipment and chemicals to be disposed
-    Move beaker specific code to BeakerController, func should be an ID
     Make a better way of Chemicals in Instructions to keep their stats so they don't change, or maybe have a reset?
-    Make basic layout for Experiment
-        Update clicking and dragging to change indexes for ExperimentBoxes when they are removed from the list
-        Split Experiment render code into individual methods
-        Store and display list of available Chemicals
+    Make proper layout page with home button
     Add camera panning
         Use x and y camera coordinates in the ExperimentController2D
         Use P5 translate for graphics
         Create global function to get x and y mouse positions
         Objects which will not be on the screen should not be rendered, i.e. a renderBounds() method
         Objects in the experiment should be forced to stay within the experiment bounds
+    Make basic layout for Experiment
+        Update clicking and dragging to change indexes for ExperimentBoxes when they are removed from the list
+        Split Experiment render code into individual methods
     Optimize performance of searching for adding and removing Equipment, pick a better data structure
-    Modify ExperimentController2D code to handle abstraction as described by the TO DO comments
-        Set it up so that each piece of equipment has a list of interaction methods
-        So it would be actor and receiver methods?
+    Create a method to render a static loading screen while the simulator loads
 
 */
 
@@ -32,6 +31,9 @@ TODO:
 P5.js function, called when script is initially loaded
 */
 function setup(){
+    // Create the canvas
+    let canvas = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
+    canvas.position(50, 50, "relative");
 
     // First load image assets
     loadImages();
@@ -71,9 +73,6 @@ function setup(){
     let data = JSON.parse(sessionStorage.getItem(SESSION_EXPERIMENT_NAME));
 
     let mainExperiment = parseExperiment(data);
-
-    let canvas = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
-    canvas.position(50, 50, "relative");
 
     mainExpController = new ExperimentController2D(mainExperiment, true);
 }
