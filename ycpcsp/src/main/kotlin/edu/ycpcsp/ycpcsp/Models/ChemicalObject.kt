@@ -14,6 +14,7 @@ data class ChemicalObject(
         var quantity : Float,
         var concentration : Float
 )
+
 {
     override fun toString(): String {
         return "$typeId: quantity=$quantity, concentration=$concentration"

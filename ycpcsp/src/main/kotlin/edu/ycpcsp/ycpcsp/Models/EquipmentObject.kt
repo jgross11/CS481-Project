@@ -16,6 +16,7 @@ data class EquipmentObject(
         var amount : Int
 ) {
 
+
     override fun toString(): String {
         return "$name | $objectID | $amount"
     }

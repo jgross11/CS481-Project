@@ -1,6 +1,8 @@
 package edu.ycpcsp.ycpcsp.WebControllers
 
+import edu.ycpcsp.ycpcsp.DataBase.CreateExperiment
 import edu.ycpcsp.ycpcsp.Models.Experiment
+import edu.ycpcsp.ycpcsp.PostDataClasses.UserAndExperiment
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 
@@ -22,8 +24,9 @@ class SimulationController {
     // otherwise populates and returns Experiment object with relevant info
     @PostMapping(path = ["/simulation-data"], consumes = ["application/json"], produces = ["application/json"])
     @ResponseBody
-    fun getSimulationData(id : Int) : Experiment{
+    fun getSimulationData(@RequestBody id : Integer) : Experiment{
         var exp = Experiment()
+        println(id)
         // TODO ADD EXPERIMENT QUERY HERE LIKE
         // exp = loadExperimentQuery(id);
         return exp
@@ -33,10 +36,11 @@ class SimulationController {
     // attempt to save Experiment object in DB. return true if save successful, false otherwise
     @PostMapping(path = ["/save-new-simulation"], consumes = ["application/json"], produces = ["application/json"])
     @ResponseBody
-    fun submitNewSimulation(@RequestBody exp : Experiment) : Boolean{
+    fun submitNewSimulation(@RequestBody userAndExp : UserAndExperiment) : Boolean{
         var result = true
-        // TODO ATTEMPT TO INSERT NEW EXPERIMENT INTO DB
-        // result = insertNewSimulation(exp)
+        println("User ${userAndExp.user.getFullName()} wants to submit following experiment data to DB:")
+        println(userAndExp.experiment)
+        result = CreateExperiment(userAndExp)
         return result
     }
 

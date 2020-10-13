@@ -17,7 +17,7 @@ fun serverCredential(): MutableList<String>? {
             return lineList
 
         }catch (ex: IndexOutOfBoundsException){
-            println("The file you directed the code towards has ")
+            println("The file you directed the code towards appears to be empty")
             ex.printStackTrace()
         }
     } catch(ex: FileNotFoundException){

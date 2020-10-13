@@ -18,7 +18,7 @@ fun main(){
     }
 
     else if (answer == 2) {
-    print("Enter in the user id that you wish to delete: ")
+    print("Enter in the user id that you wish to add: ")
     val id = readLine()
     print("First Name: ")
     val firstName = readLine()
@@ -42,7 +42,8 @@ fun main(){
     val ans2 = readLine()
     print("Ans3: ")
     val ans3 = readLine()
-        UserSignup(2, firstName!!, lastName!!, email!!, password!!, organization!!, question1!!, question2!!, question3!!, ans1!!, ans2!!, ans3!!)
+        // TODO fix / get rid of this
+        //UserSignup(2, firstName!!, lastName!!, email!!, password!!, organization!!, question1!!, question2!!, question3!!, ans1!!, ans2!!, ans3!!)
     }
 
     else if (answer == 3){
@@ -57,7 +58,8 @@ fun main(){
         print("Enter password: ")
         val password = readLine()
 
-        VerifyUser(username!!, password!!)
+        // TODO fix / get rid of this
+        //VerifyUser(username!!, password!!)
     }
 
     else if(answer ==5){

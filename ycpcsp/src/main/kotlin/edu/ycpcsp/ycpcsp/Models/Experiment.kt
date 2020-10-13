@@ -6,7 +6,7 @@ package edu.ycpcsp.ycpcsp.Models
  */
 data class Experiment(
                     var title : String,
-                    var CreatorName : String
+                    var creatorName : String
                     )
 {
     var equipment : MutableList<EquipmentObject> = mutableListOf<EquipmentObject>()
@@ -18,14 +18,14 @@ data class Experiment(
     }
 
     // null constructor
-    constructor() : this("NULL", "NULL"){
+    constructor() : this("", ""){
 
     }
 
     override fun toString(): String {
         var result = "$title, made by\n"
         for(step in steps){
-            result += "$step.toString()"
+            result += "$step"
         }
         return result
     }

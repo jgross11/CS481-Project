@@ -107,8 +107,21 @@
                     sq3a: sq3a.value
                 };
                 postData('signup-submit', formData).then(function(data){
-                    console.log(data);
-                    // TODO handle logic
+                    var user = data;
+                    console.log(user);
+                    // successful login
+                    if(user.firstName != ""){
+                        // put user info in session and redirect to homepage
+                        sessionStorage.setItem("user", JSON.stringify(user));
+                        console.log("signup successful, redirecting..");
+                        window.location.href = "/";
+                    }
+                    // unsuccessful login
+                    else{
+                        // alert them that login failed
+                        console.log("signup failed");
+                        setErrorDivMessageByValue("fname", "ERROR: COULD NOT SIGN UP WITH GIVEN INFORMATION", false);
+                    }
                 });
             }
             // create applicable errors

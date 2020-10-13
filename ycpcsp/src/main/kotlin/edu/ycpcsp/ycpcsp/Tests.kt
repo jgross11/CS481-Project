@@ -41,6 +41,7 @@ fun main(args : Array<String>){
     // create a step between water and a beaker
     var waterInBeakerStep = Step(1, 0, true, 0, false, 0)
 
+
     // print object information
     println(water.toString())
     println(beaker.toString())
