@@ -1,6 +1,7 @@
 package edu.ycpcsp.ycpcsp.WebControllers
 
 import edu.ycpcsp.ycpcsp.DataBase.CreateExperiment
+import edu.ycpcsp.ycpcsp.DataBase.LoadExperiment
 import edu.ycpcsp.ycpcsp.Models.Experiment
 import edu.ycpcsp.ycpcsp.PostDataClasses.UserAndExperiment
 import org.springframework.stereotype.Controller
@@ -27,8 +28,7 @@ class SimulationController {
     fun getSimulationData(@RequestBody id : Integer) : Experiment{
         var exp = Experiment()
         println(id)
-        // TODO ADD EXPERIMENT QUERY HERE LIKE
-        // exp = loadExperimentQuery(id);
+        exp = LoadExperiment("$id");
         return exp
     }
 
@@ -40,6 +40,13 @@ class SimulationController {
         var result = true
         println("User ${userAndExp.user.getFullName()} wants to submit following experiment data to DB:")
         println(userAndExp.experiment)
+        // FOR TESTING PURPOSES ONLY
+        var copyAlreadyInDB = LoadExperiment("21")
+        println("\nCOMPARED TO\n")
+        println(copyAlreadyInDB)
+        println("result: ${copyAlreadyInDB.equals(userAndExp.experiment)}")
+        // NOTE: THEY MATCH! GOOD FOR NOW
+        // END TESTING PURPOSES
         result = CreateExperiment(userAndExp)
         return result
     }
