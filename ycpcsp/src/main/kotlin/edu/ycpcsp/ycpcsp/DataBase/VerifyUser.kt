@@ -25,10 +25,13 @@ fun VerifyUser(loginFormData: LoginFormData): Boolean {
         val st = conn.createStatement()
         val rs = st.executeQuery("SELECT password FROM Database.Users WHERE email = \"${loginFormData.email}\";")
 
-        rs.next()
-       if(rs.getString(1).compareTo(loginFormData.password) == 0){
-           return true
-       }
+        return if(!rs.first()){
+            println("email not in DB")
+            false;
+        } else {
+            println("email in DB, returning password comparison")
+            rs.getString(1).compareTo(loginFormData.password) == 0
+        }
 
     } catch (ex: SQLException) {
         // handle any errors
