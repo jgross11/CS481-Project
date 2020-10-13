@@ -20,10 +20,10 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
         Type(EquipmentObject::class, name="equipment")
 )
 
-open class ExperimentObject (_name : Int)
+open class ExperimentObject(_name: String)
 
 {
-    var name : Int = _name
+    var name : String = _name
 
     override fun toString(): String {
         return "ERROR: ExperimentObject.toString was called - you meant to call toString of the subclass. Fix that. "

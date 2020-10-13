@@ -9,9 +9,9 @@ data class Experiment(
                     var CreatorName : String
                     )
 {
-    var equipment : Array<EquipmentObject> = arrayOf<EquipmentObject>()
-    var chemicals : Array<ChemicalObject> = arrayOf<ChemicalObject>()
-    var steps : Array<Step> = arrayOf<Step>()
+    var equipment : MutableList<EquipmentObject> = mutableListOf<EquipmentObject>()
+    var chemicals : MutableList<ChemicalObject> = mutableListOf<ChemicalObject>()
+    var steps : MutableList<Step> = mutableListOf<Step>()
 
     fun addStep(step : Step, index : Int){
         steps[index] = step
