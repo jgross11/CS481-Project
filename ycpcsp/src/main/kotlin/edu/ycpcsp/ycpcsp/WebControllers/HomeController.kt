@@ -1,5 +1,6 @@
 package edu.ycpcsp.ycpcsp.WebControllers
 
+import edu.ycpcsp.ycpcsp.DataBase.LoadUser
 import edu.ycpcsp.ycpcsp.DataBase.VerifyUser
 import edu.ycpcsp.ycpcsp.Models.User
 import edu.ycpcsp.ycpcsp.PostDataClasses.LoginFormData
@@ -30,12 +31,14 @@ class HomeController {
         println(loginFormData)
         var user = User()
         // check if given information matches a user in DB
-        /* TODO fix this query to actually work - ClassNotFoundException still?
-        if(VerifyUser(loginFormData.email, loginFormData.password)){
-            // TODO construct user object from the appropriate DB query
 
+        if(VerifyUser(loginFormData)){
+            // TODO construct user object from the appropriate DB query
+            // TODO this is currently only half done...
+            println("login successful")
+            return LoadUser(loginFormData.email)
         }
-        */
+
         // return constructed user object, or null, to indicate no user was found (login failed)
         return user
     }

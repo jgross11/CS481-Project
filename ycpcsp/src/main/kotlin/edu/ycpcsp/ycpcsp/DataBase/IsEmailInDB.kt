@@ -1,19 +1,11 @@
-
 package edu.ycpcsp.ycpcsp.DataBase
 
+import edu.ycpcsp.ycpcsp.Models.User
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.*
-import edu.ycpcsp.ycpcsp.Models.*
 
-//enum class UserFields {FirstName, LastName, Email, Password, School}
-var FirstName = 2
-var LastName = 3
-var Email = 4
-var Password = 5
-var School = 6
-
-fun LoadUser(email: String): User {
+fun IsEmailInDB(email : String) : Boolean{
     val serverCredentials = serverCredential()
     val username = serverCredentials?.get(0)
     val password = serverCredentials?.get(1)
@@ -25,21 +17,18 @@ fun LoadUser(email: String): User {
     connectionProps["useSSL"] = "false"
 
     try {
-        //test class fails here
         Class.forName("com.mysql.jdbc.Driver")
-
         val conn = DriverManager.getConnection(url, connectionProps)
         val st = conn.createStatement()
-        val rs = st.executeQuery("SELECT * FROM Database.Users where email = \"$email\";")
+        val rs = st.executeQuery("SELECT email FROM Database.Users WHERE email = \"$email\"")
 
         try{
-            rs.next()
-            return User(rs.getString(FirstName),rs.getString(LastName),rs.getString(Email),rs.getString(Password),rs.getString(School))
+            return rs.first()
         } catch (ex: SQLException){
             println("Error the query returned with a null result set. The query must have been entered incorrectly")
             ex.printStackTrace()
         }
-        return User()
+        return true
 
     } catch (ex: SQLException) {
         // handle any errors
@@ -48,5 +37,5 @@ fun LoadUser(email: String): User {
         // handle any errors
         ex.printStackTrace()
     }
-    return User()
+    return false
 }

@@ -5,11 +5,11 @@ class SignupFormData (var firstName : String,
                       var email : String,
                       var password : String,
                       var school : String,
-                      var sq1 : String,
+                      var sq1 : Int,
                       var sq1a : String,
-                      var sq2 : String,
+                      var sq2 : Int,
                       var sq2a : String,
-                      var sq3 : String,
+                      var sq3 : Int,
                       var sq3a : String
 
 ){

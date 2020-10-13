@@ -35,10 +35,10 @@ class Tests
         var water = ChemicalObject(101, 1.0f, 0.0f)
 
         // create beaker object
-        var beaker = EquipmentObject(3)
+        var beaker = EquipmentObject(0, 0, 0)
 
         // create a step between water and a beaker
-        var waterInBeakerStep = Step(1, water, beaker)
+        var waterInBeakerStep = Step(1, 0, true, 0, false, 0)
 
         // print object information
         println(water.toString())
@@ -46,7 +46,7 @@ class Tests
         println(waterInBeakerStep.toString())
 
         // create experiment object
-        var experiment = Experiment("Adding water to a beaker", user.getFullname(), "water, beaker", 1)
+        var experiment = Experiment("Adding water to a beaker", user.getFullName())
 
         // demonstrate initialization of experiment yields null steps
         println("### PREPARE FOR ERROR MESSAGES AS DEFAULT EXPERIMENT IS PRINTED")

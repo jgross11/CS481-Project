@@ -28,7 +28,7 @@ fun createExperiment(experiment: Experiment): Boolean {
         try{
             //Model classes have not been updated, so the execute will not work
             var rs = st.executeUpdate("INSERT INTO Database.Experiments (title, creatorID, tags)\n" +
-                    "VALUES (\'${experiment.name}\', , 0101)")
+                    "VALUES (\'${experiment.title}\', , 0101)")
             for (name in experiment.steps) {
                 rs = st.executeUpdate("INSERT INTO Database.Steps (experiment_ID, step_number, actor_index, actor_ID, receiver_index, receiver_ID, functionID)\n" +
                         "VALUES ( , 2, 0, 1, 3, 1, 3)")

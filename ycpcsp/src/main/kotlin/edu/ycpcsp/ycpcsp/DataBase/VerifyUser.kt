@@ -1,15 +1,17 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
+import edu.ycpcsp.ycpcsp.PostDataClasses.LoginFormData
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.*
 
-fun VerifyUser(email: String, userPassword: String): Boolean {
-    val serverCredentials = serverCredential()
-    val username = serverCredentials?.get(0)
-    val password = serverCredentials?.get(1)
-    val url = serverCredentials?.get(2)
+//apparently naming a const val keeps it global across kotlin classes?
+const val username = "admin"
+const val password = "ruRkob-6zoqvu-nywryf"
+const val url = "jdbc:mysql://cs481database.c4fmzwru5eoe.us-east-2.rds.amazonaws.com:3306/Database"
 
+//the class as a method is currently not working
+fun VerifyUser(loginFormData: LoginFormData): Boolean {
     val connectionProps = Properties()
     connectionProps["user"] = username
     connectionProps["password"] = password
@@ -21,16 +23,12 @@ fun VerifyUser(email: String, userPassword: String): Boolean {
 
         val conn = DriverManager.getConnection(url, connectionProps)
         val st = conn.createStatement()
-        val rs = st.executeQuery("SELECT password FROM Database.Users WHERE email = \"$email\";")
+        val rs = st.executeQuery("SELECT password FROM Database.Users WHERE email = \"${loginFormData.email}\";")
 
-        try{
-            rs.next()
-            return rs.getString(1).compareTo(userPassword) == 0
-        } catch (ex: SQLException){
-            println("Error the query returned with a null result set. The query must have been entered incorrectly")
-            ex.printStackTrace()
-        }
-        return false
+        rs.next()
+       if(rs.getString(1).compareTo(loginFormData.password) == 0){
+           return true
+       }
 
     } catch (ex: SQLException) {
         // handle any errors
@@ -39,5 +37,6 @@ fun VerifyUser(email: String, userPassword: String): Boolean {
         // handle any errors
         ex.printStackTrace()
     }
+    //this false statement is just so the program stops getting angry with me
     return false
 }
