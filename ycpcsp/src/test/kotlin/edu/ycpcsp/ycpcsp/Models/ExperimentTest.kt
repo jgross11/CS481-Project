@@ -19,8 +19,8 @@ internal class ExperimentTest {
     @Test
     fun getTitle(){
         assertEquals("Josh", Josh.creatorName)
-        assertEquals("Adrian",Josh.creatorName)
-        assertEquals("Dennis",Josh.creatorName)
+        assertEquals("Adrian",Adrian.creatorName)
+        assertEquals("Dennis",Dennis.creatorName)
     }
 
 
