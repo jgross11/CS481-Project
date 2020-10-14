@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recover your information | YCPCSP</title>
+</head>
+<body>
+    <script src="helperFunctions.js"></script>
+    <!-- TODO discuss whether security questions should be utilized to recover a password as well.. -->
+    Forgot password?<br>
+    <div id="forgot-password-container" name="forgot-password-container">
+        <form id="forgot-password-form" name="forgot-password-form" action="/forgot-password-submit" method="post">
+            <label for="email">Enter account email:</label><br>
+            <div id="email-error"></div><br>
+            <input type="text" id="email" name="email"><br>
+            <input value="Send recovery email" type="button" id="verifyEmailButton" name="verifyEmailButton" onclick="verifyEmailInformation()">
+        </form>
+    </div>
+    <br>
+    Forgot email? <br>
+    <div id="forgot-email-container" name="forgot-email-container">
+        <form id="forgot-email-form" name="forgot-email-form" action="/forgot-email-submit" method="post">
+            <label for="fname">Enter first name:</label><br>
+            <input type="text" id="fname" name="fname"><br>
+            <div id="fname-error"></div><br>
+            <label for="lname">Enter last name:</label><br>
+            <input type="text" id="lname" name="lname"><br>
+            <div id="lname-error"></div><br>
+            <input value="Check for email" type="button" id="verifyFLnameButton" name="verifyFLnameButton" onclick="verifyNameInformation()">
+        </form>
+    </div>
+</body>
+
+    <script>
+
+        // called when user submits an email to recover password
+        function verifyEmailInformation(){
+            // get email element
+            var email = document.getElementById("email");
+            email.value = email.value.trim();
+
+            // verify given email is valid
+            if(verifyInformation(email.value, TYPE_EMAIL)){
+                postData('forgot-password-email-submit', email).then(function(data){
+                    console.log(data);
+                    // TODO handle logic
+                });
+            }
+            else{
+                document.getElementById("email-error").innerHTML = "Please enter a valid email.";
+            }
+        }
+
+        // called when user submits name to recover email
+        function verifyNameInformation(){
+            // get first, last name elements
+            var fname = getAndTrimById("fname")
+            var lname = getAndTrimById("lname")
+
+            // verify information
+            var fnameGood = verifyInformation(fname.value, TYPE_NAME);
+            var lnameGood = verifyInformation(lname.value, TYPE_NAME);
+            if(fnameGood && lnameGood){
+                /* TODO query backend for email associated with given first, last name.
+                   If an account exists, get one / many security questions and return to front end
+                   and create security question divs
+                   If an account doesn't exist with given f / l name, notify user and offer a signup link.
+                */
+
+                var formData = {
+                    firstName : fname.value,
+                    lastName : lname.value
+                };
+
+                postData('forgot-email-submit', formData).then(function(data){
+                    console.log(data);
+                    // TODO handle logic
+                });
+
+                /*
+                // NOTE: the following is only for reference purposes and will eventually be deleted.
+                // assumes information was correct to simulate creation of security question div generation
+                // security question html code
+
+                // security question
+                sqResponse = "<br>What is the name of your first pet?";
+
+                // code that creates response box
+                sqCode = sqResponse + "<br>"
+                        + "<input type=\"text\" id=\"sqResponse\" name=\"sqResponse\"><br>"
+                        + "<div id=\"sqResponse-error\"></div><br>"
+                        + "<input value=\"Submit answer\" type=\"button\" id=\"verifySQResponseButton\" name=\"verifySQResponseButton\" onclick=\"verifySQResponse()\">"
+
+                // create div to hold response box
+                sqDiv = document.createElement("div");
+
+                // put response box code in div
+                sqDiv.innerHTML = sqCode;
+
+                // create div on page
+                document.getElementById("forgot-email-form").appendChild(sqDiv);
+
+                */
+            }
+            else{
+                setErrorDivMessageByValue("fname", "Please enter your first name.", fnameGood);
+                setErrorDivMessageByValue("lname", "Please enter your last name.", lnameGood);
+            }
+
+        }
+
+        // called when user submits security question response to recover email
+        function verifySQResponse(){
+            // get response element
+            var response = getAndTrimById("sqResponse")
+
+
+            if(response.value.length != 0){
+                document.getElementById("forgot-email-form").submit();
+            }
+            else{
+                setErrorDivMessageByValue("sqResponse", "Please enter a proper response.", false);
+            }
+        }
+
+    </script>
+</html>

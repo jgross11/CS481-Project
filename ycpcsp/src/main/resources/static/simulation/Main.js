@@ -1,0 +1,101 @@
+var mainExperiment = null;
+var mainExpController = null;
+
+/*
+
+TODO:
+    Create code for Chemicals, display a Chemical tab
+        Make a key toggle showing and interacting with chemicals vs equipment
+        Click on a chemical to be able to add it to a beaker, use func ids
+    Test cases ChemicalBox, EquipmentBox.getImage, DisplayBox
+        Need to allow them to turn graphics on or off
+    Allow users to select different actions for each piece of equipment
+    Allow equipment and chemicals to be disposed
+    Make a better way of Chemicals in Instructions to keep their stats so they don't change, or maybe have a reset?
+    Make proper layout page with home button
+    Add camera panning
+        Use x and y camera coordinates in the ExperimentController2D
+        Use P5 translate for graphics
+        Create global function to get x and y mouse positions
+        Objects which will not be on the screen should not be rendered, i.e. a renderBounds() method
+        Objects in the experiment should be forced to stay within the experiment bounds
+    Make basic layout for Experiment
+        Update clicking and dragging to change indexes for ExperimentBoxes when they are removed from the list
+        Split Experiment render code into individual methods
+    Optimize performance of searching for adding and removing Equipment, pick a better data structure
+    Create a method to render a static loading screen while the simulator loads
+
+*/
+
+/**
+P5.js function, called when script is initially loaded
+*/
+function setup(){
+    // Create the canvas
+    let canvas = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
+    canvas.position(50, 50, "relative");
+
+    // First load image assets
+    loadImages();
+
+    // Grab data from session storage
+    loadSessionData();
+}
+
+/**
+Initialize the experiment and controller objects from the session data
+*/
+function initExperiment(data){
+    mainExperiment = parseExperiment(data);
+    mainExpController = new ExperimentController2D(mainExperiment, true);
+}
+
+/**
+P5.js function, called when screen is redrawn
+*/
+function draw(){
+    if(mainExpController !== null) mainExpController.render();
+}
+
+/**
+P5.js function, called when a mouse button is held down
+*/
+function mousePressed(){
+    if(mainExpController !== null) mainExpController.mousePress();
+}
+
+/**
+P5.js function, called when a mouse button is let go
+*/
+function mouseReleased(){
+    if(mainExpController !== null) mainExpController.mouseRelease();
+}
+
+/**
+P5.js function, called when the mouse is moved, not dragged
+*/
+function mouseMoved(){
+    if(mainExpController !== null) mainExpController.mouseMove();
+}
+
+/**
+P5.js function, called when the mouse is dragged, not moved
+*/
+function mouseDragged(){
+    if(mainExpController !== null) mainExpController.mouseDrag();
+}
+
+/**
+P5.js function, called when a key on the keyboard is pressed
+*/
+function keyPressed(){
+    if(mainExpController !== null) mainExpController.keyPress();
+}
+
+/**
+Function to stop the right click menu from showing up
+*/
+document.oncontextmenu = function(){
+    // TODO still should activate this normally when mouse is not inside P5 canvas
+    return false;
+}

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .dropbtn {
+            background-color: #3498DB;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+
+
+        }
+        .boxed {
+            border: 1px solid green ;
+            height: 600px;
+        }
+
+        .dropup {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropup-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            bottom: 50px;
+            z-index: 1;
+        }
+
+        .dropup-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropup-content a:hover {background-color: #ccc}
+
+        .dropup:hover .dropup-content {
+            display: block;
+        }
+
+        .dropup:hover .dropbtn {
+            background-color: #2980B9;
+        }
+        .dropbtn2 {
+            background-color: #4CAF50;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+            width: 250px;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {background-color: #ddd;}
+
+        .dropdown:hover .dropdown-content {display: block;}
+
+        .dropdown:hover .dropbtn2 {background-color: #3e8e41;}
+    </style>
+</head>
+<body>
+<script src="helperFunctions.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.12.0/js/md5.min.js"></script>
+
+<div class="dropdown">
+    <button class="dropbtn">Login</button>
+    <div class="dropdown-content">
+        <form id="login-form" name="login-form" action="/login-submit" method="post">
+        <label for="email">Email:</label><br>
+            <input type="text" id="email" name="email"><br>
+            <div id="email-error"></div><br>
+            <label for="password">Password:</label><br>
+            <div id="password-error"></div><br>
+            <input type="password" id="password" name="password"><br>
+            <input value="Sign in" type="button" id="verifyInformationButton" name="verifyInformationButton" onclick="submitLoginInformation()">
+            <a href="/signup">Sign up.</a><br>
+        </form>
+    </div>
+</div>
+<div class="boxed">
+</div>
+
+<div class="dropup">
+    <button class="dropbtn2">FaQ</button>
+    <div class="dropup-content">
+
+    </div>
+</div>
+<div class="dropup">
+    <button class="dropbtn2">FaQ</button>
+    <div class="dropup-content">
+
+    </div>
+</div>
+<div class="dropup">
+    <button class="dropbtn2">FaQ</button>
+    <div class="dropup-content">
+
+    </div>
+</div>
+<div class="dropup">
+    <button class="dropbtn2">FaQ</button>
+    <div class="dropup-content">
+
+    </div>
+</div>
+<br><br><br>
+<input value="New Simulation" type="button" id="newSimulationButton" name="newSimulationButton" onclick="loadSimulation(-1)"><br>
+<input value="Existing Simulation" type="button" id="loadSimulationButton" name="loadSimulationButton" onclick="loadSimulation(21)"><br>
+
+
+
+</body>
+
+<script>
+
+    checkForLogin();
+
+    function checkForLogin(){
+        // attempt to get user information from session
+        var user = JSON.parse(sessionStorage.getItem("user"));
+        console.log("HELLO");
+        console.log(user);
+        // logged in
+        if(user != null){
+            document.write("<input value=\"Log out\" type=\"button\" id=\"logoutButton\" name=\"logoutButton\" onclick=\"logout()\"><br>");
+            document.write("Logged in as: " + user.lastName + ", " + user.firstName);
+        }
+        // not logged in
+        else{
+            document.write("Not currently signed in");
+        }
+    }
+
+    function logout(){
+        sessionStorage.removeItem("user");
+        window.location.href = "/";
+    }
+
+    function submitLoginInformation(){
+        var emailDiv = getAndTrimById("email")
+        var email = emailDiv.value;
+        var password = document.getElementById("password").value;
+        // hash password
+        var emailGood = verifyInformation(email, TYPE_EMAIL);
+        var passGood = password.length != 0;
+        if(emailGood && passGood){
+            password = md5(password);
+            var user = {
+                email: email,
+                password: password
+            };
+            postData('login-submit', user).then(function(data){
+                console.log(data);
+                var user = data;
+                if(user.firstName != ""){
+                    sessionStorage.setItem("user", JSON.stringify(user));
+                    window.location.href = "/";
+                }
+                else{
+                    setErrorDivMessageByValue("email", "LOGIN FAILED", false);
+                }
+            });
+        }
+        else{
+            setErrorDivMessageByValue("email", "Please enter a valid email.", emailGood);
+            setErrorDivMessageByValue("password", "Please enter a valid password.", passGood);
+        }
+    }
+
+    function loadSimulation(simulationID){
+        sessionStorage.setItem("simulationToLoad", simulationID);
+        window.location.href = "/simulation";
+    }
+</script>
+</html>

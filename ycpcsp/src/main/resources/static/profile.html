@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile | YCPCSP</title>
+</head>
+<body>
+
+</body>
+<script>
+    getUserInformation();
+
+    function redirect(){
+        window.location.href = "/";
+    }
+
+    function getUserInformation(){
+        let user = JSON.parse(sessionStorage.getItem("user"));
+        if(user != null){
+            document.write(user.firstName+" ");
+            document.write(user.lastName+"<br>");
+            document.write(user.school+"<br>");
+            document.write(user.email+"<br>");
+            document.write("   <input value=\"Back\" type=\"button\" id=\"backToHomeButton\" name=\"backToHomeButton\" onclick=\"redirect()\">   ");
+        }
+        else{
+            redirect();
+        }
+    }
+</script>
+</html>
