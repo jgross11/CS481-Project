@@ -89,6 +89,8 @@ class ExperimentController2D{
         this.instructionCounter = 0;
 
         this.equipmentBoxes = new EquipmentBoxList();
+        this.chemicalBoxes = new ChemicalBoxList();
+        this.displayedBoxList = null;
 
         // The list of Equipment currently placed into the lab
         this.placedEquipment = [];
@@ -162,6 +164,22 @@ class ExperimentController2D{
     }
 
     /**
+    Determine if the EquipmentBoxList is being displayed
+    returns: true if the list is displayed, false otherwise
+    */
+    isDisplayEquipment(){
+        return this.equipmentBoxes === this.displayedBoxList;
+    }
+
+    /**
+    Determine if the ChemicalBoxList is being displayed
+    returns: true if the list is displayed, false otherwise
+    */
+    isDisplayChemicals(){
+        return this.chemicalBoxes === this.displayedBoxList;
+    }
+
+    /**
     Add a new piece of Equipment to this Controller's Experiment. If the Equipment already exists, it is not added a second time
     equipControl: The EquipmentController with the Equipment to add
     place: true to also place the given Equipment into the Experiment, false to just store it, default false
@@ -227,6 +245,7 @@ class ExperimentController2D{
     reset(){
         this.placedEquipment = [];
         this.equipmentBoxes = new EquipmentBoxList();
+        this.chemicalBoxes = new ChemicalBoxList();
         this.selectedEquipment = null;
         this.instructionCounter = 0;
 
@@ -236,6 +255,13 @@ class ExperimentController2D{
             eqs[i].reset();
             this.equipmentBoxes.add(eqs[i]);
         }
+
+        // Place all Chemicals in the Chemical list
+        let chems = this.experiment.chemicals;
+        for(var i = 0; i < chems.length; i++){
+            this.chemicalBoxes.add(new ChemicalController2D(chems[i].copyChem()));
+        }
+        this.displayedBoxList = this.equipmentBoxes;
     }
 
     /**
@@ -316,12 +342,21 @@ class ExperimentController2D{
 
         // Handle left click, for moving objects
         if(mouseButton === LEFT){
-            // If the mouse is outside the bounds, attempt to select an EquipmentBox
-            if(!inExpBounds){
-                this.equipmentBoxes.selectBox();
+            // If the mouse is inside the Experiment, attempt to make a selection for moving an Equipment
+            if(inExpBounds){
+                // If there is no selection made for movement, make a selection
+                if(this.movingEquipment === null) this.setMovingEquipment(this.findEquipmentByPosition(expMouse));
             }
-            // If there is no selection made for movement, make a selection
-            if(this.movingEquipment === null) this.setMovingEquipment(this.findEquipmentByPosition(expMouse));
+            // If the mouse is outside the bounds, attempt to select an EquipmentBox
+            else{
+                let boxes = this.equipmentBoxes;
+                if(boxes !== null) boxes.selectBox();
+
+                // Select a chemical
+                if(this.isDisplayChemicals()){
+                    this.chemicalBoxes.selectBox();
+                }
+            }
         }
 
         // Handle right click, for selecting objects
@@ -347,11 +382,13 @@ class ExperimentController2D{
         // Handle left click, for moving objects
         if(mouseButton === LEFT){
             // If the mouse is inside the experiment, attempt to add the Equipment from the Equipment boxes
-            if(pointInRect2D(EXP_BOUNDS, [mouseX, mouseY])){
-                this.equipmentBoxes.place(this);
-            }
-            else{
-                this.equipmentBoxes.unselect();
+            if(this.isDisplayEquipment()){
+                if(pointInRect2D(EXP_BOUNDS, [mouseX, mouseY])){
+                    this.equipmentBoxes.place(this);
+                }
+                else{
+                    this.equipmentBoxes.unselect();
+                }
             }
             this.setMovingEquipment(null);
         }
@@ -368,7 +405,8 @@ class ExperimentController2D{
     */
     mouseDrag(){
         // If the equipment to be placed is selected, update it's position
-        this.equipmentBoxes.updateSelectPos();
+        let boxes = this.equipmentBoxes;
+        if(boxes !== null && this.isDisplayEquipment()) boxes.updateSelectPos();
 
         // Update the position of the object being moved by the mouse
         if(this.movingEquipment !== null){
@@ -401,6 +439,12 @@ class ExperimentController2D{
                 break;
             case 'r':
                 this.reset();
+                break;
+            case 'c':
+                this.displayedBoxList = this.chemicalBoxes;
+                break;
+            case 'v':
+                this.displayedBoxList = this.equipmentBoxes;
                 break;
 
             default:
@@ -457,8 +501,8 @@ class ExperimentController2D{
             sel.draw(expG);
             // Draw a box around the selected equipment and draw it on top of all other equipment
             expG.noFill();
-            expG.stroke(150, 150, 255, 160);
-            expG.strokeWeight(8);
+            expG.stroke(EXP_EQUIP_SELECT_STROKE_COLOR);
+            expG.strokeWeight(EXP_EQUIP_SELECT_STROKE_WEIGHT);
             expG.rect(sel.x(), sel.y(), sel.width(), sel.height());
         }
 
@@ -467,7 +511,7 @@ class ExperimentController2D{
         expG.fill(color(0, 0, 0));
         expG.noStroke();
         expG.textSize(18);
-        var y = 410;
+        var y = 370;
         let x = 650;
         expG.text("Left click a beaker to move it", x, y += 20);
         expG.text("Right click a beaker to select it", x, y += 20);
@@ -478,6 +522,8 @@ class ExperimentController2D{
         expG.text("Click an unselected beaker to combine the chemical in the selected beaker", x, y += 20);
         expG.text("Press I to run the next instruction", x, y += 20);
         expG.text("Press R to reset the simulation", x, y += 20);
+        expG.text("Press C to view Chemical tab", x, y += 20);
+        expG.text("Press V to view Equipment tab", x, y += 20);
 
         // Draw options button
         // TODO
@@ -500,13 +546,11 @@ class ExperimentController2D{
         g.text(exp.title + " created by " + exp.creator, 10, 24);
 
         // Draw the equipment list at the bottom
-        g.stroke(0);
-        g.strokeWeight(3);
-        g.fill(200);
-        this.equipmentBoxes.draw(g);
+        let boxes = this.displayedBoxList;
+        if(boxes !== null) boxes.draw(g);
 
         // Draw the equipment to be placed in the Experiment
-        this.equipmentBoxes.drawSelected(g);
+        if(this.isDisplayEquipment()) this.equipmentBoxes.drawSelected(g);
 
         // Draw the final graphics image to the canvas
         image(g, 0, 0);
@@ -515,29 +559,18 @@ class ExperimentController2D{
 }
 
 /**
-A helper object used by ExperimentController2D to handle a list of EquipmentBox objects
+A helper object used by ExperimentController2D to handle a list of DisplayBox objects
 */
-class EquipmentBoxList{
+class DisplayBoxList{
 
     /**
-    Create an empty EquipmentBoxList
+    Create an empty DisplayBoxList
     */
     constructor(){
-        // The List of EquipmentBoxes
+        // The List of DisplayBoxes
         this.boxes = []
-        // The currently selected box for moving
+        // The currently selected box of this list
         this.selected = null;
-    }
-
-    /**
-    Get the EquipmentController2D of the EquipmentBox with the given index
-    i: The index
-    returns: The EquipmentBox
-    */
-    get(i){
-        let b = this.boxes[i];
-        if(b === undefined) return b;
-        return this.boxes[i].objControl;
     }
 
     /**
@@ -545,16 +578,13 @@ class EquipmentBoxList{
     returns: true if a box was selected, false otherwise
     */
     selectBox(){
-        if(this.selected === null){
-            let mouse = [mouseX, mouseY];
-            for(var i = 0; i < this.boxes.length; i++){
-                let b = this.boxes[i];
-                let r = b.bounds();
-                if(pointInRect2D(r, mouse)){
-                    this.selected = b;
-                    this.selected.objControl.setCenter(mouse[0], mouse[1]);
-                    return true;
-                }
+        let mouse = [mouseX, mouseY];
+        for(var i = 0; i < this.boxes.length; i++){
+            let b = this.boxes[i];
+            let r = b.bounds();
+            if(pointInRect2D(r, mouse)){
+                this.selected = b;
+                return true;
             }
         }
         return false;
@@ -568,26 +598,89 @@ class EquipmentBoxList{
     }
 
     /**
-    Add a new EquipmentBox to this List with the given EquipmentController2D
-    equip: The EquipmentController2D which will be added in this List
+    Get the Object of the DisplayBox with the given index
+    i: The index
+    returns: The DisplayBox
     */
-    add(equip){
-        this.boxes.push(new EquipmentBox(equip, this.boxes.length));
+    get(i){
+        let b = this.boxes[i];
+        if(b === undefined) return b;
+        return this.boxes[i].obj;
     }
 
     /**
-    Remove an EquipmentBox from the list
-    equip: The EquipmentController2D contained in an EquipmentBox to remove
-    returns: true if the EquipmentBox was removed, false otherwise
+    Create an appropriate box for this DisplayBoxList
+    obj: The object for the box
+    index: The index for the box
+    returns: The box
     */
-    remove(equip){
+    createBox(obj, index){
+        throw new Error("DisplayBoxLists objects must implement createBox");
+    }
+
+    /**
+    Add a new DisplayBox to this List with the given Object
+    obj: The Object which will be added in this List
+    */
+    add(obj){
+        this.boxes.push(this.createBox(obj, this.boxes.length));
+    }
+
+    /**
+    Remove an DisplayBox from the list
+    obj: The Object contained in an DisplayBox to remove
+    returns: true if the DisplayBox was removed, false otherwise
+    */
+    remove(obj){
         for(var i = 0; i < this.boxes.length; i++){
-            if(this.boxes[i].objControl === equip){
+            if(this.boxes[i].obj === obj){
                 this.boxes.splice(i, 1);
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+    Draw all of the DisplayBoxes in this List, set the P5 rendering parameters before it this method is called.
+    Also draws a light blue box on top of the selected box
+    g: The P5 graphics object to use
+    */
+    draw(g){
+        for(var i = 0; i < this.boxes.length; i++){
+            var b = this.boxes[i];
+            let sel = this.selected;
+            let index = (sel === null) ? null : sel.index;
+            b.draw(g, index === b.index);
+        }
+    }
+}
+
+/**
+A helper object used by ExperimentController2D to handle a list of EquipmentBox objects
+*/
+class EquipmentBoxList extends DisplayBoxList{
+
+    /**
+    Create an empty EquipmentBoxList
+    */
+    constructor(){
+        super();
+    }
+
+    selectBox(){
+        let success = super.selectBox();
+        if(success) this.selected.obj.setCenter(mouseX, mouseY);
+    }
+
+    /**
+    Create an appropriate box for this EquipmentBoxList
+    obj: The object for the box
+    index: The index for the box
+    returns: The box
+    */
+    createBox(obj, index){
+        return new EquipmentBox(obj, index);
     }
 
     /**
@@ -601,14 +694,14 @@ class EquipmentBoxList{
         var success = false;
         if(sel !== null){
             let expMouse = expControl.experimentMousePos();
-            sel.objControl.setCenter(expMouse[0], expMouse[1]);
+            sel.obj.setCenter(expMouse[0], expMouse[1]);
             let eqs = expControl.experiment.equipment;
 
-            let index = eqs.indexOf(sel.objControl);
+            let index = eqs.indexOf(sel.obj);
             if(index < 0) success = false;
             else{
                 expControl.placeEquipment(index);
-                this.remove(sel.objControl);
+                this.remove(sel.obj);
                 success = true;
             }
         }
@@ -623,20 +716,10 @@ class EquipmentBoxList{
     */
     updateSelectPos(){
         if(this.selected !== null){
-            this.selected.objControl.setCenter(mouseX, mouseY);
+            this.selected.obj.setCenter(mouseX, mouseY);
             return true;
         }
         return false;
-    }
-
-    /**
-    Draw all of the EquipmentBoxes in this List
-    g: The P5 graphics object to use
-    */
-    draw(g){
-        for(var i = 0; i < this.boxes.length; i++){
-            this.boxes[i].draw(g);
-        }
     }
 
     /**
@@ -646,10 +729,33 @@ class EquipmentBoxList{
     drawSelected(g){
         let sel = this.selected;
         if(sel !== null){
-            sel.objControl.drawSprite(g);
+            sel.obj.drawSprite(g);
         }
     }
 
+}
+
+/**
+A helper object used by ExperimentController2D to handle a list of ChemicalBox objects
+*/
+class ChemicalBoxList extends DisplayBoxList{
+
+    /**
+    Create an empty ChemicalBoxList
+    */
+    constructor(){
+        super();
+    }
+
+    /**
+    Create an appropriate box for this EquipmentBoxList
+    obj: The object for the box
+    index: The index for the box
+    returns: The box
+    */
+    createBox(obj, index){
+        return new ChemicalBox(obj, index);
+    }
 }
 
 
@@ -659,20 +765,20 @@ A helper object used by BoxLists for displaying and interacting with Experiment 
 class DisplayBox{
     /**
     Create a new EquipmentBox to handle drawing and mouse input for an Equipment box
-    objControl: The EquipmentController2D holding the Equipment to be rendered
+    obj: The Object holding to be stored in this DisplayBox
     index: The index position where this Box should be rendered
     */
-    constructor(objControl, index){
-        this.objControl = objControl;
+    constructor(obj, index){
+        this.obj = obj;
         this.index = index;
     }
 
     /**
-    Set the EquipmentController2D used by this EquipmentBox
-    objControl: The EquipmentController2D to set
+    Set the Object used by this EquipmentBox
+    obj: The EquipmentController2D to set
     */
-    setEquipment(objControl){
-        this.objControl = objControl;
+    setObj(obj){
+        this.obj = obj;
     }
 
     /**
@@ -686,18 +792,29 @@ class DisplayBox{
     /**
     Draw a single piece of Equipment for displaying at the bottom of the screen.
     Draws a rectangle along with the equipment picture.
-    Set stroke and fill before calling this method
     g: The P5 graphics object to use for rendering
+    selected: true if this box should be drawn as selected, false otherwise
     */
-    draw(g){
-        let SIZE = EXP_EQUIP_BOX_SIZE;
+    draw(g, selected){
+        let SIZE = EXP_BOX_SIZE;
 
         let r = this.bounds();
-        let IMG_SIZE = EXP_EQUIP_BOX_SPRITE_SIZE * SIZE;
+        let IMG_SIZE = EXP_BOX_SPRITE_SIZE * SIZE;
         // 0.5 constant for centering, not adjustable
         let IMG_OFF = (SIZE - IMG_SIZE) * 0.5;
 
+        g.stroke(EXP_BOX_STROKE_COLOR);
+        g.strokeWeight(EXP_BOX_STROKE_WEIGHT);
+        g.fill(EXP_BOX_FILL_COLOR);
+
         g.rect(r[0], r[1], r[2], r[3]);
+
+        if(selected){
+            g.noStroke();
+            g.fill(EXP_BOX_SELECT_COLOR);
+            g.rect(r[0], r[1], r[2], r[3]);
+        }
+
         g.image(this.getImage(), r[0] + IMG_OFF, r[1] + IMG_OFF, IMG_SIZE, IMG_SIZE);
     }
 
@@ -705,7 +822,7 @@ class DisplayBox{
     Get the Square image which will be used to display this Box
     */
     getImage(){
-        return this.objControl.equipment.sprite;
+        throw new Error("DisplayBox objects must implement getImage");
     }
 
     /**
@@ -713,9 +830,9 @@ class DisplayBox{
     i: The index of the square
     */
     bounds(){
-        let SIZE = EXP_EQUIP_BOX_SIZE;
-        let x = EXP_EQUIP_BOX_OFF_X + this.index * SIZE;
-        let y = EXP_EQUIP_BOX_OFF_Y + CANVAS_HEIGHT - SIZE;
+        let SIZE = EXP_BOX_SIZE;
+        let x = EXP_BOX_OFF_X + this.index * SIZE;
+        let y = EXP_BOX_OFF_Y + CANVAS_HEIGHT - SIZE;
         return [x, y, SIZE, SIZE];
     }
 
@@ -726,12 +843,12 @@ class DisplayBox{
 A helper object used by EquipmentBoxList for allowing the user to click and drag Equipment into the Experiment
 */
 class EquipmentBox extends DisplayBox{
-    constructor(objControl, index){
-        super(objControl, index);
+    constructor(obj, index){
+        super(obj, index);
     }
 
     getImage(){
-        return this.objControl.equipment.sprite;
+        return this.obj.equipment.sprite;
     }
 }
 
@@ -740,14 +857,14 @@ class EquipmentBox extends DisplayBox{
 A helper object used by ChemicalBoxList for allowing the user to select Chemicals from a tab
 */
 class ChemicalBox extends DisplayBox{
-    constructor(objControl, index){
-        super(objControl, index);
-        this.graphics = createGraphics(EXP_EQUIP_BOX_SIZE, EXP_EQUIP_BOX_SIZE);
+    constructor(chemControl, index){
+        super(chemControl, index);
+        this.graphics = createGraphics(EXP_BOX_SIZE, EXP_BOX_SIZE);
     }
 
     getImage(){
         this.graphics.fill(255);
-        this.objControl.drawRect(0, 0, 1, EXP_EQUIP_BOX_SIZE, EXP_EQUIP_BOX_SIZE, 0, this.graphics)
+        this.obj.drawRect(0, 0, 1, EXP_BOX_SIZE, EXP_BOX_SIZE, 0, this.graphics)
         return this.graphics;
     }
 }

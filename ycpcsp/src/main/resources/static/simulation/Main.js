@@ -5,20 +5,20 @@ var mainExpController = null;
 
 TODO:
     Create code for Chemicals, display a Chemical tab
-        Make a key toggle showing and interacting with chemicals vs equipment
-        Click on a chemical to be able to add it to a beaker, use func ids
-    Test cases ChemicalBox, EquipmentBox.getImage, DisplayBox
-        Need to allow them to turn graphics on or off
-    Allow users to select different actions for each piece of equipment
-    Allow equipment and chemicals to be disposed
-    Make a better way of Chemicals in Instructions to keep their stats so they don't change, or maybe have a reset?
-    Make proper layout page with home button
+        Click on a chemical to be able to add it to a beaker, any amount, use func ids
+    Test cases ChemicalBox, EquipmentBox.getImage, DisplayBox, ExperimentController2D.isDisplayEquipment, isDisplayChemicals
+        Need to allow them to turn graphics on or off, add main to test cases?
+    Remove things like size and position from the Beaker constructor
     Add camera panning
         Use x and y camera coordinates in the ExperimentController2D
         Use P5 translate for graphics
         Create global function to get x and y mouse positions
         Objects which will not be on the screen should not be rendered, i.e. a renderBounds() method
         Objects in the experiment should be forced to stay within the experiment bounds
+    Allow users to select different actions for each piece of equipment
+    Make a better way of Chemicals in Instructions to keep their stats so they don't change, or maybe have a reset?
+    Add update method for each object
+    Allow equipment and chemicals to be disposed
     Make basic layout for Experiment
         Update clicking and dragging to change indexes for ExperimentBoxes when they are removed from the list
         Split Experiment render code into individual methods
