@@ -33,11 +33,32 @@ QUnit.module("ExperimentController2D", {
         mouseY = 0;
         exp = new Experiment("a title", "a name");
         controller = new ExperimentController2D(exp);
-        beaker1 = new Beaker([0, 0], [10, 20], 1.0, 1.0);
-        beaker2 = new Beaker([100, 0], [12, 6], 1.0, 1.0);
-        beaker3 = new Beaker([45, 100], [20, 15], 1.0, 1.0);
-        beaker4 = new Beaker([45, 200], [20, 15], 1.0, 1.0);
-        beaker5 = new Beaker([45, 210], [20, 15], 1.0, 1.0);
+
+        beaker1 = new Beaker(ID_EQUIP_BEAKER_50mL);
+        beaker1.setResidue(0);
+        beaker1.setPosition([0, 0]);
+        beaker1.setSize([10, 20]);
+
+        beaker2 = new Beaker(ID_EQUIP_BEAKER_150mL);
+        beaker2.setResidue(0);
+        beaker2.setPosition([100, 0]);
+        beaker2.setSize([12, 6]);
+
+        beaker3 = new Beaker(ID_EQUIP_BEAKER_250mL);
+        beaker3.setResidue(0);
+        beaker3.setPosition([45, 100]);
+        beaker3.setSize([20, 15]);
+
+        beaker4 = new Beaker(ID_EQUIP_BEAKER_600mL);
+        beaker4.setResidue(0);
+        beaker4.setPosition([45, 200]);
+        beaker4.setSize([20, 15]);
+
+        beaker5 = new Beaker(ID_EQUIP_BEAKER_50mL);
+        beaker5.setResidue(0);
+        beaker5.setPosition([45, 210]);
+        beaker5.setSize([20, 15]);
+
         beakerControl1 = new BeakerController2D(beaker1);
         beakerControl2 = new BeakerController2D(beaker2);
         beakerControl3 = new BeakerController2D(beaker3);

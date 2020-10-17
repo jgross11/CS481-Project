@@ -16,8 +16,15 @@ QUnit.module("ContainerController2D", {
     beforeEach: function(){
         container = new Container([0, 0], [0, 0], 0, 8, 0, null);
         controller = new ContainerController2D(container);
-        beaker1 = new Beaker([0, 0], [0, 0], 1, 100, 0.1);
-        beaker2 = new Beaker([0, 0], [0, 0], 0, 100, 0.1);
+        beaker1 = new Beaker(ID_EQUIP_BEAKER_50mL);
+        beaker1.setResidue(0.1);
+        beaker1.setMass(1);
+        beaker1.setCapacity(100);
+        beaker2 = new Beaker(ID_EQUIP_BEAKER_50mL);
+        beaker2.setResidue(0.1);
+        beaker2.setMass(0);
+        beaker2.setCapacity(100);
+
         beakerControl1 = new BeakerController2D(beaker1);
         beakerControl2 = new BeakerController2D(beaker2);
 

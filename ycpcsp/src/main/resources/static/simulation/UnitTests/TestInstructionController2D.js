@@ -7,8 +7,12 @@ var chem2;
 
 QUnit.module("InstructionController2D", {
     beforeEach: function(){
-        beaker1 = new BeakerController2D(new Beaker([0, 0], [0, 0], 1, 100, 0));
-        beaker2 = new BeakerController2D(new Beaker([0, 0], [0, 0], 1, 100, 0));
+        beaker1 = new BeakerController2D(new Beaker(ID_EQUIP_BEAKER_150mL));
+        beaker1.equipment.setResidue(0);
+        beaker1.equipment.setCapacity(100);
+        beaker2 = new BeakerController2D(new Beaker(ID_EQUIP_BEAKER_150mL));
+        beaker2.equipment.setResidue(0);
+        beaker2.equipment.setCapacity(100);
         ins = new Instruction(beaker1, beaker2, beaker1.pourInto);
         controller = new InstructionController2D(ins);
         chem1 = new Chemical(6.0, "equ", 20.0, [10, 20, 40]);

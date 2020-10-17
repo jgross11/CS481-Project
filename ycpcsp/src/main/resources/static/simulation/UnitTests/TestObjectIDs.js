@@ -4,7 +4,13 @@ QUnit.module("ObjectIDs", {
 });
 
 QUnit.test('idToEquipment:', function(assert){
-    assert.equal(idToEquipment(ID_EQUIP_BEAKER_TEST, 0).constructor.name, "BeakerController2D",
+    assert.equal(idToEquipment(ID_EQUIP_BEAKER_50mL).constructor.name, "BeakerController2D",
+        "Should create a BeakerController2D");
+    assert.equal(idToEquipment(ID_EQUIP_BEAKER_150mL).constructor.name, "BeakerController2D",
+        "Should create a BeakerController2D");
+    assert.equal(idToEquipment(ID_EQUIP_BEAKER_250mL).constructor.name, "BeakerController2D",
+        "Should create a BeakerController2D");
+    assert.equal(idToEquipment(ID_EQUIP_BEAKER_600mL).constructor.name, "BeakerController2D",
         "Should create a BeakerController2D");
 });
 

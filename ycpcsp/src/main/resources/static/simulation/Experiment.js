@@ -449,7 +449,9 @@ class ExperimentController2D{
                 break;
 
             default:
-                let chemControl = this.chemicalBoxes.selected.obj;
+                let box = this.chemicalBoxes.selected;
+                if(box === null) break;
+                let chemControl = box.obj;
                 if(chemControl === null) break;
                 var mass;
                 switch(key){

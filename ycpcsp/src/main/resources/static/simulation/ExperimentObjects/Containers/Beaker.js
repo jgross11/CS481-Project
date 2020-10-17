@@ -4,23 +4,33 @@ A standard Beaker for use in experiments. Primarily for holding liquids, can als
 class Beaker extends Container{
 
     /**
-    Create a new Beaker object with the given position, mass, capacity, residue, id
-    position: A list [x, y] of the upper left hand corner coordinates of the Beaker's location in the Experiment
-    size: A list [width, height] of the size of the Equipment in pixels
-    mass: A floating point value, the mass, in grams, of this Beaker
-    capacity: A floating point value, the maximum amount of contents, in milliliters which this Beaker can hold TODO should this be in milliliters
-    residue: A floating point value in range [0-1], the percentage of this Beaker's capacity
-        which will be left behind when the contents of this Beaker are poured out.
+    Create a new Beaker object based on the given beakerID
+    beakerID: The specific ID of a beaker with a specific size
     */
-    constructor(position, size, mass, capacity, residue){
-        super(position, size, mass, capacity, residue, SPRITE_BEAKER);
+    constructor(beakerID){
+        super([0, 0], undefined, undefined, undefined, 0.03, SPRITE_BEAKER);
+        this.id = beakerID;
+        var newAttributes = null;
+        switch(beakerID){
+            // All Beaker sizes
+            case ID_EQUIP_BEAKER_50mL: newAttributes = [[60, 60], 15.0, 50.0]; break;
+            case ID_EQUIP_BEAKER_150mL: newAttributes = [[100, 100], 20.0, 150.0]; break;
+            case ID_EQUIP_BEAKER_250mL: newAttributes = [[130, 130], 30.0, 250.0]; break;
+            case ID_EQUIP_BEAKER_600mL: newAttributes = [[200, 200], 50.0, 600.0]; break;
+            default: break;
+        }
+        if(newAttributes !== null){
+            this.setSize(newAttributes[0]);
+            this.setMass(newAttributes[1]);
+            this.setCapacity(newAttributes[2]);
+        }
     }
 
     /**
     Get the ID representing this Beaker
     */
     getID(){
-        return ID_EQUIP_BEAKER_TEST;
+        return this.id;
     }
 }
 
@@ -66,7 +76,7 @@ class BeakerController2D extends ContainerController2D{
         graphics.fill(color(0, 0, 0));
         graphics.noStroke();
         graphics.textSize(15);
-        graphics.text("ID: " + eq.instanceID, this.x() + 25, this.y() + this.height() / 2)
+        graphics.text("ID: " + eq.instanceID, this.x() + this.width() * 0.4, this.y() + this.height() / 2)
     }
 
 }

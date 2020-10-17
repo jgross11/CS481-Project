@@ -4,7 +4,10 @@
 // ExperimentObject ids
 
 // Constants for IDs of Equipment
-let ID_EQUIP_BEAKER_TEST = 1;
+let ID_EQUIP_BEAKER_50mL = 1;
+let ID_EQUIP_BEAKER_150mL = 2;
+let ID_EQUIP_BEAKER_250mL = 3;
+let ID_EQUIP_BEAKER_600mL = 4;
 
 // Constants for IDs of Chemicals
 let ID_CHEM_TEST_RED = 1;
@@ -20,8 +23,11 @@ returns: The Equipment, or null if an invalid ID is given
 */
 function idToEquipment(id){
     switch(id){
-        // Default beaker
-        case ID_EQUIP_BEAKER_TEST: return new BeakerController2D(new Beaker([50, 200], [100, 100], 20.0, 50.0, 0.03));
+        // All Beaker sizes
+        case ID_EQUIP_BEAKER_50mL:
+        case ID_EQUIP_BEAKER_150mL:
+        case ID_EQUIP_BEAKER_250mL:
+        case ID_EQUIP_BEAKER_600mL: return new BeakerController2D(new Beaker(id));
         default: return null;
     }
 }

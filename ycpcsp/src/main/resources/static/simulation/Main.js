@@ -1,10 +1,12 @@
 var mainExperiment = null;
 var mainExpController = null;
 
+// true to load data from the actual database, false to use test data defined by the return of getTestJSON()
+let LOAD_EXPERIMENT_FROM_SERVER = true;
+
 /*
 
 TODO:
-    Remove things like size and position from the Beaker constructor, add defaults for chemical
     Add camera panning
         Use x and y camera coordinates in the ExperimentController2D
         Use P5 translate for graphics
@@ -43,9 +45,8 @@ function setup(){
 Initialize the experiment and controller objects from the session data
 */
 function initExperiment(data){
-    mainExperiment = parseExperiment(data);
-    //mainExperiment.chemicals.push(idToChemical(ID_CHEM_TEST_GREEN, 1, 1)); // TODO remove
-    //mainExperiment.chemicals.push(idToChemical(ID_CHEM_TEST_BLACK, 1, 1)); // TODO remove
+    if(LOAD_EXPERIMENT_FROM_SERVER) mainExperiment = parseExperiment(data);
+    else mainExperiment = parseExperiment(getTestJSON());
     mainExpController = new ExperimentController2D(mainExperiment, true);
 }
 
