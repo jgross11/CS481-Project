@@ -4,15 +4,14 @@ var mainExpController = null;
 /*
 
 TODO:
-    Test cases ChemicalBox, EquipmentBox.getImage, DisplayBox, ExperimentController2D.isDisplayEquipment, isDisplayChemicals
-        Need to allow them to turn graphics on or off, add main to test cases?
-    Remove things like size and position from the Beaker constructor
+    Remove things like size and position from the Beaker constructor, add defaults for chemical
     Add camera panning
         Use x and y camera coordinates in the ExperimentController2D
         Use P5 translate for graphics
         Create global function to get x and y mouse positions
         Objects which will not be on the screen should not be rendered, i.e. a renderBounds() method
         Objects in the experiment should be forced to stay within the experiment bounds
+    Add update function called by P5 on ExperimentController2D to draw all Equipment
     Allow users to select different actions for each piece of equipment
     Make a better way of Chemicals in Instructions to keep their stats so they don't change, or maybe have a reset?
     Add update method for each object

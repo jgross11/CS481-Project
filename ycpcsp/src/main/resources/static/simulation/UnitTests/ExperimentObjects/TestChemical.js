@@ -58,11 +58,11 @@ QUnit.test('setConcentration:', function(assert){
     assert.equal(chem.getID(), null, "An unknown Chemical should have a null ID");
 
     chem.setEquation("R");
-    assert.equal(chem.getID(), ID_CHEM_TEST_SMALL_RED, "Should have a small red ID");
+    assert.equal(chem.getID(), ID_CHEM_TEST_RED, "Should have a small red ID");
 
     chem.setEquation("B");
-    assert.equal(chem.getID(), ID_CHEM_TEST_SMALL_BLUE, "Should have a small blue ID");
+    assert.equal(chem.getID(), ID_CHEM_TEST_BLUE, "Should have a small blue ID");
 
     chem.setEquation("W");
-    assert.equal(chem.getID(), ID_CHEM_TEST_LARGE_WHITE, "Should have a large white ID");
+    assert.equal(chem.getID(), ID_CHEM_TEST_WHITE, "Should have a large white ID");
 });

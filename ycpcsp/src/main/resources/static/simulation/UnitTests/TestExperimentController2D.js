@@ -14,10 +14,17 @@ var beakerControl4;
 var beakerControl5;
 var chem;
 
+var dList;
 var eList;
+var cList;
 
-var box1;
-var box2;
+var eBox1;
+var eBox2;
+var dBox1;
+var dBox2;
+var cBox;
+
+function createGraphics(){}
 
 QUnit.module("ExperimentController2D", {
     beforeEach: function(){
@@ -38,10 +45,17 @@ QUnit.module("ExperimentController2D", {
         beakerControl5 = new BeakerController2D(beaker5);
         chem = new Chemical(1, "", 20.0, [2, 4, 7]);
 
+        dList = new DisplayBoxList();
         eList = new EquipmentBoxList();
+        cList = new ChemicalBoxList();
 
-        box1 = new EquipmentBox(beakerControl1, 1);
-        box2 = new EquipmentBox(null, 2);
+        eBox1 = new EquipmentBox(beakerControl1, 1);
+        eBox2 = new EquipmentBox(null, 2);
+
+        dBox1 = new DisplayBox(beaker1, 3);
+        dBox2 = new DisplayBox(null, 4);
+
+        cBox = new ChemicalBox(chem, 5);
     }
 });
 
@@ -177,6 +191,28 @@ QUnit.test('nextInstruction:', function(assert){
     controller.placeEquipment(0);
     controller.nextInstruction();
     assert.equal(controller.instructionCounter, 3, "Instruction should be on 3 with beaker 0 in the Experiment");
+});
+
+QUnit.test('isDisplayEquipment:', function(assert){
+    controller.reset();
+    assert.true(controller.isDisplayEquipment(), "By default, the Equipment list should show");
+
+    controller.displayedBoxList = null;
+    assert.false(controller.isDisplayEquipment(), "The Equipment list should not show");
+
+    controller.displayedBoxList = controller.equipmentBoxes
+    assert.true(controller.isDisplayEquipment(), "The Equipment list should show");
+});
+
+QUnit.test('isDisplayChemicals:', function(assert){
+    controller.reset();
+    assert.false(controller.isDisplayChemicals(), "By default, the Chemical list should not show");
+
+    controller.displayedBoxList = controller.chemicalBoxes
+    assert.true(controller.isDisplayChemicals(), "The Chemical list should show");
+
+    controller.displayedBoxList = null;
+    assert.false(controller.isDisplayChemicals(), "The Chemical list should not show");
 });
 
 QUnit.test('addEquipment:', function(assert){
@@ -429,22 +465,13 @@ QUnit.todo('drawEquipSquare:', function(assert){
 });
 
 
-QUnit.test('EquipmentBoxList constructor:', function(assert){
-    assert.deepEqual(eList.boxes, [], "New list should be empty");
-    assert.equal(eList.selected, null, "Selected box should be null");
+QUnit.test('DisplayBoxList constructor:', function(assert){
+    assert.deepEqual(dList.boxes, [], "New list should be empty");
+    assert.equal(dList.selected, null, "Selected box should be null");
 });
 
-QUnit.test('EquipmentBoxList get:', function(assert){
-    eList.add(beakerControl1);
-    assert.deepEqual(eList.get(0), beakerControl1, "Obtained beaker should be the one added");
-    assert.deepEqual(eList.get(-1), undefined, "Obtained beaker should be undefined");
-    assert.deepEqual(eList.get(1), undefined, "Obtained beaker should be undefined");
-});
-
-QUnit.test('EquipmentBoxList selectBox:', function(assert){
+QUnit.test('DisplayBoxList selectBox:', function(assert){
     eList.unselect();
-    var success = eList.selectBox()
-    assert.false(success, "Should be unable to select a new box with no selected box");
     assert.deepEqual(eList.selected, null, "Selected should be null with no selected box");
 
     eList.unselect();
@@ -453,7 +480,7 @@ QUnit.test('EquipmentBoxList selectBox:', function(assert){
     var b = eList.boxes[0].bounds();
     mouseX = b[0];
     mouseY = b[1] - 1000;
-    success = eList.selectBox();
+    var success = eList.selectBox();
     assert.false(success, "Should be unable to select a box with the mouse on the wrong position");
     assert.deepEqual(eList.selected, null, "Selected should be null with no selected box");
 
@@ -462,23 +489,23 @@ QUnit.test('EquipmentBoxList selectBox:', function(assert){
     mouseX = b[0] + 1;
     mouseY = b[1];
     success = eList.selectBox();
-    var eq = eList.selected.objControl
+    var bObj = eList.selected.obj.equipment
     assert.true(success, "Should be able to select a box with the mouse on first equipment");
-    assert.deepEqual(eq.equipment.position, [mouseX - 5, mouseY - 10], "Coordinates should be centered on the first box index");
-    assert.deepEqual(eq, beakerControl1, "Selected should contain the first beaker");
+    assert.deepEqual(bObj.position, [mouseX - 5, mouseY - 10], "Coordinates should be centered on the first box index");
+    assert.deepEqual(bObj, beaker1, "Selected should contain the first beaker");
 
     eList.unselect();
     b = eList.boxes[1].bounds();
     mouseX = b[0] + 1;
     mouseY = b[1];
     success = eList.selectBox();
-    eq = eList.selected.objControl
+    bObj = eList.selected.obj.equipment
     assert.true(success, "Should be able to select a box with the mouse on second equipment");
-    assert.deepEqual(eq.equipment.position, [mouseX - 6, mouseY - 3], "Coordinates should be centered on the second box index");
-    assert.deepEqual(eq, beakerControl2, "Selected should contain the second beaker");
+    assert.deepEqual(bObj.position, [mouseX - 6, mouseY - 3], "Coordinates should be centered on the second box index");
+    assert.deepEqual(bObj, beaker2, "Selected should contain the second beaker");
 });
 
-QUnit.test('EquipmentBoxList unselect:', function(assert){
+QUnit.test('DisplayBoxList unselect:', function(assert){
     eList.add(beakerControl1);
 
     eList.selected = eList.get(0);
@@ -489,13 +516,24 @@ QUnit.test('EquipmentBoxList unselect:', function(assert){
 
 });
 
-QUnit.test('EquipmentBoxList add:', function(assert){
+QUnit.test('DisplayBoxList get:', function(assert){
+    eList.add(beakerControl1);
+    assert.deepEqual(eList.get(0), beakerControl1, "Obtained beaker should be the one added");
+    assert.deepEqual(eList.get(-1), undefined, "Obtained beaker should be undefined");
+    assert.deepEqual(eList.get(1), undefined, "Obtained beaker should be undefined");
+});
+
+QUnit.test('DisplayBoxList createBox:', function(assert){
+    assert.throws(dList.createBox, "Generic DisplayBoxList should throw error on createBox");
+});
+
+QUnit.test('DisplayBoxList add:', function(assert){
     eList.add(beakerControl1);
 
     assert.deepEqual(eList.get(0), beakerControl1, "Obtained beaker should be the one added");
 });
 
-QUnit.test('EquipmentBoxList remove:', function(assert){
+QUnit.test('DisplayBoxList remove:', function(assert){
     eList.add(beakerControl1);
     eList.add(beakerControl2);
     eList.add(beakerControl3);
@@ -509,6 +547,22 @@ QUnit.test('EquipmentBoxList remove:', function(assert){
     var success = eList.remove(beakerControl2);
     assert.false(success, "Should failed to find and remove beaker 2, which is no longer in the list");
     assert.equal(eList.boxes.length, 2, "Should still have 2 pieces of Equipment");
+});
+
+QUnit.todo('DisplayBoxList draw:', function(assert){
+    assert.false(true);
+});
+
+
+QUnit.test('EquipmentBoxList constructor:', function(assert){
+    assert.deepEqual(eList.boxes, [], "New list should be empty");
+    assert.equal(eList.selected, null, "Selected box should be null");
+});
+
+QUnit.test('EquipmentBoxList createBox:', function(assert){
+    var newBox = eList.createBox(beakerControl1, 1);
+    assert.deepEqual(newBox.obj, beakerControl1, "New Equipment box should have the given object");
+    assert.equal(newBox.index, 1, "New Equipment box should have the given index");
 });
 
 QUnit.test('EquipmentBoxList place:', function(assert){
@@ -526,7 +580,7 @@ QUnit.test('EquipmentBoxList place:', function(assert){
     mouseY = b[1];
     eList.selectBox();
     var place = controller.placedEquipment;
-    assert.deepEqual(eList.selected.objControl, beakerControl1, "Selected should be the first Beaker");
+    assert.deepEqual(eList.selected.obj, beakerControl1, "Selected should be the first Beaker");
     assert.equal(place.length, 0, "There should be only no elements in the Experiment before placed list after placing one");
 
     success = eList.place(controller);
@@ -550,13 +604,9 @@ QUnit.test('EquipmentBoxList updateSelectPos:', function(assert){
     mouseX = 100;
     mouseY = 200;
     success = eList.updateSelectPos();
-    let pos = eList.selected.objControl.equipment.position;
+    let pos = eList.selected.obj.equipment.position;
     assert.true(success, "Updating the selected position should succeed with a selection");
     assert.deepEqual(pos, [95, 190], "Should correctly center the Equipment to the mouse");
-});
-
-QUnit.todo('EquipmentBoxList draw:', function(assert){
-    assert.false(true);
 });
 
 QUnit.todo('EquipmentBoxList drawSelected:', function(assert){
@@ -564,42 +614,77 @@ QUnit.todo('EquipmentBoxList drawSelected:', function(assert){
 });
 
 
-QUnit.test('EquipmentBox constructor:', function(assert){
-    assert.deepEqual(box1.objControl, beakerControl1, "Equipment should be the given beaker");
-    assert.equal(box1.index, 1, "Index should be 1");
+QUnit.test('ChemicalBoxList constructor:', function(assert){
+    assert.deepEqual(cList.boxes, [], "New list should be empty");
+    assert.equal(cList.selected, null, "Selected box should be null");
 });
 
-QUnit.test('EquipmentBox setEquipment:', function(assert){
-    box1.setEquipment(null);
-    assert.deepEqual(box1.objControl, null, "Equipment should be null");
-
-    box1.setEquipment(beakerControl1);
-    assert.deepEqual(box1.objControl, beakerControl1, "Equipment should be the set beaker");
+QUnit.test('ChemicalBoxList createBox:', function(assert){
+    var newBox = cList.createBox(chem, 1);
+    assert.deepEqual(newBox.obj, chem, "New Equipment box should have the given object");
+    assert.equal(newBox.index, 1, "New Equipment box should have the given index");
 });
 
-QUnit.test('EquipmentBox setIndex:', function(assert){
-    assert.equal(box1.index, 1, "Index should be 1");
 
-    box1.setIndex(2);
-    assert.equal(box1.index, 2, "Index should be set to 2");
+QUnit.test('DisplayBox constructor:', function(assert){
+    assert.deepEqual(dBox1.obj, beaker1, "Object should be the given beaker");
+    assert.equal(dBox1.index, 3, "Index should be 3");
 });
 
-QUnit.todo('EquipmentBox draw:', function(assert){
+QUnit.test('DisplayBox setObj:', function(assert){
+    eBox1.setObj(null);
+    assert.deepEqual(dBox2.obj, null, "Object should be null");
+
+    eBox2.setObj(beakerControl1);
+    assert.deepEqual(eBox2.obj, beakerControl1, "Object should be the set beaker");
+});
+
+QUnit.test('DisplayBox setIndex:', function(assert){
+    assert.equal(dBox1.index, 3, "Index should be 3");
+
+    dBox1.setIndex(6);
+    assert.equal(dBox1.index, 6, "Index should be set to 6");
+});
+
+QUnit.todo('DisplayBox draw:', function(assert){
     assert.false(true);
 });
 
-QUnit.test('EquipmentBox bounds:', function(assert){
-    var b = box2.bounds();
+QUnit.test('DisplayBox getImage:', function(assert){
+    assert.throws(dBox1.getImage, "Generic DisplayBox should throw error on getImage");
+});
 
-    assert.equal(b[0], EXP_EQUIP_BOX_OFF_X + EXP_EQUIP_BOX_SIZE * 2, "X bounds coordinate should be that of the second index");
-    assert.equal(b[1], EXP_EQUIP_BOX_OFF_Y + CANVAS_HEIGHT - EXP_EQUIP_BOX_SIZE, "Y bounds coordinate should be the same for all indexes");
-    assert.equal(b[2], EXP_EQUIP_BOX_SIZE, "Width should be the size constant");
-    assert.equal(b[3], EXP_EQUIP_BOX_SIZE, "Height should be the size constant");
+QUnit.test('DisplayBox bounds:', function(assert){
+    var b = dBox1.bounds();
+    assert.equal(b[0], EXP_BOX_OFF_X + EXP_BOX_SIZE * 3, "X bounds coordinate should be that of the second index");
+    assert.equal(b[1], EXP_BOX_OFF_Y + CANVAS_HEIGHT - EXP_BOX_SIZE, "Y bounds coordinate should be the same for all indexes");
+    assert.equal(b[2], EXP_BOX_SIZE, "Width should be the size constant");
+    assert.equal(b[3], EXP_BOX_SIZE, "Height should be the size constant");
 
-    box2.setIndex(1);
-    b = box2.bounds();
-    assert.equal(b[0], EXP_EQUIP_BOX_OFF_X + EXP_EQUIP_BOX_SIZE * 1, "X bounds coordinate should be that of the second index");
-    assert.equal(b[1], EXP_EQUIP_BOX_OFF_Y + CANVAS_HEIGHT - EXP_EQUIP_BOX_SIZE, "Y bounds coordinate should be the same for all indexes");
-    assert.equal(b[2], EXP_EQUIP_BOX_SIZE, "Width should be the size constant");
-    assert.equal(b[3], EXP_EQUIP_BOX_SIZE, "Height should be the size constant");
+    dBox2.setIndex(1);
+    b = dBox2.bounds();
+    assert.equal(b[0], EXP_BOX_OFF_X + EXP_BOX_SIZE * 1, "X bounds coordinate should be that of the second index");
+    assert.equal(b[1], EXP_BOX_OFF_Y + CANVAS_HEIGHT - EXP_BOX_SIZE, "Y bounds coordinate should be the same for all indexes");
+    assert.equal(b[2], EXP_BOX_SIZE, "Width should be the size constant");
+    assert.equal(b[3], EXP_BOX_SIZE, "Height should be the size constant");
+});
+
+
+QUnit.test('EquipmentBox constructor:', function(assert){
+    assert.deepEqual(eBox1.obj, beakerControl1, "Object should be the given beaker");
+    assert.equal(eBox1.index, 1, "Index should be 1");
+});
+
+QUnit.todo('EquipmentBox getImage:', function(assert){
+    assert.false(true);
+});
+
+
+QUnit.test('ChemicalBox constructor:', function(assert){
+    assert.deepEqual(cBox.obj, chem, "Object should be the given beaker");
+    assert.equal(cBox.index, 5, "Index should be 5");
+});
+
+QUnit.todo('ChemicalBox getImage:', function(assert){
+    assert.false(true);
 });

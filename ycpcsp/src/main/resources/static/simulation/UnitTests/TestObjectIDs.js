@@ -9,10 +9,10 @@ QUnit.test('idToEquipment:', function(assert){
 });
 
 QUnit.test('idToChemical:', function(assert){
-    assert.equal(idToChemical(ID_CHEM_TEST_SMALL_RED, 1, 1).constructor.name, "ChemicalController2D",
+    assert.equal(idToChemical(ID_CHEM_TEST_RED, 1, 1).constructor.name, "ChemicalController2D",
         "Should create a ChemicalController2D");
-    assert.equal(idToChemical(ID_CHEM_TEST_SMALL_BLUE, 1, 1).constructor.name, "ChemicalController2D",
+    assert.equal(idToChemical(ID_CHEM_TEST_BLUE, 1, 1).constructor.name, "ChemicalController2D",
         "Should create a ChemicalController2D");
-    assert.equal(idToChemical(ID_CHEM_TEST_LARGE_WHITE, 1, 1).constructor.name, "ChemicalController2D",
+    assert.equal(idToChemical(ID_CHEM_TEST_WHITE, 1, 1).constructor.name, "ChemicalController2D",
         "Should create a ChemicalController2D");
 });

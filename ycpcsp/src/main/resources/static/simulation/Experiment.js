@@ -675,6 +675,7 @@ class EquipmentBoxList extends DisplayBoxList{
     selectBox(){
         let success = super.selectBox();
         if(success) this.selected.obj.setCenter(mouseX, mouseY);
+        return success;
     }
 
     /**
