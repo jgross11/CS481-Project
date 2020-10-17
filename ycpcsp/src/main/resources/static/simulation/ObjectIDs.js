@@ -7,9 +7,11 @@
 let ID_EQUIP_BEAKER_TEST = 1;
 
 // Constants for IDs of Chemicals
-let ID_CHEM_TEST_SMALL_RED = 1;
-let ID_CHEM_TEST_SMALL_BLUE = 2;
-let ID_CHEM_TEST_LARGE_WHITE = 3;
+let ID_CHEM_TEST_RED = 1;
+let ID_CHEM_TEST_BLUE = 2;
+let ID_CHEM_TEST_WHITE = 3;
+let ID_CHEM_TEST_GREEN = 4;
+let ID_CHEM_TEST_BLACK = 5;
 
 /**
 Take an integer ID and convert it to a valid piece of Equipment
@@ -35,10 +37,13 @@ function idToChemical(id, mass, concentration){
     var chem;
     switch(id){
         // Test chemicals
-        case ID_CHEM_TEST_SMALL_RED: chem = new Chemical(5, "R", 20, [255, 0, 0]); break;
-        case ID_CHEM_TEST_SMALL_BLUE: chem = new Chemical(5, "B", 20, [0, 0, 255]); break;
-        case ID_CHEM_TEST_LARGE_WHITE: chem = new Chemical(20, "W", 20, [255, 255, 255]); break;
+        case ID_CHEM_TEST_RED: chem = new Chemical(mass, "R", 20, [255, 0, 0]); break;
+        case ID_CHEM_TEST_BLUE: chem = new Chemical(mass, "B", 20, [0, 0, 255]); break;
+        case ID_CHEM_TEST_WHITE: chem = new Chemical(mass, "W", 20, [255, 255, 255]); break;
+        case ID_CHEM_TEST_GREEN: chem = new Chemical(mass, "G", 20, [0, 255, 0]); break;
+        case ID_CHEM_TEST_BLACK: chem = new Chemical(mass, "BL", 20, [0, 0, 0]); break;
         default: return null;
     }
+    chem.setConcentration(concentration);
     return new ChemicalController2D(chem);
 }

@@ -4,8 +4,6 @@ var mainExpController = null;
 /*
 
 TODO:
-    Create code for Chemicals, display a Chemical tab
-        Click on a chemical to be able to add it to a beaker, any amount, use func ids
     Test cases ChemicalBox, EquipmentBox.getImage, DisplayBox, ExperimentController2D.isDisplayEquipment, isDisplayChemicals
         Need to allow them to turn graphics on or off, add main to test cases?
     Remove things like size and position from the Beaker constructor
@@ -47,6 +45,8 @@ Initialize the experiment and controller objects from the session data
 */
 function initExperiment(data){
     mainExperiment = parseExperiment(data);
+    //mainExperiment.chemicals.push(idToChemical(ID_CHEM_TEST_GREEN, 1, 1)); // TODO remove
+    //mainExperiment.chemicals.push(idToChemical(ID_CHEM_TEST_BLACK, 1, 1)); // TODO remove
     mainExpController = new ExperimentController2D(mainExperiment, true);
 }
 

@@ -64,9 +64,11 @@ class Chemical extends ExperimentObject{
     */
     getID(){
         switch(this.equation){
-            case "R": return ID_CHEM_TEST_SMALL_RED;
-            case "B": return ID_CHEM_TEST_SMALL_BLUE;
-            case "W": return ID_CHEM_TEST_LARGE_WHITE;
+            case "R": return ID_CHEM_TEST_RED;
+            case "B": return ID_CHEM_TEST_BLUE;
+            case "W": return ID_CHEM_TEST_WHITE;
+            case "G": return ID_CHEM_TEST_GREEN;
+            case "BL": return ID_CHEM_TEST_BLACK;
             default: return null;
         }
     }
@@ -201,6 +203,7 @@ class ChemicalController2D extends ExperimentObjectController2D{
     */
     copyChem(){
         let c = this.chemical
+        if(c === null) return null;
         return new Chemical(c.mass, c.equation, c.temperature, c.texture, c.concentration);
     }
 

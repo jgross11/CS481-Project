@@ -317,14 +317,15 @@ class ExperimentController2D{
     /**
     Call to activate a specific function on the selected EquipmentController
     id: The function ID to use for the selected EquipmentController
+    param: Optional, the ExperimentObject to send with the function
     returns: true if the function is activated, false otherwise
     */
-    selectedEquipFunction(id){
+    selectedEquipFunction(id, param = null){
         let select = this.selectedEquipment;
         if(select === null || select === undefined) return false;
         let func = select.idToFunc(id);
         if(func === null || func === undefined) return false;
-        let param = this.findEquipmentByPosition(this.experimentMousePos(), select);
+        if(param === null) param = this.findEquipmentByPosition(this.experimentMousePos(), select);
         if(param === null || param === undefined) return false;
         func.bind(select, param)();
         return true;
@@ -448,15 +449,20 @@ class ExperimentController2D{
                 break;
 
             default:
-                if(eq === null) break;
-                var color;
+                let chemControl = this.chemicalBoxes.selected.obj;
+                if(chemControl === null) break;
+                var mass;
                 switch(key){
-                    case '1': color = [255, 0, 0]; break;
-                    case '2': color = [0, 255, 0]; break;
-                    case '3': color = [0, 0, 255]; break;
-                    default: color = null;
+                    case '1': mass = 1; break;
+                    case '2': mass = 5; break;
+                    case '3': mass = 10; break;
+                    case '4': mass = 20; break;
+                    case '5': mass = 25; break;
+                    default: mass = null;
                 }
-                if(color !== null) eq.addTo(new ChemicalController2D(new Chemical(10, "", 20, color)));
+                if(mass === null) break;
+                chemControl.chemical.setMass(mass);
+                this.selectedEquipFunction(ID_FUNC_CONTAINER_ADD_TO, chemControl);
                 break;
         }
     }
@@ -515,15 +521,13 @@ class ExperimentController2D{
         let x = 650;
         expG.text("Left click a beaker to move it", x, y += 20);
         expG.text("Right click a beaker to select it", x, y += 20);
-        expG.text("Press 1 to put red chemical to selected beaker", x, y += 20);
-        expG.text("Press 2 to put green chemical to selected beaker", x, y += 20);
-        expG.text("Press 3 to put blue chemical to selected beaker", x, y += 20);
+        expG.text("Press 1, 2, 3, 4, 5 to add 1, 5, 10, 20, or 25 units to selected beaker", x, y += 20);
         expG.text("Press ESC to empty the selected beaker", x, y += 20);
         expG.text("Click an unselected beaker to combine the chemical in the selected beaker", x, y += 20);
         expG.text("Press I to run the next instruction", x, y += 20);
         expG.text("Press R to reset the simulation", x, y += 20);
-        expG.text("Press C to view Chemical tab", x, y += 20);
-        expG.text("Press V to view Equipment tab", x, y += 20);
+        expG.text("Press C to view Chemical tab, then click a chemical to select", x, y += 20);
+        expG.text("Press V to view Equipment tab, then click and drag to add equipment", x, y += 20);
 
         // Draw options button
         // TODO
@@ -600,7 +604,7 @@ class DisplayBoxList{
     /**
     Get the Object of the DisplayBox with the given index
     i: The index
-    returns: The DisplayBox
+    returns: The DisplayBox's object
     */
     get(i){
         let b = this.boxes[i];
