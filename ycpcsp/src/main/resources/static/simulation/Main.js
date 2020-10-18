@@ -10,8 +10,8 @@ let LOAD_EXPERIMENT_FROM_SERVER = false;
 TODO:
     Add camera panning
         Objects which will not be on the screen should not be rendered, i.e. a renderBounds() method
-        Objects in the experiment should be forced to stay within the, experiment bounds, need to create
-    Test cases ExperimentCamera, ExperimentController2D.update
+    Test cases ExperimentCamera, ExperimentController2D.update, updateMovingEquipmentPos
+        remove P5.js import?
     Add update method for each object
     Change objects to use model/controller and view rather than model and controller/view?
     Move code out of key and mouse input functions

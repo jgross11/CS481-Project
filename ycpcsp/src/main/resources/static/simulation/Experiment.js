@@ -100,7 +100,7 @@ class ExperimentController2D{
         var r = EXP_BOUNDS;
         this.experimentGraphics = graphics ? createGraphics(r[2], r[3]) : null;
 
-        this.camera = new ExperimentCamera();
+        this.camera = new ExperimentCamera(null, EXP_CAMERA_BOUNDS);
 
         this.reset();
     }
@@ -131,6 +131,18 @@ class ExperimentController2D{
             let p = this.movingEquipment.equipment.position;
             let m = this.experimentMousePos();
             this.movingEquipAnchor = [p[0] - m[0], p[1] - m[1]];
+        }
+    }
+
+    /**
+    Update the position of the object being moved by the mouse
+    */
+    updateMovingEquipmentPos(){
+        if(this.movingEquipment !== null){
+            var pos = this.experimentMousePos();
+            pos[0] += this.movingEquipAnchor[0];
+            pos[1] += this.movingEquipAnchor[1];
+            this.movingEquipment.equipment.setPosition(pos);
         }
     }
 
@@ -413,12 +425,7 @@ class ExperimentController2D{
         if(boxes !== null && this.isDisplayEquipment()) boxes.updateSelectPos();
 
         // Update the position of the object being moved by the mouse
-        if(this.movingEquipment !== null){
-            var pos = this.experimentMousePos();
-            pos[0] += this.movingEquipAnchor[0];
-            pos[1] += this.movingEquipAnchor[1];
-            this.movingEquipment.equipment.setPosition(pos);
-        }
+        this.updateMovingEquipmentPos();
     }
 
     /**
@@ -480,6 +487,9 @@ class ExperimentController2D{
         if(keyIsDown(RIGHT_ARROW)) this.camera.right();
         if(keyIsDown(UP_ARROW)) this.camera.up();
         if(keyIsDown(DOWN_ARROW)) this.camera.down();
+
+        // Update the position of the object being moved by the mouse
+        this.updateMovingEquipmentPos();
     }
 
     /**
@@ -499,14 +509,21 @@ class ExperimentController2D{
         let sel = this.selectedEquipment;
 
         // Fill in a background
-        g.background(120);
+        g.background(CANVAS_BACKGROUND_COLOR);
 
         // Draw the area containing the interactable portion of the Experiment
         expG.push();
-        expG.background(230);
+        expG.background(EXP_BACKGROUND_COLOR);
 
         // Translate the graphics to the camera
         this.camera.translateGraphics(expG);
+
+        // draw a border around the experiment
+        expG.noFill();
+        expG.stroke(EXP_BORDER_COLOR);
+        expG.strokeWeight(EXP_BORDER_SIZE);
+        let camB = EXP_CAMERA_OUTLINE_BOUNDS;
+        expG.rect(camB[0], camB[1], camB[2], camB[3]);
 
         // Draw the lab table
         // TODO
@@ -904,47 +921,90 @@ class ExperimentCamera{
 
     /**
     Create a new default ExperimentCamera
+    basePos: A list of 2 values [x, y] of the initial position of the ExperimentCamera. Use null for [0, 0], default null
+    bounds: A list of 4 values, [far left x, upper y, width, height] for the maximum values this camera can take up.
+        Use null for no boundaries, Default null.
     */
-    constructor(){
+    constructor(basePos = null, bounds = null){
         this.pos = null;
-        this.speed = null;
+        this.basePos = basePos;
+        this.speed = [6, 6];
+        this.bounds = bounds;
         this.reset();
+        this.bound();
     }
 
     /**
     Bring this Camera to its default state
     */
     reset(){
-        this.pos = [0, 0];
-        this.speed = [6, 6];
+        let b = this.basePos;
+        this.pos = (b === null) ? [0, 0] : [b[0], b[1]];
+        this.bound();
     }
 
     /**
-    Move this ExperimentCamera to the left by the camera speed
+    If the camera's x value is outside the bounds on the x axis, snap it to the closest edge.
     */
-    left(){
-        this.pos[0] -= this.speed[0];
+    boundX(){
+        if(this.bounds === null) return;
+        if(this.pos[0] < this.bounds[0]) this.pos[0] = this.bounds[0];
+        let edge = this.bounds[0] + this.bounds[2];
+        if(this.pos[0] > edge) this.pos[0] = edge;
     }
 
     /**
-    Move this ExperimentCamera to the right by the camera speed
+    If the camera's y value is outside the bounds on the y axis, snap it to the closest edge.
     */
-    right(){
-        this.pos[0] += this.speed[0];
+    boundY(){
+        if(this.bounds === null) return;
+        if(this.pos[1] < this.bounds[1]) this.pos[1] = this.bounds[1];
+        let edge = this.bounds[1] + this.bounds[3];
+        if(this.pos[1] > edge) this.pos[1] = edge;
     }
 
     /**
-    Move this ExperimentCamera up by the camera speed
+    If the camera's x or y value is outside the bounds, snap it to the closest edge.
     */
-    up(){
-        this.pos[1] -= this.speed[1];
+    bound(){
+        this.boundX();
+        this.boundY();
     }
 
     /**
-    Move this ExperimentCamera down by the camera speed
+    Move this ExperimentCamera to the left by the given amount
+    x: The amount to move, default: the camera speed
     */
-    down(){
-        this.pos[1] += this.speed[1];
+    left(x = this.speed[0]){
+        this.pos[0] -= x;
+        this.boundX();
+    }
+
+    /**
+    Move this ExperimentCamera to the right by the given amount
+    x: The amount to move, default: the camera speed
+    */
+    right(x = this.speed[0]){
+        this.pos[0] += x;
+        this.boundX();
+    }
+
+    /**
+    Move this ExperimentCamera up by the given amount
+    y: The amount to move, default: the camera speed
+    */
+    up(y = this.speed[1]){
+        this.pos[1] -= y;
+        this.boundY();
+    }
+
+    /**
+    Move this ExperimentCamera down by the given amount
+    y: The amount to move, default: the camera speed
+    */
+    down(y = this.speed[1]){
+        this.pos[1] += y;
+        this.boundY();
     }
 
     /**
