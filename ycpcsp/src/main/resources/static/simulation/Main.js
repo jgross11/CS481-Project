@@ -1,22 +1,22 @@
 var mainExperiment = null;
 var mainExpController = null;
+var mainExpCanvas = null;
 
 // true to load data from the actual database, false to use test data defined by the return of getTestJSON()
-let LOAD_EXPERIMENT_FROM_SERVER = true;
+let LOAD_EXPERIMENT_FROM_SERVER = false;
 
 /*
 
 TODO:
     Add camera panning
-        Use x and y camera coordinates in the ExperimentController2D
-        Use P5 translate for graphics
-        Create global function to get x and y mouse positions
         Objects which will not be on the screen should not be rendered, i.e. a renderBounds() method
-        Objects in the experiment should be forced to stay within the experiment bounds
-    Add update function called by P5 on ExperimentController2D to draw all Equipment
+        Objects in the experiment should be forced to stay within the, experiment bounds, need to create
+    Test cases ExperimentCamera, ExperimentController2D.update
+    Add update method for each object
+    Change objects to use model/controller and view rather than model and controller/view?
+    Move code out of key and mouse input functions
     Allow users to select different actions for each piece of equipment
     Make a better way of Chemicals in Instructions to keep their stats so they don't change, or maybe have a reset?
-    Add update method for each object
     Allow equipment and chemicals to be disposed
     Make basic layout for Experiment
         Update clicking and dragging to change indexes for ExperimentBoxes when they are removed from the list
@@ -33,6 +33,12 @@ function setup(){
     // Create the canvas
     let canvas = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
     canvas.position(50, 50, "relative");
+
+    // Set the frame rate
+    frameRate(EXPERIMENT_FRAME_RATE);
+
+    // Create the experiment graphics
+    mainExpCanvas = createGraphics(CANVAS_WIDTH, CANVAS_HEIGHT);
 
     // First load image assets
     loadImages();
@@ -54,7 +60,12 @@ function initExperiment(data){
 P5.js function, called when screen is redrawn
 */
 function draw(){
-    if(mainExpController !== null) mainExpController.render();
+    if(mainExpController !== null){
+        mainExpController.update();
+
+        mainExpController.render(mainExpCanvas);
+        image(mainExpCanvas, 0, 0);
+    }
 }
 
 /**

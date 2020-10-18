@@ -100,6 +100,8 @@ class ExperimentController2D{
         var r = EXP_BOUNDS;
         this.experimentGraphics = graphics ? createGraphics(r[2], r[3]) : null;
 
+        this.camera = new ExperimentCamera();
+
         this.reset();
     }
 
@@ -249,13 +251,14 @@ class ExperimentController2D{
         this.selectedEquipment = null;
         this.instructionCounter = 0;
 
+        this.camera.reset();
+
         if(this.experiment === null) return;
         let eqs = this.experiment.equipment;
         for(var i = 0; i < eqs.length; i++){
             eqs[i].reset();
             this.equipmentBoxes.add(eqs[i]);
         }
-
         // Place all Chemicals in the Chemical list
         let chems = this.experiment.chemicals;
         for(var i = 0; i < chems.length; i++){
@@ -297,14 +300,14 @@ class ExperimentController2D{
     Get the x position of the mouse based on the position of the rendered Experiment
     */
     experimentMouseX(){
-        return mouseX - EXP_BOUNDS[0];
+        return mouseX - EXP_BOUNDS[0] - this.camera.pos[0];
     }
 
     /**
     Get the y position of the mouse based on the position of the rendered Experiment
     */
     experimentMouseY(){
-        return mouseY - EXP_BOUNDS[1];
+        return mouseY - EXP_BOUNDS[1] - this.camera.pos[1];
     }
 
     /**
@@ -469,11 +472,21 @@ class ExperimentController2D{
         }
     }
 
+    /**
+    Update the current state of the simulation by one frame
+    */
+    update(){
+        if(keyIsDown(LEFT_ARROW)) this.camera.left();
+        if(keyIsDown(RIGHT_ARROW)) this.camera.right();
+        if(keyIsDown(UP_ARROW)) this.camera.up();
+        if(keyIsDown(DOWN_ARROW)) this.camera.down();
+    }
 
     /**
-    Draw the full Experiment to the P5 graphics
+    Draw the full Experiment
+    canvasGraphics: The P5 canvas to draw
     */
-    render(){
+    render(canvasGraphics){
         if(this.graphics === null) return;
 
         // Convenience variables for rendering
@@ -489,7 +502,11 @@ class ExperimentController2D{
         g.background(120);
 
         // Draw the area containing the interactable portion of the Experiment
+        expG.push();
         expG.background(230);
+
+        // Translate the graphics to the camera
+        this.camera.translateGraphics(expG);
 
         // Draw the lab table
         // TODO
@@ -514,23 +531,6 @@ class ExperimentController2D{
             expG.rect(sel.x(), sel.y(), sel.width(), sel.height());
         }
 
-        // TODO remove, only here for testing purposes
-        // Draw instructions
-        expG.fill(color(0, 0, 0));
-        expG.noStroke();
-        expG.textSize(18);
-        var y = 370;
-        let x = 650;
-        expG.text("Left click a beaker to move it", x, y += 20);
-        expG.text("Right click a beaker to select it", x, y += 20);
-        expG.text("Press 1, 2, 3, 4, 5 to add 1, 5, 10, 20, or 25 units to selected beaker", x, y += 20);
-        expG.text("Press ESC to empty the selected beaker", x, y += 20);
-        expG.text("Click an unselected beaker to combine the chemical in the selected beaker", x, y += 20);
-        expG.text("Press I to run the next instruction", x, y += 20);
-        expG.text("Press R to reset the simulation", x, y += 20);
-        expG.text("Press C to view Chemical tab, then click a chemical to select", x, y += 20);
-        expG.text("Press V to view Equipment tab, then click and drag to add equipment", x, y += 20);
-
         // Draw options button
         // TODO
 
@@ -545,6 +545,9 @@ class ExperimentController2D{
         g.rect(r[0], r[1], r[2], r[3]);
         g.image(expG, r[0], r[1]);
 
+        // reset the state of the translate graphics
+        expG.pop();
+
         // Draw the title and creator
         g.fill(color(0, 0, 0));
         g.noStroke();
@@ -558,8 +561,25 @@ class ExperimentController2D{
         // Draw the equipment to be placed in the Experiment
         if(this.isDisplayEquipment()) this.equipmentBoxes.drawSelected(g);
 
+        // TODO remove, only here for testing purposes
+        // Draw instructions
+        this.graphics.fill(color(0, 0, 0));
+        this.graphics.noStroke();
+        this.graphics.textSize(18);
+        var y = 420;
+        let x = 650;
+        this.graphics.text("Left click a beaker to move it", x, y += 20);
+        this.graphics.text("Right click a beaker to select it", x, y += 20);
+        this.graphics.text("Press 1, 2, 3, 4, 5 to add 1, 5, 10, 20, or 25 units to selected beaker", x, y += 20);
+        this.graphics.text("Press ESC to empty the selected beaker", x, y += 20);
+        this.graphics.text("Click an unselected beaker to combine the chemical in the selected beaker", x, y += 20);
+        this.graphics.text("Press I to run the next instruction", x, y += 20);
+        this.graphics.text("Press R to reset the simulation", x, y += 20);
+        this.graphics.text("Press C to view Chemical tab, then click a chemical to select", x, y += 20);
+        this.graphics.text("Press V to view Equipment tab, then click and drag to add equipment", x, y += 20);
+
         // Draw the final graphics image to the canvas
-        image(g, 0, 0);
+        canvasGraphics.image(g, 0, 0);
     }
 
 }
@@ -874,4 +894,65 @@ class ChemicalBox extends DisplayBox{
         this.obj.drawRect(0, 0, 1, EXP_BOX_SIZE, EXP_BOX_SIZE, 0, this.graphics)
         return this.graphics;
     }
+}
+
+
+/**
+A class used by ExperimentController2D to move the canvas around
+*/
+class ExperimentCamera{
+
+    /**
+    Create a new default ExperimentCamera
+    */
+    constructor(){
+        this.pos = null;
+        this.speed = null;
+        this.reset();
+    }
+
+    /**
+    Bring this Camera to its default state
+    */
+    reset(){
+        this.pos = [0, 0];
+        this.speed = [6, 6];
+    }
+
+    /**
+    Move this ExperimentCamera to the left by the camera speed
+    */
+    left(){
+        this.pos[0] -= this.speed[0];
+    }
+
+    /**
+    Move this ExperimentCamera to the right by the camera speed
+    */
+    right(){
+        this.pos[0] += this.speed[0];
+    }
+
+    /**
+    Move this ExperimentCamera up by the camera speed
+    */
+    up(){
+        this.pos[1] -= this.speed[1];
+    }
+
+    /**
+    Move this ExperimentCamera down by the camera speed
+    */
+    down(){
+        this.pos[1] += this.speed[1];
+    }
+
+    /**
+    Translate the given P5 graphics by the position of this ExperimentCamera
+    g: The P5 graphics
+    */
+    translateGraphics(g){
+        g.translate(this.pos[0], this.pos[1]);
+    }
+
 }

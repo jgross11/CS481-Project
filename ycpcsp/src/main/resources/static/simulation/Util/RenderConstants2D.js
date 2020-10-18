@@ -1,5 +1,8 @@
 // Constants for the P5 canvas
 
+// The frame rate of the Experiment simulator
+let EXPERIMENT_FRAME_RATE = 60;
+
 // The width of the canvas being displayed
 let CANVAS_WIDTH = 1280;
 // The height of the canvas being displayed
