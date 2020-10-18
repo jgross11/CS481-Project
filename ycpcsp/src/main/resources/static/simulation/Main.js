@@ -8,9 +8,9 @@ let LOAD_EXPERIMENT_FROM_SERVER = false;
 /*
 
 TODO:
-    Add camera panning
-        Objects which will not be on the screen should not be rendered, i.e. a renderBounds() method
-    Test cases ExperimentCamera, ExperimentController2D.update, updateMovingEquipmentPos
+    Test cases ExperimentCamera, ExperimentController2D.update, updateMovingEquipmentPos, experimentRenderBounds
+        Collision.rectInRect2D, inBetween
+        Equipment.shouldRender, getCenter, keepInBounds
         remove P5.js import?
     Add update method for each object
     Change objects to use model/controller and view rather than model and controller/view?

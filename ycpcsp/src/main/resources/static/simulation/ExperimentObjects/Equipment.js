@@ -124,7 +124,37 @@ class EquipmentController2D extends ExperimentObjectController2D{
     x: The y coordinate for the new center
     */
     setCenter(x, y){
-        this.equipment.setPosition([x - this.width() / 2, y - this.height() / 2]);
+        this.equipment.setPosition([x - this.width() * .5, y - this.height() * .5]);
+    }
+
+    /**
+    Get the center point of this Controller's Equipment
+    returns: The center point as a list [x, y]
+    */
+    getCenter(){
+        return [this.x() + this.width() * .5, this.y() + this.height() * .5];
+    }
+
+    /**
+    If more than half of this Controller's Equipment's bounds is outside of the given bounds, snap it to the nearest edge
+    bounds: A rectangular bounds as a list [far left x, upper y, width, height]
+    */
+    keepInBounds(bounds){
+        let x = bounds[0];
+        let y = bounds[1];
+        let w = bounds[2];
+        let h = bounds[3];
+        let c = this.getCenter();
+        var cx = c[0];
+        var cy = c[1];
+
+        if(cx < x) cx = x;
+        else if(cx > x + w) cx = x + w;
+
+        if(cy < y) cy = y;
+        else if(cy > y + h) cy = y + h;
+
+        this.setCenter(cx, cy);
     }
 
     /**
@@ -167,5 +197,14 @@ class EquipmentController2D extends ExperimentObjectController2D{
     */
     draw(graphics){
         this.drawSprite(graphics);
+    }
+
+    /**
+    Determine if any part of this Controller's Equipment, when rendered, will appear in the given bounds
+    bounds: The bounds to use, a rectangle [far left x, upper y, width, height]
+    returns: true if This Controller's Equipment will be rendered, false otherwise
+    */
+    shouldRender(bounds){
+        return rectInRect2D(bounds, this.toRect());
     }
 }

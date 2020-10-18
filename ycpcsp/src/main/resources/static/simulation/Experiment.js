@@ -138,11 +138,13 @@ class ExperimentController2D{
     Update the position of the object being moved by the mouse
     */
     updateMovingEquipmentPos(){
-        if(this.movingEquipment !== null){
+        let eq = this.movingEquipment;
+        if(eq !== null){
             var pos = this.experimentMousePos();
             pos[0] += this.movingEquipAnchor[0];
             pos[1] += this.movingEquipAnchor[1];
-            this.movingEquipment.equipment.setPosition(pos);
+            eq.equipment.setPosition(pos);
+            eq.keepInBounds(EXP_CAMERA_OUTLINE_BOUNDS);
         }
     }
 
@@ -312,14 +314,14 @@ class ExperimentController2D{
     Get the x position of the mouse based on the position of the rendered Experiment
     */
     experimentMouseX(){
-        return mouseX - EXP_BOUNDS[0] - this.camera.pos[0];
+        return this.camera.moveX(mouseX - EXP_BOUNDS[0]);
     }
 
     /**
     Get the y position of the mouse based on the position of the rendered Experiment
     */
     experimentMouseY(){
-        return mouseY - EXP_BOUNDS[1] - this.camera.pos[1];
+        return this.camera.moveY(mouseY - EXP_BOUNDS[1]);
     }
 
     /**
@@ -327,6 +329,14 @@ class ExperimentController2D{
     */
     experimentMousePos(){
         return [this.experimentMouseX(), this.experimentMouseY()];
+    }
+
+    /**
+    Get the rectangular bounds of the region of the Experiment which will be rendered, based on camera position
+    returns: The bounds as a list [far left x, upper y, width, height]
+    */
+    experimentRenderBounds(){
+        return [this.camera.pos[0], this.camera.pos[1], EXP_BOUNDS[2], EXP_BOUNDS[3]];
     }
 
     /**
@@ -533,8 +543,9 @@ class ExperimentController2D{
 
         // Draw objects on the lab table
         // Draw all not selected equipment
+        let cameraBounds = this.experimentRenderBounds();
         for(var i = 0; i < placed.length; i++){
-            if(placed[i] !== sel){
+            if(placed[i] !== sel && placed[i].shouldRender(cameraBounds)){
                 placed[i].draw(expG);
             }
         }
@@ -583,7 +594,7 @@ class ExperimentController2D{
         this.graphics.fill(color(0, 0, 0));
         this.graphics.noStroke();
         this.graphics.textSize(18);
-        var y = 420;
+        var y = 490;
         let x = 650;
         this.graphics.text("Left click a beaker to move it", x, y += 20);
         this.graphics.text("Right click a beaker to select it", x, y += 20);
@@ -594,6 +605,7 @@ class ExperimentController2D{
         this.graphics.text("Press R to reset the simulation", x, y += 20);
         this.graphics.text("Press C to view Chemical tab, then click a chemical to select", x, y += 20);
         this.graphics.text("Press V to view Equipment tab, then click and drag to add equipment", x, y += 20);
+        this.graphics.text("Use arrow keys to move camera", x, y += 20);
 
         // Draw the final graphics image to the canvas
         canvasGraphics.image(g, 0, 0);
@@ -944,6 +956,24 @@ class ExperimentCamera{
     }
 
     /**
+    Get the x coordinate as translated by this ExperimentCamera
+    x: The x coordinate to translate
+    returns: The translated x coordinate
+    */
+    moveX(x){
+        return x + this.pos[0];
+    }
+
+    /**
+    Get the y coordinate as translated by this ExperimentCamera
+    y: The y coordinate to translate
+    returns: The translated y coordinate
+    */
+    moveY(y){
+        return y + this.pos[1];
+    }
+
+    /**
     If the camera's x value is outside the bounds on the x axis, snap it to the closest edge.
     */
     boundX(){
@@ -976,7 +1006,7 @@ class ExperimentCamera{
     x: The amount to move, default: the camera speed
     */
     left(x = this.speed[0]){
-        this.pos[0] -= x;
+        this.pos[0] += x;
         this.boundX();
     }
 
@@ -985,7 +1015,7 @@ class ExperimentCamera{
     x: The amount to move, default: the camera speed
     */
     right(x = this.speed[0]){
-        this.pos[0] += x;
+        this.pos[0] -= x;
         this.boundX();
     }
 
@@ -994,7 +1024,7 @@ class ExperimentCamera{
     y: The amount to move, default: the camera speed
     */
     up(y = this.speed[1]){
-        this.pos[1] -= y;
+        this.pos[1] += y;
         this.boundY();
     }
 
@@ -1003,7 +1033,7 @@ class ExperimentCamera{
     y: The amount to move, default: the camera speed
     */
     down(y = this.speed[1]){
-        this.pos[1] += y;
+        this.pos[1] -= y;
         this.boundY();
     }
 
@@ -1012,7 +1042,7 @@ class ExperimentCamera{
     g: The P5 graphics
     */
     translateGraphics(g){
-        g.translate(this.pos[0], this.pos[1]);
+        g.translate(-this.pos[0], -this.pos[1]);
     }
 
 }

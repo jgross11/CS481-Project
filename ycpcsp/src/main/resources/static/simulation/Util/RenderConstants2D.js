@@ -38,8 +38,8 @@ let EXP_CAMERA_BOUNDS = [
 ];
 // A rectangular bounds representing the space which is visible for the experiment, [x, y, width, height]
 let EXP_CAMERA_OUTLINE_BOUNDS = [
-    EXP_CAMERA_BOUNDS[0] - EXP_BOUNDS[2] + EXP_BOUNDS_X_OFFSET,
-    EXP_CAMERA_BOUNDS[1] - EXP_BOUNDS[3] + EXP_BOUNDS_Y_OFFSET,
+    EXP_CAMERA_BOUNDS[0],
+    EXP_CAMERA_BOUNDS[1],
     EXP_BOUNDS[2] + EXP_CAMERA_BOUNDS[2],
     EXP_BOUNDS[3] + EXP_CAMERA_BOUNDS[3]
 ];
