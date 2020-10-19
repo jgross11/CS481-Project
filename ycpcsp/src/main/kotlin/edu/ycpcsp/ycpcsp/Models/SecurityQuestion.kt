@@ -10,9 +10,7 @@ data class SecurityQuestion(var questionIndex : Int, var answer : String) {
 
 
     // 'null' constructor
-    constructor() : this(-1, ""){
-        answer = ""
-    }
+    constructor() : this(-1, ""){}
 
     // if a valid question index is given, fetch and store the question
     init{

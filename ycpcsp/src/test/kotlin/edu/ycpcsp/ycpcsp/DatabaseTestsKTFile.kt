@@ -3,17 +3,22 @@ package edu.ycpcsp.ycpcsp
 
 import edu.ycpcsp.ycpcsp.DataBase.*
 import edu.ycpcsp.ycpcsp.Models.*
+import edu.ycpcsp.ycpcsp.PostDataClasses.LoginFormData
+import edu.ycpcsp.ycpcsp.PostDataClasses.UserAndExperiment
+
+var email = "test@test.com"
+var userPassword = "1234"
 
 fun main(){
     //TODO this section of code tests VerifyUser.kt
-    var email = "test@test.com"
-    var userPassword = "1234"
+    var userLogIn = LoginFormData(email, userPassword)
+
     println("=============================Begin VerifyUser Test=============================")
-   /* if(VerifyUser(email, userPassword)){
+    if(VerifyUser(userLogIn)){
         println("Test VerifyUser is working")
     } else{
         println("Error VerifyUser does not work")
-    }*/
+    }
     println("=============================End VerifyUser Test=============================")
 
     //TODO this section of code tests LoadUser
@@ -58,7 +63,7 @@ fun main(){
     if(verifySecurityQuestion(email,secQuestion1)){
         println("Security Question 1's answer was the correct")
     } else{
-        println("Security Quesition 1's answer was incorrect")
+        println("Security Question 1's answer was incorrect")
     }
     //This Should run an incorrect test
     if(verifySecurityQuestion(email,secQuestion2)){
@@ -67,5 +72,15 @@ fun main(){
         println("Security Question 2's answer was incorrect")
     }
     println("=============================End Security Question Answer Test=============================")
+
+//    println("=============================Begin Create Experiment Test=============================")
+//    var newExperiment = Experiment("Cool Experiment", "Yeah")
+//    originalUser= LoadUser(email)
+//    var userAndExp = UserAndExperiment(originalUser, newExperiment)
+//   CreateExperiment(userAndExp)
+//    //TODO Delete Experiment & Delete all of the steps too
+//
+//    println("=============================End Create Experiment Test=============================")
+
 
 }

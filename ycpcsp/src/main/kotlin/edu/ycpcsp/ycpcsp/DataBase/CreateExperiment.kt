@@ -7,8 +7,8 @@ import edu.ycpcsp.ycpcsp.Models.*
 import edu.ycpcsp.ycpcsp.PostDataClasses.UserAndExperiment
 import java.sql.Statement
 
-
 fun CreateExperiment(userAndExperiment: UserAndExperiment): Boolean {
+
     val serverCredentials = serverCredential()
     val username = serverCredentials?.get(0)
     val password = serverCredentials?.get(1)
@@ -17,6 +17,7 @@ fun CreateExperiment(userAndExperiment: UserAndExperiment): Boolean {
     val connectionProps = Properties()
     connectionProps["user"] = username
     connectionProps["password"] = password
+    edu.ycpcsp.ycpcsp.DataBase.password
     connectionProps["useSSL"] = "false"
 
     try {

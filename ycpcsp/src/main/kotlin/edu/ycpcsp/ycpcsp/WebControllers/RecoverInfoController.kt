@@ -30,7 +30,6 @@ class RecoverInfoController {
         // TODO otherwise, return a 'null' question
         var secQue = SecurityQuestion()
 
-
         return secQue
     }
 

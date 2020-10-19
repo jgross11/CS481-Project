@@ -11,8 +11,6 @@ fun ModifyUser(user: User): Boolean {
     val password = serverCredentials?.get(1)
     val url = serverCredentials?.get(2)
 
-    val email = user.email
-
     val connectionProps = Properties()
     connectionProps["user"] = username
     connectionProps["password"] = password

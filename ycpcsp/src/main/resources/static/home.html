@@ -135,6 +135,7 @@
 <input value="Existing Simulation" type="button" id="loadSimulationButton" name="loadSimulationButton" onclick="loadSimulation(21)"><br>
 
 
+
 </body>
 
 <script>
@@ -148,12 +149,18 @@
         console.log(user);
         // logged in
         if(user != null){
+            document.write("<input value=\"Log out\" type=\"button\" id=\"logoutButton\" name=\"logoutButton\" onclick=\"logout()\"><br>");
             document.write("Logged in as: " + user.lastName + ", " + user.firstName);
         }
         // not logged in
         else{
             document.write("Not currently signed in");
         }
+    }
+
+    function logout(){
+        sessionStorage.removeItem("user");
+        window.location.href = "/";
     }
 
     function submitLoginInformation(){
