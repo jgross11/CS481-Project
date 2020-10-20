@@ -943,7 +943,6 @@ class ExperimentCamera{
         this.speed = [6, 6];
         this.bounds = bounds;
         this.reset();
-        this.bound();
     }
 
     /**
@@ -953,6 +952,39 @@ class ExperimentCamera{
         let b = this.basePos;
         this.pos = (b === null) ? [0, 0] : [b[0], b[1]];
         this.bound();
+    }
+
+    /**
+    Set the position of this ExperimentCamera, also keeps position in bounds
+    pos: The new position, a list of 2 values [x, y]
+    */
+    setPos(pos){
+        this.pos = pos;
+        this.bound();
+    }
+
+    /**
+    Set the default position of this ExperimentCamera
+    pos: The new position, a list of 2 values [x, y]
+    */
+    setBasePos(pos){
+        this.basePos = pos;
+    }
+
+    /**
+    Set the speed of this ExperimentCamera for movement
+    speed: The new speed, a list of 2 values [x speed, y speed]
+    */
+    setSpeed(speed){
+        this.speed = speed;
+    }
+
+    /**
+    Set the bounds of this ExperimentCamera, where the camera can exist. Set to null to not use bounds.
+    bounds: The new bounds, a list of 4 values [far left x, upper y, width, height]
+    */
+    setBounds(bounds){
+        this.bounds = bounds;
     }
 
     /**

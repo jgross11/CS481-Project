@@ -24,6 +24,10 @@ var dBox1;
 var dBox2;
 var cBox;
 
+var camera1;
+var camera2;
+var camera3;
+
 function createGraphics(){}
 
 QUnit.module("ExperimentController2D", {
@@ -77,6 +81,10 @@ QUnit.module("ExperimentController2D", {
         dBox2 = new DisplayBox(null, 4);
 
         cBox = new ChemicalBox(chem, 5);
+
+        camera1 = new ExperimentCamera(null, null);
+        camera2 = new ExperimentCamera(null, [10, 20, 1000, 2000]);
+        camera3 = new ExperimentCamera([30, 50], [0, 0, 100, 100]);
     }
 });
 
@@ -109,6 +117,8 @@ QUnit.test('setSelectedEquipment:', function(assert){
 QUnit.test('setMovingEquipment:', function(assert){
     controller.movingEquipAnchor = null;
     controller.setMovingEquipment(null);
+    controller.camera.setBounds(null);
+    controller.camera.setPos([0, 0]);
     assert.equal(controller.movingEquipment, null,
         "Moving Equipment in Controller should be null.");
     assert.equal(controller.movingEquipAnchor, null,
@@ -129,6 +139,22 @@ QUnit.test('setMovingEquipment:', function(assert){
         "Moving Equipment in Controller should be null.");
     assert.deepEqual(controller.movingEquipAnchor, [60 + EXP_BOUNDS[0], 80 + EXP_BOUNDS[1]],
         "Moving Equipment anchor in Controller should have been set based on the mouse position.");
+});
+
+QUnit.test('updateMovingEquipmentPos:', function(assert){
+    controller.movingEquipment = null;
+    controller.updateMovingEquipmentPos();
+    assert.deepEqual(controller.movingEquipment, null, "Moving Equipment should still be null.");
+
+    mouseX = 1;
+    mouseY = 2;
+    controller.camera.setBounds(null);
+    controller.camera.setPos([10, 200]);
+    controller.movingEquipment = beakerControl1;
+    controller.movingEquipAnchor = [3, 4];
+    controller.updateMovingEquipmentPos();
+    assert.deepEqual(controller.movingEquipment.equipment.position, [14 - EXP_BOUNDS_X_OFFSET, 206 - EXP_BOUNDS_Y_OFFSET],
+        "Should correctly update position as if mouse moved.");
 });
 
 QUnit.test('setInstructionCounter:', function(assert){
@@ -401,11 +427,15 @@ QUnit.test('findEquipmentByInstanceID:', function(assert){
 
 QUnit.test('experimentMouseX:', function(assert){
     mouseX = 100;
+    controller.camera.setBounds(null);
+    controller.camera.setPos([0, 0]);
     assert.equal(controller.experimentMouseX(), 100 - EXP_BOUNDS[0], "Experiment mouse position for X should translate left by the x coordinate of the experiment.");
 });
 
 QUnit.test('experimentMouseY:', function(assert){
     mouseY = 300;
+    controller.camera.setBounds(null);
+    controller.camera.setPos([0, 0]);
     assert.equal(controller.experimentMouseY(), 300 - EXP_BOUNDS[1], "Experiment mouse position for X should translate left by the x coordinate of the experiment.");
 });
 
@@ -415,8 +445,17 @@ QUnit.test('experimentMousePos:', function(assert){
     assert.equal(pos[1], controller.experimentMouseY(), "Index 1 of pos should be the y mouse coordinate.");
 });
 
+QUnit.test('experimentRenderBounds:', function(assert){
+    controller.camera.setBounds(null);
+    controller.camera.setPos([20, 30]);
+    assert.deepEqual(controller.experimentRenderBounds(), [20, 30, EXP_BOUNDS[2], EXP_BOUNDS[3]],
+        "Bounds should be based on the camera position and size constants for experiment size");
+});
+
 QUnit.test('selectedEquipFunction:', function(assert){
     var result;
+    controller.camera.setBounds(null);
+    controller.camera.setPos([0, 0]);
     controller.addEquipment(beakerControl1, true);
     controller.addEquipment(beakerControl2, true);
     beaker1.setContents(chem);
@@ -475,8 +514,11 @@ QUnit.todo('keyPress:', function(assert){
     assert.true(false);
 });
 
+QUnit.todo('update:', function(assert){
+    assert.true(false);
+});
+
 QUnit.todo('render:', function(assert){
-    controller.render();
     assert.true(false);
 });
 
@@ -708,4 +750,175 @@ QUnit.test('ChemicalBox constructor:', function(assert){
 
 QUnit.todo('ChemicalBox getImage:', function(assert){
     assert.false(true);
+});
+
+
+QUnit.test('ExperimentCamera constructor:', function(assert){
+    assert.deepEqual(camera1.pos, [0, 0], "Position should default to [0, 0]");
+    assert.deepEqual(camera1.basePos, null, "Base position should be null");
+    assert.deepEqual(camera1.speed, [6, 6], "Speed should be [6, 6]");
+    assert.deepEqual(camera1.bounds, null, "Bounds should be null");
+
+    assert.deepEqual(camera2.pos, [10, 20], "Position should snap to [0, 0]");
+    assert.deepEqual(camera2.basePos, null, "Base position should be null");
+    assert.deepEqual(camera2.speed, [6, 6], "Speed should be [6, 6]");
+    assert.deepEqual(camera2.bounds, [10, 20, 1000, 2000], "Bounds should be [10, 20, 1000, 2000]");
+
+    assert.deepEqual(camera3.pos, [30, 50], "Position should default to [30, 50]");
+    assert.deepEqual(camera3.basePos, [30, 50], "Base position should be [30, 50]");
+    assert.deepEqual(camera3.speed, [6, 6], "Speed should be [6, 6]");
+    assert.deepEqual(camera3.bounds, [0, 0, 100, 100], "Bounds should be [10, 20, 1000, 2000]");
+});
+
+QUnit.test('ExperimentCamera reset:', function(assert){
+    camera1.reset();
+    assert.deepEqual(camera1.pos, [0, 0], "Position should default to [0, 0]");
+    assert.deepEqual(camera1.basePos, null, "Base position should be null");
+    assert.deepEqual(camera1.bounds, null, "Bounds should be null");
+
+    camera2.reset();
+    assert.deepEqual(camera2.pos, [10, 20], "Position should snap to [0, 0]");
+    assert.deepEqual(camera2.basePos, null, "Base position should be null");
+    assert.deepEqual(camera2.bounds, [10, 20, 1000, 2000], "Bounds should be [10, 20, 1000, 2000]");
+
+    camera3.reset();
+    assert.deepEqual(camera3.pos, [30, 50], "Position should default to [30, 50]");
+    assert.deepEqual(camera3.basePos, [30, 50], "Base position should be [30, 50]");
+    assert.deepEqual(camera3.bounds, [0, 0, 100, 100], "Bounds should be [10, 20, 1000, 2000]");
+
+});
+
+QUnit.test('ExperimentCamera setPos:', function(assert){
+    camera3.setPos([20, 60]);
+    assert.deepEqual(camera3.pos, [20, 60], "New position should be [20, 60]");
+
+    camera3.setPos([-20, 60]);
+    assert.deepEqual(camera3.pos, [0, 60], "New position should snap to [0, 60]");
+
+    camera3.setPos([40, 120]);
+    assert.deepEqual(camera3.pos, [40, 100], "New position should snap to [40, 100]");
+});
+
+QUnit.test('ExperimentCamera setBasePos:', function(assert){
+    camera1.setBasePos([56, 49]);
+    assert.deepEqual(camera1.basePos, [56, 49], "New base pos should be set to [56, 49]");
+});
+
+QUnit.test('ExperimentCamera setSpeed:', function(assert){
+    camera1.setSpeed([2, 4]);
+    assert.deepEqual(camera1.speed, [2, 4], "New speed should be set to [2, 4]");
+});
+
+QUnit.test('ExperimentCamera setBounds:', function(assert){
+    camera1.setBounds([2, 4, 100, 150]);
+    assert.deepEqual(camera1.bounds, [2, 4, 100, 150], "New bounds should be set to [2, 4, 100, 150]");
+});
+
+QUnit.test('ExperimentCamera moveX:', function(assert){
+    camera1.setPos([100, 60]);
+    assert.equal(camera1.moveX(30), 130, "New position should be increased by 100");
+});
+
+QUnit.test('ExperimentCamera moveY:', function(assert){
+    camera1.setPos([100, 60]);
+    assert.equal(camera1.moveY(-20), 40, "New position should be decreased by 20");
+});
+
+QUnit.test('ExperimentCamera boundX:', function(assert){
+    camera2.pos[0] = 40;
+    camera2.boundX();
+    assert.equal(camera2.pos[0], 40, "Position should not change");
+
+    camera2.pos[0] = 10;
+    camera2.boundX();
+    assert.equal(camera2.pos[0], 10, "Position should not change");
+
+    camera2.pos[0] = 0;
+    camera2.boundX();
+    assert.equal(camera2.pos[0], 10, "Position should snap to 10");
+
+    camera2.pos[0] = 1010;
+    camera2.boundX();
+    assert.equal(camera2.pos[0], 1010, "Position should not change");
+
+    camera2.pos[0] = 1011;
+    camera2.boundX();
+    assert.equal(camera2.pos[0], 1010, "Position should snap to 1010");
+});
+
+QUnit.test('ExperimentCamera boundY:', function(assert){
+    camera2.pos[1] = 40;
+    camera2.boundY();
+    assert.equal(camera2.pos[1], 40, "Position should not change");
+
+    camera2.pos[1] = 20;
+    camera2.boundY();
+    assert.equal(camera2.pos[1], 20, "Position should not change");
+
+    camera2.pos[1] = 0;
+    camera2.boundY();
+    assert.equal(camera2.pos[1], 20, "Position should snap to 20");
+
+    camera2.pos[1] = 2020;
+    camera2.boundY();
+    assert.equal(camera2.pos[1], 2020, "Position should not change");
+
+    camera2.pos[1] = 2021;
+    camera2.boundY();
+    assert.equal(camera2.pos[1], 2020, "Position should snap to 2020");
+});
+
+QUnit.test('ExperimentCamera bound:', function(assert){
+    camera2.pos[0] = 1011;
+    camera2.pos[1] = 0;
+    camera2.bound();
+    assert.deepEqual(camera2.pos, [1010, 20], "Should keep position in bounds");
+});
+
+QUnit.test('ExperimentCamera left:', function(assert){
+    camera1.setPos([10, 0]);
+    camera1.setSpeed([4, 4]);
+
+    camera1.left();
+    assert.equal(camera1.pos[0], 14, "Should have moved to the left by the internal speed");
+
+    camera1.left(5);
+    assert.equal(camera1.pos[0], 19, "Should have moved to the left by the given speed");
+});
+
+QUnit.test('ExperimentCamera right:', function(assert){
+    camera1.setPos([10, 0]);
+    camera1.setSpeed([4, 4]);
+
+    camera1.right();
+    assert.equal(camera1.pos[0], 6, "Should have moved to the right by the internal speed");
+
+    camera1.right(5);
+    assert.equal(camera1.pos[0], 1, "Should have moved to the right by the given speed");
+});
+
+QUnit.test('ExperimentCamera up:', function(assert){
+    camera1.setPos([0, 10]);
+    camera1.setSpeed([3, 3]);
+
+    camera1.up();
+    assert.equal(camera1.pos[1], 13, "Should have moved up by the internal speed");
+
+    camera1.up(4);
+    assert.equal(camera1.pos[1], 17, "Should have moved up by the given speed");
+});
+
+QUnit.test('ExperimentCamera down:', function(assert){
+    camera1.setPos([0, 10]);
+    camera1.setSpeed([3, 3]);
+
+    camera1.down();
+    assert.equal(camera1.pos[1], 7, "Should have moved down by the internal speed");
+
+    camera1.down(4);
+    assert.equal(camera1.pos[1], 3, "Should have moved down by the given speed");
+});
+
+QUnit.todo('ExperimentCamera translateGraphics:', function(assert){
+    assert.true(false);
 });

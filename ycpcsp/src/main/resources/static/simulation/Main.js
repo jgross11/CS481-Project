@@ -3,18 +3,14 @@ var mainExpController = null;
 var mainExpCanvas = null;
 
 // true to load data from the actual database, false to use test data defined by the return of getTestJSON()
-let LOAD_EXPERIMENT_FROM_SERVER = false;
+let LOAD_EXPERIMENT_FROM_SERVER = true;
 
 /*
 
 TODO:
-    Test cases ExperimentCamera, ExperimentController2D.update, updateMovingEquipmentPos, experimentRenderBounds
-        Collision.rectInRect2D, inBetween
-        Equipment.shouldRender, getCenter, keepInBounds
-        remove P5.js import?
     Add update method for each object
-    Change objects to use model/controller and view rather than model and controller/view?
     Move code out of key and mouse input functions
+    Change objects to use model/controller and view rather than model and controller/view?
     Allow users to select different actions for each piece of equipment
     Make a better way of Chemicals in Instructions to keep their stats so they don't change, or maybe have a reset?
     Allow equipment and chemicals to be disposed
