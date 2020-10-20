@@ -107,6 +107,11 @@ QUnit.test('reset:', function(assert){
     assert.throws(control5.reset, "A generic EquipmentController2D object should throw an error on unimplemented reset");
 });
 
+QUnit.test('update:', function(assert){
+    control1.update();
+    assert.expect(0);
+});
+
 QUnit.todo('drawSprite:', function(assert){
     assert.true(false);
 });

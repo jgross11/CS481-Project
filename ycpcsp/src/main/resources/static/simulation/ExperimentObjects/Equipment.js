@@ -183,6 +183,12 @@ class EquipmentController2D extends ExperimentObjectController2D{
     }
 
     /**
+    Update the state of this Controller's Equipment by one frame in the simulation.
+    Override this method to have events happen in sub equipment.
+    */
+    update(){}
+
+    /**
     Draw this Controller's Equipment to the given graphics in it's current position as a generic sprite.
     graphics: The P5 graphics to use
     */

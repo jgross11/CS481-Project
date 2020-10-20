@@ -222,3 +222,8 @@ QUnit.test('reset:', function(assert){
     controller.reset();
     assert.deepEqual(controller.equipment.contents, null, "After resetting, controller's container should have null.");
 });
+
+QUnit.test('update:', function(assert){
+    controller.update();
+    assert.expect(0);
+});

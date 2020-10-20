@@ -493,6 +493,13 @@ class ExperimentController2D{
     Update the current state of the simulation by one frame
     */
     update(){
+        // Update all Equipment currently in the simulation
+        let eqs = this.placedEquipment;
+        eqs.forEach(function(eq){
+            eq.update();
+        });
+
+        // Move camera based on which buttons are held down
         if(keyIsDown(LEFT_ARROW)) this.camera.left();
         if(keyIsDown(RIGHT_ARROW)) this.camera.right();
         if(keyIsDown(UP_ARROW)) this.camera.up();

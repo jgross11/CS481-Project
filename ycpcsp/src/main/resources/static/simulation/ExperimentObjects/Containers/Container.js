@@ -241,4 +241,12 @@ class ContainerController2D extends EquipmentController2D{
         this.emptyOut();
     }
 
+    /**
+    Update the state of this Controller's Container by one frame in the simulation.
+    Override this method to have events happen in sub containers.
+    */
+    update(){
+        super.update();
+    }
+
 }

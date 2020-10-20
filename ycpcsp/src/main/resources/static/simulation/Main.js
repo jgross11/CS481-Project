@@ -8,7 +8,7 @@ let LOAD_EXPERIMENT_FROM_SERVER = true;
 /*
 
 TODO:
-    Add update method for each object
+    Add constants for which buttons refer to which controls
     Move code out of key and mouse input functions
     Change objects to use model/controller and view rather than model and controller/view?
     Allow users to select different actions for each piece of equipment
