@@ -64,7 +64,6 @@ class Experiment{
 
 }
 
-
 /**
 A Controller used to control an Experiment in a 2D space
 */
@@ -119,6 +118,40 @@ class ExperimentController2D{
     */
     setSelectedEquipment(selectControl){
         this.selectedEquipment = selectControl;
+    }
+
+    /**
+    Attempt to select a piece of Equipment based on the mouse position
+    */
+    selectEquipment(){
+        this.setSelectedEquipment(this.findEquipmentByPosition(expMouse));
+    }
+
+    /**
+    Call to activate a specific function on the selected EquipmentController
+    id: The function ID to use for the selected EquipmentController
+    param: Optional, the ExperimentObject to send with the function
+    returns: true if the function is activated, false otherwise
+    */
+    selectedEquipFunction(id, param = null){
+        let select = this.selectedEquipment;
+        if(select === null || select === undefined) return false;
+        let func = select.idToFunc(id);
+        if(func === null || func === undefined) return false;
+        if(param === null) param = this.findEquipmentByPosition(this.experimentMousePos(), select);
+        if(param === null || param === undefined) return false;
+        func.bind(select, param)();
+        return true;
+    }
+
+    /**
+    Reset the selected Equipment to its default state and deselect it
+    */
+    clearSelectedEquipment(){
+        let eq = this.selectedEquipment;
+        if(eq === null) return;
+        eq.reset();
+        this.setSelectedEquipment(null);
     }
 
     /**
@@ -180,11 +213,26 @@ class ExperimentController2D{
     }
 
     /**
+    Set the DisplayBoxList to EquipmentBoxList instead of the ChemicalBoxList
+    */
+    displayEquipmentBoxes(){
+        this.displayedBoxList = this.equipmentBoxes;
+    }
+
+    /**
     Determine if the EquipmentBoxList is being displayed
     returns: true if the list is displayed, false otherwise
     */
     isDisplayEquipment(){
         return this.equipmentBoxes === this.displayedBoxList;
+    }
+
+    /**
+    Set the ChemicalBoxList to EquipmentBoxList instead of the DisplayBoxList
+    */
+    displayChemicalBoxes(){
+        this.displayedBoxList = this.chemicalBoxes;
+        this.equipmentBoxes.unselect();
     }
 
     /**
@@ -278,7 +326,7 @@ class ExperimentController2D{
         for(var i = 0; i < chems.length; i++){
             this.chemicalBoxes.add(new ChemicalController2D(chems[i].copyChem()));
         }
-        this.displayedBoxList = this.equipmentBoxes;
+        this.displayEquipmentBoxes();
     }
 
     /**
@@ -332,6 +380,15 @@ class ExperimentController2D{
     }
 
     /**
+    Determine if the Mouse is inside the bounds of the Experiment
+    returns: true if in bounds, false otherwise
+    */
+    experimentContainsMouse(){
+        return pointInRect2D(EXP_BOUNDS, [mouseX, mouseY]);
+    }
+
+
+    /**
     Get the rectangular bounds of the region of the Experiment which will be rendered, based on camera position
     returns: The bounds as a list [far left x, upper y, width, height]
     */
@@ -340,63 +397,39 @@ class ExperimentController2D{
     }
 
     /**
-    Call to activate a specific function on the selected EquipmentController
-    id: The function ID to use for the selected EquipmentController
-    param: Optional, the ExperimentObject to send with the function
-    returns: true if the function is activated, false otherwise
-    */
-    selectedEquipFunction(id, param = null){
-        let select = this.selectedEquipment;
-        if(select === null || select === undefined) return false;
-        let func = select.idToFunc(id);
-        if(func === null || func === undefined) return false;
-        if(param === null) param = this.findEquipmentByPosition(this.experimentMousePos(), select);
-        if(param === null || param === undefined) return false;
-        func.bind(select, param)();
-        return true;
-    }
-
-    /**
     Call when the mouse is pressed
     */
     mousePress(){
-        // Convenience variables
-        let mouse = [mouseX, mouseY];
-        let expMouse = this.experimentMousePos();
-        let inExpBounds = pointInRect2D(EXP_BOUNDS, mouse);
-        let isSelect = this.selectedEquipment !== null;
+        // Whenever a mouse button is pressed, always unselect the EquipmentBox
+        this.equipmentBoxes.unselect();
 
         // Handle left click, for moving objects
         if(mouseButton === LEFT){
             // If the mouse is inside the Experiment, attempt to make a selection for moving an Equipment
-            if(inExpBounds){
+            if(this.experimentContainsMouse()){
                 // If there is no selection made for movement, make a selection
-                if(this.movingEquipment === null) this.setMovingEquipment(this.findEquipmentByPosition(expMouse));
+                if(this.movingEquipment === null) this.setMovingEquipment(this.findEquipmentByPosition(this.experimentMousePos()));
             }
             // If the mouse is outside the bounds, attempt to select an EquipmentBox
             else{
-                let boxes = this.equipmentBoxes;
-                if(boxes !== null) boxes.selectBox();
-
-                // Select a chemical
-                if(this.isDisplayChemicals()){
-                    this.chemicalBoxes.selectBox();
-                }
+                // Select an EquipmentBox
+                if(this.isDisplayEquipment()) this.equipmentBoxes.selectBox();
+                // Select a ChemicalBox
+                else if(this.isDisplayChemicals()) this.chemicalBoxes.selectBox();
             }
         }
-
         // Handle right click, for selecting objects
         else if(mouseButton === RIGHT){
             // If in the Experiment bounds, check for object interaction
-            if(inExpBounds){
+            if(this.experimentContainsMouse()){
                 // If an object is selected, run a function on it
-                if(isSelect){
+                if(this.selectedEquipment === null){
                     // TODO allow multiple constants to exist here. The user selects an action when the initially right click
                     this.selectedEquipFunction(ID_FUNC_CONTAINER_POUR_INTO);
                     this.setSelectedEquipment(null);
                 }
                 // Otherwise, attempt to select a piece of Equipment
-                else this.setSelectedEquipment(this.findEquipmentByPosition(expMouse));
+                else this.selectEquipment()
             }
         }
     }
@@ -407,15 +440,10 @@ class ExperimentController2D{
     mouseRelease(){
         // Handle left click, for moving objects
         if(mouseButton === LEFT){
-            // If the mouse is inside the experiment, attempt to add the Equipment from the Equipment boxes
-            if(this.isDisplayEquipment()){
-                if(pointInRect2D(EXP_BOUNDS, [mouseX, mouseY])){
-                    this.equipmentBoxes.place(this);
-                }
-                else{
-                    this.equipmentBoxes.unselect();
-                }
-            }
+            // See if the Equipment boxes should be placed or unselected
+            this.updateEquipmentBoxPlacement();
+
+            // Stop moving a piece of Equipment inside the Experiment on mouse release
             this.setMovingEquipment(null);
         }
     }
@@ -431,61 +459,92 @@ class ExperimentController2D{
     */
     mouseDrag(){
         // If the equipment to be placed is selected, update it's position
-        let boxes = this.equipmentBoxes;
-        if(boxes !== null && this.isDisplayEquipment()) boxes.updateSelectPos();
+        this.updateEquipmentBoxMovement();
 
         // Update the position of the object being moved by the mouse
         this.updateMovingEquipmentPos();
     }
 
     /**
+    Call when a key on the keyboard is released
+    */
+    keyRelease(){
+    }
+
+    /**
     Call when a key on the keyboard is pressed
     */
     keyPress(){
-        // Option should only work for Container objects
-        let eq = this.selectedEquipment;
-        let eqs = this.experiment.equipment;
-        // Empty the beaker
-        // TODO modify this so that the calls under ESCAPE and key default are only made for beakers
         switch(keyCode){
-            case ESCAPE:
-                if(eq === null) break;
-                eq.emptyOut();
-                this.setSelectedEquipment(null);
-                break;
-        }
-        switch(key){
-            case 'i':
-                this.nextInstruction();
-                break;
-            case 'r':
-                this.reset();
-                break;
-            case 'c':
-                this.displayedBoxList = this.chemicalBoxes;
-                break;
-            case 'v':
-                this.displayedBoxList = this.equipmentBoxes;
-                break;
+            case KEY_EXP_RESET_SELECTED: this.clearSelectedEquipment(); break;
+            case KEY_EXP_NEXT_INSTRUCTION: this.nextInstruction(); break;
+            case KEY_EXP_RESET: this.reset(); break;
+            case KEY_EXP_DISPLAY_CHEMS: this.displayChemicalBoxes(); break;
+            case KEY_EXP_DISPLAY_EQUIPS: this.displayEquipmentBoxes(); break;
 
-            default:
-                let box = this.chemicalBoxes.selected;
-                if(box === null) break;
-                let chemControl = box.obj;
-                if(chemControl === null) break;
-                var mass;
-                switch(key){
-                    case '1': mass = 1; break;
-                    case '2': mass = 5; break;
-                    case '3': mass = 10; break;
-                    case '4': mass = 20; break;
-                    case '5': mass = 25; break;
-                    default: mass = null;
-                }
-                if(mass === null) break;
-                chemControl.chemical.setMass(mass);
-                this.selectedEquipFunction(ID_FUNC_CONTAINER_ADD_TO, chemControl);
-                break;
+            case KEY_EXP_ADD_CHEM_1:
+            case KEY_EXP_ADD_CHEM_5:
+            case KEY_EXP_ADD_CHEM_10:
+            case KEY_EXP_ADD_CHEM_20:
+            case KEY_EXP_ADD_CHEM_25: this.addChemicalToSelectedBeaker(keyCode); break;
+            default: break;
+        }
+    }
+
+    /**
+    TODO this is a temporary method for use only with Containers, it does nothing if it is not an instance of Container
+    Take the selected Equipment, assume it is a Container, and add a Chemical to it
+    massIndex: The index for which mass size to use
+    */
+    addChemicalToSelectedBeaker(massIndex){
+        // TODO implement better solution for if this is an instance of a Container if it should activate
+        if(!(this.selectedEquipment instanceof ContainerController2D)) return;
+        let box = this.chemicalBoxes.selected;
+        if(box === null) return;
+        let chemControl = box.obj;
+        if(chemControl === null) return;
+        var mass;
+        switch(massIndex){
+            case KEY_EXP_ADD_CHEM_1: mass = 1; break;
+            case KEY_EXP_ADD_CHEM_5: mass = 5; break;
+            case KEY_EXP_ADD_CHEM_10: mass = 10; break;
+            case KEY_EXP_ADD_CHEM_20: mass = 20; break;
+            case KEY_EXP_ADD_CHEM_25: mass = 25; break;
+            default: mass = null; break;
+        }
+        if(mass === null) return;
+        chemControl.chemical.setMass(mass);
+        this.selectedEquipFunction(ID_FUNC_CONTAINER_ADD_TO, chemControl);
+    }
+
+    /**
+    Based on the currently pressed keys, update the position of the camera
+    */
+    updateCameraPos(){
+        if(keyIsDown(KEY_EXP_PAN_CAMERA_LEFT)) this.camera.left();
+        if(keyIsDown(KEY_EXP_PAN_CAMERA_RIGHT)) this.camera.right();
+        if(keyIsDown(KEY_EXP_PAN_CAMERA_UP)) this.camera.up();
+        if(keyIsDown(KEY_EXP_PAN_CAMERA_DOWN)) this.camera.down();
+    }
+
+    /**
+    Update the status of the EquipmentBoxList to move the box the the correct location based on the mouse.
+    */
+    updateEquipmentBoxMovement(){
+        let boxes = this.equipmentBoxes;
+        if(boxes !== null && this.isDisplayEquipment()) boxes.updateSelectPos();
+    }
+
+    /**
+    Attempt to place the selected EquipmentBox into the simulation, or deselect it.
+    */
+    updateEquipmentBoxPlacement(){
+        // Only update the box if the EquipmentBoxes are displaying
+        if(this.isDisplayEquipment()){
+            // If the mouse is inside the experiment, attempt to add the Equipment from the Equipment boxes
+            if(this.experimentContainsMouse()) this.equipmentBoxes.place(this);
+            // Otherwise, just unselect the box
+            else this.equipmentBoxes.unselect();
         }
     }
 
@@ -500,10 +559,7 @@ class ExperimentController2D{
         });
 
         // Move camera based on which buttons are held down
-        if(keyIsDown(LEFT_ARROW)) this.camera.left();
-        if(keyIsDown(RIGHT_ARROW)) this.camera.right();
-        if(keyIsDown(UP_ARROW)) this.camera.up();
-        if(keyIsDown(DOWN_ARROW)) this.camera.down();
+        this.updateCameraPos();
 
         // Update the position of the object being moved by the mouse
         this.updateMovingEquipmentPos();

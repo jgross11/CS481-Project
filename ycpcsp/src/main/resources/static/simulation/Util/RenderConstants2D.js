@@ -65,3 +65,46 @@ let EXP_BOX_STROKE_WEIGHT = 3;
 let EXP_BOX_FILL_COLOR = 200;
 // The color used to display that a rendered box is selected
 let EXP_BOX_SELECT_COLOR = [200, 200, 255, 200];
+
+
+// Constants used for key inputs for Experiment
+
+// Keys for panning camera left, right, up, and down
+let KEY_EXP_PAN_CAMERA_LEFT;
+let KEY_EXP_PAN_CAMERA_RIGHT;
+let KEY_EXP_PAN_CAMERA_UP;
+let KEY_EXP_PAN_CAMERA_DOWN;
+
+// Key for moving Experiment to next Instruction
+let KEY_EXP_NEXT_INSTRUCTION;
+// Key for resetting Experiment to default state
+let KEY_EXP_RESET;
+// Key for displaying Chemical list
+let KEY_EXP_DISPLAY_CHEMS;
+// Key for displaying Equipment list
+let KEY_EXP_DISPLAY_EQUIPS;
+// Key for resetting selected Equipment
+let KEY_EXP_RESET_SELECTED;
+
+// Keys for adding a set amount of a Chemical to a Container
+let KEY_EXP_ADD_CHEM_1 = 49;
+let KEY_EXP_ADD_CHEM_5 = 50;
+let KEY_EXP_ADD_CHEM_10 = 51;
+let KEY_EXP_ADD_CHEM_20 = 52;
+let KEY_EXP_ADD_CHEM_25 = 53;
+
+/**
+Set up constants to use for key presses in the Experiment
+*/
+function setUpControlConstants(){
+    KEY_EXP_PAN_CAMERA_LEFT = LEFT_ARROW;
+    KEY_EXP_PAN_CAMERA_RIGHT = RIGHT_ARROW;
+    KEY_EXP_PAN_CAMERA_UP = UP_ARROW;
+    KEY_EXP_PAN_CAMERA_DOWN = DOWN_ARROW;
+
+    KEY_EXP_NEXT_INSTRUCTION = 73; // code 73 = i
+    KEY_EXP_RESET = 82; // code 83 = r
+    KEY_EXP_DISPLAY_CHEMS = 67; // code 67 = c
+    KEY_EXP_DISPLAY_EQUIPS = 86; // code 86 = r
+    KEY_EXP_RESET_SELECTED = ESCAPE;
+}
