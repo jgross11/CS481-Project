@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    let list = parse("Uub");
+
+    function parse(name, indexValue){
+        let list = {};
+        let startValue = indexValue == null ? 0 : indexValue;
+        for(var i = startValue; i < name.length; i++){
+            let char = name[i];
+
+            // alphabet case
+            if(char.toUpperCase() != char.toLowerCase()){
+                // uppercase found
+                if(char.toUpperCase() == char){
+                    let next = name[i+1];
+                    // 2 letter abbreviation
+                    if(next.toLowerCase() == next){
+                        let nextnext = name[i+2];
+                        // 3 letter abbreviation
+                        if(nextnext.toLowerCase() == nextnext){
+                            list[char+next+nextnext] = isNaN(list[i+3]) ? 1 : list[i+3];
+                            i += 4;
+                        }
+                        else{
+                            
+                        }
+                    }
+                }
+            }
+            else if(char == '('){
+                console.log("(");
+            }
+            else if(char == ')'){
+
+            }
+        }
+
+        console.log(list);
+    }
+</script>
+</body>
+</html>
