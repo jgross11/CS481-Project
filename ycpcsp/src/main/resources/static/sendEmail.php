@@ -6,7 +6,7 @@ if(!isset($message)) {
 	$count = $db_handle->numRows($query);
 
 	if($count==0) {
-		$query = "INSERT INTO Users (user_name, first_name, last_name, password, email, gender) VALUES
+		$query = "INSERT INTO Users (firstName, lastName, email, password, organization) VALUES
 		('" . $_POST["userName"] . "', '" . $_POST["firstName"] . "', '" . $_POST["lastName"] . "', '" . md5($_POST["password"]) . "', '" . $_POST["userEmail"] . "', '" . $_POST["gender"] . "')";
 		$current_id = $db_handle->insertQuery($query);
 		if(!empty($current_id)) {
