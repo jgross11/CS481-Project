@@ -8,8 +8,6 @@ let LOAD_EXPERIMENT_FROM_SERVER = true;
 /*
 
 TODO:
-    Add constants for which buttons refer to which controls
-    Move code out of key and mouse input functions
     Change objects to use model/controller and view rather than model and controller/view?
     Allow users to select different actions for each piece of equipment
     Make a better way of Chemicals in Instructions to keep their stats so they don't change, or maybe have a reset?
@@ -33,10 +31,13 @@ function setup(){
     // Set the frame rate
     frameRate(EXPERIMENT_FRAME_RATE);
 
+    // Set up control constants from RenderConstants2D
+    setUpControlConstants();
+
     // Create the experiment graphics
     mainExpCanvas = createGraphics(CANVAS_WIDTH, CANVAS_HEIGHT);
 
-    // First load image assets
+    // Load image assets
     loadImages();
 
     // Grab data from session storage
@@ -97,6 +98,13 @@ P5.js function, called when a key on the keyboard is pressed
 */
 function keyPressed(){
     if(mainExpController !== null) mainExpController.keyPress();
+}
+
+/**
+P5.js function, called when a key on the keyboard is released
+*/
+function keyReleased(){
+    if(mainExpController !== null) mainExpController.keyRelease();
 }
 
 /**

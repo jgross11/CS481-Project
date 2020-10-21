@@ -114,6 +114,67 @@ QUnit.test('setSelectedEquipment:', function(assert){
         "Selected Equipment in Controller should be the set Equipment.");
 });
 
+QUnit.test('selectEquipment:', function(assert){
+    mouseX = 5 + EXP_BOUNDS_X_OFFSET;
+    mouseY = 5 + EXP_BOUNDS_Y_OFFSET;
+    controller.addEquipment(beakerControl1, true);
+    controller.camera.setBounds(null);
+    controller.camera.setPos([0, 0]);
+    controller.selectEquipment();
+    assert.deepEqual(controller.selectedEquipment, beakerControl1, "Should select beaker1.");
+});
+
+QUnit.test('clearSelectedEquipment:', function(assert){
+    beaker1.setContents(chem);
+    controller.setSelectedEquipment(beakerControl1);
+    assert.deepEqual(controller.selectedEquipment, beakerControl1, "Selected Equipment should be beakerControl1");
+    assert.deepEqual(beaker1.contents, chem, "Contents of Beaker1 should be chem");
+
+    controller.clearSelectedEquipment();
+    assert.deepEqual(controller.selectedEquipment, null, "Selected Equipment should be null after clearing it");
+    assert.deepEqual(beaker1.contents, null, "Contents of Beaker1 should be null after clearing beakerControl1");
+
+    controller.clearSelectedEquipment();
+    assert.deepEqual(controller.selectedEquipment, null, "Selected Equipment should still be null after clearing null Equipment");
+});
+
+QUnit.test('selectedEquipFunction:', function(assert){
+    var result;
+    controller.camera.setBounds(null);
+    controller.camera.setPos([0, 0]);
+    controller.addEquipment(beakerControl1, true);
+    controller.addEquipment(beakerControl2, true);
+    beaker1.setContents(chem);
+    var goodX = 105 + EXP_BOUNDS[0];
+    var goodY = 5 + EXP_BOUNDS[1];
+    var badX = -1000;
+    var badY = -1000;
+
+    controller.setSelectedEquipment(beakerControl1);
+    mouseX = goodX;
+    mouseY = goodY;
+    result = controller.selectedEquipFunction(null);
+    assert.false(result, "Calling the function without a valid function should fail.");
+
+    controller.setSelectedEquipment(null);
+    mouseX = goodX;
+    mouseY = goodY;
+    result = controller.selectedEquipFunction(ID_FUNC_CONTAINER_POUR_INTO);
+    assert.false(result, "Calling the function without selected equipment should fail.");
+
+    controller.setSelectedEquipment(beakerControl1);
+    mouseX = badX;
+    mouseY = badY;
+    result = controller.selectedEquipFunction(ID_FUNC_CONTAINER_POUR_INTO);
+    assert.false(result, "Calling the function without a valid equipment in selection range should fail.");
+
+    controller.setSelectedEquipment(beakerControl1);
+    mouseX = goodX;
+    mouseY = goodY;
+    result = controller.selectedEquipFunction(ID_FUNC_CONTAINER_POUR_INTO);
+    assert.true(result, "Calling the function with valid setup should succeed.");
+});
+
 QUnit.test('setMovingEquipment:', function(assert){
     controller.movingEquipAnchor = null;
     controller.setMovingEquipment(null);
@@ -240,6 +301,12 @@ QUnit.test('nextInstruction:', function(assert){
     assert.equal(controller.instructionCounter, 3, "Instruction should be on 3 with beaker 0 in the Experiment");
 });
 
+QUnit.test('displayEquipmentBoxes:', function(assert){
+    controller.displayEquipmentBoxes();
+    assert.deepEqual(controller.displayedBoxList, controller.equipmentBoxes,
+        "Displaying equipmentBoxes should place it in the displayedBoxList");
+});
+
 QUnit.test('isDisplayEquipment:', function(assert){
     controller.reset();
     assert.true(controller.isDisplayEquipment(), "By default, the Equipment list should show");
@@ -249,6 +316,18 @@ QUnit.test('isDisplayEquipment:', function(assert){
 
     controller.displayedBoxList = controller.equipmentBoxes
     assert.true(controller.isDisplayEquipment(), "The Equipment list should show");
+});
+
+QUnit.test('displayChemicalBoxes:', function(assert){
+    controller.addEquipment(beakerControl1);
+    controller.equipmentBoxes.selected = controller.equipmentBoxes.boxes[0];
+    assert.notDeepEqual(controller.equipmentBoxes.selected, null,
+        "Before displaying chemicalBoxes, selected equipmentBoxes should not be unselected")
+    controller.displayChemicalBoxes();
+    assert.deepEqual(controller.displayedBoxList, controller.chemicalBoxes,
+        "Displaying chemicalBoxes should place it in the displayedBoxList");
+    assert.deepEqual(controller.equipmentBoxes.selected, null,
+        "After displaying chemicalBoxes, selected equipmentBoxes should be unselected")
 });
 
 QUnit.test('isDisplayChemicals:', function(assert){
@@ -389,8 +468,6 @@ QUnit.test('reset:', function(assert){
 });
 
 QUnit.test('findEquipmentByPosition:', function(assert){
-    var exp = new Experiment("a title", "a name");
-    var controller = new ExperimentController2D(exp);
     controller.addEquipment(beakerControl1, true);
     controller.addEquipment(beakerControl2, true);
     controller.addEquipment(beakerControl3, true);
@@ -445,48 +522,16 @@ QUnit.test('experimentMousePos:', function(assert){
     assert.equal(pos[1], controller.experimentMouseY(), "Index 1 of pos should be the y mouse coordinate.");
 });
 
+QUnit.test('experimentContainsMouse:', function(assert){
+    controller.experimentContainsMouse();
+    assert.expect(0);
+});
+
 QUnit.test('experimentRenderBounds:', function(assert){
     controller.camera.setBounds(null);
     controller.camera.setPos([20, 30]);
     assert.deepEqual(controller.experimentRenderBounds(), [20, 30, EXP_BOUNDS[2], EXP_BOUNDS[3]],
         "Bounds should be based on the camera position and size constants for experiment size");
-});
-
-QUnit.test('selectedEquipFunction:', function(assert){
-    var result;
-    controller.camera.setBounds(null);
-    controller.camera.setPos([0, 0]);
-    controller.addEquipment(beakerControl1, true);
-    controller.addEquipment(beakerControl2, true);
-    beaker1.setContents(chem);
-    var goodX = 105 + EXP_BOUNDS[0];
-    var goodY = 5 + EXP_BOUNDS[1];
-    var badX = -1000;
-    var badY = -1000;
-
-    controller.setSelectedEquipment(beakerControl1);
-    mouseX = goodX;
-    mouseY = goodY;
-    result = controller.selectedEquipFunction(null);
-    assert.false(result, "Calling the function without a valid function should fail.");
-
-    controller.setSelectedEquipment(null);
-    mouseX = goodX;
-    mouseY = goodY;
-    result = controller.selectedEquipFunction(ID_FUNC_CONTAINER_POUR_INTO);
-    assert.false(result, "Calling the function without selected equipment should fail.");
-
-    controller.setSelectedEquipment(beakerControl1);
-    mouseX = badX;
-    mouseY = badY;
-    result = controller.selectedEquipFunction(ID_FUNC_CONTAINER_POUR_INTO);
-    assert.false(result, "Calling the function without a valid equipment in selection range should fail.");
-
-    controller.setSelectedEquipment(beakerControl1);
-    mouseX = goodX;
-    mouseY = goodY;
-    result = controller.selectedEquipFunction(ID_FUNC_CONTAINER_POUR_INTO);
-    assert.true(result, "Calling the function with valid setup should succeed.");
 });
 
 QUnit.todo('mousePress:', function(assert){
@@ -512,6 +557,47 @@ QUnit.todo('mouseDrag:', function(assert){
 QUnit.todo('keyPress:', function(assert){
     controller.keyPress();
     assert.true(false);
+});
+
+QUnit.todo('addChemicalToSelectedBeaker:', function(assert){
+    assert.true(false);
+});
+
+QUnit.todo('updateCameraPos:', function(assert){
+    assert.true(false);
+});
+
+QUnit.test('updateEquipmentBoxMovement:', function(assert){
+    controller.addEquipment(beakerControl1);
+
+    controller.displayChemicalBoxes();
+    controller.equipmentBoxes.selected = controller.equipmentBoxes.boxes[0];
+    controller.updateEquipmentBoxMovement();
+
+    controller.displayEquipmentBoxes();
+    controller.equipmentBoxes.selected = controller.equipmentBoxes.boxes[0];
+    controller.updateEquipmentBoxMovement();
+
+    assert.expect(0);
+});
+
+QUnit.test('updateEquipmentBoxPlacement:', function(assert){
+    controller.displayChemicalBoxes();
+    controller.updateEquipmentBoxPlacement();
+
+    controller.camera.setBounds(null);
+    controller.camera.setPos([0, 0]);
+    controller.displayEquipmentBoxes();
+    mouseX = -1000;
+    mouseY = -1000;
+    controller.updateEquipmentBoxPlacement();
+
+    mouseX = 0;
+    mouseY = 0;
+    controller.camera.setPos([EXP_BOUNDS[0], EXP_BOUNDS[1]]);
+    controller.updateEquipmentBoxPlacement();
+
+    assert.expect(0);
 });
 
 QUnit.todo('update:', function(assert){
