@@ -6,15 +6,25 @@
 </head>
 <body>
 <script>
+    // single elements
     parse("H");
-    parse("(H)");
-    parse("(H)2");
-    parse("(HO)2");
-    parse("H2O");
+    parse("H2");
+    parse("H234");
+    parse("He");
+    parse("He2");
+    parse("He23213");
+    parse("Uub");
+    parse("Uub2");
+
+
+    parse("Uub232342232");
     parse("H2He");
     parse("H2He2");
     parse("H2He2O7");
     parse("H2He2OOOO");
+    parse("(H)");
+    parse("(H)2");
+    parse("(HO)2");
     parse("S(O2)2");
     parse("SO(SO2)2");
     parse("S(S2)(S3)(S4)");
@@ -23,6 +33,9 @@
     parse("A(A(A)2)2");
     parse("(AuBuCuDuEuFuGu)1");
     parse("Au(Au2)2(Au3)3(Au4)4");
+    parse("Uub123");
+    parse("Uu123");
+    parse("U123");
     
 
     function parse(name, indexValue){
@@ -56,8 +69,13 @@
                         }
                         let next3 = name[i+3];
                         if(!isNaN(next3)){
-                            list[char+next+nextnext] = list[char+next+nextnext] == null ? parseInt(next3) : list[char+next+nextnext] + parseInt(next3);
-                            i+=4;
+                            let coefficient = parseInt(next3);
+                            let index = i+4;
+                            while(!isNaN(name[index])){
+                                coefficient = coefficient * 10 + parseInt(name[index++]);
+                            }
+                            list[char+next+nextnext] = list[char+next+nextnext] == null ? coefficient : list[char+next+nextnext] + coefficient;
+                            i = index;
                         }
                         else{
                             list[char+next+nextnext] = list[char+next+nextnext] == null ? 1 : list[char+next+nextnext] + 1;
@@ -65,8 +83,13 @@
                         }
                     }
                     else if(!isNaN(nextnext)){
-                        list[char+next] = list[char+next] == null ? parseInt(nextnext) : list[char+next] + parseInt(nextnext);
-                        i+=3
+                        let index = i+3;
+                        let coefficient = parseInt(nextnext);
+                        while(!isNaN(name[index])){
+                            coefficient = coefficient * 10 + parseInt(name[index++]);
+                        }
+                        list[char+next] = list[char+next] == null ? coefficient : list[char+next] + coefficient;
+                        i = index;
                     }
                     // paren or start of next element
                     else{
@@ -76,8 +99,13 @@
                 }
                 // number
                 else if(!isNaN(next)){
-                    list[char] = list[char] == null ? parseInt(next) : list[char] + parseInt(next);
-                    i+=2;
+                    let index = i+2;
+                    let coefficient = parseInt(next);
+                    while(!isNaN(name[index])){
+                        coefficient = coefficient * 10 + parseInt(name[index++]);
+                    }
+                    list[char] = list[char] == null ? coefficient : list[char] + coefficient;
+                    i = index;
                 }
                 // paren or start of next element
                 else{
