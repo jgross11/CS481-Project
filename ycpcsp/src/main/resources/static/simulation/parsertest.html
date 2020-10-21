@@ -15,13 +15,20 @@
     parse("H2He2");
     parse("H2He2O7");
     parse("H2He2OOOO");
-    parse("H2He2O2O3O2");
+    parse("S(O2)2");
+    parse("SO(SO2)2");
+    parse("S(S2)(S3)(S4)");
+    parse("ABCDEFG");
+    parse("(A2B2A2B2)2");
+    parse("A(A(A)2)2");
+    parse("(AuBuCuDuEuFuGu)1");
+    parse("Au(Au2)2(Au3)3(Au4)4");
+    
 
     function parse(name, indexValue){
         let list = {};
         let startValue = indexValue == null ? 0 : indexValue;
-
-        console.log("parsing " + name);
+        if(startValue == 0) console.log("parsing " + name);
         let nameLength = name.length;
         for(var i = startValue; i < nameLength;){
             let char = name[i];
@@ -53,6 +60,7 @@
                             i+=4;
                         }
                         else{
+                            list[char+next+nextnext] = list[char+next+nextnext] == null ? 1 : list[char+next+nextnext] + 1;
                             i+=3;
                         }
                     }
@@ -62,6 +70,7 @@
                     }
                     // paren or start of next element
                     else{
+                        list[char+next] = list[char+next] == null ? 1 : list[char+next] + 1;
                         i+=2;
                     }
                 }
@@ -78,40 +87,57 @@
             }
             else if(char == '('){
                 let tempList = parse(name, i+1);
-                console.log("received from recursive call: ");
-                console.log(tempList);
+                //console.log("received from recursive call: ");
+                //console.log(tempList);
                 let tempListKeys = Object.keys(tempList);
                 let tempListValues = Object.values(tempList);
 
-                for(var k = 1; k < tempListKeys.length; k++){
-                    list[tempListKeys[i]] = list[tempListKeys[i]] == null ? tempListValues[i] : list[tempListKeys[i]] + tempListValues[i];
+                for(var k = 0; k < tempListKeys.length; k++){
+                    //console.log(tempListKeys[k]);
+                    //console.log(tempListValues[k]);
+                    //console.log(list[tempListKeys[k]]);
+                    list[tempListKeys[k]] = list[tempListKeys[k]] == null ? tempListValues[k] : list[tempListKeys[k]] + tempListValues[k];
                 }
                 i = tempList["nextIndex"];
-                console.log("after recursion, i set to: " + i);
+                delete list["nextIndex"];
+                //console.log("after recursion, i set to: " + i);
             }
             else if(char == ')'){
-                console.log("reached end of paren with list: ");
-                console.log(list);
+                //console.log("reached end of paren with list: ");
+                //console.log(list);
                 if(i+1 >= nameLength){
+                    // at end of string
                     list["nextIndex"] = i+1;
                     return list;
                 }
-                let afterClosingParen = name[i+1];
-                if(!isNaN(afterClosingParen)){
+                let possibleMultiplier = name[i+1];
+                if(!isNaN(possibleMultiplier)){
                     list["nextIndex"] = i+2;
                     let listKeys = Object.keys(list);
                     for(var j = 0; j < listKeys.length; j++){
                         if(listKeys[j] == "nextIndex"){
                             continue;
                         } else{
-                            list[listKeys[j]] = list[listKeys[j]] == null ? afterClosingParen : list[listKeys[j]] * afterClosingParen;
+                            list[listKeys[j]] = list[listKeys[j]] == null ? possibleMultiplier : list[listKeys[j]] * possibleMultiplier;
+                        }
+                    }
+                    return list;
+                }
+                else{
+                    list["nextIndex"] = i+1;
+                    let listKeys = Object.keys(list);
+                    for(var j = 0; j < listKeys.length; j++){
+                        if(listKeys[j] == "nextIndex"){
+                            continue;
+                        } else{
+                            list[listKeys[j]] = list[listKeys[j]] == null ? 1 : list[listKeys[j]];
                         }
                     }
                     return list;
                 }
             }
         }
-        console.log("completed list: ");
+        //console.log("completed list: ");
         console.log(list);
         return list;
     }
