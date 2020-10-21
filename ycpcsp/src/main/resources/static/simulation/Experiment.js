@@ -124,7 +124,7 @@ class ExperimentController2D{
     Attempt to select a piece of Equipment based on the mouse position
     */
     selectEquipment(){
-        this.setSelectedEquipment(this.findEquipmentByPosition(expMouse));
+        this.setSelectedEquipment(this.findEquipmentByPosition(this.experimentMousePos()));
     }
 
     /**
@@ -387,7 +387,6 @@ class ExperimentController2D{
         return pointInRect2D(EXP_BOUNDS, [mouseX, mouseY]);
     }
 
-
     /**
     Get the rectangular bounds of the region of the Experiment which will be rendered, based on camera position
     returns: The bounds as a list [far left x, upper y, width, height]
@@ -422,14 +421,14 @@ class ExperimentController2D{
         else if(mouseButton === RIGHT){
             // If in the Experiment bounds, check for object interaction
             if(this.experimentContainsMouse()){
-                // If an object is selected, run a function on it
-                if(this.selectedEquipment === null){
+                // Attempt to select a piece of Equipment
+                if(this.selectedEquipment === null) this.selectEquipment()
+                // Otherwise, if an object is selected, run a function on it
+                else{
                     // TODO allow multiple constants to exist here. The user selects an action when the initially right click
                     this.selectedEquipFunction(ID_FUNC_CONTAINER_POUR_INTO);
                     this.setSelectedEquipment(null);
                 }
-                // Otherwise, attempt to select a piece of Equipment
-                else this.selectEquipment()
             }
         }
     }
@@ -531,8 +530,7 @@ class ExperimentController2D{
     Update the status of the EquipmentBoxList to move the box the the correct location based on the mouse.
     */
     updateEquipmentBoxMovement(){
-        let boxes = this.equipmentBoxes;
-        if(boxes !== null && this.isDisplayEquipment()) boxes.updateSelectPos();
+        if(this.isDisplayEquipment()) this.equipmentBoxes.updateSelectPos();
     }
 
     /**

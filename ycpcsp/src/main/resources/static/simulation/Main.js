@@ -3,15 +3,11 @@ var mainExpController = null;
 var mainExpCanvas = null;
 
 // true to load data from the actual database, false to use test data defined by the return of getTestJSON()
-let LOAD_EXPERIMENT_FROM_SERVER = false;
+let LOAD_EXPERIMENT_FROM_SERVER = true;
 
 /*
 
 TODO:
-    Test cases:
-        ExperimentController2D.updateCameraPos, displayEquipmentBoxes, displayChemicalBoxes,
-        clearSelectedEquipment, addChemicalToSelectedBeaker, updateEquipmentBoxMovement,
-        updateEquipmentBoxPlacement, experimentContainsMouse, selectEquipment
     Change objects to use model/controller and view rather than model and controller/view?
     Allow users to select different actions for each piece of equipment
     Make a better way of Chemicals in Instructions to keep their stats so they don't change, or maybe have a reset?
