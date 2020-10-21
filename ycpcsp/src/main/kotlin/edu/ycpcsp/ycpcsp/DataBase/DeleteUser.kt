@@ -16,7 +16,7 @@ fun DeleteUser(id: String?): Boolean{
         //Connection for the database to get it connected and then execute the query to insert the values into the database
         val conn = DriverManager.getConnection(url, connectionProps)
         val st = conn.createStatement()
-        val rs = st.executeUpdate("DELETE FROM Database.Users WHERE id = '$id'")
+        st.executeUpdate("DELETE FROM Database.Users WHERE id = '$id'")
 
         return true
 
