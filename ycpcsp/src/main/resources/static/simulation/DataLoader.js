@@ -243,56 +243,84 @@ function getTestJSON(){
     exp[EXP_JSON_TITLE] = "Color";
     exp[EXP_JSON_CREATOR] = "Zaq";
 
-    let equips = [];
-    let equip = {}
-    equip[EXP_JSON_EQUIP_OBJ_ID] = 1;
-    equip[EXP_JSON_EQUIP_AMOUNT] = 3;
-    equips.push(equip);
+    let equips = [{}, {}, {}, {}];
+    equips[0][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_BEAKER_50mL;
+    equips[0][EXP_JSON_EQUIP_AMOUNT] = 1;
+
+    equips[1][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_BEAKER_150mL;
+    equips[1][EXP_JSON_EQUIP_AMOUNT] = 2;
+
+    equips[2][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_BEAKER_250mL;
+    equips[2][EXP_JSON_EQUIP_AMOUNT] = 2;
+
+    equips[3][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_BEAKER_600mL;
+    equips[3][EXP_JSON_EQUIP_AMOUNT] = 1;
+
     exp[EXP_JSON_EQUIPMENT] = equips;
 
-    let chems = [{}, {}, {}];
-    chems[0][EXP_JSON_CHEM_ID] = 1;
-    chems[0][EXP_JSON_CHEM_MASS] = 5;
+
+    let chems = [{}, {}, {}, {}, {}];
+
+    chems[0][EXP_JSON_CHEM_ID] = ID_CHEM_TEST_RED;
+    chems[0][EXP_JSON_CHEM_MASS] = 20;
     chems[0][EXP_JSON_CHEM_CONCENTRATION] = 1;
-    chems[1][EXP_JSON_CHEM_ID] = 2;
-    chems[1][EXP_JSON_CHEM_MASS] = 5;
+
+    chems[1][EXP_JSON_CHEM_ID] = ID_CHEM_TEST_BLUE;
+    chems[1][EXP_JSON_CHEM_MASS] = 20;
     chems[1][EXP_JSON_CHEM_CONCENTRATION] = 1;
-    chems[2][EXP_JSON_CHEM_ID] = 3;
-    chems[2][EXP_JSON_CHEM_MASS] = 20;
+
+    chems[2][EXP_JSON_CHEM_ID] = ID_CHEM_TEST_WHITE;
+    chems[2][EXP_JSON_CHEM_MASS] = 50;
     chems[2][EXP_JSON_CHEM_CONCENTRATION] = 1;
+
+    chems[3][EXP_JSON_CHEM_ID] = ID_CHEM_TEST_GREEN;
+    chems[3][EXP_JSON_CHEM_MASS] = 10;
+    chems[3][EXP_JSON_CHEM_CONCENTRATION] = 1;
+
+    chems[4][EXP_JSON_CHEM_ID] = ID_CHEM_TEST_BLACK;
+    chems[4][EXP_JSON_CHEM_MASS] = 10;
+    chems[4][EXP_JSON_CHEM_CONCENTRATION] = 1;
+
     exp[EXP_JSON_CHEMICALS] = chems;
 
+
     let steps = [{}, {}, {}, {}, {}];
+
     steps[0][EXP_JSON_INS_STEP_NUM] = 0;
     steps[0][EXP_JSON_INS_ACTOR_INDEX] = 0;
     steps[0][EXP_JSON_INS_ACTOR_IS_EQUIP] = true;
     steps[0][EXP_JSON_INS_RECEIVER_INDEX] = 0;
     steps[0][EXP_JSON_INS_RECEIVER_IS_EQUIP] = false;
     steps[0][EXP_JSON_INS_FUNC_ID] = ID_FUNC_CONTAINER_ADD_TO;
+
     steps[1][EXP_JSON_INS_STEP_NUM] = 1;
     steps[1][EXP_JSON_INS_ACTOR_INDEX] = 1;
     steps[1][EXP_JSON_INS_ACTOR_IS_EQUIP] = true;
     steps[1][EXP_JSON_INS_RECEIVER_INDEX] = 1;
     steps[1][EXP_JSON_INS_RECEIVER_IS_EQUIP] = false;
     steps[1][EXP_JSON_INS_FUNC_ID] = ID_FUNC_CONTAINER_ADD_TO;
+
     steps[2][EXP_JSON_INS_STEP_NUM] = 2;
     steps[2][EXP_JSON_INS_ACTOR_INDEX] = 0;
     steps[2][EXP_JSON_INS_ACTOR_IS_EQUIP] = true;
     steps[2][EXP_JSON_INS_RECEIVER_INDEX] = 1;
     steps[2][EXP_JSON_INS_RECEIVER_IS_EQUIP] = true;
     steps[2][EXP_JSON_INS_FUNC_ID] = ID_FUNC_CONTAINER_POUR_INTO;
+
     steps[3][EXP_JSON_INS_STEP_NUM] = 3;
     steps[3][EXP_JSON_INS_ACTOR_INDEX] = 1;
     steps[3][EXP_JSON_INS_ACTOR_IS_EQUIP] = true;
     steps[3][EXP_JSON_INS_RECEIVER_INDEX] = 2;
     steps[3][EXP_JSON_INS_RECEIVER_IS_EQUIP] = true;
     steps[3][EXP_JSON_INS_FUNC_ID] = ID_FUNC_CONTAINER_POUR_INTO;
+
     steps[4][EXP_JSON_INS_STEP_NUM] = 4;
     steps[4][EXP_JSON_INS_ACTOR_INDEX] = 2;
     steps[4][EXP_JSON_INS_ACTOR_IS_EQUIP] = true;
     steps[4][EXP_JSON_INS_RECEIVER_INDEX] = 2;
     steps[4][EXP_JSON_INS_RECEIVER_IS_EQUIP] = false;
     steps[4][EXP_JSON_INS_FUNC_ID] = ID_FUNC_CONTAINER_ADD_TO;
+
     exp[EXP_JSON_INSTRUCTIONS] = steps;
 
     return exp;
