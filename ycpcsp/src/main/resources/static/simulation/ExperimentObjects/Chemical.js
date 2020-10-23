@@ -153,16 +153,19 @@ class ChemicalController2D extends ExperimentObjectController2D{
     }
 
     /**
-    Mix another Chemical with this Controller's Chemical, and store that Chemical in this Controller.
-    Does nothing if either Chemical is null
-    chemical: The Controller with the Chemical to mix
-    returns: true if the Chemicals were combined, false otherwise
+    Mix a list of Chemicals with a copy of this Controller's Chemical, and return the newly mixed Chemicals as a list
+    Does nothing if either this Controller's Chemical, or the list, is null.
+    Currently just mixes The chemical of this Controller with the first Chemical in the list
+    chems: The Chemicals to mix
+    returns: The list of chemicals Chemicals, or null if they could not be combined
     */
-    combine(chemical){
-        if(chemical === null) return false;
-        let c1 = chemical.chemical;
-        let c2 = this.chemical;
-        if(c1 === null || c2 === null) return false;
+    combine(chems){
+        if(chems === null) return null;
+        let copy = this.copyChem();
+        if(chems.length < 1) return [copy];
+        let c1 = chems[0];
+        let c2 = copy;
+        if(c1 === null || c1 === undefined || c2 === null || c2 === undefined) return null;
 
         let t1 = c1.texture;
         let t2 = c2.texture;
@@ -172,12 +175,18 @@ class ChemicalController2D extends ExperimentObjectController2D{
         let r2 = c2.mass / totalMass;
 
         // Set the amount for each color based on the ratio of the mass of each chemical
-        var tex = [t1[0] * r1 + t2[0] * r2, t1[1] * r1 + t2[1] * r2, t1[2] * r1 + t2[2] * r2];
+        let tex = [t1[0] * r1 + t2[0] * r2, t1[1] * r1 + t2[1] * r2, t1[2] * r1 + t2[2] * r2];
 
-        this.chemical.setTexture(tex);
-        this.chemical.setMass(totalMass);
+        let newChems = [];
+        let control = new ChemicalController2D(null);
+        for(var i = 0; i < chems.length; i++){
+            control.setChemical(chems[i]);
+            newChems.push(control.copyChem());
+        }
+        newChems[0].setTexture(tex);
+        newChems[0].setMass(totalMass);
 
-        return true;
+        return newChems;
     }
 
     /**

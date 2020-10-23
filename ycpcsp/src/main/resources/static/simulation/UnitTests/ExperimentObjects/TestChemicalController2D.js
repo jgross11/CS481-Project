@@ -57,20 +57,22 @@ QUnit.todo('calculateMatterState:', function(assert){
 QUnit.test('combine:', function(assert){
     control1.setChemical(null);
     control2.setChemical(null);
-    assert.false(control1.combine(null), "Combine should fail");
+    assert.deepEqual(control1.combine(null), null, "Combine should fail");
 
     control1.setChemical(chem1);
-    assert.false(control1.combine(control2), "Combine should fail");
-
-    control1.setChemical(null);
-    control2.setChemical(chem2);
-    assert.false(control1.combine(control2), "Combine should fail");
+    assert.deepEqual(control1.combine(chem2), null, "Combine should fail");
 
     control1.setChemical(chem1);
-    var result = control1.combine(control2);
-    assert.true(result, "Combine should be successful");
-    assert.equal(chem1.mass, 10.0, "Combined mass should be 15.0");
-    assert.deepEqual(chem1.texture, [10, 16, 28], "Combined texture should be [10, 16, 28]");
+    assert.deepEqual(control1.combine([]), [chem1], "Combine should fail");
+
+    control1.setChemical(chem1);
+    assert.deepEqual(control1.combine(null), null, "Combine should fail");
+
+    control1.setChemical(chem1);
+    var result = control1.combine([chem2]);
+    assert.notDeepEqual(result, null, "Combine should be successful");
+    assert.equal(result[0].mass, 10.0, "Combined mass should be 15.0");
+    assert.deepEqual(result[0].texture, [10, 16, 28], "Combined texture should be [10, 16, 28]");
 });
 
 QUnit.test('split:', function(assert){

@@ -8,7 +8,7 @@ let LOAD_EXPERIMENT_FROM_SERVER = true;
 /*
 
 TODO:
-    Change objects to use model/controller and view rather than model and controller/view?
+    Create system for making Experiment Instructions
     Allow users to select different actions for each piece of equipment
     Make a better way of Chemicals in Instructions to keep their stats so they don't change, or maybe have a reset?
     Allow equipment and chemicals to be disposed
@@ -17,6 +17,7 @@ TODO:
         Split Experiment render code into individual methods
     Optimize performance of searching for adding and removing Equipment, pick a better data structure
     Create a method to render a static loading screen while the simulator loads
+    Add sample animation
 
 */
 

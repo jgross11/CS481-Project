@@ -128,11 +128,11 @@ QUnit.test('clearSelectedEquipment:', function(assert){
     beaker1.setContents(chem);
     controller.setSelectedEquipment(beakerControl1);
     assert.deepEqual(controller.selectedEquipment, beakerControl1, "Selected Equipment should be beakerControl1");
-    assert.deepEqual(beaker1.contents, chem, "Contents of Beaker1 should be chem");
+    assert.deepEqual(beaker1.contents, [chem], "Contents of Beaker1 should be chem");
 
     controller.clearSelectedEquipment();
     assert.deepEqual(controller.selectedEquipment, null, "Selected Equipment should be null after clearing it");
-    assert.deepEqual(beaker1.contents, null, "Contents of Beaker1 should be null after clearing beakerControl1");
+    assert.deepEqual(beaker1.contents, [], "Contents of Beaker1 should be empty after clearing beakerControl1");
 
     controller.clearSelectedEquipment();
     assert.deepEqual(controller.selectedEquipment, null, "Selected Equipment should still be null after clearing null Equipment");
@@ -455,16 +455,19 @@ QUnit.test('reset:', function(assert){
     controller.nextInstruction();
     assert.equal(controller.instructionCounter, 0, "instructionCounter should be on 0");
 
-    beaker1.setContents(new Chemical(1, "", 20.0, [2, 4, 7]));
-    assert.deepEqual(beaker1.contents, chem, "Beaker 1 should have chem");
-    assert.deepEqual(beaker2.contents, null, "Beaker 2 should be empty");
+    let chemControl = new ChemicalController2D(chem);
+    var chemCopy = chemControl.copyChem();
+    beaker1.setContents(chemCopy);
+    chemCopy = chemControl.copyChem();
+    assert.deepEqual(beaker1.contents, [chem], "Beaker 1 should have chem");
+    assert.deepEqual(beaker2.contents, [], "Beaker 2 should be empty");
 
     controller.placeEquipment(0);
     controller.placeEquipment(1);
     controller.nextInstruction();
     assert.equal(controller.instructionCounter, 1, "instructionCounter should be on 1");
-    assert.deepEqual(beaker1.contents, null, "Beaker 1 should have poured its contents");
-    assert.deepEqual(beaker2.contents, chem, "Beaker 2 should have received beaker 1 contents");
+    assert.deepEqual(beaker1.contents, [], "Beaker 1 should have poured its contents");
+    assert.deepEqual(beaker2.contents, [chemCopy], "Beaker 2 should have received beaker 1 contents");
 });
 
 QUnit.test('findEquipmentByPosition:', function(assert){
