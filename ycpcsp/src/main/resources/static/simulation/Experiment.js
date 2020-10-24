@@ -205,7 +205,7 @@ class ExperimentController2D{
             // Check to ensure that the Instruction's ExperimentObject has been placed in the lab, if possible
             //  if either object can be placed and it's not placed, do nothing
             if((ins.actor.canPlace() !== eqs.includes(ins.actor)) ||
-               (ins.receiver.canPlace() !== eqs.includes(ins.receiver))) return;
+               (ins.receiver !== null && ins.receiver.canPlace() !== eqs.includes(ins.receiver))) return;
 
             insC.activate();
             this.instructionCounter++;

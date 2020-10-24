@@ -153,7 +153,8 @@ function parseInstructions(equips, chems, rawIns){
         let actI = ins[EXP_JSON_INS_ACTOR_INDEX];
         let recI = ins[EXP_JSON_INS_RECEIVER_INDEX];
         let act = (ins[EXP_JSON_INS_ACTOR_IS_EQUIP]) ? equips[actI] : chems[actI];
-        let rec = (ins[EXP_JSON_INS_RECEIVER_IS_EQUIP]) ? equips[recI] : chems[recI];
+        // If the receiverID is less than 0, use a null receiver, otherwise get the correct receiver from the equipment or chemical list
+        let rec = (recI < 0) ? null : ((ins[EXP_JSON_INS_RECEIVER_IS_EQUIP]) ? equips[recI] : chems[recI]);
         let func = act.idToFunc(ins[EXP_JSON_INS_FUNC_ID]);
 
         instructions.push(new InstructionController2D(new Instruction(act, rec, func)));

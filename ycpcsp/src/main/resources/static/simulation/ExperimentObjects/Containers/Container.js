@@ -215,6 +215,7 @@ class ContainerController2D extends EquipmentController2D{
     returns: true if the Controller's Chemical was successfully added, false otherwise
     */
     addTo(chemControl){
+        if(chemControl === null) return false;
         let chem = chemControl.copyChem();
         let copyControl = new ChemicalController2D(chem);
         let eq = this.equipment;

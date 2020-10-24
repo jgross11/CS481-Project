@@ -201,11 +201,13 @@ QUnit.test('addTo:', function(assert){
     chem2.setMass(1);
     assert.true(beaker1.isEmpty(), "The container should initially be empty");
 
-    beakerControl1.addTo(chemControl1);
+    assert.true(beakerControl1.addTo(chemControl1), "Should successfully add the chemical");
     assert.deepEqual(beaker1.contents, [chem1], "The container should contain chemical 1");
 
-    beakerControl1.addTo(chemControl2);
+    assert.true(beakerControl1.addTo(chemControl2), "Should successfully add the chemical");
     assert.deepEqual(beaker1.contents[0].texture, [55, 70, 90], "The container should contain a mix of chemical 1 and 2");
+
+    assert.false(beakerControl1.addTo(null), "Should fail to add a null parameter");
 });
 
 QUnit.test('emptyOut:', function(assert){
