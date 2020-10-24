@@ -3,15 +3,15 @@ var mainExpController = null;
 var mainExpCanvas = null;
 
 // true to load data from the actual database, false to use test data defined by the return of getTestJSON()
-let LOAD_EXPERIMENT_FROM_SERVER = true;
+let LOAD_EXPERIMENT_FROM_SERVER = false;
 
 /*
 
 TODO:
+    Test cases Disposer, DisposerController2D, Trashcan, TrashcanController2D
     Create system for making Experiment Instructions
-    Allow users to select different actions for each piece of equipment
-    Make a better way of Chemicals in Instructions to keep their stats so they don't change, or maybe have a reset?
     Allow equipment and chemicals to be disposed
+    Allow users to select different actions for each piece of equipment
     Make basic layout for Experiment
         Update clicking and dragging to change indexes for ExperimentBoxes when they are removed from the list
         Split Experiment render code into individual methods

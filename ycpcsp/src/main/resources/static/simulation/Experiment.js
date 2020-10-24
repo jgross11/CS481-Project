@@ -18,6 +18,9 @@ class Experiment{
         // The instructions for running this Experiment
         this.instructions = []
 
+        // The disposers used by this Experiment
+        this.disposers = [];
+
         this.title = title;
         this.creator = creator;
     }
@@ -316,17 +319,26 @@ class ExperimentController2D{
         this.camera.reset();
 
         if(this.experiment === null) return;
+
         let eqs = this.experiment.equipment;
         for(var i = 0; i < eqs.length; i++){
             eqs[i].reset();
             this.equipmentBoxes.add(eqs[i]);
         }
+
         // Place all Chemicals in the Chemical list
         let chems = this.experiment.chemicals;
         for(var i = 0; i < chems.length; i++){
             this.chemicalBoxes.add(new ChemicalController2D(chems[i].copyChem()));
         }
         this.displayEquipmentBoxes();
+
+        // Reset the disposers
+        this.experiment.disposers = [];
+        let disposers = this.experiment.disposers;
+        let trashcan = idToEquipment(ID_EQUIP_TRASHCAN);
+        trashcan.equipment.setPosition([EXP_BOUNDS_X_OFFSET + 20, EXP_BOUNDS_Y_OFFSET + 20]);
+        disposers.push(trashcan);
     }
 
     /**
@@ -556,6 +568,11 @@ class ExperimentController2D{
             eq.update();
         });
 
+        // Update all of the Disposers
+        this.experiment.disposers.forEach(function(disposer){
+            disposer.update();
+        });
+
         // Move camera based on which buttons are held down
         this.updateCameraPos();
 
@@ -601,6 +618,11 @@ class ExperimentController2D{
 
         // Draw the disposal area
         // TODO
+
+        // Draw all of the Disposers
+        this.experiment.disposers.forEach(function(disposer){
+            disposer.draw(expG);
+        });
 
         // Draw objects on the lab table
         // Draw all not selected equipment
