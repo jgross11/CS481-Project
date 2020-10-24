@@ -27,7 +27,7 @@ class ErlenmeyerFlask extends Container{
     }
 
     /**
-    Get the ID representing this Beaker
+    Get the ID representing this Flask
     */
     getID(){
         return this.id;
@@ -36,19 +36,19 @@ class ErlenmeyerFlask extends Container{
 
 
 /**
-A class for handling controlling a Beaker in a 2D environment
+A class for handling controlling a Flask in a 2D environment
 */
-class BeakerController2D extends ContainerController2D{
+class ErlenmeyerController2D extends ContainerController2D{
     /**
-    Create a new BeakerController to control the given Beaker
-    beaker: The Beaker which this Controller will control
+    Create a new ErlenmeyerController to control the given Flask
+    erlenmeyer: The Flask which this Controller will control
     */
     constructor(erlenmeyer){
         super(erlenmeyer);
     }
 
     /**
-    Determine if this Controller's Beaker can contain the given Chemical.
+    Determine if this Controller's Flask can contain the given Chemical.
     chemical: The Chemical to test if it can be contained
     */
     canContain(chemical){
@@ -56,7 +56,7 @@ class BeakerController2D extends ContainerController2D{
     }
 
     /**
-    Draw this Controller's Beaker along with its data
+    Draw this Controller's Flask along with its data
     graphics: The P5 graphics to use
     */
     draw(graphics){
@@ -69,7 +69,7 @@ class BeakerController2D extends ContainerController2D{
             chemController.drawRect(this.x() + w * .12, this.y(), chem.mass / eq.capacity, w * .85, this.height(), 0.2, graphics);
         }
 
-        // Draw the base Beaker sprite
+        // Draw the base Flask sprite
         super.draw(graphics);
 
         // Draw the text
