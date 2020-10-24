@@ -22,4 +22,8 @@ class Beaker extends Container{
     getID(){
         return ID_EQUIP_BEAKER_TEST;
     }
+
+    getMass(){
+        return this.mass;
+    }
 }

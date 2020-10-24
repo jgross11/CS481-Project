@@ -70,4 +70,8 @@ class Chemical extends ExperimentObject{
             default: return null;
         }
     }
+
+    getMass(){
+        return this.mass;
+    }
 }
