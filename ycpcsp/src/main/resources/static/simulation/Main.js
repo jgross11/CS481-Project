@@ -3,7 +3,7 @@ var mainExpController = null;
 var mainExpCanvas = null;
 
 // true to load data from the actual database, false to use test data defined by the return of getTestJSON()
-let LOAD_EXPERIMENT_FROM_SERVER = true;
+let LOAD_EXPERIMENT_FROM_SERVER = false;
 
 /*
 

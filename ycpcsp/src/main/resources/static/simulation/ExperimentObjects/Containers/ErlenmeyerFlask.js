@@ -11,12 +11,12 @@ class ErlenmeyerFlask extends Container{
         super([0, 0], undefined, undefined, undefined, 0.03, SPRITE_ERLENMEYER);
         this.id = erlenmeyerID;
         var newAttributes = null;
-        switch(beakerID){
+        switch(erlenmeyerID){
             // All Beaker sizes
-            case ID_EQUIP_BEAKER_50mL: newAttributes = [[60, 60], 15.0, 50.0]; break;
-            case ID_EQUIP_BEAKER_150mL: newAttributes = [[100, 100], 20.0, 150.0]; break;
-            case ID_EQUIP_BEAKER_250mL: newAttributes = [[130, 130], 30.0, 250.0]; break;
-            case ID_EQUIP_BEAKER_600mL: newAttributes = [[200, 200], 50.0, 600.0]; break;
+            case ID_EQUIP_FLASK_25mL: newAttributes = [[60, 60], 15.0, 25.0]; break;
+            case ID_EQUIP_FLASK_50mL: newAttributes = [[100, 100], 20.0, 50.0]; break;
+            case ID_EQUIP_FLASK_100mL: newAttributes = [[130, 130], 30.0, 100.0]; break;
+            case ID_EQUIP_FLASK_1000mL: newAttributes = [[200, 200], 50.0, 1000.0]; break;
             default: break;
         }
         if(newAttributes !== null){

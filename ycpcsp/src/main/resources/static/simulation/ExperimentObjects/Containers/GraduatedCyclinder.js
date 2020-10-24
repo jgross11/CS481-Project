@@ -11,12 +11,12 @@ class GraduatedCylinder extends Container{
         super([0, 0], undefined, undefined, undefined, 0.03, SPRITE_GRADUATED);
         this.id = graduatedID;
         var newAttributes = null;
-        switch(beakerID){
+        switch(graduatedID){
             // All Beaker sizes
-            case ID_EQUIP_FLASK_25mL: newAttributes = [[60, 60], 15.0, 25.0]; break;
-            case ID_EQUIP_FLASK_50mL: newAttributes = [[100, 100], 20.0, 50.0]; break;
-            case ID_EQUIP_FLASK_100mL: newAttributes = [[130, 130], 30.0, 100.0]; break;
-            case ID_EQUIP_FLASK_1000mL: newAttributes = [[200, 200], 50.0, 1000.0]; break;
+            case ID_EQUIP_GRADUATED_25mL: newAttributes = [[60, 60], 15.0, 25.0]; break;
+            case ID_EQUIP_GRADUATED_50mL: newAttributes = [[100, 100], 20.0, 50.0]; break;
+            case ID_EQUIP_GRADUATED_100mL: newAttributes = [[130, 130], 30.0, 100.0]; break;
+            case ID_EQUIP_GRADUATED_1000mL: newAttributes = [[200, 200], 50.0, 1000.0]; break;
             default: break;
         }
         if(newAttributes !== null){
@@ -43,7 +43,7 @@ class BeakerController2D extends ContainerController2D{
     Create a new BeakerController to control the given Beaker
     beaker: The Beaker which this Controller will control
     */
-    constructor(graduted){
+    constructor(graduated){
         super(graduated);
     }
 
