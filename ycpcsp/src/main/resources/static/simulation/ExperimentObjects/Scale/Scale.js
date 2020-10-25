@@ -11,15 +11,17 @@ class Scale extends Equipment{
      which will be left behind when the object that this container holds are removed from it.
      sprite: A P5 image file used to display this piece of Container
      */
-    constructor(Scaleobject = null){
-        super(position, size, mass,  sprite);
+    constructor(ObjectToBeWeighed = null){
+        super([1,1], undefined, undefined,  SPRITE_SCALE);
         this.scaleId = 5;
         this.DisplayedWeight = 0.0;
-        this.ScaleObject = Scaleobject;
+        this.ObjectToBeWeighed = ObjectToBeWeighed;
         this.ZeroOut = 0.0;
         // The weight of  contained by this Container
     }
-
+    setObjectToBeWeighed(NewObjectToBeWeighed){
+        this.ObjectToBeWeighed = NewObjectToBeWeighed;
+    }
     getID() {
         return this.scaleId;
     }
@@ -37,7 +39,7 @@ class Scale extends Equipment{
      */
 
     getWeightObj(){
-            this.DisplayedWeight = this.ScaleObject.getTotalMass() - this.zeroOut;
+            this.DisplayedWeight = this.ObjectToBeWeighed.getTotalMass() - this.zeroOut;
     }
 
 

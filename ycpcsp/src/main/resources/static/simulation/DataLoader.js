@@ -245,7 +245,7 @@ function getTestJSON(){
     exp[EXP_JSON_CREATOR] = "Zaq";
 
     let equips = [{}, {}, {}, {}];
-    equips[0][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_BEAKER_50mL;
+    equips[0][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_SCALE;
     equips[0][EXP_JSON_EQUIP_AMOUNT] = 1;
 
     equips[1][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_BEAKER_150mL;

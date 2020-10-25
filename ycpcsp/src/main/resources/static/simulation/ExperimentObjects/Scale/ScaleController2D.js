@@ -1,11 +1,11 @@
 // Constants for identifying which functions have which ids
 let ID_FUNC_To_Take_Weight = 0;
-let ID_FUNC_Zero_Out_Value = 1;
 
 class ScaleController2D extends EquipmentController2D{
 
     constructor(ScaleObject){
         super(ScaleObject);
+
     }
 
     /**
@@ -13,6 +13,12 @@ class ScaleController2D extends EquipmentController2D{
      id: The id to convert
      returns: The function of the id
      */
+    //TODO ScaleObject(Needs)
+    // To either set the object that the scale is weighing or to update the object that the scale is weighing
+    setScaleObject(NewObjectTOBeWeighed){
+        this.ScaleObject.ObjectToBeWeighed = NewObjectTOBeWeighed;
+        this.ScaleObject.DisplayedWeight = this.ScaleObject.ObjectToBeWeighed.getTotalMass();
+    }
     idToFunc(id){
         switch(id){
             case ID_FUNC_To_Take_Weight: return this.updateMass;
@@ -35,12 +41,6 @@ class ScaleController2D extends EquipmentController2D{
     }
 
 
-    /**
-        updateMass will update the mass of the displayedWeight of a scale object by using the function in the scale model class
-     */
-    updateMass(){
-        this.ScaleObject.getWeightObj();
-    }
 
     /**
         The zero out function takes the current weight on the scale
@@ -56,8 +56,10 @@ class ScaleController2D extends EquipmentController2D{
     */
     zeroOut(){
         ScaleObject.ZeroOut = ScaleObject.getHeldWeight();
-        ScaleObject.getWeightObj();
     }
 
+    clearZeroOut(){
+        ScaleObject.ZeroOut = 0.0;
+    }
 
 }
