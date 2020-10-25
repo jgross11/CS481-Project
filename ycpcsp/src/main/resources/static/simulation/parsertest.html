@@ -32,6 +32,7 @@
     parse("(A2B2A2B2)2");
     parse("A(A(A)2)2");
     parse("(AuBuCuDuEuFuGu)1");
+    parse("(AuBuCuDuEuFuGu)100");
     parse("Au(Au2)2(Au3)3(Au4)4");
     parse("Uub123");
     parse("Uu123");
@@ -140,13 +141,18 @@
                 }
                 let possibleMultiplier = name[i+1];
                 if(!isNaN(possibleMultiplier)){
-                    list["nextIndex"] = i+2;
+                    let index = i+2;
+                    let coefficient = possibleMultiplier;
+                    while(!isNaN(name[index])){
+                        coefficient = coefficient * 10 + parseInt(name[index++]);
+                    }
+                    list["nextIndex"] = index;
                     let listKeys = Object.keys(list);
                     for(var j = 0; j < listKeys.length; j++){
                         if(listKeys[j] == "nextIndex"){
                             continue;
                         } else{
-                            list[listKeys[j]] = list[listKeys[j]] == null ? possibleMultiplier : list[listKeys[j]] * possibleMultiplier;
+                            list[listKeys[j]] = list[listKeys[j]] == null ? coefficient : list[listKeys[j]] * coefficient;
                         }
                     }
                     return list;
