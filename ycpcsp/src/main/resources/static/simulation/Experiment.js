@@ -698,7 +698,7 @@ class ExperimentController2D{
 
         // TODO remove, only here for testing purposes
         // Draw instructions
-        g.fill(color(0, 0, 0));
+        g.fill(0);
         g.noStroke();
         g.textSize(18);
         var y = 490;
@@ -717,12 +717,21 @@ class ExperimentController2D{
         // Draw the list of possible actions for the selected actor
         if(this.selectedActor !== null && this.selectedReceiver !== null){
             // TODO make render constants
-            g.textSize(16);
-            g.fill(0, 0, 0);
-            g.noStroke();
             let options = selAct.getFuncDescriptions();
+            g.textSize(16);
+            let baseX = mouseX + 15;
+            let baseY = mouseY;
             for(var i = 0; i < options.length; i++){
-                g.text((i + 1) + ": " + options[i], mouseX + 15, mouseY + i * 18);
+                let s = (i + 1) + ": " + options[i];
+
+                g.strokeWeight(1);
+                g.stroke(0);
+                g.fill(255);
+                g.rect(baseX - 2, baseY + (i - 1) * 18 + 3, g.textWidth(s) + 6, 18);
+
+                g.noStroke();
+                g.fill(0);
+                g.text(s, baseX, baseY + i * 18);
             }
         }
 

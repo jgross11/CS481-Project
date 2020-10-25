@@ -8,8 +8,8 @@ let LOAD_EXPERIMENT_FROM_SERVER = false;
 /*
 
 TODO:
-    Allow users to select different actions for each piece of equipment
-        Right click second, show options for the two interacting, allow them to be clicked
+    Test case ContainerController2D.addTo, pourInto
+    Allow options for interactions to be clicked on
     Create system for making Experiment Instructions
     Allow equipment to be disposed via sink
     Add way to add chemicals to containers over time

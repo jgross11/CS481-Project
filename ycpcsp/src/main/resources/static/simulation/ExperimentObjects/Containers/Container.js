@@ -164,6 +164,7 @@ class ContainerController2D extends EquipmentController2D{
     contControl: The ContainerController in which to pour this Controller's Container's contents
     */
     pourInto(contControl){
+        if(!(contControl instanceof ContainerController2D)) return;
         if(this.equipment !== null && contControl !== null){
             let chems = this.pourOut(this.maxPourAmount(contControl));
             for(var i = 0; i < chems.length && this.hasSpace(chems[i]); i++){
@@ -224,6 +225,7 @@ class ContainerController2D extends EquipmentController2D{
     */
     addTo(chemControl){
         if(chemControl === null) return false;
+        if(!(chemControl instanceof ChemicalController2D)) return false;
         let chem = chemControl.copyChem();
         let copyControl = new ChemicalController2D(chem);
         let eq = this.equipment;
