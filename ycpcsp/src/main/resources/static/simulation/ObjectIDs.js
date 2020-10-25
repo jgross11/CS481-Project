@@ -11,7 +11,6 @@ let ID_EQUIP_BEAKER_600mL = 4;
 let ID_EQUIP_SCALE = 5;
 let ID_EQUIP_TRASHCAN = 6;
 
-
 // Constants for IDs of Chemicals
 let ID_CHEM_TEST_RED = 1;
 let ID_CHEM_TEST_BLUE = 2;

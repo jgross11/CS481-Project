@@ -162,15 +162,18 @@ class ContainerController2D extends EquipmentController2D{
     Pour the contents of this Controller's Container into the given Controller's Container. This will leave residue inside this Controller's Container.
     If the contents of this Controller's Container do not fit in the given Controller's Container, then as much as can fit will be poured, Beginning with chemicals first in the list
     contControl: The ContainerController in which to pour this Controller's Container's contents
+    return: true if the Chemicals could be poured into the Controller, false otherwise
     */
     pourInto(contControl){
-        if(!(contControl instanceof ContainerController2D)) return;
+        if(!(contControl instanceof ContainerController2D)) return false;
         if(this.equipment !== null && contControl !== null){
             let chems = this.pourOut(this.maxPourAmount(contControl));
             for(var i = 0; i < chems.length && this.hasSpace(chems[i]); i++){
                 contControl.addTo(new ChemicalController2D(chems[i]));
             }
+            return true;
         }
+        return false;
     }
 
     /**
