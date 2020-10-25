@@ -36,6 +36,12 @@ QUnit.test('funcToId:', function(assert){
     assert.deepEqual(disposeControl.funcToId(null), null, "Should find null on invalid function");
 });
 
+QUnit.test('getFuncDescriptions:', function(assert){
+    let desc = disposeControl.getFuncDescriptions();
+    assert.equal(desc.length, 1, "Disposers should have one function description");
+    assert.true(typeof desc[0] === "string", "Elements of the function descriptions must be strings.");
+});
+
 QUnit.test('dispose:', function(assert){
     assert.throws(disposeControl.dispose, "Generic DisposerController2D should throw an error on dispose");
 });

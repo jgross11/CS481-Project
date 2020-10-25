@@ -51,6 +51,13 @@ QUnit.test('funcToId:', function(assert){
     assert.equal(controller.funcToId(controller.addTo), ID_FUNC_CONTAINER_ADD_TO, "Should get the ID for addTo");
 });
 
+QUnit.test('getFuncDescriptions:', function(assert){
+    let desc = controller.getFuncDescriptions();
+    assert.equal(desc.length, 2, "Containers should have two function descriptions");
+    assert.true(typeof desc[0] === "string", "Elements of the function descriptions must be strings.");
+    assert.true(typeof desc[1] === "string", "Elements of the function descriptions must be strings.");
+});
+
 QUnit.test('hasResidue:', function(assert){
     beaker1.setResidue(0.1);
     assert.false(beakerControl1.hasResidue(), "Should have no residue by default");

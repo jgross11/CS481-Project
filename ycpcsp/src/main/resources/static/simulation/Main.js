@@ -8,8 +8,6 @@ let LOAD_EXPERIMENT_FROM_SERVER = false;
 /*
 
 TODO:
-    Test cases ExperimentObjectController2D.getFuncDescriptions, ChemicalController2D.getFuncDescriptions,
-        ContainerController2D.getFuncDescriptions, DisposerController2D.getFuncDescriptions
     Allow users to select different actions for each piece of equipment
         Right click second, show options for the two interacting, allow them to be clicked
     Create system for making Experiment Instructions
