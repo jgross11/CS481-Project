@@ -8,10 +8,9 @@ let LOAD_EXPERIMENT_FROM_SERVER = false;
 /*
 
 TODO:
-    Test cases Disposer, DisposerController2D, Trashcan, TrashcanController2D
-    Create system for making Experiment Instructions
-    Allow equipment and chemicals to be disposed
     Allow users to select different actions for each piece of equipment
+    Create system for making Experiment Instructions
+    Allow equipment to be disposed
     Make basic layout for Experiment
         Update clicking and dragging to change indexes for ExperimentBoxes when they are removed from the list
         Split Experiment render code into individual methods

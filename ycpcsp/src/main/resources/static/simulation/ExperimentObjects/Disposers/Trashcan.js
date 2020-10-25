@@ -30,11 +30,15 @@ class TrashcanController2D extends DisposerController2D{
 
     /**
     Dispose of a Chemical in this trashcan
-    chemControl: The Chemical to dispose of, must be a ChemicalController2D
+    contControl: The Chemical to dispose of, must be a ChemicalController2D
     returns: true if the chemical was disposed, false otherwise
     */
-    dispose(chemControl){
-        if(chemControl.chemical !== undefined) chemControl.chemical.setMass(0);
+    dispose(contControl){
+        if(contControl instanceof ContainerController2D){
+            let chems = contControl.emptyOut();
+            return Array.isArray(chems) && chems.length > 0;
+        }
+        return false;
     }
 
 }

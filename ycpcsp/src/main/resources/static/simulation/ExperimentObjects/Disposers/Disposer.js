@@ -47,7 +47,7 @@ class DisposerController2D extends EquipmentController2D{
     returns: The id of the function, or null if an invalid function was given
     */
     funcToId(func){
-        switch(id){
+        switch(func){
             case this.dispose: return ID_FUNC_DISPOSER_DISPOSE;
             default: return null;
         }

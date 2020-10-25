@@ -38,6 +38,7 @@ QUnit.module("ExperimentController2D", {
         exp = new Experiment("a title", "a name");
         controller = new ExperimentController2D(exp);
 
+        currentInstanceID = 10;
         beaker1 = new Beaker(ID_EQUIP_BEAKER_50mL);
         beaker1.setResidue(0);
         beaker1.setPosition([0, 0]);
@@ -499,10 +500,10 @@ QUnit.test('findEquipmentByInstanceID:', function(assert){
     controller.addEquipment(beakerControl2, true);
     controller.addEquipment(beakerControl3, true);
 
-    assert.deepEqual(controller.findEquipmentByInstanceID(1), beakerControl1, "Should find the first beaker.");
-    assert.deepEqual(controller.findEquipmentByInstanceID(2), beakerControl2, "Should find the second beaker.");
-    assert.deepEqual(controller.findEquipmentByInstanceID(3), beakerControl3, "Should find the third beaker.");
-    assert.deepEqual(controller.findEquipmentByInstanceID(4), null, "Should find null.");
+    assert.deepEqual(controller.findEquipmentByInstanceID(10), beakerControl1, "Should find the first beaker.");
+    assert.deepEqual(controller.findEquipmentByInstanceID(11), beakerControl2, "Should find the second beaker.");
+    assert.deepEqual(controller.findEquipmentByInstanceID(12), beakerControl3, "Should find the third beaker.");
+    assert.deepEqual(controller.findEquipmentByInstanceID(13), null, "Should find null.");
 });
 
 QUnit.test('experimentMouseX:', function(assert){

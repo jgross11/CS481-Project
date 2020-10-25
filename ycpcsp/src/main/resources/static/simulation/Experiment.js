@@ -440,7 +440,7 @@ class ExperimentController2D{
                 // Otherwise, if an object is selected, run a function on it
                 else{
                     // TODO allow multiple constants to exist here. The user selects an action when the initially right click
-                    this.selectedEquipFunction(ID_FUNC_CONTAINER_POUR_INTO);
+                    this.selectedEquipFunction(1);
                     this.setSelectedEquipment(null);
                 }
             }
@@ -684,7 +684,7 @@ class ExperimentController2D{
         this.graphics.text("Left click a beaker to move it", x, y += 20);
         this.graphics.text("Right click a beaker to select it", x, y += 20);
         this.graphics.text("Press 1, 2, 3, 4, 5 to add 1, 5, 10, 20, or 25 units to selected beaker", x, y += 20);
-        this.graphics.text("Press ESC to empty the selected beaker", x, y += 20);
+        this.graphics.text("Press ESC to reset the selected Equipment", x, y += 20);
         this.graphics.text("Click an unselected beaker to combine the chemical in the selected beaker", x, y += 20);
         this.graphics.text("Press I to run the next instruction", x, y += 20);
         this.graphics.text("Press R to reset the simulation", x, y += 20);
