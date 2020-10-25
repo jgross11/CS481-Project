@@ -8,8 +8,7 @@ let LOAD_EXPERIMENT_FROM_SERVER = false;
 /*
 
 TODO:
-    Test case: ExperimentController2D.selectEquipment where actor is the same as receiver
-        Scale and ScaleController2D
+    Test case: Scale and ScaleController2D
     Allow options for interactions to be clicked on
     Create system for making Experiment Instructions
     Allow equipment to be disposed via sink
