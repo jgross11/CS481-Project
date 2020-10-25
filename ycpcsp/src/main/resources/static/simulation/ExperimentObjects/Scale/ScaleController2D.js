@@ -5,7 +5,6 @@ class ScaleController2D extends EquipmentController2D{
 
     constructor(ScaleObject){
         super(ScaleObject);
-
     }
 
     /**
@@ -20,7 +19,7 @@ class ScaleController2D extends EquipmentController2D{
         if(!(NewObjectTOBeWeighed instanceof ContainerController2D)) return;
 
         this.equipment.setObjectToBeWeighed(NewObjectTOBeWeighed);
-        this.equipment.setDisplayedWeight(this.equipment.ObjectToBeWeighed.equipment.getTotalMass());
+        this.updateWeighingObjectMass();
     }
 
     idToFunc(id){
@@ -52,6 +51,14 @@ class ScaleController2D extends EquipmentController2D{
     }
 
     /**
+    Update the displayed mass of this Container's scale based on the mass of the current object
+    */
+    updateWeighingObjectMass(){
+        let eqControl = this.equipment.ObjectToBeWeighed;
+        this.equipment.setDisplayedWeight((eqControl === null) ? 0 : eqControl.equipment.getTotalMass());
+    }
+
+    /**
     Get a list of all possible functions which this ScaleController can perform.
     returns: the list of strings
     */
@@ -77,6 +84,14 @@ class ScaleController2D extends EquipmentController2D{
 
     clearZeroOut(){
         this.equipment.ZeroOut = 0.0;
+    }
+
+    /**
+    Find the mass of the ContainerController2D and update the scale's mass display
+    */
+    update(){
+        this.updateWeighingObjectMass();
+        // TODO find a way to set the Scale to be holding nothing when the user moves the Scale's Container
     }
 
     /**
