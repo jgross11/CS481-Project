@@ -1,5 +1,5 @@
 // Constants for identifying which functions have which ids
-let ID_FUNC_To_Take_Weight = 0;
+let ID_FUNC_To_Take_Weight = 1;
 
 class ScaleController2D extends EquipmentController2D{
 
@@ -16,13 +16,15 @@ class ScaleController2D extends EquipmentController2D{
     //TODO ScaleObject(Needs)
     // To either set the object that the scale is weighing or to update the object that the scale is weighing
     setScaleObject(NewObjectTOBeWeighed){
-        this.ScaleObject.ObjectToBeWeighed = NewObjectTOBeWeighed;
-        this.ScaleObject.DisplayedWeight = this.ScaleObject.ObjectToBeWeighed.getTotalMass();
+        this.equipment.setObjectToBeWeighed(NewObjectTOBeWeighed);
+        this.equipment.DisplayedWeight = this.equipment.ObjectToBeWeighed.equipment.getTotalMass();
+        console.log(this.equipment.ObjectToBeWeighed);
     }
+
     idToFunc(id){
         switch(id){
-            case ID_FUNC_To_Take_Weight: return this.updateMass;
-            case ID_FUNC_Zero_Out_Value: return this.zeroOut;
+            case ID_FUNC_To_Take_Weight: return this.setScaleObject;
+            default: return null;
         }
     }
 
@@ -34,13 +36,26 @@ class ScaleController2D extends EquipmentController2D{
 
     funcToId(func){
         switch(func){
-            case this.updateMass(): return ID_FUNC_To_Take_Weight;
-            case this.zeroOut: return  ID_FUNC_Zero_Out_Value;
+            case this.setScaleObject: return ID_FUNC_To_Take_Weight;
             default: return null;
         }
     }
 
+    /**
+    Reset this Controller's Scale by resetting the zero value and removing equipment
+    */
+    reset(){
+        this.equipment.setObjectToBeWeighed(null);
+        this.equipment.setZeroOut(0);
+    }
 
+    /**
+    Get a list of all possible functions which this ScaleController can perform.
+    returns: the list of strings
+    */
+    getFuncDescriptions(){
+        return ["Place Equipment"];
+    }
 
     /**
         The zero out function takes the current weight on the scale
@@ -55,11 +70,11 @@ class ScaleController2D extends EquipmentController2D{
         so becomes displayedWeight = 15.00 - 15.00 = 0
     */
     zeroOut(){
-        ScaleObject.ZeroOut = ScaleObject.getHeldWeight();
+        this.equipment.ZeroOut = ScaleObject.getHeldWeight();
     }
 
     clearZeroOut(){
-        ScaleObject.ZeroOut = 0.0;
+        this.equipment.ZeroOut = 0.0;
     }
 
 }

@@ -30,7 +30,8 @@ function idToEquipment(id){
         case ID_EQUIP_BEAKER_150mL:
         case ID_EQUIP_BEAKER_250mL:
         case ID_EQUIP_BEAKER_600mL: return new BeakerController2D(new Beaker(id));
-        case ID_EQUIP_TRASHCAN: return new TrashcanController2D(new Trashcan(id));
+        case ID_EQUIP_SCALE: return new ScaleController2D(new Scale());
+        case ID_EQUIP_TRASHCAN: return new TrashcanController2D(new Trashcan());
         default: return null;
     }
 }
