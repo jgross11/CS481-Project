@@ -13,17 +13,39 @@ class Scale extends Equipment{
      */
     constructor(ObjectToBeWeighed = null){
         super([1,1], [100, 100], 100, SPRITE_SCALE);
-        this.scaleId = 5;
         this.DisplayedWeight = 0.0;
         this.ObjectToBeWeighed = ObjectToBeWeighed;
         this.ZeroOut = 0.0;
         // The weight of  contained by this Container
     }
+
+    /**
+    Set the current position of this Scale, also updates the position of the held object
+    pos: The new position, a list [x, y] of coordinates
+    */
+    setPosition(pos){
+        super.setPosition(pos);
+        // Update the position of the equipment
+        let obj = this.ObjectToBeWeighed;
+        if(obj !== null){
+            let scaleControl = new ScaleController2D(this);
+            let eq = obj.equipment;
+            eq.setPosition([scaleControl.getCenter()[0] - eq.size[0] * 0.5, pos[1] - eq.size[1]]);
+        }
+    }
+
+    setDisplayedWeight(displayedWeight){
+        this.DisplayedWeight = displayedWeight;
+    }
+
     setObjectToBeWeighed(NewObjectToBeWeighed){
         this.ObjectToBeWeighed = NewObjectToBeWeighed;
+        // Update the position of this Scale, and the position of the object to be weighed
+        this.setPosition(this.position);
     }
+
     getID() {
-        return this.scaleId;
+        return ID_EQUIP_SCALE;
     }
 
     setZeroOut(value){

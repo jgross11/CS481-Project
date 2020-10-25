@@ -16,9 +16,11 @@ class ScaleController2D extends EquipmentController2D{
     //TODO ScaleObject(Needs)
     // To either set the object that the scale is weighing or to update the object that the scale is weighing
     setScaleObject(NewObjectTOBeWeighed){
+        // Scales only can weigh containers
+        if(!(NewObjectTOBeWeighed instanceof ContainerController2D)) return;
+
         this.equipment.setObjectToBeWeighed(NewObjectTOBeWeighed);
-        this.equipment.DisplayedWeight = this.equipment.ObjectToBeWeighed.equipment.getTotalMass();
-        console.log(this.equipment.ObjectToBeWeighed);
+        this.equipment.setDisplayedWeight(this.equipment.ObjectToBeWeighed.equipment.getTotalMass());
     }
 
     idToFunc(id){
@@ -75,6 +77,20 @@ class ScaleController2D extends EquipmentController2D{
 
     clearZeroOut(){
         this.equipment.ZeroOut = 0.0;
+    }
+
+    /**
+    Draw this Controller's Scale onto the screen using P5 2D graphics
+    graphics: The P5 graphics to use
+    */
+    draw(graphics){
+        super.draw(graphics);
+
+        // Draw the mass on the scale
+        graphics.noStroke();
+        graphics.fill(0);
+        graphics.textSize(15);
+        graphics.text("" + this.equipment.DisplayedWeight, this.x() + this.width() * 0.2, this.y() + this.height() * 0.7);
     }
 
 }

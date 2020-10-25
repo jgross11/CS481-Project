@@ -141,7 +141,7 @@ class ExperimentController2D{
         let equip = this.findEquipmentByPosition(this.experimentMousePos(), null, true);
         if(equip === null) return false;
         if(this.selectedActor === null) this.setSelectedActor(equip);
-        else if(this.selectedReceiver === null) this.setSelectedReceiver(equip);
+        else if(this.selectedReceiver === null && equip !== this.selectedActor) this.setSelectedReceiver(equip);
         else return false;
         return true;
     }
