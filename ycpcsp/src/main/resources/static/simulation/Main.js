@@ -9,8 +9,16 @@ let LOAD_EXPERIMENT_FROM_SERVER = false;
 
 TODO:
     Allow users to select different actions for each piece of equipment
+        Right click second, show options for the two interacting
+        Display list of options, press number key for corresponding option
+        Later make the options clickable
+        How do I know what options?
+        First object is Actor, get list of all possible actions
+        Need to know what actions the actor can perform on the receiver
+        Display only those options, or unselect both if there are no options
     Create system for making Experiment Instructions
     Allow equipment to be disposed
+    Fix bug where left clicking one Equipment, then while dragging, right click, makes the equipment not get unselected on letting go of left click
     Make basic layout for Experiment
         Update clicking and dragging to change indexes for ExperimentBoxes when they are removed from the list
         Split Experiment render code into individual methods

@@ -105,38 +105,71 @@ QUnit.test('setExperiment:', function(assert){
         "Experiment in Controller should equal the set Experiment.");
 });
 
-QUnit.test('setSelectedEquipment:', function(assert){
-    controller.setSelectedEquipment(null);
-    assert.equal(controller.selectedEquipment, null,
-        "Selected Equipment in Controller should be null.");
+QUnit.test('setSelectedActor:', function(assert){
+    controller.setSelectedActor(null);
+    assert.equal(controller.selectedActor, null,
+        "Selected actor in Controller should be null.");
 
-    controller.setSelectedEquipment(beakerControl1);
-    assert.equal(controller.selectedEquipment, beakerControl1,
-        "Selected Equipment in Controller should be the set Equipment.");
+    controller.setSelectedActor(beakerControl1);
+    assert.equal(controller.selectedActor, beakerControl1,
+        "Selected actor in Controller should be the set Equipment.");
+});
+
+QUnit.test('setSelectedReceiver:', function(assert){
+    controller.setSelectedReceiver(null);
+    assert.equal(controller.selectedReceiver, null,
+        "Selected receiver in Controller should be null.");
+
+    controller.setSelectedReceiver(beakerControl1);
+    assert.equal(controller.selectedReceiver, beakerControl1,
+        "Selected receiver in Controller should be the set Equipment.");
 });
 
 QUnit.test('selectEquipment:', function(assert){
-    mouseX = 5 + EXP_BOUNDS_X_OFFSET;
-    mouseY = 5 + EXP_BOUNDS_Y_OFFSET;
-    controller.addEquipment(beakerControl1, true);
+    exp.disposers = [];
+    assert.false(controller.selectEquipment(), "Should fail select equipment when finding none");
+
     controller.camera.setBounds(null);
     controller.camera.setPos([0, 0]);
-    controller.selectEquipment();
-    assert.deepEqual(controller.selectedEquipment, beakerControl1, "Should select beaker1.");
+    controller.addEquipment(beakerControl1, true);
+    controller.addEquipment(beakerControl2, true);
+
+    mouseX = 5 + EXP_BOUNDS_X_OFFSET;
+    mouseY = 5 + EXP_BOUNDS_Y_OFFSET;
+    assert.true(controller.selectEquipment(), "Should successfully select equipment");
+    assert.deepEqual(controller.selectedActor, beakerControl1, "Should select beaker1 for the actor.");
+    assert.deepEqual(controller.selectedReceiver, null, "Should still have a null selected receiver.");
+
+    mouseX = 105 + EXP_BOUNDS_X_OFFSET;
+    mouseY = 5 + EXP_BOUNDS_Y_OFFSET;
+    assert.true(controller.selectEquipment(), "Should successfully select equipment");
+    assert.deepEqual(controller.selectedActor, beakerControl1, "Should still have beaker1 for the actor.");
+    assert.deepEqual(controller.selectedReceiver, beakerControl2, "Should select beaker2 for the receiver.");
+
+    mouseX = 50 + EXP_BOUNDS_X_OFFSET;
+    mouseY = 105 + EXP_BOUNDS_Y_OFFSET;
+    assert.false(controller.selectEquipment(), "Should fail to select equipment");
+    assert.deepEqual(controller.selectedActor, beakerControl1, "Should still have beaker1 for the actor.");
+    assert.deepEqual(controller.selectedReceiver, beakerControl2, "Should still have beaker2 for the receiver.");
 });
 
-QUnit.test('clearSelectedEquipment:', function(assert){
+QUnit.test('clearSelected:', function(assert){
     beaker1.setContents(chem);
-    controller.setSelectedEquipment(beakerControl1);
-    assert.deepEqual(controller.selectedEquipment, beakerControl1, "Selected Equipment should be beakerControl1");
-    assert.deepEqual(beaker1.contents, [chem], "Contents of Beaker1 should be chem");
+    controller.setSelectedActor(beakerControl1);
+    controller.setSelectedReceiver(beakerControl2);
 
-    controller.clearSelectedEquipment();
-    assert.deepEqual(controller.selectedEquipment, null, "Selected Equipment should be null after clearing it");
-    assert.deepEqual(beaker1.contents, [], "Contents of Beaker1 should be empty after clearing beakerControl1");
+    assert.deepEqual(controller.selectedActor, beakerControl1,
+        "Selected actor should be beakerControl1 after making selection");
+    assert.deepEqual(controller.selectedReceiver, beakerControl2,
+        "Selected actor should be beakerControl2 after making selection");
 
-    controller.clearSelectedEquipment();
-    assert.deepEqual(controller.selectedEquipment, null, "Selected Equipment should still be null after clearing null Equipment");
+    controller.clearSelected();
+    assert.deepEqual(controller.selectedActor, null, "Selected actor should be null after clearing selections");
+    assert.deepEqual(controller.selectedReceiver, null, "Selected actor should be null after clearing selections");
+
+    controller.clearSelected();
+    assert.deepEqual(controller.selectedActor, null, "Selected actor should still be null after clearing empty selections");
+    assert.deepEqual(controller.selectedReceiver, null, "Selected actor should still be null after clearing empty selections");
 });
 
 QUnit.test('selectedEquipFunction:', function(assert){
@@ -151,29 +184,37 @@ QUnit.test('selectedEquipFunction:', function(assert){
     var badX = -1000;
     var badY = -1000;
 
-    controller.setSelectedEquipment(beakerControl1);
+    controller.setSelectedActor(beakerControl1);
     mouseX = goodX;
     mouseY = goodY;
     result = controller.selectedEquipFunction(null);
     assert.false(result, "Calling the function without a valid function should fail.");
 
-    controller.setSelectedEquipment(null);
+    controller.setSelectedActor(null);
     mouseX = goodX;
     mouseY = goodY;
     result = controller.selectedEquipFunction(ID_FUNC_CONTAINER_POUR_INTO);
     assert.false(result, "Calling the function without selected equipment should fail.");
 
-    controller.setSelectedEquipment(beakerControl1);
+    controller.setSelectedActor(beakerControl1);
     mouseX = badX;
     mouseY = badY;
     result = controller.selectedEquipFunction(ID_FUNC_CONTAINER_POUR_INTO);
     assert.false(result, "Calling the function without a valid equipment in selection range should fail.");
 
-    controller.setSelectedEquipment(beakerControl1);
+    controller.setSelectedActor(beakerControl1);
+    controller.setSelectedReceiver(beakerControl2);
     mouseX = goodX;
     mouseY = goodY;
     result = controller.selectedEquipFunction(ID_FUNC_CONTAINER_POUR_INTO);
     assert.true(result, "Calling the function with valid setup should succeed.");
+
+    controller.setSelectedActor(beakerControl1);
+    controller.setSelectedReceiver(null);
+    mouseX = goodX;
+    mouseY = goodY;
+    result = controller.selectedEquipFunction(ID_FUNC_CONTAINER_POUR_INTO, beaker2);
+    assert.true(result, "Calling the function with valid actor, and valid receiver parameters should succeed.");
 });
 
 QUnit.test('setMovingEquipment:', function(assert){
@@ -612,8 +653,7 @@ QUnit.todo('render:', function(assert){
     assert.true(false);
 });
 
-QUnit.todo('drawEquipSquare:', function(assert){
-    controller.drawEquipSquare();
+QUnit.todo('drawSelectedIndicator:', function(assert){
     assert.true(false);
 });
 
