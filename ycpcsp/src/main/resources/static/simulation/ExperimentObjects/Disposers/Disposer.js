@@ -54,6 +54,14 @@ class DisposerController2D extends EquipmentController2D{
     }
 
     /**
+    Get a list of all possible functions which this DisposerController can perform.
+    returns: the list of strings
+    */
+    getFuncDescriptions(){
+        return ["Dispose"];
+    }
+
+    /**
     Dispose of the given ExperimentObjectController2D's Object
     objControl: The Controller with the object to dispose
     returns: true if the object was successfully disposed, false otherwise

@@ -119,6 +119,14 @@ class ContainerController2D extends EquipmentController2D{
     }
 
     /**
+    Get a list of all possible functions which this ContainerController can perform.
+    returns: the list of strings
+    */
+    getFuncDescriptions(){
+        return ["Pour Into", "Add To"];
+    }
+
+    /**
     Determine if this Controller's Container only has residue left.
     To have residue, there must be only one chemical remaining, and it must take up less than the
     residue percentage of this Controller's Container's capacity

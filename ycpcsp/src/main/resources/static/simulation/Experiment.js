@@ -698,21 +698,33 @@ class ExperimentController2D{
 
         // TODO remove, only here for testing purposes
         // Draw instructions
-        this.graphics.fill(color(0, 0, 0));
-        this.graphics.noStroke();
-        this.graphics.textSize(18);
+        g.fill(color(0, 0, 0));
+        g.noStroke();
+        g.textSize(18);
         var y = 490;
         let x = 650;
-        this.graphics.text("Left click equipment to move it", x, y += 20);
-        this.graphics.text("Right click a equipment to select, blue = actor, green = receiver", x, y += 20);
-        this.graphics.text("Press ESC to unselect selected Equipment", x, y += 20);
-        this.graphics.text("Pres 1, 2, or 3 to perform actions on selected actor and receiver", x, y += 20);
-        this.graphics.text("Press 1, 2, 3, 4, 5 to add 1, 5, 10, 20, or 25 units to selected actor, if container", x, y += 20);
-        this.graphics.text("Press I to run the next instruction", x, y += 20);
-        this.graphics.text("Press R to reset the simulation", x, y += 20);
-        this.graphics.text("Press C to view Chemical tab, then click a chemical to select", x, y += 20);
-        this.graphics.text("Press V to view Equipment tab, then click and drag to add equipment", x, y += 20);
-        this.graphics.text("Use arrow keys to move camera", x, y += 20);
+        g.text("Left click equipment to move it", x, y += 20);
+        g.text("Right click a equipment to select, blue = actor, green = receiver", x, y += 20);
+        g.text("Press ESC to unselect selected Equipment", x, y += 20);
+        g.text("Pres 1, 2, or 3 to perform actions on selected actor and receiver", x, y += 20);
+        g.text("Press 1, 2, 3, 4, 5 to add 1, 5, 10, 20, or 25 units to selected actor, if container", x, y += 20);
+        g.text("Press I to run the next instruction", x, y += 20);
+        g.text("Press R to reset the simulation", x, y += 20);
+        g.text("Press C to view Chemical tab, then click a chemical to select", x, y += 20);
+        g.text("Press V to view Equipment tab, then click and drag to add equipment", x, y += 20);
+        g.text("Use arrow keys to move camera", x, y += 20);
+
+        // Draw the list of possible actions for the selected actor
+        if(this.selectedActor !== null && this.selectedReceiver !== null){
+            // TODO make render constants
+            g.textSize(16);
+            g.fill(0, 0, 0);
+            g.noStroke();
+            let options = selAct.getFuncDescriptions();
+            for(var i = 0; i < options.length; i++){
+                g.text((i + 1) + ": " + options[i], mouseX + 15, mouseY + i * 18);
+            }
+        }
 
         // Draw the final graphics image to the canvas
         canvasGraphics.image(g, 0, 0);

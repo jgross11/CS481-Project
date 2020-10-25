@@ -73,4 +73,15 @@ class ExperimentObjectController2D{
         throw new Error("All ExperimentObjectController2D objects must implement funcToId");
     }
 
+    /**
+    Get a list of all possible functions which this ExperimentObjectController can perform.
+    The list must be in the same order as the function ids. For example, if this ExperimentObjectController has
+    3 functions, make, add, and destroy, with function ids 1, 2, and 3 respectively, then this method
+    should return a list of 3 strings, first describing make, then add, and then destroy
+    returns: the list of strings
+    */
+    getFuncDescriptions(){
+        throw new Error("All ExperimentObjectController2D objects must implement getFuncDescriptions");
+    }
+
 }
