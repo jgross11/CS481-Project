@@ -18,16 +18,44 @@ class Container extends Equipment{
         this.capacity = capacity;
         this.residue = residue;
 
-        // The Chemical contained by this Container
-        this.contents = null;
+        // The list of Chemicals in this Container
+        this.contents = [];
     }
 
     /**
-    Set the Chemical contents of this Container
-    contents: The new contents, a Chemical
+    Set the Chemical contents of this Container.
+    contents: The new contents, a single chemical, or a list of Chemicals, can be an empty list or null, null will set an empty list
     */
     setContents(contents){
-        this.contents = contents;
+        this.contents = (contents === null) ? [] : contents;
+        if(!Array.isArray(this.contents)) this.contents = [this.contents];
+    }
+
+    /**
+    Get the mass of all the combined Chemicals in this Container
+    returns: The mass total
+    */
+    getTotalContentsMass(){
+        var total = 0;
+        for(var i = 0; i < this.contents.length; i++){
+            total += this.contents[i].mass;
+        }
+        return total;
+    }
+
+    /**
+    Get the mass of this Container combined with all chemicals in the container
+    */
+    getTotalMass(){
+        return this.mass + this.getTotalContentsMass();
+    }
+
+    /**
+    Determine if there are no contents in this Container
+    returns: true if there are no contents in this Container, false otherwise
+    */
+    isEmpty(){
+        return this.getTotalContentsMass() === 0;
     }
 
     /**
@@ -91,39 +119,61 @@ class ContainerController2D extends EquipmentController2D{
     }
 
     /**
-    Determine if this Controller's Container only has residue left
+    Get a list of all possible functions which this ContainerController can perform.
+    returns: the list of strings
+    */
+    getFuncDescriptions(){
+        return ["Pour Into", "Add To"];
+    }
+
+    /**
+    Determine if this Controller's Container only has residue left.
+    To have residue, there must be only one chemical remaining, and it must take up less than the
+    residue percentage of this Controller's Container's capacity
     returns: true if there is residue, false otherwise
     */
     hasResidue(){
         let eq = this.equipment;
-        if(eq.contents === null) return false;
-        return eq.residue * eq.capacity >= eq.contents.mass;
+        if(eq.contents.length !== 1) return false;
+        return eq.residue * eq.capacity >= eq.getTotalContentsMass();
     }
 
     /**
     Check to see if there is any mass remaining in this Controller's Container's contents.
-    If the contents have zero mass, set the contents to null
-    returns: true if contents were set to null, false otherwise
+    If any the contents have zero mass, remove that contents
+    returns: true if contents were removed, false otherwise
     */
     checkForMass(){
-        let cont = this.equipment.contents;
-        if(cont !== null && cont.mass === 0){
-            this.emptyOut();
-            return true;
+        let eq = this.equipment;
+        let cont = eq.contents;
+        // Remove all contents with zero mass
+        var removed = false;
+        for(var i = 0; i < cont.length; i++){
+            if(cont[i].mass === 0){
+                cont.splice(i, 1);
+                i--;
+                removed = true;
+            }
         }
-        return false;
+        return removed;
     }
 
     /**
     Pour the contents of this Controller's Container into the given Controller's Container. This will leave residue inside this Controller's Container.
-    If the contents of this Controller's Container do not fit in the given Controller's Container, then as much as can fit will be poured
+    If the contents of this Controller's Container do not fit in the given Controller's Container, then as much as can fit will be poured, Beginning with chemicals first in the list
     contControl: The ContainerController in which to pour this Controller's Container's contents
+    return: true if the Chemicals could be poured into the Controller, false otherwise
     */
     pourInto(contControl){
+        if(!(contControl instanceof ContainerController2D)) return false;
         if(this.equipment !== null && contControl !== null){
-            let chem = this.pourOut(this.maxPourAmount(contControl));
-            contControl.addTo(new ChemicalController2D(chem));
+            let chems = this.pourOut(this.maxPourAmount(contControl));
+            for(var i = 0; i < chems.length && this.hasSpace(chems[i]); i++){
+                contControl.addTo(new ChemicalController2D(chems[i]));
+            }
+            return true;
         }
+        return false;
     }
 
     /**
@@ -131,44 +181,64 @@ class ContainerController2D extends EquipmentController2D{
     Cannot pour out if this Controller's Container only has residue thus not enough of a Chemical to pour out, or if it is empty.
     amount: The amount to pour out of this Controller's Container. Use a negative number to pour out everything. Default -1
         If the amount specified is greater than the amount in this Controller's Container, all contents are poured out.
-    return: The Chemical poured out of this Controller's Container, or null if no Chemical could be poured out
+        The amount poured out begins with the Chemicals at the beginning of the list
+    return: The Chemicals poured out of this Controller's Container, or an empty list if no Chemical could be poured out
     */
     pourOut(amount = -1){
         // Do not pour out anything if the remaining contents is less than the residue percent
         //  and do nothing if this Controller's Container is empty
         let eq = this.equipment;
-        if(this.hasResidue() || eq.contents === null) return null;
+        if(this.hasResidue() || eq.isEmpty()) return [];
+
+        // If the amount is negative, set it to the entire contents
+        if(amount === -1) amount = eq.capacity;
 
         // Otherwise, pour out based on residue percentage
-        let chemController = new ChemicalController2D(eq.contents);
+        var total = 0;
+        var newAmount = 0;
+        let chemControl = new ChemicalController2D(null);
+        let chems = [];
+        for(var i = 0; i < eq.contents.length && total < amount; i++){
+            chemControl.setChemical(eq.contents[i]);
+            let chem = chemControl.chemical;
+            let m = chem.mass;
+            let useMore = total + m < amount && i + 1 != eq.contents.length;
+            newAmount = (useMore) ? m : amount - total;
 
-        // Determine the percentage of Chemical to leave in the Container
-        var leavePercent = 1 - ((amount < 0 || amount >= eq.contents.mass) ? 1 : amount / eq.contents.mass);
-        // If the percentage to leave is less than the residue, then leave only residue
-        if(leavePercent < eq.residue) leavePercent = eq.residue;
+            // Determine the percentage of Chemical to leave in the Container
+            var leavePercent = 1 - ((newAmount >= m) ? 1 : newAmount / m);
+            // If the percentage to leave is less than the residue, then leave only residue
+            if(leavePercent < eq.residue) leavePercent = eq.residue;
+            if(useMore) leavePercent = 0;
 
-        var splitChem = chemController.split(leavePercent);
+            let splitChem = chemControl.split(leavePercent);
+            chems.push(splitChem);
+            total += splitChem.mass;
+        }
         this.checkForMass();
 
-        return splitChem;
+        return chems;
     }
 
     /**
-    Add a copy of the given Controller's Chemical to this Controller's Container. Does nothing if the Chemical cannot be placed in this Controller's Container.
+    Add a copy of the given Controller's Chemical to this Controller's Container.
+    Does nothing if the Chemical cannot be placed in this Controller's Container.
     chemControl: The Controller who's Chemical will be placed in this container
     returns: true if the Controller's Chemical was successfully added, false otherwise
     */
     addTo(chemControl){
+        if(chemControl === null) return false;
+        if(!(chemControl instanceof ChemicalController2D)) return false;
         let chem = chemControl.copyChem();
         let copyControl = new ChemicalController2D(chem);
+        let eq = this.equipment;
 
         if(this.canContain(chem) && this.hasSpace(chem)){
-            if(this.equipment.contents === null){
-                this.equipment.setContents(chem);
+            if(eq.isEmpty()){
+                eq.setContents([chem]);
             }
             else{
-                var thisChemControl = new ChemicalController2D(this.equipment.contents);
-                thisChemControl.combine(copyControl);
+                eq.setContents(copyControl.combine(this.equipment.contents));
                 this.checkForMass();
             }
             return true;
@@ -178,13 +248,13 @@ class ContainerController2D extends EquipmentController2D{
 
     /**
     Clear all of the contents of this Controller's Container, leaving no residue
-    returns: The contents removed, can be null if the Container is already empty
+    returns: The contents removed, can be an empty list if the Container is already empty
     */
     emptyOut(){
         let eq = this.equipment;
-        var chem = eq.contents;
+        var chems = eq.contents;
         eq.setContents(null);
-        return chem;
+        return chems;
     }
 
     /**
@@ -196,7 +266,7 @@ class ContainerController2D extends EquipmentController2D{
         if(this.hasResidue()) return true;
         let eq = this.equipment;
         let cont = eq.contents;
-        var mass = ((cont === null) ? 0 : cont.mass) + ((chem === null) ? 0 : chem.mass);
+        var mass = eq.getTotalContentsMass() + ((chem === null) ? 0 : chem.mass);
         return mass <= eq.capacity;
     }
 
@@ -206,8 +276,7 @@ class ContainerController2D extends EquipmentController2D{
     */
     remainingSpace(){
         let eq = this.equipment;
-        var amount = (eq.contents === null) ? 0 : eq.contents.mass
-        return eq.capacity - amount;
+        return eq.capacity - eq.getTotalContentsMass();
     }
 
     /**
@@ -217,12 +286,13 @@ class ContainerController2D extends EquipmentController2D{
     */
     maxPourAmount(contControl){
         let eq = this.equipment;
-        if(eq === null) return null;
+        if(eq === null || contControl === null || contControl.equipment === null) return null;
         let cont = eq.contents;
-        if(cont === null || contControl === null) return null;
+        if(cont.length < 1) return null;
 
         var maxSpace = contControl.remainingSpace();
-        return (cont.mass <= maxSpace) ? cont.mass : maxSpace;
+        var totalMass = eq.getTotalContentsMass();
+        return (totalMass <= maxSpace) ? totalMass : maxSpace;
     }
 
     /**

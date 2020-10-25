@@ -62,8 +62,8 @@ class BeakerController2D extends ContainerController2D{
     draw(graphics){
         // Draw the color of the Chemical, if one exists
         let eq = this.equipment;
-        let chem = eq.contents;
-        if(chem !== null){
+        if(eq.contents.length > 0){
+            let chem = eq.contents[0];
             let chemController = new ChemicalController2D(chem);
             let w = this.width();
             chemController.drawRect(this.x() + w * .12, this.y(), chem.mass / eq.capacity, w * .85, this.height(), 0.2, graphics);

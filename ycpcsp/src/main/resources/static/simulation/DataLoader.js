@@ -153,7 +153,8 @@ function parseInstructions(equips, chems, rawIns){
         let actI = ins[EXP_JSON_INS_ACTOR_INDEX];
         let recI = ins[EXP_JSON_INS_RECEIVER_INDEX];
         let act = (ins[EXP_JSON_INS_ACTOR_IS_EQUIP]) ? equips[actI] : chems[actI];
-        let rec = (ins[EXP_JSON_INS_RECEIVER_IS_EQUIP]) ? equips[recI] : chems[recI];
+        // If the receiverID is less than 0, use a null receiver, otherwise get the correct receiver from the equipment or chemical list
+        let rec = (recI < 0) ? null : ((ins[EXP_JSON_INS_RECEIVER_IS_EQUIP]) ? equips[recI] : chems[recI]);
         let func = act.idToFunc(ins[EXP_JSON_INS_FUNC_ID]);
 
         instructions.push(new InstructionController2D(new Instruction(act, rec, func)));
@@ -243,8 +244,8 @@ function getTestJSON(){
     exp[EXP_JSON_TITLE] = "Color";
     exp[EXP_JSON_CREATOR] = "Zaq";
 
-    let equips = [{}, {}, {}, {}, {}, {}, {}, {}];
-    equips[0][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_BEAKER_50mL;
+    let equips = [{}, {}, {}, {}];
+    equips[0][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_SCALE;
     equips[0][EXP_JSON_EQUIP_AMOUNT] = 1;
 
     equips[1][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_BEAKER_150mL;
@@ -255,30 +256,6 @@ function getTestJSON(){
 
     equips[3][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_BEAKER_600mL;
     equips[3][EXP_JSON_EQUIP_AMOUNT] = 1;
-
-    equips[4][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_FLASK_25mL;
-    equips[4][EXP_JSON_EQUIP_OBJ_ID] = 1;
-
-    equips[5][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_FLASK_50mL;
-    equips[5][EXP_JSON_EQUIP_OBJ_ID] = 1;
-
-    equips[6][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_FLASK_100mL;
-    equips[6][EXP_JSON_EQUIP_OBJ_ID] = 1;
-
-    equips[7][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_FLASK_1000mL;
-    equips[7][EXP_JSON_EQUIP_OBJ_ID] = 1;
-
-    equips[8][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_GRADUATED_25mL;
-    equips[8][EXP_JSON_EQUIP_OBJ_ID] = 1;
-
-    equips[9][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_GRADUATED_50mL;
-    equips[9][EXP_JSON_EQUIP_OBJ_ID] = 1;
-
-    equips[10][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_GRADUATED_100mL;
-    equips[10][EXP_JSON_EQUIP_OBJ_ID] = 1;
-
-    equips[11][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_GRADUATED_1000mL;
-    equips[11][EXP_JSON_EQUIP_OBJ_ID] = 1;
 
     exp[EXP_JSON_EQUIPMENT] = equips;
 

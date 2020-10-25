@@ -18,6 +18,9 @@ class Experiment{
         // The instructions for running this Experiment
         this.instructions = []
 
+        // The disposers used by this Experiment
+        this.disposers = [];
+
         this.title = title;
         this.creator = creator;
     }
@@ -77,8 +80,10 @@ class ExperimentController2D{
     constructor(experiment, graphics = false){
         this.experiment = experiment;
 
-        // The EquipmentController2D object which is being selected for interactions
-        this.selectedEquipment = null;
+        // The EquipmentController2D object which is being selected as the actor for interactions
+        this.selectedActor = null;
+        // The EquipmentController2D object which is being selected as the receiver for interactions
+        this.selectedReceiver = null;
 
         // The EquipmentController2D object which is being selected and moved by the mouse
         this.movingEquipment = null;
@@ -113,45 +118,57 @@ class ExperimentController2D{
     }
 
     /**
-    Set the EquipmentController which this ExperimentController has selected
+    Set the EquipmentController which this ExperimentController has selected as its actor
     selectControl: The EquipmentController to set
     */
-    setSelectedEquipment(selectControl){
-        this.selectedEquipment = selectControl;
+    setSelectedActor(selectControl){
+        this.selectedActor = selectControl;
+    }
+
+    /**
+    Set the EquipmentController which this ExperimentController has selected as its actor
+    selectControl: The EquipmentController to set
+    */
+    setSelectedReceiver(selectControl){
+        this.selectedReceiver = selectControl;
     }
 
     /**
     Attempt to select a piece of Equipment based on the mouse position
+    returns: true if equipment was selected, false otherwise
     */
     selectEquipment(){
-        this.setSelectedEquipment(this.findEquipmentByPosition(this.experimentMousePos()));
+        let equip = this.findEquipmentByPosition(this.experimentMousePos(), null, true);
+        if(equip === null) return false;
+        if(this.selectedActor === null) this.setSelectedActor(equip);
+        else if(this.selectedReceiver === null) this.setSelectedReceiver(equip);
+        else return false;
+        return true;
     }
 
     /**
     Call to activate a specific function on the selected EquipmentController
     id: The function ID to use for the selected EquipmentController
-    param: Optional, the ExperimentObject to send with the function
+    receiver: Optional, the ExperimentObject to send with the function
     returns: true if the function is activated, false otherwise
     */
-    selectedEquipFunction(id, param = null){
-        let select = this.selectedEquipment;
-        if(select === null || select === undefined) return false;
-        let func = select.idToFunc(id);
+    selectedEquipFunction(id, receiver = null){
+        let actor = this.selectedActor;
+        if(actor === null || actor === undefined) return false;
+        let func = actor.idToFunc(id);
         if(func === null || func === undefined) return false;
-        if(param === null) param = this.findEquipmentByPosition(this.experimentMousePos(), select);
-        if(param === null || param === undefined) return false;
-        func.bind(select, param)();
+        if(receiver === null) receiver = this.selectedReceiver;
+        if(receiver === null || receiver === undefined) return false;
+        func.bind(actor, receiver)();
         return true;
     }
 
     /**
-    Reset the selected Equipment to its default state and deselect it
+    Unselect the selected actor and receiver
     */
-    clearSelectedEquipment(){
-        let eq = this.selectedEquipment;
-        if(eq === null) return;
-        eq.reset();
-        this.setSelectedEquipment(null);
+    clearSelected(){
+        this.setSelectedActor(null);
+        this.setSelectedReceiver(null);
     }
 
     /**
@@ -205,7 +222,7 @@ class ExperimentController2D{
             // Check to ensure that the Instruction's ExperimentObject has been placed in the lab, if possible
             //  if either object can be placed and it's not placed, do nothing
             if((ins.actor.canPlace() !== eqs.includes(ins.actor)) ||
-               (ins.receiver.canPlace() !== eqs.includes(ins.receiver))) return;
+               (ins.receiver !== null && ins.receiver.canPlace() !== eqs.includes(ins.receiver))) return;
 
             insC.activate();
             this.instructionCounter++;
@@ -310,34 +327,46 @@ class ExperimentController2D{
         this.placedEquipment = [];
         this.equipmentBoxes = new EquipmentBoxList();
         this.chemicalBoxes = new ChemicalBoxList();
-        this.selectedEquipment = null;
+        this.selectedActor= null;
+        this.selectedReceiver = null;
         this.instructionCounter = 0;
 
         this.camera.reset();
 
         if(this.experiment === null) return;
+
         let eqs = this.experiment.equipment;
         for(var i = 0; i < eqs.length; i++){
             eqs[i].reset();
             this.equipmentBoxes.add(eqs[i]);
         }
+
         // Place all Chemicals in the Chemical list
         let chems = this.experiment.chemicals;
         for(var i = 0; i < chems.length; i++){
             this.chemicalBoxes.add(new ChemicalController2D(chems[i].copyChem()));
         }
         this.displayEquipmentBoxes();
+
+        // Reset the disposers
+        this.experiment.disposers = [];
+        let disposers = this.experiment.disposers;
+        let trashcan = idToEquipment(ID_EQUIP_TRASHCAN);
+        trashcan.equipment.setPosition([EXP_BOUNDS_X_OFFSET + 20, EXP_BOUNDS_Y_OFFSET + 20]);
+        disposers.push(trashcan);
     }
 
     /**
     Find a piece of Equipment in the lab which contains a point of the Equipment placed in this Controller's placed Equipment
     p: The point, a list of [x, y] coordinates
     exclude: A specific object to ignore, or a list of objects to ignore, or null to ignore none, default null
+    searchMisc: true to search all of the placedEquipment and other constant Equipment, false to search only placedEquipment, default false
     returns: The piece of equipment, or null if none is found
     */
-    findEquipmentByPosition(p, exclude = null){
-        for(var i = 0; i < this.placedEquipment.length; i++){
-            var eq = this.placedEquipment[i];
+    findEquipmentByPosition(p, exclude = null, searchMisc = false){
+        let searchArr = (searchMisc) ? this.placedEquipment.concat(this.experiment.disposers) : this.placedEquipment;
+        for(var i = 0; i < searchArr.length; i++){
+            var eq = searchArr[i];
             if(eq.inBounds(p) && (exclude === null || exclude !== eq && (!Array.isArray(exclude) || !exclude.includes(eq)))){
                 return eq;
             }
@@ -407,7 +436,7 @@ class ExperimentController2D{
             // If the mouse is inside the Experiment, attempt to make a selection for moving an Equipment
             if(this.experimentContainsMouse()){
                 // If there is no selection made for movement, make a selection
-                if(this.movingEquipment === null) this.setMovingEquipment(this.findEquipmentByPosition(this.experimentMousePos()));
+                if(this.movingEquipment === null) this.setMovingEquipment(this.findEquipmentByPosition(this.experimentMousePos(), null, false));
             }
             // If the mouse is outside the bounds, attempt to select an EquipmentBox
             else{
@@ -422,13 +451,7 @@ class ExperimentController2D{
             // If in the Experiment bounds, check for object interaction
             if(this.experimentContainsMouse()){
                 // Attempt to select a piece of Equipment
-                if(this.selectedEquipment === null) this.selectEquipment()
-                // Otherwise, if an object is selected, run a function on it
-                else{
-                    // TODO allow multiple constants to exist here. The user selects an action when the initially right click
-                    this.selectedEquipFunction(ID_FUNC_CONTAINER_POUR_INTO);
-                    this.setSelectedEquipment(null);
-                }
+                this.selectEquipment();
             }
         }
     }
@@ -474,19 +497,36 @@ class ExperimentController2D{
     Call when a key on the keyboard is pressed
     */
     keyPress(){
-        switch(keyCode){
-            case KEY_EXP_RESET_SELECTED: this.clearSelectedEquipment(); break;
-            case KEY_EXP_NEXT_INSTRUCTION: this.nextInstruction(); break;
-            case KEY_EXP_RESET: this.reset(); break;
-            case KEY_EXP_DISPLAY_CHEMS: this.displayChemicalBoxes(); break;
-            case KEY_EXP_DISPLAY_EQUIPS: this.displayEquipmentBoxes(); break;
+        // TODO this is just temporary controls via keyboard
+        if(this.selectedActor !== null && this.selectedReceiver !== null && (key === '1' || key === '2' || key === '3')){
+            var funcID;
+            switch(key){
+                case '1': funcID = 1; break;
+                case '2': funcID = 2; break;
+                case '3': funcID = 3; break;
+                default: funcID = null;
+            }
+            if(funcID !== null){
+                this.selectedEquipFunction(funcID);
+                this.setSelectedActor(null);
+                this.setSelectedReceiver(null);
+            }
+        }
+        else{
+            switch(keyCode){
+                case KEY_EXP_RESET_SELECTED: this.clearSelected(); break;
+                case KEY_EXP_NEXT_INSTRUCTION: this.nextInstruction(); break;
+                case KEY_EXP_RESET: this.reset(); break;
+                case KEY_EXP_DISPLAY_CHEMS: this.displayChemicalBoxes(); break;
+                case KEY_EXP_DISPLAY_EQUIPS: this.displayEquipmentBoxes(); break;
 
-            case KEY_EXP_ADD_CHEM_1:
-            case KEY_EXP_ADD_CHEM_5:
-            case KEY_EXP_ADD_CHEM_10:
-            case KEY_EXP_ADD_CHEM_20:
-            case KEY_EXP_ADD_CHEM_25: this.addChemicalToSelectedBeaker(keyCode); break;
-            default: break;
+                case KEY_EXP_ADD_CHEM_1:
+                case KEY_EXP_ADD_CHEM_5:
+                case KEY_EXP_ADD_CHEM_10:
+                case KEY_EXP_ADD_CHEM_20:
+                case KEY_EXP_ADD_CHEM_25: this.addChemicalToSelectedBeaker(keyCode); break;
+                default: break;
+            }
         }
     }
 
@@ -497,7 +537,7 @@ class ExperimentController2D{
     */
     addChemicalToSelectedBeaker(massIndex){
         // TODO implement better solution for if this is an instance of a Container if it should activate
-        if(!(this.selectedEquipment instanceof ContainerController2D)) return;
+        if(!(this.selectedActor instanceof ContainerController2D)) return;
         let box = this.chemicalBoxes.selected;
         if(box === null) return;
         let chemControl = box.obj;
@@ -556,6 +596,11 @@ class ExperimentController2D{
             eq.update();
         });
 
+        // Update all of the Disposers
+        this.experiment.disposers.forEach(function(disposer){
+            disposer.update();
+        });
+
         // Move camera based on which buttons are held down
         this.updateCameraPos();
 
@@ -577,7 +622,8 @@ class ExperimentController2D{
         let r = EXP_BOUNDS;
         let expG = this.experimentGraphics;
         let g = this.graphics;
-        let sel = this.selectedEquipment;
+        let selAct = this.selectedActor;
+        let selRec = this.selectedReceiver;
 
         // Fill in a background
         g.background(CANVAS_BACKGROUND_COLOR);
@@ -602,23 +648,23 @@ class ExperimentController2D{
         // Draw the disposal area
         // TODO
 
+        // Draw all of the Disposers
+        this.experiment.disposers.forEach(function(disposer){
+            disposer.draw(expG);
+        });
+
         // Draw objects on the lab table
         // Draw all not selected equipment
         let cameraBounds = this.experimentRenderBounds();
         for(var i = 0; i < placed.length; i++){
-            if(placed[i] !== sel && placed[i].shouldRender(cameraBounds)){
-                placed[i].draw(expG);
+            let p = placed[i];
+            if(p !== selAct && p !== selRec && p.shouldRender(cameraBounds)){
+                p.draw(expG);
             }
         }
         // Draw the selected equipment if it exists
-        if(sel !== null){
-            sel.draw(expG);
-            // Draw a box around the selected equipment and draw it on top of all other equipment
-            expG.noFill();
-            expG.stroke(EXP_EQUIP_SELECT_STROKE_COLOR);
-            expG.strokeWeight(EXP_EQUIP_SELECT_STROKE_WEIGHT);
-            expG.rect(sel.x(), sel.y(), sel.width(), sel.height());
-        }
+        this.drawSelectedIndicator(selAct, true, expG);
+        this.drawSelectedIndicator(selRec, false, expG);
 
         // Draw options button
         // TODO
@@ -652,24 +698,61 @@ class ExperimentController2D{
 
         // TODO remove, only here for testing purposes
         // Draw instructions
-        this.graphics.fill(color(0, 0, 0));
-        this.graphics.noStroke();
-        this.graphics.textSize(18);
+        g.fill(0);
+        g.noStroke();
+        g.textSize(18);
         var y = 490;
         let x = 650;
-        this.graphics.text("Left click a beaker to move it", x, y += 20);
-        this.graphics.text("Right click a beaker to select it", x, y += 20);
-        this.graphics.text("Press 1, 2, 3, 4, 5 to add 1, 5, 10, 20, or 25 units to selected beaker", x, y += 20);
-        this.graphics.text("Press ESC to empty the selected beaker", x, y += 20);
-        this.graphics.text("Click an unselected beaker to combine the chemical in the selected beaker", x, y += 20);
-        this.graphics.text("Press I to run the next instruction", x, y += 20);
-        this.graphics.text("Press R to reset the simulation", x, y += 20);
-        this.graphics.text("Press C to view Chemical tab, then click a chemical to select", x, y += 20);
-        this.graphics.text("Press V to view Equipment tab, then click and drag to add equipment", x, y += 20);
-        this.graphics.text("Use arrow keys to move camera", x, y += 20);
+        g.text("Left click equipment to move it", x, y += 20);
+        g.text("Right click a equipment to select, blue = actor, green = receiver", x, y += 20);
+        g.text("Press ESC to unselect selected Equipment", x, y += 20);
+        g.text("Pres 1, 2, or 3 to perform actions on selected actor and receiver", x, y += 20);
+        g.text("Press 1, 2, 3, 4, 5 to add 1, 5, 10, 20, or 25 units to selected actor, if container", x, y += 20);
+        g.text("Press I to run the next instruction", x, y += 20);
+        g.text("Press R to reset the simulation", x, y += 20);
+        g.text("Press C to view Chemical tab, then click a chemical to select", x, y += 20);
+        g.text("Press V to view Equipment tab, then click and drag to add equipment", x, y += 20);
+        g.text("Use arrow keys to move camera", x, y += 20);
+
+        // Draw the list of possible actions for the selected actor
+        if(this.selectedActor !== null && this.selectedReceiver !== null){
+            // TODO make render constants
+            let options = selAct.getFuncDescriptions();
+            g.textSize(16);
+            let baseX = mouseX + 15;
+            let baseY = mouseY;
+            for(var i = 0; i < options.length; i++){
+                let s = (i + 1) + ": " + options[i];
+
+                g.strokeWeight(1);
+                g.stroke(0);
+                g.fill(255);
+                g.rect(baseX - 2, baseY + (i - 1) * 18 + 3, g.textWidth(s) + 6, 18);
+
+                g.noStroke();
+                g.fill(0);
+                g.text(s, baseX, baseY + i * 18);
+            }
+        }
 
         // Draw the final graphics image to the canvas
         canvasGraphics.image(g, 0, 0);
+    }
+
+    /**
+    Draw the indicator for which object is selected. Does nothing if obj is null.
+    obj: The object to draw, should always be an EquipmentController2D
+    isActor: true if obj should get the details for a selected actor, false for a selected receiver
+    g: The graphics object used to draw
+    */
+    drawSelectedIndicator(obj, isActor, g){
+        if(obj === null) return;
+        obj.draw(g);
+        // Draw a box around the selected equipment and draw it on top of all other equipment
+        g.noFill();
+        g.stroke((isActor) ? EXP_EQUIP_SELECT_ACTOR_STROKE_COLOR : EXP_EQUIP_SELECT_RECEIVER_STROKE_COLOR);
+        g.strokeWeight(EXP_EQUIP_SELECT_STROKE_WEIGHT);
+        g.rect(obj.x(), obj.y(), obj.width(), obj.height());
     }
 
 }

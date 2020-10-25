@@ -1,9 +1,8 @@
 var SPRITE_BEAKER;
-var SPRITE_ERLENMEYER;
-var SPRITE_GRADUATED;
+var SPRITE_TRASH_CAN;
 
 function loadImages(){
     SPRITE_BEAKER = loadImage('./simulation/assets/beaker.png');
-    SPRITE_ERLENMEYER = loadImage('./simulation/assets/erlenmeyer.png');
-    SPRITE_GRADUATED = loadImage('./simulation/assets/graduated.png');
+    SPRITE_TRASH_CAN = loadImage('./simulation/assets/trashcan.png');
+    SPRITE_SCALE = loadImage('./simulation/assets/Scale.png')
 }

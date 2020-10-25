@@ -37,8 +37,8 @@ QUnit.test('activate:', function(assert){
     beaker2.equipment.setContents(chem2);
 
     controller.activate();
-    assert.equal(beaker1.equipment.contents, null, "Instruction should empty out beaker1");
-    assert.equal(beaker2.equipment.contents.mass, 10, "Instruction should have left 10 mass in beaker2");
+    assert.deepEqual(beaker1.equipment.contents, [], "Instruction should empty out beaker1");
+    assert.equal(beaker2.equipment.contents[0].mass, 10, "Instruction should have left 10 mass in beaker2");
 
     ins.setReceiver(null);
     chem1 = new Chemical(6.0, "equ", 20.0, [10, 20, 40]);
@@ -46,6 +46,6 @@ QUnit.test('activate:', function(assert){
     beaker1.equipment.setContents(chem1);
     beaker2.equipment.setContents(chem2);
     controller.activate();
-    assert.equal(beaker1.equipment.contents.mass, 6, "Instruction should do nothing to beaker 1 using null receiver");
-    assert.equal(beaker2.equipment.contents.mass, 4, "Instruction should do nothing to beaker 2 using null receiver");
+    assert.equal(beaker1.equipment.contents[0].mass, 6, "Instruction should do nothing to beaker 1 using null receiver");
+    assert.equal(beaker2.equipment.contents[0].mass, 4, "Instruction should do nothing to beaker 2 using null receiver");
 });
