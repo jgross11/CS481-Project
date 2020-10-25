@@ -1,5 +1,6 @@
 package edu.ycpcsp.ycpcsp
 
+import edu.ycpcsp.ycpcsp.DataBase.serverCredential
 import java.util.*
 import javax.mail.*
 import javax.mail.internet.InternetAddress
@@ -11,9 +12,10 @@ class EmailSender {
     fun sendMessage() {
         val to = "jgross11@ycp.edu"
         var subject: String = "Test email"
-        val from: String = "PUTEMAILHERE"
-        val username = "PUTUSERNAMEHERE"
-        val password = "PUTPASSWORDHERE"
+        val serverCredentials = serverCredential()
+        val from = serverCredentials?.get(3)
+        val username = serverCredentials?.get(4)
+        val password = serverCredentials?.get(5)
         val mailer = "Kotlin Project"
         val host: String = "smtp.gmail.com"
         val properties = Properties()
