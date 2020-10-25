@@ -136,6 +136,14 @@ class ChemicalController2D extends ExperimentObjectController2D{
     }
 
     /**
+    Get a list of all possible functions which this ChemicalController can perform.
+    returns: an empty list, ChemicalController2D objects have no functions
+    */
+    getFuncDescriptions(){
+        return [];
+    }
+
+    /**
     Determine the number of moles of this Controller's Chemical
     returns: A floating point value, the number of moles
     */

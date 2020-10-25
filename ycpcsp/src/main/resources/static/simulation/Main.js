@@ -3,15 +3,17 @@ var mainExpController = null;
 var mainExpCanvas = null;
 
 // true to load data from the actual database, false to use test data defined by the return of getTestJSON()
-let LOAD_EXPERIMENT_FROM_SERVER = true;
+let LOAD_EXPERIMENT_FROM_SERVER = false;
 
 /*
 
 TODO:
+    Test case ContainerController2D.addTo, pourInto
+    Allow options for interactions to be clicked on
     Create system for making Experiment Instructions
-    Allow users to select different actions for each piece of equipment
-    Make a better way of Chemicals in Instructions to keep their stats so they don't change, or maybe have a reset?
-    Allow equipment and chemicals to be disposed
+    Allow equipment to be disposed via sink
+    Add way to add chemicals to containers over time
+    Fix bug where left clicking one Equipment, then while dragging, right click, makes the equipment not get unselected on letting go of left click
     Make basic layout for Experiment
         Update clicking and dragging to change indexes for ExperimentBoxes when they are removed from the list
         Split Experiment render code into individual methods

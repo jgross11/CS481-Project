@@ -8,7 +8,11 @@ let ID_EQUIP_BEAKER_50mL = 1;
 let ID_EQUIP_BEAKER_150mL = 2;
 let ID_EQUIP_BEAKER_250mL = 3;
 let ID_EQUIP_BEAKER_600mL = 4;
+<<<<<<< HEAD
 let ID_EQUIP_SCALE = 5;
+=======
+let ID_EQUIP_TRASHCAN = 6;
+>>>>>>> simulation-core
 
 // Constants for IDs of Chemicals
 let ID_CHEM_TEST_RED = 1;
@@ -29,6 +33,7 @@ function idToEquipment(id){
         case ID_EQUIP_BEAKER_150mL:
         case ID_EQUIP_BEAKER_250mL:
         case ID_EQUIP_BEAKER_600mL: return new BeakerController2D(new Beaker(id));
+        case ID_EQUIP_TRASHCAN: return new TrashcanController2D(new Trashcan(id));
         default: return null;
     }
 }

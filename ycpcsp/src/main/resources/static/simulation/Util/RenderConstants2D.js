@@ -45,7 +45,8 @@ let EXP_CAMERA_OUTLINE_BOUNDS = [
 ];
 
 // The stroke color of the outline used to indicate selected Equipment
-let EXP_EQUIP_SELECT_STROKE_COLOR = [150, 150, 255, 160];
+let EXP_EQUIP_SELECT_ACTOR_STROKE_COLOR = [150, 150, 255, 160];
+let EXP_EQUIP_SELECT_RECEIVER_STROKE_COLOR = [150, 255, 150, 160];
 // The stroke weight of the outline used to indicate selected Equipment
 let EXP_EQUIP_SELECT_STROKE_WEIGHT = 8;
 
