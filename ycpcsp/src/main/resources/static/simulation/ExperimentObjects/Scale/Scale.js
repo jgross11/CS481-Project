@@ -12,7 +12,7 @@ class Scale extends Equipment{
      sprite: A P5 image file used to display this piece of Container
      */
     constructor(ObjectToBeWeighed = null){
-        super([1,1], undefined, undefined,  SPRITE_SCALE);
+        super([1,1], [100, 100], 100, SPRITE_SCALE);
         this.scaleId = 5;
         this.DisplayedWeight = 0.0;
         this.ObjectToBeWeighed = ObjectToBeWeighed;
