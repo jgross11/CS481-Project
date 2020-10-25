@@ -244,7 +244,7 @@ function getTestJSON(){
     exp[EXP_JSON_TITLE] = "Color";
     exp[EXP_JSON_CREATOR] = "Zaq";
 
-    let equips = [{}, {}, {}, {}];
+    let equips = [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}];
     equips[0][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_SCALE;
     equips[0][EXP_JSON_EQUIP_AMOUNT] = 1;
 
@@ -256,6 +256,30 @@ function getTestJSON(){
 
     equips[3][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_BEAKER_600mL;
     equips[3][EXP_JSON_EQUIP_AMOUNT] = 1;
+
+    equips[4][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_FLASK_25mL;
+    equips[4][EXP_JSON_EQUIP_OBJ_ID] = 1;
+
+    equips[5][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_FLASK_50mL;
+    equips[5][EXP_JSON_EQUIP_OBJ_ID] = 1;
+
+    equips[6][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_FLASK_100mL;
+    equips[6][EXP_JSON_EQUIP_OBJ_ID] = 1;
+
+    equips[7][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_FLASK_1000mL;
+    equips[7][EXP_JSON_EQUIP_OBJ_ID] = 1;
+
+    equips[8][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_GRADUATED_25mL;
+    equips[8][EXP_JSON_EQUIP_OBJ_ID] = 1;
+
+    equips[9][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_GRADUATED_50mL;
+    equips[9][EXP_JSON_EQUIP_OBJ_ID] = 1;
+
+    equips[10][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_GRADUATED_100mL;
+    equips[10][EXP_JSON_EQUIP_OBJ_ID] = 1;
+
+    equips[11][EXP_JSON_EQUIP_OBJ_ID] = ID_EQUIP_GRADUATED_1000mL;
+    equips[11][EXP_JSON_EQUIP_OBJ_ID] = 1;
 
     exp[EXP_JSON_EQUIPMENT] = equips;
 
