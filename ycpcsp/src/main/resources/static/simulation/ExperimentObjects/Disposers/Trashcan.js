@@ -34,7 +34,7 @@ class TrashcanController2D extends DisposerController2D{
     returns: true if the chemical was disposed, false otherwise
     */
     dispose(chemControl){
-        chemControl.setMass(0);
+        if(chemControl.chemical !== undefined) chemControl.chemical.setMass(0);
     }
 
 }

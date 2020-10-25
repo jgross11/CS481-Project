@@ -127,7 +127,7 @@ class ExperimentController2D{
     Attempt to select a piece of Equipment based on the mouse position
     */
     selectEquipment(){
-        this.setSelectedEquipment(this.findEquipmentByPosition(this.experimentMousePos()));
+        this.setSelectedEquipment(this.findEquipmentByPosition(this.experimentMousePos(), null, true));
     }
 
     /**
@@ -141,7 +141,7 @@ class ExperimentController2D{
         if(select === null || select === undefined) return false;
         let func = select.idToFunc(id);
         if(func === null || func === undefined) return false;
-        if(param === null) param = this.findEquipmentByPosition(this.experimentMousePos(), select);
+        if(param === null) param = this.findEquipmentByPosition(this.experimentMousePos(), select, true);
         if(param === null || param === undefined) return false;
         func.bind(select, param)();
         return true;
@@ -345,11 +345,13 @@ class ExperimentController2D{
     Find a piece of Equipment in the lab which contains a point of the Equipment placed in this Controller's placed Equipment
     p: The point, a list of [x, y] coordinates
     exclude: A specific object to ignore, or a list of objects to ignore, or null to ignore none, default null
+    searchMisc: true to search all of the placedEquipment and other constant Equipment, false to search only placedEquipment, default false
     returns: The piece of equipment, or null if none is found
     */
-    findEquipmentByPosition(p, exclude = null){
-        for(var i = 0; i < this.placedEquipment.length; i++){
-            var eq = this.placedEquipment[i];
+    findEquipmentByPosition(p, exclude = null, searchMisc = false){
+        let searchArr = (searchMisc) ? this.placedEquipment.concat(this.experiment.disposers) : this.placedEquipment;
+        for(var i = 0; i < searchArr.length; i++){
+            var eq = searchArr[i];
             if(eq.inBounds(p) && (exclude === null || exclude !== eq && (!Array.isArray(exclude) || !exclude.includes(eq)))){
                 return eq;
             }
@@ -419,7 +421,7 @@ class ExperimentController2D{
             // If the mouse is inside the Experiment, attempt to make a selection for moving an Equipment
             if(this.experimentContainsMouse()){
                 // If there is no selection made for movement, make a selection
-                if(this.movingEquipment === null) this.setMovingEquipment(this.findEquipmentByPosition(this.experimentMousePos()));
+                if(this.movingEquipment === null) this.setMovingEquipment(this.findEquipmentByPosition(this.experimentMousePos(), null, false));
             }
             // If the mouse is outside the bounds, attempt to select an EquipmentBox
             else{
