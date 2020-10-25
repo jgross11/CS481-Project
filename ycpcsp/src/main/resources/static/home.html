@@ -3,6 +3,13 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
+
+        .Search {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+        }
+
         .dropbtn {
             background-color: #3498DB;
             color: white;
@@ -83,10 +90,18 @@
 
         .dropdown:hover .dropbtn2 {background-color: #3e8e41;}
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 <script src="helperFunctions.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.12.0/js/md5.min.js"></script>
+
+<div class="Search">
+    <form action="search.php" method="GET">
+        <input type="text" id ="input" size ="40" placeholder="Search..." name="query"/>
+        <button type="submit" value="Search"><i class="fa fa-search"></i></button>
+    </form>
+</div>
 
 <div class="dropdown">
     <button class="dropbtn">Login</button>
@@ -105,6 +120,7 @@
 </div>
 <div class="boxed">
 </div>
+
 
 <div class="dropup">
     <button class="dropbtn2">FaQ</button>
@@ -197,6 +213,13 @@
     function loadSimulation(simulationID){
         sessionStorage.setItem("simulationToLoad", simulationID);
         window.location.href = "/simulation";
+    }
+
+    function searchBar() {
+        var input, filter, ul, li, a, i, txtValue;
+        input = document.getElementById("search");
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("");
     }
 </script>
 </html>
