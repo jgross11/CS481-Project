@@ -1,8 +1,8 @@
 package edu.ycpcsp.ycpcsp.WebControllers
 
 import edu.ycpcsp.ycpcsp.DataBase.IsEmailInDB
-import edu.ycpcsp.ycpcsp.DataBase.LoadUser
 import edu.ycpcsp.ycpcsp.DataBase.UserSignup
+import edu.ycpcsp.ycpcsp.EmailSender
 import edu.ycpcsp.ycpcsp.Models.User
 import edu.ycpcsp.ycpcsp.PostDataClasses.SignupFormData
 import org.springframework.stereotype.Controller
@@ -46,6 +46,16 @@ class SignupController {
             if(UserSignup(signupFormData)){
                 user.setContentsFromForm(signupFormData)
                 println("new user successfully added to DB")
+
+                // TODO send email verification link using user ID (for now)
+                // TODO must obtain users' DB ID and set in user before calling this
+                user.id = 1
+                if(EmailSender().sendSignupEmail(user)){
+                    println("Verification email sent successfully!")
+                } else{
+                    println("Could not send verification email")
+                }
+
             } else{
                 println("unable to add user to DB")
             }
