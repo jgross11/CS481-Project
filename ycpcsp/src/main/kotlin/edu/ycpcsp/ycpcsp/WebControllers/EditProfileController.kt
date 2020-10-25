@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.*
  *  This class handles all GET and POST interactions that regard the profile page.
  */
 @Controller
-class ProfileController {
+class EditProfileController {
 
     // sends profile html file to user
-    @GetMapping("/profile")
+    @GetMapping("/editprofile")
     fun sendHomePage(): String{
-        println("Sending user to profile page...")
-        return "profile.html"
+        println("Sending user to edit page...")
+        return "editprofile.html"
     }
 }

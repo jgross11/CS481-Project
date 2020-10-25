@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Creation</title>
+</head>
+<style>
+    .dropbtn {
+        background-color: #3498DB;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .dropbtn:hover, .dropbtn:focus {
+        background-color: #2980B9;
+    }
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f1f1f1;
+        min-width: 160px;
+        overflow: auto;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+    .dropdown-content a {
+        color: #000000;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown a:hover {background-color: #ddd;}
+
+    .show {display: block;}
+</style>
+<body>
+<div>
+    <a href="/" class="button">Home</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/p5@1.1.9/lib/p5.js"></script>
+<script src="./helperFunctions.js"></script>
+
+<script src="simulation/Images.js"></script>
+
+<script src="simulation/Util/InstanceID.js"></script>
+<script src="simulation/Util/Util.js"></script>
+
+<script src="simulation/ObjectIDs.js"></script>
+
+
+
+<script src="simulation/ExperimentObjects/ExperimentObject.js"></script>
+
+
+<div class="dropdown">
+    <button onclick="EFunction()" class="dropbtn">Equipment</button>
+    <div id="equipDropdown" class="dropdown-content">
+        <button onclick="addbeaker()">Beaker</button>
+        <script src="simulation/ExperimentObjects/Equipment.js"></script>
+        <script src="simulation/ExperimentObjects/Containers/Container.js"></script>
+        <script src="simulation/ExperimentObjects/Containers/Beaker.js"></script>
+    </div>
+</div>
+<div class="dropdown">
+    <button onclick="CFunction()" class="dropbtn">Chemicals</button>
+    <div id="ChemDropdown" class="dropdown-content">
+        <button onclick="addchem()">Chem</button>
+        <script src="simulation/ExperimentObjects/Chemical.js"></script>
+    </div>
+</div>
+
+
+
+<script src="simulation/DataLoader.js"></script>
+
+<script src="simulation/Main.js"></script>
+
+
+</body>
+<script>
+    /* When the user clicks on the button,
+    toggle between hiding and showing the dropdown content */
+    function CFunction() {
+        document.getElementById("ChemDropdown").classList.toggle("show");
+    }
+    function EFunction() {
+        document.getElementById("equipDropdown").classList.toggle("show");
+    }
+    function addbeaker(){
+
+    }
+    function addchem(){
+
+
+    }
+
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+</script>
+</html>

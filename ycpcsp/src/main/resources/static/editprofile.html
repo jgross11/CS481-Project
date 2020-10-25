@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Profile | YCPCSP</title>
+</head>
+<body>
+First Name:
+<input type='text' name='Firstname' size='15' placeholder=" "/>
+<div name="fname-error" id="fname-error"></div><br>
+Last name:
+<input type='text' name='Lastname' size='15' placeholder=" "/>
+<div name="lname-error" id="lname-error"></div><br>
+School:
+<input type='text' name='school' size='15' placeholder=" " />
+Email:
+<input type='text' name='email' size='15' placeholder=" " />
+<div name="email-error" id="email-error"></div><br>
+<button onclick="save()">Save</button>
+
+</body>
+<script>
+    getUserInformation();
+
+    function redirect(){
+        window.location.href = "/";
+    }
+    function save(){
+        var fname = getAndTrimById("Firstname");
+        var lname = getAndTrimById("Lastname");
+        var email = getAndTrimById("email");
+        var school = getAndTrimById("school")
+        var fnameGood = verifyInformation(fname.value, TYPE_NAME);
+        var lnameGood = verifyInformation(lname.value, TYPE_NAME);
+        var emailGood = verifyInformation(email.value, TYPE_EMAIL);
+        var schoolGood = school.value.length != 0;
+
+        if(fnameGood && lnameGood && emailGood && schoolGood){
+            var edituser = {
+                firstName: fname.value,
+                lastName: lname.value,
+                email: email.value,
+                school: school.value
+
+
+            }
+
+            window.location.href = "/profile.html";
+
+        }else{
+            if(!fnameGood){
+                setErrorDivMessageByValue("fname", "Please enter a valid first name.", fnameGood);
+            }if(!lnameGood){
+                setErrorDivMessageByValue("lname", "Please enter your last name.", lnameGood);
+            }if(!emailGood){
+                setErrorDivMessageByValue("email", "Please enter your email.", emailGood);
+            }if(!schoolGood){
+                setErrorDivMessageByValue("school", "Please enter a valid school or institution.", schoolGood);}if(!schoolGood){
+
+            }
+        }
+
+    }
+
+    function getUserInformation(){
+        let user = JSON.parse(sessionStorage.getItem("user"));
+
+        if (user != null) {
+            document.getElementById("Firstname").placeholder = user.firstName;
+            document.getElementById("Lastname").placeholder = user.lastName;
+            document.getElementById("school").placeholder = user.school;
+            document.getElementById("email").placeholder = user.email;
+
+        } else {
+            redirect();
+        }
+    }
+</script>
+</html>
