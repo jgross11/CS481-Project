@@ -8,7 +8,6 @@ let LOAD_EXPERIMENT_FROM_SERVER = false;
 /*
 
 TODO:
-    Test case ContainerController2D.addTo, pourInto
     Allow options for interactions to be clicked on
     Create system for making Experiment Instructions
     Allow equipment to be disposed via sink

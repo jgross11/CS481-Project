@@ -99,19 +99,22 @@ QUnit.test('pourInto:', function(assert){
     beakerControl1.setEquipment(null);
     beakerControl2.setEquipment(null);
 
-    beakerControl1.pourInto(null);
+    assert.false(beakerControl1.pourInto(null), "Pouring into a null object should fail");
     assert.deepEqual(beakerControl1.equipment, null, "Container should still be empty");
 
-    beakerControl1.pourInto(beakerControl2);
+    assert.false(beakerControl1.pourInto(beaker1), "Pouring into not a beaker controller should fail");
+    assert.deepEqual(beakerControl1.equipment, null, "Container should still be empty");
+
+    assert.false(beakerControl1.pourInto(beakerControl2), "Pouring into a controller with no beaker should fail");
     assert.deepEqual(beakerControl1.equipment, null, "Container should still be empty");
 
     beakerControl1.setEquipment(beaker2);
-    beakerControl1.pourInto(null);
+    assert.false(beakerControl1.pourInto(null), "Pouring null into a controller with no beaker should fail");
     assert.deepEqual(beakerControl1.equipment, beaker2, "Container should still be empty");
 
     beakerControl1.setEquipment(beaker1);
     beakerControl2.setEquipment(beaker2);
-    beakerControl1.pourInto(beakerControl2);
+    assert.true(beakerControl1.pourInto(beakerControl2), "Pouring into a valid controller should succeed");
     var cont = beakerControl2.equipment.contents;
     assert.equal(cont[0].mass, 50, "Container should contain modified chemical with mass 50");
     assert.deepEqual(cont[0].texture, [64, 80, 100], "Container should contain modified chemical with color [64, 80, 100]");
@@ -121,14 +124,14 @@ QUnit.test('pourInto:', function(assert){
     beaker1.setResidue(0.1);
     beaker1.setContents(chem1);
     beaker2.setContents(chem2);
-    beakerControl1.pourInto(beakerControl2);
+    assert.true(beakerControl1.pourInto(beakerControl2), "Pouring into a valid controller should succeed");
     cont = beakerControl2.equipment.contents;
     assert.equal(cont[0].mass, 47, "Container should contain modified chemical with mass 47 after leaving residue");
 
     beaker1.setContents(chem3);
     beaker2.setContents(chem4);
     beaker1.setResidue(0);
-    beakerControl1.pourInto(beakerControl2);
+    assert.true(beakerControl1.pourInto(beakerControl2), "Pouring into a valid controller should succeed");
     assert.equal(beakerControl2.equipment.contents[0].mass, 100, "Container poured into should be full with mass 50");
     assert.equal(beakerControl1.equipment.contents[0].mass, 20, "Container poured out should have 20 mass");
 
@@ -137,7 +140,7 @@ QUnit.test('pourInto:', function(assert){
     beaker1.setResidue(0);
     beaker1.setContents([chem1, chem2]);
     beaker2.setContents(null);
-    beakerControl1.pourInto(beakerControl2);
+    assert.true(beakerControl1.pourInto(beakerControl2), "Pouring into a valid controller should succeed");
     assert.deepEqual(beaker2.getTotalContentsMass(), 15, "Beaker1 should have poured 15 units of chemical into beaker2");
 
     chem1.setMass(5);
@@ -145,7 +148,7 @@ QUnit.test('pourInto:', function(assert){
     beaker1.setContents([chem1, chem2]);
     beaker2.setContents(null);
     beaker2.setCapacity(15);
-    beakerControl1.pourInto(beakerControl2);
+    assert.true(beakerControl1.pourInto(beakerControl2));
     assert.deepEqual(beaker2.getTotalContentsMass(), 15, "Beaker1 should have poured all 15 units of chemical into beaker2");
 
     chem1.setMass(5);
@@ -153,7 +156,7 @@ QUnit.test('pourInto:', function(assert){
     beaker1.setContents([chem1, chem2]);
     beaker2.setContents(null);
     beaker2.setCapacity(12);
-    beakerControl1.pourInto(beakerControl2);
+    assert.true(beakerControl1.pourInto(beakerControl2), "Pouring into a valid controller should succeed");
     assert.deepEqual(beaker2.getTotalContentsMass(), 12, "Beaker1 should have poured 12 units of chemical into beaker2");
 });
 
@@ -215,6 +218,8 @@ QUnit.test('addTo:', function(assert){
     assert.deepEqual(beaker1.contents[0].texture, [55, 70, 90], "The container should contain a mix of chemical 1 and 2");
 
     assert.false(beakerControl1.addTo(null), "Should fail to add a null parameter");
+
+    assert.false(beakerControl1.addTo(chem1), "Should fail to add a non chemical controller parameter");
 });
 
 QUnit.test('emptyOut:', function(assert){
