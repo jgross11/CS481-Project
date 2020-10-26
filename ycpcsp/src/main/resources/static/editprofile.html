@@ -6,16 +6,16 @@
 </head>
 <body>
 First Name:
-<input type='text' name='Firstname' id="Firstname" size='15' placeholder/>
+<input type='text' name='Firstname' id="Firstname" size='15' value/>
 <div name="fname-error" id="fname-error"></div><br>
 Last name:
-<input type='text' name='Lastname' id="Lastname" size='15' placeholder/>
+<input type='text' name='Lastname' id="Lastname" size='15' value/>
 <div name="lname-error" id="lname-error"></div><br>
 School:
-<input type='text' name='school' id="school" size='15' placeholder/>
+<input type='text' name='school' id="school" size='15' value/>
 <div name="school-error" id="school-error"></div><br>
 Email:
-<input type='text' name='email' id ="email" size='15' placeholder/>
+<input type='text' name='email' id ="email" size='15' value/>
 <div name="email-error" id="email-error"></div><br>
 <button onclick="save()">Save</button>
 
@@ -56,8 +56,7 @@ Email:
             }if(!emailGood){
                 setErrorDivMessageByValue("email", "Please enter your email.", emailGood);
             }if(!schoolGood){
-                setErrorDivMessageByValue("school", "Please enter a valid school or institution.", schoolGood);}if(!schoolGood){
-
+                setErrorDivMessageByValue("school", "Please enter a valid school or institution.", schoolGood);
             }
         }
 
@@ -67,10 +66,10 @@ Email:
         let user = JSON.parse(sessionStorage.getItem("user"));
 
         if (user != null) {
-            document.getElementById("Firstname").placeholder = user.firstName;
-            document.getElementById("Lastname").placeholder = user.lastName;
-            document.getElementById("school").placeholder = user.school;
-            document.getElementById("email").placeholder = user.email;
+            document.getElementById("Firstname").value = user.firstName;
+            document.getElementById("Lastname").value = user.lastName;
+            document.getElementById("school").value = user.school;
+            document.getElementById("email").value = user.email;
 
         } else {
             redirect();
