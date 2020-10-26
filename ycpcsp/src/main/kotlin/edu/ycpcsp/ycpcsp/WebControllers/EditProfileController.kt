@@ -31,13 +31,11 @@ class EditProfileController {
         // check if email not in DB
         if(!IsEmailInDB(user.email)){
             // ensure name is capitalized
-            println("user not in DB, adding")
+            println("Edit")
             user.firstName = user.firstName.capitalize()
             user.lastName = user.lastName.capitalize()
-
-            // insert into DB if email not found
             if(ModifyUser(user)){
-                println("new edit successfully added to DB")
+                println("Edit successfully added to DB")
             } else{
                 println("unable to edit user to DB")
             }
