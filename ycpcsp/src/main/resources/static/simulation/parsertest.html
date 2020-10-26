@@ -7,38 +7,85 @@
 <body>
 <script>
     // single elements
-    parse("H");
-    parse("H2");
-    parse("H234");
-    parse("He");
-    parse("He2");
-    parse("He23213");
-    parse("Uub");
-    parse("Uub2");
+    parseChemical("H");
+    parseChemical("H2");
+    parseChemical("H234");
+    parseChemical("He");
+    parseChemical("He2");
+    parseChemical("He23213");
+    parseChemical("Uub");
+    parseChemical("Uub2");
 
 
-    parse("Uub232342232");
-    parse("H2He");
-    parse("H2He2");
-    parse("H2He2O7");
-    parse("H2He2OOOO");
-    parse("(H)");
-    parse("(H)2");
-    parse("(HO)2");
-    parse("S(O2)2");
-    parse("SO(SO2)2");
-    parse("S(S2)(S3)(S4)");
-    parse("ABCDEFG");
-    parse("(A2B2A2B2)2");
-    parse("A(A(A)2)2");
-    parse("(AuBuCuDuEuFuGu)1");
-    parse("Au(Au2)2(Au3)3(Au4)4");
-    parse("Uub123");
-    parse("Uu123");
-    parse("U123");
-    
+    parseChemical("Uub232342232");
+    parseChemical("H2He");
+    parseChemical("H2He2");
+    parseChemical("H2He2O7");
+    parseChemical("H2He2OOOO");
+    parseChemical("(H)");
+    parseChemical("(H)2");
+    parseChemical("(HO)2");
+    parseChemical("S(O2)2");
+    parseChemical("SO(SO2)2");
+    parseChemical("S(S2)(S3)(S4)");
+    parseChemical("ABCDEFG");
+    parseChemical("(A2B2A2B2)2");
+    parseChemical("A(A(A)2)2");
+    parseChemical("(AuBuCuDuEuFuGu)1");
+    parseChemical("(AuBuCuDuEuFuGu)100");
+    parseChemical("(AuBuCuDuEuFuGu)100Au");
+    parseChemical("Au(Au2)2(Au3)3(Au4)4");
+    parseChemical("Uub123");
+    parseChemical("Uu123");
+    parseChemical("U123");
 
-    function parse(name, indexValue){
+    parseEquation("H2 + O -> H2O ");
+    parseEquation("H2O -> H2 + O ");
+    parseEquation("H + H + H + H -> H4");
+    parseEquation("(HO)4 + (OH)2 -> H6 + O6");
+    parseEquation("A + B + C + D + E -> (ABCDE)1");
+
+    function parseEquation(name){
+        console.log("Parsing equation: " + name);
+        let reactants = [];
+        let products = [];
+        let nameLength = name.length;
+        let buildingSubString = false;
+        let subStringStart = 0;
+        let inProducts = false;
+        for(var i = 0; i < nameLength+1; i++){
+            let char = name[i];
+            if(char == " " || char == "+" || char == "-" || i == nameLength){
+                if(buildingSubString){
+                    // console.log("building substring: " + name.substring(subStringStart, i));
+                    if(inProducts){
+                        products.push(parseChemical(name.substring(subStringStart, i)));
+                    }
+                    else{
+                        reactants.push(parseChemical(name.substring(subStringStart, i)));
+                    }
+                    buildingSubString = false;
+                }
+                else{
+                    continue;
+                }
+            }
+            else if(char == ">"){
+                inProducts = true;
+            }
+            else if(!buildingSubString){
+                buildingSubString = true;
+                subStringStart = i;
+            }
+        }
+
+        console.log("Parsed reactants: ");
+        console.log(reactants);
+        console.log("Parsed products: ");
+        console.log(products);
+    }
+
+    function parseChemical(name, indexValue){
         let list = {};
         let startValue = indexValue == null ? 0 : indexValue;
         if(startValue == 0) console.log("parsing " + name);
@@ -114,7 +161,7 @@
                 }
             }
             else if(char == '('){
-                let tempList = parse(name, i+1);
+                let tempList = parseChemical(name, i+1);
                 //console.log("received from recursive call: ");
                 //console.log(tempList);
                 let tempListKeys = Object.keys(tempList);
@@ -140,13 +187,18 @@
                 }
                 let possibleMultiplier = name[i+1];
                 if(!isNaN(possibleMultiplier)){
-                    list["nextIndex"] = i+2;
+                    let index = i+2;
+                    let coefficient = possibleMultiplier;
+                    while(!isNaN(name[index])){
+                        coefficient = coefficient * 10 + parseInt(name[index++]);
+                    }
+                    list["nextIndex"] = index;
                     let listKeys = Object.keys(list);
                     for(var j = 0; j < listKeys.length; j++){
                         if(listKeys[j] == "nextIndex"){
                             continue;
                         } else{
-                            list[listKeys[j]] = list[listKeys[j]] == null ? possibleMultiplier : list[listKeys[j]] * possibleMultiplier;
+                            list[listKeys[j]] = list[listKeys[j]] == null ? coefficient : list[listKeys[j]] * coefficient;
                         }
                     }
                     return list;

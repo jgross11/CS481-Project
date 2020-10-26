@@ -138,7 +138,7 @@ class ExperimentController2D{
     returns: true if equipment was selected, false otherwise
     */
     selectEquipment(){
-        let equip = this.findEquipmentByPosition(this.experimentMousePos(), null, true);
+        let equip = this.findEquipmentByPosition(this.experimentMousePos(), this.selectedActor, true);
         if(equip === null) return false;
         if(this.selectedActor === null) this.setSelectedActor(equip);
         else if(this.selectedReceiver === null) this.setSelectedReceiver(equip);
