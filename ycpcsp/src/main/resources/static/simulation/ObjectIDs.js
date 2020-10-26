@@ -46,7 +46,7 @@ function idToEquipment(id){
         case ID_EQUIP_FLASK_25mL:
         case ID_EQUIP_FLASK_50mL:
         case ID_EQUIP_FLASK_100mL:
-        case ID_EQUIP_FLASK_1000mL: return new CylinderController2D(new ErlenmeyerFlask(id));
+        case ID_EQUIP_FLASK_1000mL: return new ErlenmeyerFlaskController2D(new ErlenmeyerFlask(id));
         case ID_EQUIP_SCALE: return new ScaleController2D(new Scale());
         case ID_EQUIP_TRASHCAN: return new TrashcanController2D(new Trashcan());
         default: return null;

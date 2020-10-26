@@ -8,5 +8,5 @@ function loadImages(){
     SPRITE_TRASH_CAN = loadImage('./simulation/assets/trashcan.png');
     SPRITE_SCALE = loadImage('./simulation/assets/Scale.png');
     SPRITE_ERLENMEYER = loadImage('./simulation/assets/ErlenmeyerFlask.png');
-    SPRITE_GRADUATED - loadImage('./simulation/assets/graduatedCylinder.png');
+    SPRITE_GRADUATED = loadImage('./simulation/assets/graduatedCylinder.png');
 }

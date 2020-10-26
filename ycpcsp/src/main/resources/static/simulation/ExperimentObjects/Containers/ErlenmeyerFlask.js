@@ -38,7 +38,7 @@ class ErlenmeyerFlask extends Container{
 /**
 A class for handling controlling a Flask in a 2D environment
 */
-class ErlenmeyerController2D extends ContainerController2D{
+class ErlenmeyerFlaskController2D extends ContainerController2D{
     /**
     Create a new ErlenmeyerController to control the given Flask
     erlenmeyer: The Flask which this Controller will control
