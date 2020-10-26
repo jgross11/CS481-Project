@@ -12,6 +12,8 @@ class Chemical extends ExperimentObject{
                 or an image file representing the texture of this Chemical
     concentration: A floating point value in the range [0, 1] of the concentration of the chemical, default: 1
     */
+
+    //TODO Give Formula
     constructor(mass = 1.0, equation = "", temperature = 20.0, texture = [127, 127, 127], concentration = 1){
         super(mass);
         this.equation = equation;
