@@ -103,7 +103,8 @@
         </form>
     </div>
 </div>
-<div class="boxed">
+<div id = "boxed" class="boxed">
+
 </div>
 
 <div class="dropup">
@@ -133,9 +134,6 @@
 <br><br><br>
 <input value="New Simulation" type="button" id="newSimulationButton" name="newSimulationButton" onclick="loadSimulation(-1)"><br>
 <input value="Existing Simulation" type="button" id="loadSimulationButton" name="loadSimulationButton" onclick="loadSimulation(21)"><br>
-
-
-
 </body>
 
 <script>
@@ -151,6 +149,33 @@
         if(user != null){
             document.write("<input value=\"Log out\" type=\"button\" id=\"logoutButton\" name=\"logoutButton\" onclick=\"logout()\"><br>");
             document.write("Logged in as: " + user.lastName + ", " + user.firstName);
+            var boxDiv = document.getElementById("boxed");
+            var testExperimentOne = {
+                title: "Iodine clock",
+                id: 4
+            };
+            var testExperimentTwo = {
+                title: "Soluable Trimethylane",
+                id: 17
+            };
+            var testExperimentThree = {
+                title: "You guessed it: HCl!",
+                id: 101
+            };
+            var testExperimentFour = {
+                title: "Color",
+                id: 21
+            };
+
+            user.experiments = [testExperimentOne, testExperimentTwo, testExperimentThree, testExperimentFour];
+            boxDiv.innerHTML = "<h3> Your experiments </h3><br>"
+            for(var i = 0; i < user.experiments.length; i++){
+                var experiment = user.experiments[i];
+                var experimentInListDiv = "<div id=\"userExperiment\" style=\"text-align: center; width: 200px; height: 50px; border: 1px solid black\" onclick=\"loadSimulation("+experiment.id+")\">"+
+                                            experiment.title + "<br>" +
+                                            experiment.id + "<br><\div>";
+                boxDiv.innerHTML += experimentInListDiv;
+            }
         }
         // not logged in
         else{
