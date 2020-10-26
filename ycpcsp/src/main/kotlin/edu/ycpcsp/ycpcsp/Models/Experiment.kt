@@ -6,7 +6,8 @@ package edu.ycpcsp.ycpcsp.Models
  */
 data class Experiment(
                     var title : String,
-                    var creatorName : String
+                    var creatorName : String,
+                    var experimentID : Int
                     )
 {
     var equipment : Array<EquipmentObject> = arrayOf<EquipmentObject>()
@@ -18,7 +19,7 @@ data class Experiment(
     }
 
     // null constructor
-    constructor() : this("", ""){
+    constructor() : this("", "", -1){
 
     }
 
