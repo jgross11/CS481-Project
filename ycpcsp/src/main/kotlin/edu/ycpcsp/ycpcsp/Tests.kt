@@ -48,7 +48,7 @@ fun main(args : Array<String>){
     println(waterInBeakerStep.toString())
 
     // create experiment object
-    var experiment = Experiment("Adding water to a beaker", user.getFullName())
+    var experiment = Experiment("Adding water to a beaker", user.getFullName(), -1)
 
     // demonstrate initialization of experiment yields null steps
     println("### PREPARE FOR ERROR MESSAGES AS DEFAULT EXPERIMENT IS PRINTED")
