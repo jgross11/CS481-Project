@@ -13,10 +13,10 @@ class ErlenmeyerFlask extends Container{
         var newAttributes = null;
         switch(erlenmeyerID){
             // All Beaker sizes
-            case ID_EQUIP_FLASK_25mL: newAttributes = [[60, 60], 15.0, 25.0]; break;
-            case ID_EQUIP_FLASK_50mL: newAttributes = [[100, 100], 20.0, 50.0]; break;
-            case ID_EQUIP_FLASK_100mL: newAttributes = [[130, 130], 30.0, 100.0]; break;
-            case ID_EQUIP_FLASK_1000mL: newAttributes = [[200, 200], 50.0, 1000.0]; break;
+            case ID_EQUIP_FLASK_25mL: newAttributes = [[50, 80], 15.0, 25.0]; break;
+            case ID_EQUIP_FLASK_50mL: newAttributes = [[62.5, 100], 20.0, 50.0]; break;
+            case ID_EQUIP_FLASK_100mL: newAttributes = [[84, 136], 30.0, 100.0]; break;
+            case ID_EQUIP_FLASK_1000mL: newAttributes = [[125, 200], 50.0, 1000.0]; break;
             default: break;
         }
         if(newAttributes !== null){
@@ -71,12 +71,6 @@ class ErlenmeyerFlaskController2D extends ContainerController2D{
 
         // Draw the base Flask sprite
         super.draw(graphics);
-
-        // Draw the text
-        graphics.fill(color(0, 0, 0));
-        graphics.noStroke();
-        graphics.textSize(15);
-        graphics.text("ID: " + eq.instanceID, this.x() + this.width() * 0.4, this.y() + this.height() / 2)
     }
 
 }

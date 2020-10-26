@@ -7,7 +7,7 @@ class Trashcan extends Disposer{
     Create a new Trashcan, used for disposing of Chemicals
     */
     constructor(){
-        super([0, 0], [75, 125], 100, SPRITE_TRASH_CAN);
+        super([0, 0], [72, 90], 100, SPRITE_TRASH_CAN);
     }
 
     getID(){

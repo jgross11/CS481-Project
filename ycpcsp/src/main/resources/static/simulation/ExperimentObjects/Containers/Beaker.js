@@ -71,12 +71,6 @@ class BeakerController2D extends ContainerController2D{
 
         // Draw the base Beaker sprite
         super.draw(graphics);
-
-        // Draw the text
-        graphics.fill(color(0, 0, 0));
-        graphics.noStroke();
-        graphics.textSize(15);
-        graphics.text("ID: " + eq.instanceID, this.x() + this.width() * 0.4, this.y() + this.height() / 2)
     }
 
 }

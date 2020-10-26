@@ -13,10 +13,10 @@ class GraduatedCylinder extends Container{
         var newAttributes = null;
         switch(graduatedID){
             // All Beaker sizes
-            case ID_EQUIP_GRADUATED_25mL: newAttributes = [[60, 60], 15.0, 25.0]; break;
-            case ID_EQUIP_GRADUATED_50mL: newAttributes = [[100, 100], 20.0, 50.0]; break;
-            case ID_EQUIP_GRADUATED_100mL: newAttributes = [[130, 130], 30.0, 100.0]; break;
-            case ID_EQUIP_GRADUATED_1000mL: newAttributes = [[200, 200], 50.0, 1000.0]; break;
+            case ID_EQUIP_GRADUATED_25mL: newAttributes = [[23, 80], 15.0, 25.0]; break;
+            case ID_EQUIP_GRADUATED_50mL: newAttributes = [[32.4, 112], 20.0, 50.0]; break;
+            case ID_EQUIP_GRADUATED_100mL: newAttributes = [[39.1, 136], 30.0, 100.0]; break;
+            case ID_EQUIP_GRADUATED_1000mL: newAttributes = [[57.5, 200], 50.0, 1000.0]; break;
             default: break;
         }
         if(newAttributes !== null){
@@ -71,12 +71,6 @@ class CylinderController2D extends ContainerController2D{
 
         // Draw the base Cylinder sprite
         super.draw(graphics);
-
-        // Draw the text
-        graphics.fill(color(0, 0, 0));
-        graphics.noStroke();
-        graphics.textSize(15);
-        graphics.text("ID: " + eq.instanceID, this.x() + this.width() * 0.4, this.y() + this.height() / 2)
     }
 
 }
