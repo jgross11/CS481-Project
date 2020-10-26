@@ -3,19 +3,43 @@ package edu.ycpcsp.ycpcsp.DataBase
 import edu.ycpcsp.ycpcsp.Models.Compound
 import java.sql.SQLException
 
-fun getChemicalInformationByName(name : String){
+// element DB indices
 
+
+// compound DB indices
+const val CompoundIDIndex = 1
+const val CompoundFormulaIndex = 2
+const val CompoundNameIndex = 3
+const val CompoundDensityIndex = 4
+const val CompoundSolubleIndex = 5
+const val CompoundSolidIndex = 6
+const val CompoundGasIndex = 7
+const val CompoundLiquidIndex = 8
+
+fun getCompoundInformationByName(name : String) : Compound?{
+    var connection = getDBConnection()
+    if(connection != null){
+        return try{
+            val preparedStatement = connection.prepareStatement("SELECT * FROM Database.Chemical_Information WHERE Chemical_Name = ?;")
+            preparedStatement.setString(1, name)
+            val rs = preparedStatement.executeQuery()
+            return if(rs.first()){
+                Compound(rs.getInt(CompoundIDIndex), rs.getString(CompoundFormulaIndex), rs.getString(CompoundNameIndex), rs.getDouble(CompoundDensityIndex),
+                        rs.getBoolean(CompoundSolubleIndex), rs.getDouble(CompoundSolidIndex), rs.getDouble(CompoundGasIndex), rs.getDouble(CompoundLiquidIndex))
+            } else{
+                null
+            }
+
+        } catch(ex : SQLException){
+            ex.printStackTrace()
+            null
+        }
+    }
+    return null
 }
 
 fun getCompoundInformationByID(id : Int) : Compound?{
-    val idIndex = 1
-    val formulaIndex = 2
-    val nameIndex = 3
-    val densityIndex = 4
-    val solubleIndex = 5
-    val solidIndex = 6
-    val gasIndex = 7
-    val liquidIndex = 8
+
     var connection = getDBConnection()
     if(connection != null){
         return try{
@@ -23,8 +47,8 @@ fun getCompoundInformationByID(id : Int) : Compound?{
             preparedStatement.setInt(1, id)
             val rs = preparedStatement.executeQuery()
             return if(rs.first()){
-                Compound(rs.getInt(idIndex), rs.getString(formulaIndex), rs.getString(nameIndex), rs.getDouble(densityIndex),
-                        rs.getBoolean(solubleIndex), rs.getDouble(solidIndex), rs.getDouble(gasIndex), rs.getDouble(liquidIndex))
+                Compound(rs.getInt(CompoundIDIndex), rs.getString(CompoundFormulaIndex), rs.getString(CompoundNameIndex), rs.getDouble(CompoundDensityIndex),
+                        rs.getBoolean(CompoundSolubleIndex), rs.getDouble(CompoundSolidIndex), rs.getDouble(CompoundGasIndex), rs.getDouble(CompoundLiquidIndex))
             } else{
                 null
             }
