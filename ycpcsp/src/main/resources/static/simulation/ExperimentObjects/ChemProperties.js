@@ -1,40 +1,21 @@
 /**
-An Object used to track properties of Chemicals using a tree structure.
+An abstract class used to track properties of Chemicals using a tree structure.
 Do not directly access or assign fields from this object, use getters and setters.
 If no getter or setter exists, do not attempt to access or assign the field
 */
 class ChemProperties{
 
     /**
-    Create new ChemProperties, using the given stats. Only provide chem and count of this is an atom.
-    chem: Either a list of ChemProperties objects, indicating that this is not a leaf of the properties tree,
-        or a single integer for the atomic number, indicating that this is a leaf
+    Create new ChemProperties, using the given stats. Only provide chem and count if this is an atom, optionally can include creator.
+    chem: Either a list of ChemProperties objects, or a single integer for the atomic number
     count: The number of atoms or molecules of this Chemical, i.e. a hydrogen molecule has a count of 2,
         and a hydrogen atom has a count of 1
-    creator: The name of the creator of this ChemProperties. Do not use if this ChemProperties should be an atom.
-    name: The name of this ChemProperties. Do not use if this ChemProperties should be an atom.
-    meltingPoint: The temperature, in celsius, at which the chemical melts. Do not use if this ChemProperties should be an atom.
-    boilingPoint: The temperature, in celsius, at which the chemical boils. Do not use if this ChemProperties should be an atom.
-    density: The density of the chemical. Do not use if this ChemProperties should be an atom.
+    creator: The name of the creator of this ChemProperties.
     */
-    constructor(chem, count, creator = null, name = null, meltingPoint = null, boilingPoint = null, density = null){
-        this.chem = chem;
+    constructor(chem, count, creator){
+        this.setChem(chem);
         this.count = count;
-
         this.creator = creator;
-        this.name = name;
-
-        this.meltingPoint = meltingPoint;
-        this.boilingPoint = boilingPoint;
-        this.density = density;
-    }
-
-    /**
-    Determine if this is a leaf of the tree, i.e. this is an atom with no further breaking down
-    returns: true if this is an atom, false otherwise
-    */
-    isAtom(){
-        return Array.isArray(this.chem);
     }
 
     /**
@@ -47,10 +28,9 @@ class ChemProperties{
 
     /**
     Set a new ChemicalProperties list.
-    chem: The new list, or one object
+    chem: Either a single integer, or the new list, where each list element should be a ChemProperties
     */
     setChem(chem){
-        if(chem instanceof ChemicalProperties) this.chem = (Array.isArray(chem)) ? chem : [chem];
         this.chem = chem;
     }
 
@@ -72,91 +52,233 @@ class ChemProperties{
 
     /**
     Get the creator of this ChemProperties
-    return: The creator, or "Element" if this is an atom
+    return: The creator
     */
     getCreator(){
-        return (this.creator === null) ? "Element" : this.creator;
+        return this.creator;
     }
 
     /**
     Get the name used to refer to this ChemProperties in plain english.
+    returns: The name
+    Always throws an error as a generic ChemProperties object
     */
     getName(){
-        return (this.isAtom()) ? CHEM_PROPERTIES[this.getAtomicNumber()][CHEM_PROPERTY_NAME] : this.name;
+        throw new Error("All ChemProperties objects must implement getName");
     }
 
     /**
     Get the symbol used to refer to this ChemProperties in plain english.
+    returns: The symbol
+    Always throws an error as a generic ChemProperties object
     */
     getSymbol(){
-        var symbol = "";
-        if(this.isAtom){
-            let s = CHEM_PROPERTIES[this.getAtomicNumber()][CHEM_PROPERTY_SYMBOL];
-            symbol = (this.count === 1) ? s : (this.count + s);
-        }
-        else{
-            let c = this.chems;
-            symbol += "(";
-            for(var i = 0; i < c.length; i++) symbol += c[i].getSymbol();
-            symbol += ")";
-        }
-        return symbol;
-    }
-
-    /**
-    Get the atomic number of this ChemProperties.
-    returns: The atomic number if this ChemProperties is an atom, or null if it is not an atom
-    */
-    getAtomicNumber(){
-        return (this.isAtom()) ? this.chem : null;
+        throw new Error("All ChemProperties objects must implement getSymbol");
     }
 
     /**
     Get the molar mass of the chemical, including all of its components
+    returns: The molar mass
+    Always throws an error as a generic ChemProperties object
     */
     getMolarMass(){
-        var total;
-        if(this.isAtom()) total = CHEM_PROPERTIES[this.getAtomicNumber][CHEM_PROPERTY_ATOMIC_NUMBER];
-        else{
-            total = 0;
-            let c = this.chems;
-            for(var i = 0; i < c.length; i++){
-                total += c[i].getMolarMass();
-            }
-        }
-        return this.count * total;
+        throw new Error("All ChemProperties objects must implement getMolarMass");
     }
 
     /**
     Get the temperature at which the chemical melts
     returns: The temperature, in Celsius
+    Always throws an error as a generic ChemProperties object
     */
     getMeltingPoint(){
-        return (this.isAtom()) ? CHEM_PROPERTIES[this.getAtomicNumber()][CHEM_PROPERTY_MELTING_POINT] : this.meltingPoint;
+        throw new Error("All ChemProperties objects must implement getMeltingPoint");
     }
 
     /**
     Get the temperature at which the chemical boils
     returns: The temperature, in Celsius
+    Always throws an error as a generic ChemProperties object
     */
     getBoilingPoint(){
-        return (this.isAtom()) ? CHEM_PROPERTIES[this.getAtomicNumber()][CHEM_PROPERTY_BOILING_POINT] : this.boilingPoint;
+        throw new Error("All ChemProperties objects must implement getBoilingPoint");
     }
 
     /**
     Get the density of the chemical
     returns: The density
+    Always throws an error as a generic ChemProperties object
     */
     getDensity(){
-        return (this.isAtom()) ? CHEM_PROPERTIES[this.chem][CHEM_PROPERTY_DENSITY] : this.density;
+        throw new Error("All ChemProperties objects must implement getDensity");
     }
 
 }
 
 
+/**
+A class keeping track of ChemProperties, but one which is specifically an element
+*/
+class ElementProperties extends ChemProperties{
+    /**
+    Create new ElementProperties, using the given stats.
+    chem: A single integer for the atomic number
+    creator: The name of the creator of this ElementProperties.
+    */
+    constructor(chem, creator = null){
+        super(chem, 1, creator);
+    }
+
+    /**
+    Get the name used to refer to this ChemProperties in plain english.
+    returns: The name
+    */
+    getName(){
+        return CHEM_PROPERTIES[this.getAtomicNumber()][CHEM_PROPERTY_NAME];
+    }
+
+    /**
+    Get the symbol used to refer to this ChemProperties in plain english.
+    returns: The symbol
+    */
+    getSymbol(){
+        let s = CHEM_PROPERTIES[this.getAtomicNumber()][CHEM_PROPERTY_SYMBOL];
+        return (this.count === 1) ? s : (this.count + s);
+    }
+
+    /**
+    Get the atomic number of the element.
+    returns: The atomic number
+    */
+    getAtomicNumber(){
+        return this.chem;
+    }
+
+    /**
+    Get the molar mass of the element
+    returns: The molar mass
+    */
+    getMolarMass(){
+        return this.getCount() * CHEM_PROPERTIES[this.getAtomicNumber][CHEM_PROPERTY_ATOMIC_NUMBER];
+    }
+
+    /**
+    Get the temperature at which the element melts
+    returns: The temperature, in Celsius
+    */
+    getMeltingPoint(){
+        return CHEM_PROPERTIES[this.getAtomicNumber()][CHEM_PROPERTY_MELTING_POINT];
+    }
+
+    /**
+    Get the temperature at which the element boils
+    returns: The temperature, in Celsius
+    */
+    getBoilingPoint(){
+        return CHEM_PROPERTIES[this.getAtomicNumber()][CHEM_PROPERTY_BOILING_POINT];
+    }
+
+    /**
+    Get the density of the element
+    returns: The density
+    */
+    getDensity(){
+        return CHEM_PROPERTIES[this.chem][CHEM_PROPERTY_DENSITY];
+    }
+
+}
+
+/**
+A class keeping track of ChemProperties, but one which is specifically a compound
+*/
+class CompoundProperties extends ChemProperties{
+    /**
+    Create new ChemProperties, using the given stats.
+    chem: A list of ChemProperties objects
+    count: The number of molecules of the compound, i.e. a hydrogen molecule has a count of 2, and a hydrogen atom has a count of 1
+    creator: The name of the creator of this ChemProperties.
+    name: The name of this ChemProperties.
+    meltingPoint: The temperature, in celsius, at which the compound melts.
+    boilingPoint: The temperature, in celsius, at which the compound boils.
+    density: The density of the compound.
+    */
+    constructor(chem, count, creator, name, meltingPoint, boilingPoint, density){
+        super(chem, count, creator);
+
+        this.name = name;
+        this.meltingPoint = meltingPoint;
+        this.boilingPoint = boilingPoint;
+        this.density = density;
+    }
+
+    /**
+    Get the name used to refer to this ChemProperties in plain english.
+    returns: The name
+    */
+    getName(){
+        return this.name;
+    }
+
+    /**
+    Get the symbol used to refer to this ChemProperties in plain english.
+    returns: The symbol
+    */
+    getSymbol(){
+        let c = this.chems;
+        var symbol = "(";
+        for(var i = 0; i < c.length; i++) symbol += c[i].getSymbol();
+        symbol += ")";
+        return symbol;
+    }
+
+    /**
+    Get the molar mass of the compound, including all of its components
+    returns: The molar mass
+    */
+    getMolarMass(){
+        var total;
+        total = 0;
+        let c = this.chems;
+        for(var i = 0; i < c.length; i++){
+            total += c[i].getMolarMass();
+        }
+        return this.count * total;
+    }
+
+    /**
+    Get the temperature at which the compound melts
+    returns: The temperature, in Celsius
+    */
+    getMeltingPoint(){
+        return this.meltingPoint;
+    }
+
+    /**
+    Get the temperature at which the compound boils
+    returns: The temperature, in Celsius
+    */
+    getBoilingPoint(){
+        return this.boilingPoint;
+    }
+
+    /**
+    Get the density of the compound
+    returns: The density
+    */
+    getDensity(){
+        return this.density;
+    }
+}
+
+
+// Constants for indexing elements
+let ELEMENT_HYDROGEN_ATOMIC_NUM = 1;
+let ELEMENT_HELIUM_ATOMIC_NUM = 2;
+let ELEMENT_LITHIUM_ATOMIC_NUM = 3;
+
 // A test "database" holding a few chemical properties
 let CHEM_PROPERTY_SYMBOL = "symbol";
 let CHEM_PROPERTY_NAME = "name";
+let CHEM_PROPERTY_CREATOR = "creator";
 let CHEM_PROPERTY_ATOMIC_NUMBER = "atomicNumber";
 let CHEM_PROPERTY_MOLAR_MASS = "molarMass";
 let CHEM_PROPERTY_MELTING_POINT = "meltingPoint";
@@ -165,24 +287,26 @@ let CHEM_PROPERTY_DENSITY = "density";
 
 let CHEM_PROPERTIES;
 
-function initChemProperties(){
+function initTestChemProperties(){
 
-    let makeChem = function(symbol, name, atomicNumber, molarMass, meltingPoint, boilingPoint, density){
-        let c = {};
+    let makeChem = function(chemList, symbol, name, creator, atomicNumber, molarMass, meltingPoint, boilingPoint, density){
+        chemList[atomicNumber] = {};
+        let c = chemList[atomicNumber];
         c[CHEM_PROPERTY_SYMBOL] = symbol;
         c[CHEM_PROPERTY_NAME] = name;
+        c[CHEM_PROPERTY_CREATOR] = creator;
         c[CHEM_PROPERTY_ATOMIC_NUMBER] = atomicNumber;
         c[CHEM_PROPERTY_MOLAR_MASS] = molarMass;
         c[CHEM_PROPERTY_MELTING_POINT] = meltingPoint;
         c[CHEM_PROPERTY_BOILING_POINT] = boilingPoint;
         c[CHEM_PROPERTY_DENSITY] = density;
-        return c;
     }
 
     let chems = [];
-    chems.push(makeChem("H", "Hydrogen", 1, 1.001, -259, -269, 0.09));
-    chems.push(makeChem("He", "Helium", 2, 4.003, -272, -253, 0.18));
-    chems.push(makeChem("Li", "Lithium", 3, 6.941, 180, 1347, 0.53));
+    chems[0] = null;
+    makeChem(chems, "H", "Hydrogen", "Nature", ELEMENT_HYDROGEN_ATOMIC_NUM, 1.001, -259, -269, 0.09);
+    makeChem(chems, "He", "Helium", "Nature", ELEMENT_HELIUM_ATOMIC_NUM, 4.003, -272, -253, 0.18);
+    makeChem(chems, "Li", "Lithium", "Nature", ELEMENT_LITHIUM_ATOMIC_NUM, 6.941, 180, 1347, 0.53);
 
     CHEM_PROPERTIES = chems;
 }
