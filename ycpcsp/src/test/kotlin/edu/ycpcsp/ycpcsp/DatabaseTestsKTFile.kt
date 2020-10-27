@@ -120,7 +120,7 @@ fun main(){
 
     println("=============================Begin Find My Experiments=============================")
     val userID = 7
-    val testExperiment = Experiment("Color", "7")
+    val testExperiment = Experiment("Color", "7", 1)
 
     val experiments = FindMyExperiments(userID)
     for(x in 0 until experiments.size) {
