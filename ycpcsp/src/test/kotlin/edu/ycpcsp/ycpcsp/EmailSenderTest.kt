@@ -12,5 +12,8 @@ fun main(args : Array<String>){
     user.email = readLine()!!
     println("Enter ID")
     user.id = readLine()!!.toInt()
+    println("sending signup email with given information...")
     println("Was signup email sent? ${EmailSender().sendSignupEmail(user)}")
+    println("sending recover password email with given information...")
+    println("Was recover password email sent? ${EmailSender().sendForgotPasswordEmail(user)}")
 }
