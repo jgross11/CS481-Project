@@ -24,7 +24,8 @@ fun getSecurityQuestionByEmail(email : String) : SecurityQuestion?{
             preparedStatement.setString(1, email)
             val rs = preparedStatement.executeQuery()
             return if(rs.first()){
-                SecurityQuestion(rs.getInt(1), rs.getString(securityQuestionAnswerIndex))
+                // do not provide answer
+                SecurityQuestion(rs.getInt(1), "", randIndex)
             } else{
                 null
             }
