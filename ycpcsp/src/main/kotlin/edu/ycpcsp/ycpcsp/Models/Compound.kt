@@ -15,10 +15,12 @@ package edu.ycpcsp.ycpcsp.Models
 
 class Compound (var compoundID : Int, var formula : String, var name : String, var density : Double, var isWaterSoluable : Boolean, var solidTemp : Double, var gasTemp : Double, var liquidTemp : Double){
 
+    // null constructor
     constructor() : this(-1, "", "", 0.0, false, 0.0, 0.0, 0.0){
 
     }
 
+    // used when compound is first created on FE and given to BE (before ID exists in DB)
     constructor(formula: String, name: String, density: Double, isWaterSoluable: Boolean, solidTemp: Double, gasTemp: Double, liquidTemp: Double) : this(
             -1, formula, name, density, isWaterSoluable, solidTemp, gasTemp, liquidTemp){
     }
