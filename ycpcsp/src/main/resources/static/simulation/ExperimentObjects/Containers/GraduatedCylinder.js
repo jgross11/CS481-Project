@@ -66,7 +66,7 @@ class CylinderController2D extends ContainerController2D{
             let chem = eq.contents[0];
             let chemController = new ChemicalController2D(chem);
             let w = this.width();
-            chemController.drawRect(this.x() + w * .12, this.y(), chem.mass / eq.capacity, w * .85, this.height(), 0.2, graphics);
+            chemController.drawRect(this.x() + w * .135, this.y(), chem.mass / eq.capacity, w * .72, this.height() * 0.93, 0.1, graphics);
         }
 
         // Draw the base Cylinder sprite

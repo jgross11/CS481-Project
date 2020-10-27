@@ -45,6 +45,7 @@ class ErlenmeyerFlaskController2D extends ContainerController2D{
     */
     constructor(erlenmeyer){
         super(erlenmeyer);
+        this.chemFill = createGraphics(this.width(), this.height());
     }
 
     /**
@@ -65,8 +66,25 @@ class ErlenmeyerFlaskController2D extends ContainerController2D{
         if(eq.contents.length > 0){
             let chem = eq.contents[0];
             let chemController = new ChemicalController2D(chem);
+            let x = this.x();
+            let y = this.y();
             let w = this.width();
-            chemController.drawRect(this.x() + w * .12, this.y(), chem.mass / eq.capacity, w * .85, this.height(), 0.2, graphics);
+            let h = this.height();
+
+            // TODO move this code to ChemicalController2D, including all cropping
+            let cf = this.chemFill;
+            cf.fill(chem.texture);
+            cf.noStroke();
+            cf.beginShape();
+            cf.vertex(0.01 * w, 0.95 * h);
+            cf.vertex(0.5 * w, 1 * h);
+            cf.vertex(0.99 * w, 0.95 * h);
+            cf.vertex(0.64 * w, 0.3 * h);
+            cf.vertex(0.32 * w, 0.3 * h);
+            cf.endShape(CLOSE);
+            let ratio = h * .65 * chem.mass / eq.capacity;
+            graphics.image(cf, x, y + h - ratio, w, ratio,
+                0, h - ratio, w, ratio);
         }
 
         // Draw the base Flask sprite
