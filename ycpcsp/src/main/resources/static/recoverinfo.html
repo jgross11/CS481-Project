@@ -38,13 +38,19 @@
             // get email element
             var email = document.getElementById("email");
             email.value = email.value.trim();
+            console.log(email.value)
 
             // verify given email is valid
             if(verifyInformation(email.value, TYPE_EMAIL)){
-                postData('forgot-password-email-submit', email).then(function(data){
+                postData('forgot-password-email-submit', email.value).then(function(data){
                     console.log(data);
-                    // TODO handle logic
+                    if(data){
+                        document.getElementById("email-error").innerHTML = "Password recovery email was sent! Please check your email.";
+                    }else{
+                        document.getElementById("email-error").innerHTML = "No account found with that email. <a href=\"/signup\> Would you like to sign up?</a>";
+                    }
                 });
+                document.getElementById("email-error").innerHTML = "Waiting...";
             }
             else{
                 document.getElementById("email-error").innerHTML = "Please enter a valid email.";
