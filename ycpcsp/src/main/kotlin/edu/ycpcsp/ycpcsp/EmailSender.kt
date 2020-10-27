@@ -40,6 +40,24 @@ class EmailSender {
         return sendMessage(to, subject, body)
     }
 
+    // given a User object, formats and sends a forgot password email
+    // to the user's email, utilizing the User's name and ID.
+    // returns true if email is sent, false otherwise
+    fun sendForgotPasswordEmail(user : User) : Boolean{
+        val to = user.email
+        val subject = "Recover your password"
+        val body = "Hello ${user.getFullName()}, \n" +
+                "\n" +
+                "You recently indicated that you wish to recover your password for your YCPCSP account. \n" +
+                "Please click the following link to reset your password:\n" +
+                "\n" +
+                "${rootWebAddress}/recoverPassword/${user.id}\n" +
+                "\n" +
+                "Thank you,\n" +
+                "- The YCPCSP Team"
+        return sendMessage(to, subject, body)
+    }
+
     // given a 'to' address, a subject line, and a body,
     // constructs and sends an email to that address with
     // the given subject and body.
