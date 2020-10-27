@@ -34,8 +34,11 @@ fun LoadUser(email: String): User {
         val rs = st.executeQuery("SELECT * FROM Database.Users where email = \"$email\";")
 
         try{
-            rs.next()
-            return User(rs.getString(FirstName),rs.getString(LastName),rs.getString(Email),rs.getString(Password),rs.getString(School), rs.getInt(ID))
+            return if(rs.first()){
+                User(rs.getString(FirstName),rs.getString(LastName),rs.getString(Email),rs.getString(Password),rs.getString(School), rs.getInt(ID))
+            } else{
+                User()
+            }
         } catch (ex: SQLException){
             println("Error the query returned with a null result set. The query must have been entered incorrectly")
             ex.printStackTrace()
