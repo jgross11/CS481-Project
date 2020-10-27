@@ -97,24 +97,43 @@ fun main(){
 //
 //    println("=============================End Delete Experiment Test=============================")
 
-    println("=============================Begin Create Quarantine User=============================")
-    val quaraUser = SignupFormData("aaa", "aaa", "aaa", "aaa", "aaa", 1, "answ", 2, "answw", 3, "answww")
+//    println("=============================Begin Create Quarantine User=============================")
+//    val quaraUser = SignupFormData("aaa", "aaa", "aaa", "aaa", "aaa", 1, "answ", 2, "answw", 3, "answww")
+//
+//    if(CreateQuarantineUser(quaraUser)){
+//                println("Create Quartine User worked")
+//            } else{
+//        println("Error: Create Quarantine User did not work")
+//    }
+//    val quaraUser2 = LoadQuarantineUser("aaa")
+//    if(quaraUser2.firstName.compareTo("UNKNOWN") == 0){println("Load Quarantine User Worked")} else{
+//        println("Load Quarantine User did not work")
+//    }
+//
+//    if(DeleteQuarantineUser(quaraUser2)){
+//        println("Delete Quarantine User works")
+//    } else{
+//        println("Delete Quaratine User does not work")
+//    }
+//
+//    println("=============================End Create Quarantine User=============================")
 
-    if(CreateQuarantineUser(quaraUser)){
-                println("Create Quartine User worked")
-            } else{
-        println("Error: Create Quarantine User did not work")
-    }
-    val quaraUser2 = LoadQuarantineUser("aaa")
-    if(quaraUser2.firstName.compareTo("UNKNOWN") == 0){println("Load Quarantine User Worked")} else{
-        println("Load Quarantine User did not work")
+    println("=============================Begin Find My Experiments=============================")
+    val userID = 7
+    val testExperiment = Experiment("Color", "7")
+
+    val experiments = FindMyExperiments(userID)
+    for(x in 0 until experiments.size) {
+        if (experiments[x].title.compareTo(testExperiment.title) == 0) {
+            println("The title is " + experiments[x].title)
+            if (experiments[x].creatorName.compareTo(testExperiment.creatorName) == 0) {
+                println("Find My Experiments works so far")
+            }
+            println("The creator Name is " + experiments[x].creatorName)
+        } else {
+            println("Error: Find My Experiments did not work")
+        }
     }
 
-    if(DeleteQuarantineUser(quaraUser2)){
-        println("Delete Quarantine User works")
-    } else{
-        println("Delete Quaratine User does not work")
-    }
-
-    println("=============================End Create Quarantine User=============================")
+    println("=============================End Find My Experiments=============================")
 }
