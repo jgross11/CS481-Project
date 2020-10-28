@@ -1,5 +1,6 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
+import edu.ycpcsp.ycpcsp.Models.Compound
 import edu.ycpcsp.ycpcsp.Models.User
 import edu.ycpcsp.ycpcsp.PostDataClasses.SignupFormData
 import java.sql.DriverManager
@@ -38,6 +39,32 @@ fun CreateQuarantineUser(signupFormData: SignupFormData): Boolean {
     return false
 }
 
+/**
+ *  Given a quarantine user's quID, attempts to fetch all quarantine user information
+ *  userID: the quID of the desired user
+ *  return: a populated User object if the quID is exists, a null User otherwise
+ */
+fun loadQuarantineUserByID(userID : String) : User{
+    var connection = getDBConnection()
+    if(connection != null){
+        return try{
+            val preparedStatement = connection.prepareStatement("SELECT * FROM Database.Quarantine_Users WHERE quID = ?;")
+            preparedStatement.setString(1, userID)
+            val rs = preparedStatement.executeQuery()
+            return if(rs.first()){
+                User(rs.getString(FirstName),rs.getString(LastName),rs.getString(Email),rs.getString(Password),rs.getString(School), rs.getInt(ID))
+            } else{
+                User()
+            }
+
+        } catch(ex : SQLException){
+            ex.printStackTrace()
+            User()
+        }
+    }
+    return User()
+}
+
 fun LoadQuarantineUser(email: String): User{
     val serverCredentials = serverCredential()
     val username = serverCredentials?.get(0)
@@ -58,8 +85,11 @@ fun LoadQuarantineUser(email: String): User{
         val rs = st.executeQuery("SELECT * FROM Database.Quarantine_Users where email = \"$email\";")
 
         try{
-            rs.next()
-            return User(rs.getString(FirstName),rs.getString(LastName),rs.getString(Email),rs.getString(Password),rs.getString(School), rs.getInt(ID))
+            return if(rs.first()){
+                User(rs.getString(FirstName),rs.getString(LastName),rs.getString(Email),rs.getString(Password),rs.getString(School), rs.getInt(ID))
+            } else{
+                User()
+            }
         } catch (ex: SQLException){
             println("Error the query returned with a null result set. The query must have been entered incorrectly")
             ex.printStackTrace()
@@ -129,10 +159,10 @@ fun DeQuarantineUser(user: User): Boolean{
         val conn = DriverManager.getConnection(url, connectionProps)
         val st = conn.createStatement()
         //assuming we grabbed we already grabbed the user information
-        st.executeUpdate("DELETE FROM Database.Quarantine_Users WHERE quID = '${user.id}'")
-
         st.executeUpdate("INSERT INTO Database.Users (firstName, lastName, email, password, organization, question1, question2, question3, ans1, ans2, ans3)" +
                 " VALUES('"+user.firstName+"', '"+user.lastName+"','"+user.email+"','"+user.password+"','"+user.school+"','"+user.securityQuestions[0].question+"','"+user.securityQuestions[1].question+"','"+user.securityQuestions[2].question+"', '"+user.securityQuestions[0].answer+"', '"+user.securityQuestions[1].answer+"', '"+user.securityQuestions[2].answer+"')")
+
+        st.executeUpdate("DELETE FROM Database.Quarantine_Users WHERE quID = '${user.id}'")
 
         //For now I am not returning the now de-quarantine user
         return true
