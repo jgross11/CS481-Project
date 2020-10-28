@@ -2,6 +2,7 @@ package edu.ycpcsp.ycpcsp
 
 import edu.ycpcsp.ycpcsp.DataBase.*
 import java.util.Scanner
+import javax.naming.directory.SearchResult
 
 fun main(){
 
@@ -63,9 +64,9 @@ fun main(){
     }
 
     else if(answer ==5){
-        print("Enter in the id of experiment: ")
-        val id = readLine()
-        LoadExperiment(id!!)
+        print("Search: ")
+        val stringy = readLine()
+        SearchExperiment(stringy!!)
     }
 }
 
