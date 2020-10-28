@@ -138,7 +138,7 @@ class ExperimentController2D{
     returns: true if equipment was selected, false otherwise
     */
     selectEquipment(){
-        let equip = this.findEquipmentByPosition(this.experimentMousePos(), null, true);
+        let equip = this.findEquipmentByPosition(this.experimentMousePos(), this.selectedActor, true);
         if(equip === null) return false;
         if(this.selectedActor === null) this.setSelectedActor(equip);
         else if(this.selectedReceiver === null) this.setSelectedReceiver(equip);
@@ -1015,7 +1015,28 @@ class DisplayBox{
             g.rect(r[0], r[1], r[2], r[3]);
         }
 
-        g.image(this.getImage(), r[0] + IMG_OFF, r[1] + IMG_OFF, IMG_SIZE, IMG_SIZE);
+        // Determine the height and width to draw the image for the box
+        let img = this.getImage();
+        let w = img.width;
+        let h = img.height;
+        var dw;
+        var dh;
+        if(w > h){
+            dw = IMG_SIZE;
+            dh = (dw / w) * h;
+        }
+        else{
+            dh = IMG_SIZE;
+            dw = (dh / h) * w;
+        }
+
+        let midX = r[0] + IMG_OFF + IMG_SIZE * 0.5;
+        let midY = r[1] + IMG_OFF + IMG_SIZE * 0.5;
+
+        g.push();
+        g.imageMode(CENTER);
+        g.image(img, midX, midY, dw, dh);
+        g.pop();
     }
 
     /**

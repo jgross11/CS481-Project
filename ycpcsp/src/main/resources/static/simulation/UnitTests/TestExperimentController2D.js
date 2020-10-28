@@ -140,6 +140,12 @@ QUnit.test('selectEquipment:', function(assert){
     assert.deepEqual(controller.selectedActor, beakerControl1, "Should select beaker1 for the actor.");
     assert.deepEqual(controller.selectedReceiver, null, "Should still have a null selected receiver.");
 
+    mouseX = 5 + EXP_BOUNDS_X_OFFSET;
+    mouseY = 5 + EXP_BOUNDS_Y_OFFSET;
+    assert.false(controller.selectEquipment(), "Should fail to select equipment, when the new equipment is the already selected actor");
+    assert.deepEqual(controller.selectedActor, beakerControl1, "Should still have beaker1 for the actor.");
+    assert.deepEqual(controller.selectedReceiver, null, "Should still have a null selected receiver.");
+
     mouseX = 105 + EXP_BOUNDS_X_OFFSET;
     mouseY = 5 + EXP_BOUNDS_Y_OFFSET;
     assert.true(controller.selectEquipment(), "Should successfully select equipment");

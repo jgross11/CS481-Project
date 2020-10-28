@@ -239,7 +239,7 @@ class ChemicalController2D extends ExperimentObjectController2D{
     */
     drawRect(x, y, fillPercent, width, baseHeight, heightOffset, graphics){
         let tex = this.chemical.texture;
-        if(tex !== null){
+        if(tex !== null && tex !== undefined){
             graphics.fill(color(tex));
             graphics.noStroke();
             let h = baseHeight;
