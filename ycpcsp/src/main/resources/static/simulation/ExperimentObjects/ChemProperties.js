@@ -13,7 +13,7 @@ class ChemProperties{
     creator: The name of the creator of this ChemProperties.
     */
     constructor(chem, count, creator){
-        this.setChem(chem);
+        this.chem = chem;
         this.count = count;
         this.creator = creator;
     }
@@ -23,7 +23,7 @@ class ChemProperties{
     returns: The component
     */
     getChem(){
-        return chem;
+        return this.chem;
     }
 
     /**
@@ -39,7 +39,7 @@ class ChemProperties{
     returns: The count
     */
     getCount(){
-        return count;
+        return this.count;
     }
 
     /**
@@ -56,6 +56,14 @@ class ChemProperties{
     */
     getCreator(){
         return this.creator;
+    }
+
+    /**
+    Set the creator of this ChemProperties
+    creator: The creator
+    */
+    setCreator(creator){
+        this.creator = creator;
     }
 
     /**
@@ -121,28 +129,13 @@ A class keeping track of ChemProperties, but one which is specifically an elemen
 class ElementProperties extends ChemProperties{
     /**
     Create new ElementProperties, using the given stats.
-    chem: A single integer for the atomic number
+    atomicNumber: A single integer for the atomic number
     creator: The name of the creator of this ElementProperties.
     */
-    constructor(chem, creator = null){
-        super(chem, 1, creator);
-    }
-
-    /**
-    Get the name used to refer to this ChemProperties in plain english.
-    returns: The name
-    */
-    getName(){
-        return CHEM_PROPERTIES[this.getAtomicNumber()][CHEM_PROPERTY_NAME];
-    }
-
-    /**
-    Get the symbol used to refer to this ChemProperties in plain english.
-    returns: The symbol
-    */
-    getSymbol(){
-        let s = CHEM_PROPERTIES[this.getAtomicNumber()][CHEM_PROPERTY_SYMBOL];
-        return (this.count === 1) ? s : (this.count + s);
+    constructor(atomicNumber, creator = null){
+        super(atomicNumber, 1, creator);
+        let newElement = CHEM_PROPERTIES[atomicNumber];
+        if(newElement !== undefined) this.setCreator(newElement[CHEM_PROPERTY_CREATOR]);
     }
 
     /**
@@ -154,11 +147,37 @@ class ElementProperties extends ChemProperties{
     }
 
     /**
+    Get the properties based on this ElementProperties atomic number
+    return: The properties, or an empty object if no entry exists with the given atomic number
+    */
+    chemFromProperties(){
+        let c = CHEM_PROPERTIES[this.getAtomicNumber()];
+        return (c === undefined) ? {} : c;
+    }
+
+    /**
+    Get the name used to refer to this ChemProperties in plain english.
+    returns: The name
+    */
+    getName(){
+        return this.chemFromProperties()[CHEM_PROPERTY_NAME];
+    }
+
+    /**
+    Get the symbol used to refer to this ChemProperties in plain english.
+    returns: The symbol
+    */
+    getSymbol(){
+        let s = this.chemFromProperties()[CHEM_PROPERTY_SYMBOL];
+        return (s === undefined) ? "" : s;
+    }
+
+    /**
     Get the molar mass of the element
     returns: The molar mass
     */
     getMolarMass(){
-        return this.getCount() * CHEM_PROPERTIES[this.getAtomicNumber][CHEM_PROPERTY_ATOMIC_NUMBER];
+        return this.chemFromProperties()[CHEM_PROPERTY_MOLAR_MASS];
     }
 
     /**
@@ -166,7 +185,7 @@ class ElementProperties extends ChemProperties{
     returns: The temperature, in Celsius
     */
     getMeltingPoint(){
-        return CHEM_PROPERTIES[this.getAtomicNumber()][CHEM_PROPERTY_MELTING_POINT];
+        return this.chemFromProperties()[CHEM_PROPERTY_MELTING_POINT];
     }
 
     /**
@@ -174,7 +193,7 @@ class ElementProperties extends ChemProperties{
     returns: The temperature, in Celsius
     */
     getBoilingPoint(){
-        return CHEM_PROPERTIES[this.getAtomicNumber()][CHEM_PROPERTY_BOILING_POINT];
+        return this.chemFromProperties()[CHEM_PROPERTY_BOILING_POINT];
     }
 
     /**
@@ -182,7 +201,7 @@ class ElementProperties extends ChemProperties{
     returns: The density
     */
     getDensity(){
-        return CHEM_PROPERTIES[this.chem][CHEM_PROPERTY_DENSITY];
+        return this.chemFromProperties()[CHEM_PROPERTY_DENSITY];
     }
 
 }
@@ -223,11 +242,13 @@ class CompoundProperties extends ChemProperties{
     returns: The symbol
     */
     getSymbol(){
-        let c = this.chems;
-        var symbol = "(";
+        let c = this.getChem();
+        let oneChem = c.length > 1
+        var symbol = oneChem ? "(" : "";
         for(var i = 0; i < c.length; i++) symbol += c[i].getSymbol();
-        symbol += ")";
-        return symbol;
+        symbol += oneChem ? ")" : "";
+        let num = this.getCount();
+        return ((num === 1) ? "" : num) + symbol;
     }
 
     /**
@@ -237,7 +258,7 @@ class CompoundProperties extends ChemProperties{
     getMolarMass(){
         var total;
         total = 0;
-        let c = this.chems;
+        let c = this.getChem();
         for(var i = 0; i < c.length; i++){
             total += c[i].getMolarMass();
         }
@@ -304,8 +325,8 @@ function initTestChemProperties(){
 
     let chems = [];
     chems[0] = null;
-    makeChem(chems, "H", "Hydrogen", "Nature", ELEMENT_HYDROGEN_ATOMIC_NUM, 1.001, -259, -269, 0.09);
-    makeChem(chems, "He", "Helium", "Nature", ELEMENT_HELIUM_ATOMIC_NUM, 4.003, -272, -253, 0.18);
+    makeChem(chems, "H", "Hydrogen", "Nature", ELEMENT_HYDROGEN_ATOMIC_NUM, 1.008, -259, -253, 0.09);
+    makeChem(chems, "He", "Helium", "Nature", ELEMENT_HELIUM_ATOMIC_NUM, 4.003, -272, -269, 0.18);
     makeChem(chems, "Li", "Lithium", "Nature", ELEMENT_LITHIUM_ATOMIC_NUM, 6.941, 180, 1347, 0.53);
 
     CHEM_PROPERTIES = chems;
