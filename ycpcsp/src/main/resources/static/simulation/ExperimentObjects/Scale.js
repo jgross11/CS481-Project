@@ -181,7 +181,7 @@ class ScaleController2D extends EquipmentController2D{
         graphics.noStroke();
         graphics.fill(0);
         graphics.textSize(15);
-        graphics.text("" + this.equipment.DisplayedWeight, this.x() + this.width() * 0.3, this.y() + this.height() * 0.7);
+        graphics.text("" + this.equipment.DisplayedWeight.toFixed(2), this.x() + this.width() * 0.25, this.y() + this.height() * 0.7);
     }
 
 }

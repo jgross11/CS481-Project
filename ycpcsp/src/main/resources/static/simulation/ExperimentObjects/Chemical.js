@@ -248,4 +248,36 @@ class ChemicalController2D extends ExperimentObjectController2D{
         }
     }
 
+    /**
+    Draw this chemical as a shape defined by vertices. Part of the shape can be drawn based on a percentage
+    graphics: The P5 graphics object to draw the final picture onto
+    buffer: The P5 graphics object to use as a buffer for drawing to graphics
+        This buffer should be the size of the total space which the chemical visual cane take up
+    x: The x coordinates to draw the chemical to graphics
+    y: The y coordinates to draw the chemical to graphics
+    vertices: A list of 2 element lists representing coordinates of where the chemical shape will be drawn
+        All should be in the range of [0, 1], and will be scaled to fit the buffer
+        The first and last vertices in the list will also connect together, completing the shape
+    fillRatio: The percentage of the total shape which will be drawn. The shape starts being drawn at the bottom
+    bottomFillPercent: The total percentage of buffer which is used to draw the shape, beginning with the bottom
+    */
+    drawShape(graphics, buffer, x, y, vertices, fillRatio, bottomFillPercent){
+        let w = buffer.width;
+        let h = buffer.height;
+
+        buffer.push();
+        buffer.fill(this.chemical.texture);
+        buffer.noStroke();
+        buffer.scale(w, h);
+        buffer.beginShape();
+        for(var i = 0; i < vertices.length; i++){
+            buffer.vertex(vertices[i][0], vertices[i][1]);
+        }
+        buffer.endShape(CLOSE);
+        buffer.pop();
+        let ratio = h * bottomFillPercent * fillRatio;
+        let hr = h - ratio;
+        graphics.image(buffer, x, y + hr, w, ratio, 0, hr, w, ratio);
+    }
+
 }
