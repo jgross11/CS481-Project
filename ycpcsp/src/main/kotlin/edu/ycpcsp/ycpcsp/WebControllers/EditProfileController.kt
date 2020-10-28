@@ -3,6 +3,7 @@ import edu.ycpcsp.ycpcsp.DataBase.IsEmailInDB
 import edu.ycpcsp.ycpcsp.DataBase.ModifyUser
 import edu.ycpcsp.ycpcsp.DataBase.UserSignup
 import edu.ycpcsp.ycpcsp.Models.User
+import edu.ycpcsp.ycpcsp.PostDataClasses.EditUserFormData
 import edu.ycpcsp.ycpcsp.PostDataClasses.SignupFormData
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
@@ -23,18 +24,20 @@ class EditProfileController {
 
     @PostMapping(path = ["/edit-submit"], consumes = ["application/json"])
     @ResponseBody
-    fun receiveEditFormInformation(@RequestBody user : User) : User {
+    fun receiveEditFormInformation(@RequestBody editUserFormData : EditUserFormData) : User {
         // print received information
+        println(editUserFormData)
 
         var user = User()
 
         // check if email not in DB
-        if(!IsEmailInDB(user.email)){
+        if(IsEmailInDB(editUserFormData.email)){
             // ensure name is capitalized
             println("Edit")
-            user.firstName = user.firstName.capitalize()
-            user.lastName = user.lastName.capitalize()
-            if(ModifyUser(user)){
+            editUserFormData.firstName = editUserFormData.firstName.capitalize()
+            editUserFormData.lastName = editUserFormData.lastName.capitalize()
+            if(ModifyUser(editUserFormData)){
+                user.setContentsFromEdit(editUserFormData)
                 println("Edit successfully added to DB")
             } else{
                 println("unable to edit user to DB")

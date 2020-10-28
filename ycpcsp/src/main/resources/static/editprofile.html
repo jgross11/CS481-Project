@@ -47,7 +47,7 @@
 
         if(fnameGood && lnameGood && emailGood && schoolGood &&passwordGood){
 
-            var user = {
+            var formData = {
                 firstName: fname.value,
                 lastName: lname.value,
                 email: email.value,
@@ -56,7 +56,7 @@
 
 
             };
-            postData('edit-submit', user).then(function(data){
+            postData('edit-submit', formData).then(function(data){
                 var user = data;
                     sessionStorage.setItem("user", JSON.stringify(user));
                     console.log("Edit successful, redirecting back to profile");

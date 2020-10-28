@@ -1,5 +1,6 @@
 package edu.ycpcsp.ycpcsp.Models
 
+import edu.ycpcsp.ycpcsp.PostDataClasses.EditUserFormData
 import edu.ycpcsp.ycpcsp.PostDataClasses.SignupFormData
 
 /**
@@ -73,5 +74,13 @@ data class User(var firstName : String = "UNKNOWN",
         securityQuestions[0] = SecurityQuestion(signupFormData.sq1, signupFormData.sq1a)
         securityQuestions[1] = SecurityQuestion(signupFormData.sq2, signupFormData.sq2a)
         securityQuestions[2] = SecurityQuestion(signupFormData.sq3, signupFormData.sq3a)
+    }
+    fun setContentsFromEdit(editUserFormData: EditUserFormData) {
+        firstName = editUserFormData.firstName
+        lastName = editUserFormData.lastName
+        email = editUserFormData.email
+        password = editUserFormData.password
+        school = editUserFormData.school
+
     }
 }
