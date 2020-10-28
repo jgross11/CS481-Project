@@ -7,7 +7,7 @@ import java.util.*
 fun DeleteUser(id: String?): Boolean{
     val connectionProps = Properties()
     connectionProps["user"] = username
-    connectionProps["password"] = edu.ycpcsp.ycpcsp.DataBase.password
+    connectionProps["password"] = password
     connectionProps["useSSL"] = "false"
 
     try {

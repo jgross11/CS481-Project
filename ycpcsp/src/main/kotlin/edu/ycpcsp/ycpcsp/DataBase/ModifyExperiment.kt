@@ -30,7 +30,7 @@ fun ModifyExperiment(experiment: Experiment): Boolean {
         //Edit Experiment table, delete later?
         //Need to modify all experiment id
         st.executeUpdate("UPDATE Database.Experiments" +
-                            "SET title = '${experiment.title}', numSteps = '$experiment.numSteps'" +
+                            "SET title = '${experiment.title}'" +
                             "WHERE ExperimentsID = '$experiment.id';")
 
         //Edit Chemistry table

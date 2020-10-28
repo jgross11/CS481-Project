@@ -30,8 +30,11 @@ fun LoadUser(email: String): User {
         Class.forName("com.mysql.jdbc.Driver")
 
         val conn = DriverManager.getConnection(url, connectionProps)
-        val st = conn.createStatement()
-        val rs = st.executeQuery("SELECT * FROM Database.Users where email = \"$email\";")
+//        val st = conn.createStatement()
+//        val rs = st.executeQuery("SELECT * FROM Database.Users where email = \"$email\";")
+        val stm = conn.prepareStatement("SELECT * FROM Database.Users where email = ?;")
+        stm.setString(1, email)
+        val rs = stm.executeQuery()
 
         try{
             return if(rs.first()){

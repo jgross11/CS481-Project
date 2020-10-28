@@ -23,20 +23,22 @@ fun main(){
 //    println("=============================End VerifyUser Test=============================")
 //
 //    //TODO this section of code tests LoadUser
-//    println("=============================Begin LoadUser Test=============================")
-//
-//    var testUser = LoadUser(email)
-//    var testCompare : Array<String> = arrayOf("Test", "Name", "test@test.com","test-inc")
-//    if(testUser != null) {
-//        assert(testUser.firstName.compareTo(testCompare[0]) == 0)
-//        assert(testUser.lastName.compareTo(testCompare[1]) == 0)
-//        assert(testUser.email.compareTo(testCompare[2]) == 0)
-//        assert(testUser.school.compareTo(testCompare[3]) == 0)
-//        println("LoadUser works just fine")
-//
-//    }
-//    println()
-//    println("=============================End LoadUser Test=============================")
+    println("=============================Begin LoadUser Test=============================")
+
+    var testUser = LoadUser(email)
+    var testCompare : Array<String> = arrayOf("Test", "Name", "test@test.com","TheBest")
+    if(testUser != null) {
+        assert(testUser.firstName.compareTo(testCompare[0]) == 0)
+        assert(testUser.lastName.compareTo(testCompare[1]) == 0)
+        assert(testUser.email.compareTo(testCompare[2]) == 0)
+        if(testUser.school.compareTo(testCompare[3]) == 0){
+            println("LoadUser works just fine")
+        }
+
+
+    }
+    println()
+    println("=============================End LoadUser Test=============================")
 //
 //    //TODO ModifyUser test
 //    println("=============================Begin Modify User Test=============================")
