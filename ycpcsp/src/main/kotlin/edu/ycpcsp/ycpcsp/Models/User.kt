@@ -22,6 +22,8 @@ data class User(var firstName : String = "UNKNOWN",
     var experiments : Array<Experiment> = arrayOf<Experiment>()
     var recentExperiments : Array<Experiment> = arrayOf<Experiment>()
 
+    // assume a user is not quarantined, changed to true if user is when fetching from DB
+    var isQuarantined = false
     // capitalize name
     init
     {
