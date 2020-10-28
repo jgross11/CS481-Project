@@ -1,5 +1,6 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
+import edu.ycpcsp.ycpcsp.Models.User
 import edu.ycpcsp.ycpcsp.PostDataClasses.LoginFormData
 import java.sql.DriverManager
 import java.sql.SQLException
@@ -46,5 +47,23 @@ fun VerifyUser(loginFormData: LoginFormData): Boolean {
         ex.printStackTrace()
     }
     //this false statement is just so the program stops getting angry with me
+    return false
+}
+
+fun verifyQuarantineUser(loginFormData: LoginFormData) : Boolean{
+    var connection = getDBConnection()
+    if(connection != null){
+        return try{
+            val preparedStatement = connection.prepareStatement("SELECT quID FROM Database.Quarantine_Users WHERE email = ? and password = ?")
+            preparedStatement.setString(1, loginFormData.email)
+            preparedStatement.setString(2, loginFormData.password)
+            val rs = preparedStatement.executeQuery()
+            return rs.first()
+
+        } catch(ex : SQLException){
+            ex.printStackTrace()
+            false
+        }
+    }
     return false
 }
