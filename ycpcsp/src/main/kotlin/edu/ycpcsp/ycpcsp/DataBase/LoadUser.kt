@@ -30,12 +30,18 @@ fun LoadUser(email: String): User {
         Class.forName("com.mysql.jdbc.Driver")
 
         val conn = DriverManager.getConnection(url, connectionProps)
-        val st = conn.createStatement()
-        val rs = st.executeQuery("SELECT * FROM Database.Users where email = \"$email\";")
+//        val st = conn.createStatement()
+//        val rs = st.executeQuery("SELECT * FROM Database.Users where email = \"$email\";")
+        val stm = conn.prepareStatement("SELECT * FROM Database.Users where email = ?;")
+        stm.setString(1, email)
+        val rs = stm.executeQuery()
 
         try{
-            rs.next()
-            return User(rs.getString(FirstName),rs.getString(LastName),rs.getString(Email),rs.getString(Password),rs.getString(School), rs.getInt(ID))
+            return if(rs.first()){
+                User(rs.getString(FirstName),rs.getString(LastName),rs.getString(Email),rs.getString(Password),rs.getString(School), rs.getInt(ID))
+            } else{
+                User()
+            }
         } catch (ex: SQLException){
             println("Error the query returned with a null result set. The query must have been entered incorrectly")
             ex.printStackTrace()

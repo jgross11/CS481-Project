@@ -17,7 +17,6 @@ fun CreateExperiment(userAndExperiment: UserAndExperiment): Boolean {
     val connectionProps = Properties()
     connectionProps["user"] = username
     connectionProps["password"] = password
-    edu.ycpcsp.ycpcsp.DataBase.password
     connectionProps["useSSL"] = "false"
 
     try {

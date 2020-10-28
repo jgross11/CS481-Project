@@ -1,32 +1,31 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
+import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.*
 
-fun DeleteUser(id: String?): Boolean{
+fun getDBConnection() : Connection?{
+    val serverCredentials = serverCredential()
+    val username = serverCredentials?.get(0)
+    val password = serverCredentials?.get(1)
+    val url = serverCredentials?.get(2)
+
     val connectionProps = Properties()
     connectionProps["user"] = username
     connectionProps["password"] = password
     connectionProps["useSSL"] = "false"
 
     try {
-        //test the driver to make sure that it works
         Class.forName("com.mysql.jdbc.Driver")
-        //Connection for the database to get it connected and then execute the query to insert the values into the database
-        val conn = DriverManager.getConnection(url, connectionProps)
-        val st = conn.createStatement()
-        st.executeUpdate("DELETE FROM Database.Users WHERE id = '$id'")
+        return DriverManager.getConnection(url, connectionProps)
 
-        return true
-
-    }catch (ex: SQLException) {
+    } catch (ex: SQLException) {
         // handle any errors
         ex.printStackTrace()
     } catch (ex: Exception) {
         // handle any errors
         ex.printStackTrace()
     }
-
-    return false
+    return null
 }
