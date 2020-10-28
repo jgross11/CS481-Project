@@ -1,9 +1,10 @@
 package edu.ycpcsp.ycpcsp.WebControllers
 
+import edu.ycpcsp.ycpcsp.DataBase.DeQuarantineUser
+import edu.ycpcsp.ycpcsp.DataBase.loadQuarantineUserByID
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.ResponseBody
 
 /**
  *  This class (will) handle the all GET and POSTS associated with
@@ -14,24 +15,23 @@ import org.springframework.web.bind.annotation.ResponseBody
 class VerifySignupController {
 
     // Attempts to verify a users' signup and redirects accordingly
-    // TODO determine why this grabs html resources such as helperFunctions.js...
+    // TODO determine a way to distinguish between a valid and invalid verification attempt
+    // TODO and indicate this on the FE, rather than always redirecting to home page.
     @GetMapping("/verify/{userID}")
-    fun simulation(@PathVariable(value="userID") id : String) : String{
-        // TODO verify this verification link is still valid (user still in quarantine table, etc.)
-        // TODO move user from quarantine to main user table if valid and send to home page
-        // TODO send to bad-verification page if verification fails
-        /*
-        TODO change this function name accordingly
-        if(verifySignup(id)){
-            return "home.html"
+    fun simulation(@PathVariable("userID") id : String) : String{
+        println("Received verification ID: $id")
+        val user = loadQuarantineUserByID(id)
+        if(user.firstName != ""){
+            println("user in quarantine table")
+            if(DeQuarantineUser(user)){
+                println("user moved from quarantine to normal table")
+            } else{
+                println("could not move user from quarantine to normal table")
+            }
         }
         else{
-            return "bad-verification.html"
+            println("user not in quarantine table")
         }
-
-         */
-
-        println("Received verification ID: $id")
-        return "/home.html"
+        return "redirect:/"
     }
 }
