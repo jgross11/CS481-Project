@@ -109,36 +109,46 @@ class RecoverInfoController {
         val user = getUserByRecoveryKeyID(id)
         println(user.toString())
         // TODO make this not suck
-        return "<script src=\"/../helperFunctions.js\"></script>" +
-                "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.12.0/js/md5.min.js\"></script>" +
-                "<label for=\"newPassword\">Enter new password:</label><br>\n" +
-                "<div id=\"newPassword-error\"></div><br>\n" +
-                "<input type=\"password\" id=\"newPassword\" name=\"newPassword\"><br>\n" +
-                "<input value=\"Change password\" type=\"button\" id=\"changePasswordButton\" name=\"changePasswordButton\" onclick=\"verifyChangePassword()\">\n" +
-                "<script>\n" +
-                "function verifyChangePassword(){\n" +
-                "            let userID = ${user.id};\n" +
-                "            let passwordValue = document.getElementById(\"newPassword\").value\n" +
-                "                if(passwordValue.length > 0){\n" +
-                "                    let group = {\n" +
-                "                    userID: userID,\n" +
-                "                    password: md5(passwordValue)\n" +
-                "                };\n" +
-                "               console.log(group)\n" +
-                "                postData(\"/../submit-new-password\", group).then(function(data){\n" +
-                "                    if(data){\n" +
-                "                        window.location.href = \"/\";\n" +
-                "                    } else{\n" +
-                "                        document.getElementById(\"newPassword-error\").innerHTML = \"Could not update password, please try again later.\";\n" +
-                "                    }\n" +
-                "                });\n" +
-"                           } else{\n" +
-            "                   document.getElementById(\"newPassword-error\").innerHTML = \"Please enter a valid password.\";\n" +
-                "            }\n" +
-                "        }\n" +
-                "</script>"
+        if(user.id != -1) {
+            return "<script src=\"/../helperFunctions.js\"></script>" +
+                    "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.12.0/js/md5.min.js\"></script>" +
+                    "<label for=\"newPassword\">Enter new password:</label><br>\n" +
+                    "<div id=\"newPassword-error\"></div><br>\n" +
+                    "<input type=\"password\" id=\"newPassword\" name=\"newPassword\"><br>\n" +
+                    "<input value=\"Change password\" type=\"button\" id=\"changePasswordButton\" name=\"changePasswordButton\" onclick=\"verifyChangePassword()\">\n" +
+                    "<script>\n" +
+                    "function verifyChangePassword(){\n" +
+                    "            let userID = ${user.id};\n" +
+                    "            let passwordValue = document.getElementById(\"newPassword\").value\n" +
+                    "                if(passwordValue.length > 0){\n" +
+                    "                    let group = {\n" +
+                    "                    userID: userID,\n" +
+                    "                    password: md5(passwordValue)\n" +
+                    "                };\n" +
+                    "               console.log(group)\n" +
+                    "                postData(\"/../submit-new-password\", group).then(function(data){\n" +
+                    "                    if(data){\n" +
+                    "                        window.location.href = \"/\";\n" +
+                    "                    } else{\n" +
+                    "                        document.getElementById(\"newPassword-error\").innerHTML = \"Could not update password, please try again later.\";\n" +
+                    "                    }\n" +
+                    "                });\n" +
+                    "                           } else{\n" +
+                    "                   document.getElementById(\"newPassword-error\").innerHTML = \"Please enter a valid password.\";\n" +
+                    "            }\n" +
+                    "        }\n" +
+                    "</script>"
+        }
+        else{
+            return "<script>\n" +
+                    "            window.location.href = \"/\";\n" +
+                    "         </script>"
+        }
 
         /**
+         <script>
+            window.location.href = "/";
+         </script>
         function verifyChangePassword(){
             let userID = ${user.id};
             let passwordValue = document.getElementById("newPassword").value
