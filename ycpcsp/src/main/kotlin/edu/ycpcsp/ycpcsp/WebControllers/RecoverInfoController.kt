@@ -81,12 +81,23 @@ class RecoverInfoController {
         }
     }
 
-    // submit-new-password
     @PostMapping(path=["/submit-new-password"], consumes = ["application/json"], produces = ["application/json"])
     @ResponseBody
     fun updatePassword(@RequestBody userIDAndPassword : UserIDAndPassword) : Boolean {
         println("received userID / password: ${userIDAndPassword.toString()}")
-        return false
+        return if(updatePasswordByUserID(userIDAndPassword)){
+            return if(removeRecoveryIDByUserID(userIDAndPassword.userID)){
+                println("Updated password and removed recovery")
+                true
+            } else{
+                println("Updated password but couldn't remove from DB")
+                true
+            }
+        }
+        else{
+            println("Could not update password")
+            false
+        }
     }
 
     // TODO extract user's userID from link, send back textfield and button (TODOTODO make html page)
@@ -99,6 +110,7 @@ class RecoverInfoController {
         println(user.toString())
         // TODO make this not suck
         return "<script src=\"/../helperFunctions.js\"></script>" +
+                "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.12.0/js/md5.min.js\"></script>" +
                 "<label for=\"newPassword\">Enter new password:</label><br>\n" +
                 "<div id=\"newPassword-error\"></div><br>\n" +
                 "<input type=\"password\" id=\"newPassword\" name=\"newPassword\"><br>\n" +
@@ -110,7 +122,7 @@ class RecoverInfoController {
                 "                if(passwordValue.length > 0){\n" +
                 "                    let group = {\n" +
                 "                    userID: userID,\n" +
-                "                    password: passwordValue\n" +
+                "                    password: md5(passwordValue)\n" +
                 "                };\n" +
                 "               console.log(group)\n" +
                 "                postData(\"/../submit-new-password\", group).then(function(data){\n" +
