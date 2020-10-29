@@ -42,7 +42,7 @@ function idToEquipment(id){
         case ID_EQUIP_GRADUATED_25mL:
         case ID_EQUIP_GRADUATED_50mL:
         case ID_EQUIP_GRADUATED_100mL:
-        case ID_EQUIP_GRADUATED_1000mL: return new CylinderController2D(new GraduatedCylinder(id));
+        case ID_EQUIP_GRADUATED_1000mL: return new GraduatedCylinderController2D(new GraduatedCylinder(id));
         case ID_EQUIP_FLASK_25mL:
         case ID_EQUIP_FLASK_50mL:
         case ID_EQUIP_FLASK_100mL:

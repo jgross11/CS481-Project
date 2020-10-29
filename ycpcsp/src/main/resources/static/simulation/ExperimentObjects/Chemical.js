@@ -182,7 +182,9 @@ class ChemicalController2D extends ExperimentObjectController2D{
             control.setChemical(chems[i]);
             newChems.push(control.copyChem());
         }
-        //newChems[0].setTexture(tex); // TODO temp code for creating a new color, replace with proper chemical combining
+
+        //temp code for creating a new color, replace with proper chemical combining
+        //newChems[0].setTexture(tex);
         newChems[0].setProperties(c2.properties);
         newChems[0].setMass(totalMass);
 

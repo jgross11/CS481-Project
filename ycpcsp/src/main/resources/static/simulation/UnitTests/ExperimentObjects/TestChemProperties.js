@@ -42,12 +42,20 @@ QUnit.test('setCreator:', function(assert){
     assert.equal(chem1.getCreator(), "dude", "Should have given creator of 'dude'");
 });
 
+QUnit.test('getID:', function(assert){
+    assert.throws(chem1.getID, "Generic ChemProperties should throw an error on getID");
+});
+
 QUnit.test('getName:', function(assert){
     assert.throws(chem1.getName, "Generic ChemProperties should throw an error on getName");
 });
 
 QUnit.test('getSymbol:', function(assert){
     assert.throws(chem1.getName, "Generic ChemProperties should throw an error on getSymbol");
+});
+
+QUnit.test('getTexture:', function(assert){
+    assert.throws(chem1.getTexture, "Generic ChemProperties should throw an error on getTexture");
 });
 
 QUnit.test('getMolarMass:', function(assert){
@@ -99,6 +107,11 @@ QUnit.test('chemFromProperties:', function(assert){
     assert.deepEqual(elementNew.chemFromProperties(), {}, "Should get an empty object from an unknown atomic number");
 });
 
+QUnit.test('getID:', function(assert){
+    assert.equal(elementHydrogen.getID(), 1, "Should get the ID of Hydrogen");
+    assert.equal(elementNew.getID(), 9999, "Should get given ID of undefined element");
+});
+
 QUnit.test('getName:', function(assert){
     assert.equal(elementHydrogen.getName(), "Hydrogen", "Should get the name of Hydrogen");
     assert.equal(elementNew.getName(), undefined, "Undefined element name should be undefined");
@@ -107,6 +120,11 @@ QUnit.test('getName:', function(assert){
 QUnit.test('getSymbol:', function(assert){
     assert.equal(elementHydrogen.getSymbol(), "H", "Should get H for the symbol of Hydrogen");
     assert.equal(elementNew.getSymbol(), "", "Undefined element symbol should be an empty string");
+});
+
+QUnit.test('getTexture:', function(assert){
+    assert.deepEqual(elementHydrogen.getTexture(), [255, 255, 200], "Should get the defined color of Hydrogen");
+    assert.equal(elementNew.getTexture(), undefined, "Undefined element should have undefined texture");
 });
 
 QUnit.test('getMolarMass:', function(assert){
@@ -168,6 +186,12 @@ QUnit.test('constructor:', function(assert){
     assert.equal(compoundHydrogen.density, 3, "Density should match given density in constructor");
 });
 
+QUnit.test('getID:', function(assert){
+    assert.equal(compoundHydrogen.getID(), 10001, "Get ID should match given ID in constructor");
+    assert.equal(compoundHelium.getID(), 10002, "Get ID should match given ID in constructor");
+    assert.equal(compoundLithium.getID(), 10003, "Get ID should match given ID in constructor");
+});
+
 QUnit.test('getName:', function(assert){
     assert.equal(compoundHydrogen.getName(), "HydrogenDouble", "Get name should match given name in constructor");
     assert.equal(compoundHelium.getName(), "HeliumDouble", "Get name should match given name in constructor");
@@ -182,6 +206,12 @@ QUnit.test('getSymbol:', function(assert){
     assert.equal(compoundHydroThium.getSymbol(), "(2HLi)", "Should find correct symbol");
     assert.equal(compoundHelThium.getSymbol(), "2(2He3Li)", "Should find correct symbol");
     assert.equal(compoundHydroHelThium.getSymbol(), "3((2HLi)2(2He3Li))", "Should find correct symbol");
+});
+
+QUnit.test('getTexture:', function(assert){
+    assert.deepEqual(compoundHydrogen.getTexture(), [1, 2, 3], "Get texture should match given texture in constructor");
+    assert.deepEqual(compoundHelium.getTexture(), [4, 5, 6], "Get texture should match given texture in constructor");
+    assert.deepEqual(compoundLithium.getTexture(), [7, 8, 9], "Get texture should match given texture in constructor");
 });
 
 QUnit.test('getMolarMass:', function(assert){

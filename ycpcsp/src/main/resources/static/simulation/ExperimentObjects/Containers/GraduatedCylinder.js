@@ -38,9 +38,9 @@ class GraduatedCylinder extends Container{
 /**
 A class for handling controlling a Graduated Cylinder in a 2D environment
 */
-class CylinderController2D extends ContainerController2D{
+class GraduatedCylinderController2D extends ContainerController2D{
     /**
-    Create a new CylinderController to control the given Graduated Cylinder
+    Create a new GraduatedCylinderController to control the given Graduated Cylinder
     graduated: The Cylinder which this Controller will control
     */
     constructor(graduated){

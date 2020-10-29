@@ -35,23 +35,23 @@ QUnit.test('getObject:', function(assert){
     assert.equal(control1.getObject(), chem1, "The object obtained should be the same as the Chemical in the Controller.");
 });
 
+QUnit.test('canPlace:', function(assert){
+    assert.false(control1.canPlace(), "All ChemicalController objects should be not placeable by default");
+});
+
 QUnit.test('idToFunc:', function(assert){
     assert.equal(control1.idToFunc(0), null, "ChemicalController2D should not have any function ids");
     assert.equal(control1.idToFunc(1), null, "ChemicalController2D should not have any function ids");
     assert.equal(control1.idToFunc(2), null, "ChemicalController2D should not have any function ids");
 });
 
-QUnit.test('getFuncDescriptions:', function(assert){
-    let desc = control1.getFuncDescriptions();
-    assert.equal(desc.length, 0, "Chemicals should have no function descriptions");
-});
-
 QUnit.test('funcToId:', function(assert){
     assert.equal(control1.funcToId(null), null, "ChemicalController2D should not have any functions returned");
 });
 
-QUnit.test('canPlace:', function(assert){
-    assert.false(control1.canPlace(), "All ChemicalController objects should be not placeable by default");
+QUnit.test('getFuncDescriptions:', function(assert){
+    let desc = control1.getFuncDescriptions();
+    assert.equal(desc.length, 0, "Chemicals should have no function descriptions");
 });
 
 QUnit.todo('calculateMoles:', function(assert){
@@ -104,5 +104,9 @@ QUnit.test('copyChem:', function(assert){
 });
 
 QUnit.todo('drawRect:', function(assert){
+    assert.true(false);
+});
+
+QUnit.todo('drawShape:', function(assert){
     assert.true(false);
 });
