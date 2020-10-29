@@ -22,11 +22,13 @@
 
     <script>
         let securityQuestionResponse = {};
+        let emailValue = "";
         // called when user submits an email to recover password
         function verifyEmailInformation(){
             // get email element
-            var email = document.getElementById("email");
+            email = document.getElementById("email");
             email.value = email.value.trim();
+            emailValue = email.value;
             console.log(email.value)
 
             // verify given email is valid
@@ -60,8 +62,14 @@
                 postData('forgot-password-security-question-answer-submit', securityQuestionResponse).then(function(data){
                     console.log(data);
                     if(data){
-                        document.getElementById("responseContainer").innerHTML = "Password recovery email was sent! Please check your email.";
-
+                        postData('send-password-recovery-email', emailValue).then(function(data){
+                            if(data){
+                                document.getElementById("responseContainer").innerHTML = "Password recovery email was sent! Please check your email.";
+                            }
+                            else{
+                                document.getElementById("responseContainer").innerHTML = "Could not send recovery email. Please try again later.";
+                            }
+                        });
                     }else{
                         document.getElementById("SQQuestion-error").innerHTML = "That answer is incorrect.";
                     }
