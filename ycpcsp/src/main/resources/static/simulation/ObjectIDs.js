@@ -21,11 +21,11 @@ let ID_EQUIP_FLASK_1000mL = 14;
 
 
 // Constants for IDs of Chemicals
-let ID_CHEM_TEST_RED = 1;
-let ID_CHEM_TEST_BLUE = 2;
-let ID_CHEM_TEST_WHITE = 3;
-let ID_CHEM_TEST_GREEN = 4;
-let ID_CHEM_TEST_BLACK = 5;
+let ID_CHEM_TEST_RED = 1001;
+let ID_CHEM_TEST_BLUE = 1002;
+let ID_CHEM_TEST_WHITE = 1003;
+let ID_CHEM_TEST_GREEN = 1004;
+let ID_CHEM_TEST_BLACK = 1005;
 
 /**
 Take an integer ID and convert it to a valid piece of Equipment
@@ -58,19 +58,23 @@ Take an integer ID and convert it to a valid Chemical
 id: The integer id
 mass: The mass of the Chemical
 concentration: The concentration of the Chemical
-returns: The Equipment, or null if an invalid ID is given
+returns: The ChemicalController2D, or null if an invalid ID is given
 */
 function idToChemical(id, mass, concentration){
-    var chem;
+    var properties;
     switch(id){
-        // Test chemicals
-        case ID_CHEM_TEST_RED: chem = new Chemical(mass, "R", 20, [255, 0, 0]); break;
-        case ID_CHEM_TEST_BLUE: chem = new Chemical(mass, "B", 20, [0, 0, 255]); break;
-        case ID_CHEM_TEST_WHITE: chem = new Chemical(mass, "W", 20, [255, 255, 255]); break;
-        case ID_CHEM_TEST_GREEN: chem = new Chemical(mass, "G", 20, [0, 255, 0]); break;
-        case ID_CHEM_TEST_BLACK: chem = new Chemical(mass, "BL", 20, [0, 0, 0]); break;
+        // TODO add test compounds
+        // Test chemicals elements
+        case ELEMENT_HYDROGEN_ATOMIC_NUM:
+        case ELEMENT_HELIUM_ATOMIC_NUM:
+        case ELEMENT_LITHIUM_ATOMIC_NUM:
+        case ID_CHEM_TEST_RED:
+        case ID_CHEM_TEST_BLUE:
+        case ID_CHEM_TEST_WHITE:
+        case ID_CHEM_TEST_GREEN:
+        case ID_CHEM_TEST_BLACK: properties = new ElementProperties(id); break;
         default: return null;
     }
-    chem.setConcentration(concentration);
+    let chem = new Chemical(mass, properties, 20.0, concentration);
     return new ChemicalController2D(chem);
 }

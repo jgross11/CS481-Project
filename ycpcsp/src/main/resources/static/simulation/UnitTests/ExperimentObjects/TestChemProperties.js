@@ -94,7 +94,7 @@ QUnit.test('getAtomicNumber:', function(assert){
 });
 
 QUnit.test('chemFromProperties:', function(assert){
-    assert.deepEqual(elementHydrogen.chemFromProperties(), CHEM_PROPERTIES[ELEMENT_HYDROGEN_ATOMIC_NUM],
+    assert.deepEqual(elementHydrogen.chemFromProperties(), ELEMENT_PROPERTIES[ELEMENT_HYDROGEN_ATOMIC_NUM],
         "Should get the properties of Hydrogen");
     assert.deepEqual(elementNew.chemFromProperties(), {}, "Should get an empty object from an unknown atomic number");
 });
@@ -151,13 +151,13 @@ QUnit.module("CompoundProperties", {
         elementHelium = new ElementProperties(ELEMENT_HELIUM_ATOMIC_NUM);
         elementLithium = new ElementProperties(ELEMENT_LITHIUM_ATOMIC_NUM);
 
-        compoundHydrogen = new CompoundProperties([elementHydrogen], 2, "Nature", "HydrogenDouble", 1, 2, 3);
-        compoundHelium = new CompoundProperties([elementHelium], 2, "Nature", "HeliumDouble", 4, 5, 6);
-        compoundLithium = new CompoundProperties([elementLithium], 3, "Nature", "LithiumTriple", 7, 8, 9);
+        compoundHydrogen = new CompoundProperties([elementHydrogen], 2, "Nature", 10001, "HydrogenDouble", [1, 2, 3], 1, 2, 3);
+        compoundHelium = new CompoundProperties([elementHelium], 2, "Nature", 10002, "HeliumDouble", [4, 5, 6], 4, 5, 6);
+        compoundLithium = new CompoundProperties([elementLithium], 3, "Nature", 10003, "LithiumTriple", [7, 8, 9], 7, 8, 9);
 
-        compoundHydroThium = new CompoundProperties([compoundHydrogen, elementLithium], 1, "Nature", "HydroThium", 1.5, 2.5, 3.5);
-        compoundHelThium = new CompoundProperties([compoundHelium, compoundLithium], 2, "Nature", "HelThium", 4.5, 5.5, 6.5);
-        compoundHydroHelThium = new CompoundProperties([compoundHydroThium, compoundHelThium], 3, "Nature", "HydroHelThium", 7.5, 8.5, 9.5);
+        compoundHydroThium = new CompoundProperties([compoundHydrogen, elementLithium], 1, "Nature", 10004, "HydroThium", [10, 20, 30], 1.5, 2.5, 3.5);
+        compoundHelThium = new CompoundProperties([compoundHelium, compoundLithium], 2, "Nature", 10005, "HelThium", [40, 50, 60], 4.5, 5.5, 6.5);
+        compoundHydroHelThium = new CompoundProperties([compoundHydroThium, compoundHelThium], 3, "Nature", 10006, [70, 80, 90], "HydroHelThium", 7.5, 8.5, 9.5);
     }
 });
 
