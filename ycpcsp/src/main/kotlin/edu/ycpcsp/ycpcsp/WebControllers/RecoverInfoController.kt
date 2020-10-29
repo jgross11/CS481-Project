@@ -45,6 +45,40 @@ class RecoverInfoController {
     @PostMapping(path=["/forgot-password-security-question-answer-submit"], consumes = ["application/json"], produces = ["application/json"])
     @ResponseBody
     fun receiveForgottenPasswordSecurityQuestionAnswerInformation(@RequestBody questionAndEmail : SecurityQuestionAndEmail) : Boolean{
+        println("received following response: ${questionAndEmail.toString()}")
         return verifySecurityQuestionAnswer(questionAndEmail)
+    }
+
+    // send-password-recovery-email
+    // given a user's email, send a password recovery email
+    @PostMapping(path=["/send-password-recovery-email"], consumes = ["application/json"], produces = ["application/json"])
+    @ResponseBody
+    fun sendRecoveryEmail(@RequestBody email : String /*email that was submitted*/) : Boolean {
+        // TODO determine why spring / jackson / whoever is putting the string value in quotes
+        val properEmail = email.substring(1, email.length-1)
+        println("Received email to send recovery to: $properEmail")
+        val user = LoadUser(properEmail)
+        return if(user.firstName != ""){
+            return if(EmailSender().sendForgotPasswordEmail(user)){
+                println("recovery email sent")
+                true
+            } else{
+                println("could not send recovery email")
+                false
+            }
+        }
+        else{
+            println("user could not be loaded...")
+            false
+        }
+    }
+
+    // TODO add flag to DB indicating that user has asked for a password reset
+    // TODO then and only then can you work on this
+    // TODO extract user's userID from link, send back textfield and button (TODOTODO make html page)
+    // TODO that will update the users' password once submitted on FE
+    @GetMapping("/recoverPassword/{userID}")
+    fun recoverPasswordField(@PathVariable("userID") id : String) : String {
+        return ""
     }
 }
