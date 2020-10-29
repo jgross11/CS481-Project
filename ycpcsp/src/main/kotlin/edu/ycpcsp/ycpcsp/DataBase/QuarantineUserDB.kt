@@ -1,14 +1,14 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
-import edu.ycpcsp.ycpcsp.Models.Compound
 import edu.ycpcsp.ycpcsp.Models.User
 import edu.ycpcsp.ycpcsp.PostDataClasses.SignupFormData
 import java.sql.DriverManager
 import java.sql.SQLException
+import java.sql.Statement
 import java.util.*
 
 
-fun CreateQuarantineUser(signupFormData: SignupFormData): Boolean {
+fun CreateQuarantineUser(signupFormData: SignupFormData): Int {
     val serverCredentials = serverCredential()
     val username = serverCredentials?.get(0)
     val password = serverCredentials?.get(1)
@@ -23,20 +23,26 @@ fun CreateQuarantineUser(signupFormData: SignupFormData): Boolean {
         Class.forName("com.mysql.jdbc.Driver")
         //Connection for the database to get it connected and then execute the query to insert the values into the database
         val conn = DriverManager.getConnection(url, connectionProps)
-        val st = conn.createStatement()
-        st.executeUpdate("INSERT INTO Database.Quarantine_Users (firstName, lastName, email, password, organization, question1, question2, question3, ans1, ans2, ans3)" +
-                " VALUES('"+signupFormData.firstName+"', '"+signupFormData.lastName+"','"+signupFormData.email+"','"+signupFormData.password+"','"+signupFormData.school+"','"+signupFormData.sq1+"','"+signupFormData.sq2+"','"+signupFormData.sq3+"', '"+signupFormData.sq1a+"', '"+signupFormData.sq2a+"', '"+signupFormData.sq3a+"')")
-        return true
+        val st = conn.prepareStatement("INSERT INTO Database.Quarantine_Users (firstName, lastName, email, password, organization, question1, question2, question3, ans1, ans2, ans3) VALUES('"+signupFormData.firstName+"', '"+signupFormData.lastName+"','"+signupFormData.email+"','"+signupFormData.password+"','"+signupFormData.school+"','"+signupFormData.sq1+"','"+signupFormData.sq2+"','"+signupFormData.sq3+"', '"+signupFormData.sq1a+"', '"+signupFormData.sq2a+"', '"+signupFormData.sq3a+"')", Statement.RETURN_GENERATED_KEYS)
+        st.execute()
+        val rs = st.generatedKeys
+        return if(rs.next()) {
+            rs.getInt(1)
+        }else{
+            -1
+        }
 
     } catch (ex: SQLException) {
         // handle any errors
         ex.printStackTrace()
+        return -1
     } catch (ex: Exception) {
         // handle any errors
         ex.printStackTrace()
+        return -1
     }
 
-    return false
+    return -1
 }
 
 /**
