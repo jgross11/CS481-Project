@@ -1,15 +1,14 @@
 package edu.ycpcsp.ycpcsp.WebControllers
 
-import edu.ycpcsp.ycpcsp.DataBase.IsEmailInDB
-import edu.ycpcsp.ycpcsp.DataBase.LoadUser
-import edu.ycpcsp.ycpcsp.DataBase.getSecurityQuestionByEmail
-import edu.ycpcsp.ycpcsp.DataBase.verifySecurityQuestionAnswer
+import edu.ycpcsp.ycpcsp.DataBase.*
 import edu.ycpcsp.ycpcsp.EmailSender
 import edu.ycpcsp.ycpcsp.Models.SecurityQuestion
 import edu.ycpcsp.ycpcsp.PostDataClasses.ForgotEmailFormData
 import edu.ycpcsp.ycpcsp.PostDataClasses.SecurityQuestionAndEmail
+import edu.ycpcsp.ycpcsp.PostDataClasses.UserIDAndPassword
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
+import java.net.PasswordAuthentication
 
 /**
  *  This class handles all GET and POST interactions that regard the recover information page.
@@ -59,11 +58,20 @@ class RecoverInfoController {
         println("Received email to send recovery to: $properEmail")
         val user = LoadUser(properEmail)
         return if(user.firstName != ""){
-            return if(EmailSender().sendForgotPasswordEmail(user)){
-                println("recovery email sent")
-                true
+            val recoveryKey = createRecoveryKeyByID(user.id)
+            if(recoveryKey != -1) {
+                // TODO this is dirty and deceptive, a tragedy within the CS department
+                // TODO however it works for now and we're on a time crunch
+                // TODO DO NOT CONFLATE USER ID WITH RECOVERY ID EVERY AGAIN
+                user.id = recoveryKey
+                return if (EmailSender().sendForgotPasswordEmail(user)) {
+                    println("recovery email sent")
+                    true
+                } else {
+                    println("could not send recovery email")
+                    false
+                }
             } else{
-                println("could not send recovery email")
                 false
             }
         }
@@ -73,12 +81,73 @@ class RecoverInfoController {
         }
     }
 
-    // TODO add flag to DB indicating that user has asked for a password reset
-    // TODO then and only then can you work on this
+    // submit-new-password
+    @PostMapping(path=["/submit-new-password"], consumes = ["application/json"], produces = ["application/json"])
+    @ResponseBody
+    fun updatePassword(@RequestBody userIDAndPassword : UserIDAndPassword) : Boolean {
+        println("received userID / password: ${userIDAndPassword.toString()}")
+        return false
+    }
+
     // TODO extract user's userID from link, send back textfield and button (TODOTODO make html page)
     // TODO that will update the users' password once submitted on FE
     @GetMapping("/recoverPassword/{userID}")
-    fun recoverPasswordField(@PathVariable("userID") id : String) : String {
-        return ""
+    @ResponseBody
+    fun recoverPasswordField(@PathVariable("userID") id : Int) : String {
+        println("Received user who wants to recover password with recoveryID of: $id")
+        val user = getUserByRecoveryKeyID(id)
+        println(user.toString())
+        // TODO make this not suck
+        return "<script src=\"/../helperFunctions.js\"></script>" +
+                "<label for=\"newPassword\">Enter new password:</label><br>\n" +
+                "<div id=\"newPassword-error\"></div><br>\n" +
+                "<input type=\"password\" id=\"newPassword\" name=\"newPassword\"><br>\n" +
+                "<input value=\"Change password\" type=\"button\" id=\"changePasswordButton\" name=\"changePasswordButton\" onclick=\"verifyChangePassword()\">\n" +
+                "<script>\n" +
+                "function verifyChangePassword(){\n" +
+                "            let userID = ${user.id};\n" +
+                "            let passwordValue = document.getElementById(\"newPassword\").value\n" +
+                "                if(passwordValue.length > 0){\n" +
+                "                    let group = {\n" +
+                "                    userID: userID,\n" +
+                "                    password: passwordValue\n" +
+                "                };\n" +
+                "               console.log(group)\n" +
+                "                postData(\"/../submit-new-password\", group).then(function(data){\n" +
+                "                    if(data){\n" +
+                "                        window.location.href = \"/\";\n" +
+                "                    } else{\n" +
+                "                        document.getElementById(\"newPassword-error\").innerHTML = \"Could not update password, please try again later.\";\n" +
+                "                    }\n" +
+                "                });\n" +
+"                           } else{\n" +
+            "                   document.getElementById(\"newPassword-error\").innerHTML = \"Please enter a valid password.\";\n" +
+                "            }\n" +
+                "        }\n" +
+                "</script>"
+
+        /**
+        function verifyChangePassword(){
+            let userID = ${user.id};
+            let passwordValue = document.getElementById("newPassword").value
+            if(passwordValue.length > 0){
+                let group = {
+                    userID: userID,
+                    password: passwordValue
+                };
+                console.log(group)
+                postData('submit-new-password', group).then(function(data){
+                    if(data){
+                        window.location.href = "/";
+                    } else{
+                        document.getElementById("newPassword-error").innerHTML = "Could not update password, please try again later.";
+                    }
+                });
+            } else{
+                document.getElementById("newPassword-error").innerHTML = "Please enter a valid password.";
+            }
+        }
+         */
     }
+
 }
