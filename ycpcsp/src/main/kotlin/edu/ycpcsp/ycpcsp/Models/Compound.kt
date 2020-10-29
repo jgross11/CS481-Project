@@ -13,20 +13,21 @@ package edu.ycpcsp.ycpcsp.Models
  * liquidTemp - the temperature at which this compound becomes a liquid
  */
 
-class Compound (var compoundID : Int, var formula : String, var name : String, var density : Double, var isWaterSoluble : Boolean, var solidTemp : Double, var gasTemp : Double, var liquidTemp : Double){
+class Compound (var compoundID : Int, var formula : String, var name : String, var density : Double, var isWaterSoluable : Boolean, var solidTemp : Double, var gasTemp : Double, var liquidTemp : Double){
 
+    var color = -1
     // null constructor
     constructor() : this(-1, "", "", 0.0, false, 0.0, 0.0, 0.0){
 
     }
 
     // used when compound is first created on FE and given to BE (before ID exists in DB)
-    constructor(formula: String, name: String, density: Double, isWaterSoluble: Boolean, solidTemp: Double, gasTemp: Double, liquidTemp: Double) : this(
-            -1, formula, name, density, isWaterSoluble, solidTemp, gasTemp, liquidTemp){
+    constructor(formula: String, name: String, density: Double, isWaterSoluable: Boolean, solidTemp: Double, gasTemp: Double, liquidTemp: Double) : this(
+            -1, formula, name, density, isWaterSoluable, solidTemp, gasTemp, liquidTemp){
     }
 
     override fun toString() : String{
-        return "$name: $formula | id=$compoundID, density=$density, watersoluble: $isWaterSoluble, gas @ ${gasTemp}C, liquid @ ${liquidTemp}C, solid @ ${solidTemp}C\n"
+        return "$name: $formula | id=$compoundID, density=$density, watersoluble: $isWaterSoluable, gas @ ${gasTemp}C, liquid @ ${liquidTemp}C, solid @ ${solidTemp}C, color integer: $color\n"
     }
 
 }
