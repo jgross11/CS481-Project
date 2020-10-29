@@ -1,5 +1,6 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
+import edu.ycpcsp.ycpcsp.Models.SecurityQuestion
 import edu.ycpcsp.ycpcsp.Models.User
 import edu.ycpcsp.ycpcsp.PostDataClasses.SignupFormData
 import java.sql.DriverManager
@@ -58,7 +59,12 @@ fun loadQuarantineUserByID(userID : String) : User{
             preparedStatement.setString(1, userID)
             val rs = preparedStatement.executeQuery()
             return if(rs.first()){
-                User(rs.getString(FirstName),rs.getString(LastName),rs.getString(Email),rs.getString(Password),rs.getString(School), rs.getInt(ID))
+                val user = User(rs.getString(FirstName),rs.getString(LastName),rs.getString(Email),rs.getString(Password),rs.getString(School), rs.getInt(ID))
+                user.securityQuestions = Array<SecurityQuestion>(3){SecurityQuestion()}
+                user.securityQuestions[0] = SecurityQuestion(rs.getInt(7), rs.getString(10),1)
+                user.securityQuestions[1] = SecurityQuestion(rs.getInt(8), rs.getString(11),2)
+                user.securityQuestions[2] = SecurityQuestion(rs.getInt(9), rs.getString(12),3)
+                user
             } else{
                 User()
             }
@@ -92,7 +98,12 @@ fun LoadQuarantineUser(email: String): User{
 
         try{
             return if(rs.first()){
-                User(rs.getString(FirstName),rs.getString(LastName),rs.getString(Email),rs.getString(Password),rs.getString(School), rs.getInt(ID))
+                val user = User(rs.getString(FirstName),rs.getString(LastName),rs.getString(Email),rs.getString(Password),rs.getString(School), rs.getInt(ID))
+                user.securityQuestions = Array<SecurityQuestion>(3){SecurityQuestion()}
+                user.securityQuestions[0] = SecurityQuestion(rs.getInt(7), rs.getString(10),1)
+                user.securityQuestions[1] = SecurityQuestion(rs.getInt(8), rs.getString(11),2)
+                user.securityQuestions[2] = SecurityQuestion(rs.getInt(9), rs.getString(12),3)
+                user
             } else{
                 User()
             }
@@ -166,7 +177,7 @@ fun DeQuarantineUser(user: User): Boolean{
         val st = conn.createStatement()
         //assuming we grabbed we already grabbed the user information
         st.executeUpdate("INSERT INTO Database.Users (firstName, lastName, email, password, organization, question1, question2, question3, ans1, ans2, ans3)" +
-                " VALUES('"+user.firstName+"', '"+user.lastName+"','"+user.email+"','"+user.password+"','"+user.school+"','"+user.securityQuestions[0].question+"','"+user.securityQuestions[1].question+"','"+user.securityQuestions[2].question+"', '"+user.securityQuestions[0].answer+"', '"+user.securityQuestions[1].answer+"', '"+user.securityQuestions[2].answer+"')")
+                " VALUES('"+user.firstName+"', '"+user.lastName+"','"+user.email+"','"+user.password+"','"+user.school+"','"+user.securityQuestions[0].questionIndex+"','"+user.securityQuestions[1].questionIndex+"','"+user.securityQuestions[2].questionIndex+"', '"+user.securityQuestions[0].answer+"', '"+user.securityQuestions[1].answer+"', '"+user.securityQuestions[2].answer+"')")
 
         st.executeUpdate("DELETE FROM Database.Quarantine_Users WHERE quID = '${user.id}'")
 
