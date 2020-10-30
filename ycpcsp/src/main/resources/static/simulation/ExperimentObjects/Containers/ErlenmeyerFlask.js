@@ -63,7 +63,7 @@ class ErlenmeyerFlaskController2D extends ContainerController2D{
     draw(graphics){
         // Draw the color of the Chemical, if one exists
         let eq = this.equipment;
-        if(eq.contents.length > 0){
+        if(!this.equipment.isEmpty()){
             let chem = eq.contents[0];
             let chemController = new ChemicalController2D(chem);
             let vertices = [

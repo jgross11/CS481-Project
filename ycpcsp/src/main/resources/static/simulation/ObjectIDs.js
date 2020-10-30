@@ -18,6 +18,7 @@ let ID_EQUIP_FLASK_25mL = 11;
 let ID_EQUIP_FLASK_50mL = 12;
 let ID_EQUIP_FLASK_100mL = 13;
 let ID_EQUIP_FLASK_1000mL = 14;
+let ID_EQUIP_WEIGH_BOAT = 15;
 
 
 // Constants for IDs of Chemicals
@@ -39,16 +40,21 @@ function idToEquipment(id){
         case ID_EQUIP_BEAKER_150mL:
         case ID_EQUIP_BEAKER_250mL:
         case ID_EQUIP_BEAKER_600mL: return new BeakerController2D(new Beaker(id));
+
         case ID_EQUIP_GRADUATED_25mL:
         case ID_EQUIP_GRADUATED_50mL:
         case ID_EQUIP_GRADUATED_100mL:
         case ID_EQUIP_GRADUATED_1000mL: return new GraduatedCylinderController2D(new GraduatedCylinder(id));
+
         case ID_EQUIP_FLASK_25mL:
         case ID_EQUIP_FLASK_50mL:
         case ID_EQUIP_FLASK_100mL:
         case ID_EQUIP_FLASK_1000mL: return new ErlenmeyerFlaskController2D(new ErlenmeyerFlask(id));
+
+        case ID_EQUIP_WEIGH_BOAT: return new WeighBoatController2D(new WeighBoat());
         case ID_EQUIP_SCALE: return new ScaleController2D(new Scale());
         case ID_EQUIP_TRASHCAN: return new TrashcanController2D(new Trashcan());
+
         default: return null;
     }
 }
