@@ -21,11 +21,11 @@ let ID_EQUIP_FLASK_1000mL = 14;
 
 
 // Constants for IDs of Chemicals
-let ID_CHEM_TEST_RED = 10001;
-let ID_CHEM_TEST_BLUE = 10002;
-let ID_CHEM_TEST_WHITE = 10003;
-let ID_CHEM_TEST_GREEN = 10004;
-let ID_CHEM_TEST_BLACK = 10005;
+let ID_CHEM_TEST_RED = 1001;
+let ID_CHEM_TEST_BLUE = 1002;
+let ID_CHEM_TEST_WHITE = 1003;
+let ID_CHEM_TEST_GREEN = 1004;
+let ID_CHEM_TEST_BLACK = 1005;
 
 /**
 Take an integer ID and convert it to a valid piece of Equipment
