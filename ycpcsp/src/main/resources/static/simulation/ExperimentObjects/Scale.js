@@ -193,6 +193,7 @@ class ScaleController2D extends EquipmentController2D{
         graphics.noStroke();
         graphics.fill(0);
         graphics.textSize(15);
+        // TODO make render constants
         graphics.text("" + this.equipment.displayedWeight.toFixed(2), this.x() + this.width() * 0.25, this.y() + this.height() * 0.7);
     }
 

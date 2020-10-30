@@ -18,6 +18,7 @@ let ID_EQUIP_FLASK_25mL = 11;
 let ID_EQUIP_FLASK_50mL = 12;
 let ID_EQUIP_FLASK_100mL = 13;
 let ID_EQUIP_FLASK_1000mL = 14;
+let ID_EQUIP_WEIGH_BOAT = 15;
 
 var EquipID = [
     { Equip: 'BEAKER_50mL', ID:1},
@@ -39,11 +40,11 @@ var EquipID = [
 sessionStorage.setItem("EquipID", JSON.stringify(EquipID));
 
 // Constants for IDs of Chemicals
-let ID_CHEM_TEST_RED = 10001;
-let ID_CHEM_TEST_BLUE = 10002;
-let ID_CHEM_TEST_WHITE = 10003;
-let ID_CHEM_TEST_GREEN = 10004;
-let ID_CHEM_TEST_BLACK = 10005;
+let ID_CHEM_TEST_RED = 1001;
+let ID_CHEM_TEST_BLUE = 1002;
+let ID_CHEM_TEST_WHITE = 1003;
+let ID_CHEM_TEST_GREEN = 1004;
+let ID_CHEM_TEST_BLACK = 1005;
 
 var ChemID = [
     { Chem: 'RED',ID:1001 },
@@ -66,16 +67,21 @@ function idToEquipment(id){
         case ID_EQUIP_BEAKER_150mL:
         case ID_EQUIP_BEAKER_250mL:
         case ID_EQUIP_BEAKER_600mL: return new BeakerController2D(new Beaker(id));
+
         case ID_EQUIP_GRADUATED_25mL:
         case ID_EQUIP_GRADUATED_50mL:
         case ID_EQUIP_GRADUATED_100mL:
         case ID_EQUIP_GRADUATED_1000mL: return new GraduatedCylinderController2D(new GraduatedCylinder(id));
+
         case ID_EQUIP_FLASK_25mL:
         case ID_EQUIP_FLASK_50mL:
         case ID_EQUIP_FLASK_100mL:
         case ID_EQUIP_FLASK_1000mL: return new ErlenmeyerFlaskController2D(new ErlenmeyerFlask(id));
+
+        case ID_EQUIP_WEIGH_BOAT: return new WeighBoatController2D(new WeighBoat());
         case ID_EQUIP_SCALE: return new ScaleController2D(new Scale());
         case ID_EQUIP_TRASHCAN: return new TrashcanController2D(new Trashcan());
+
         default: return null;
     }
 }
