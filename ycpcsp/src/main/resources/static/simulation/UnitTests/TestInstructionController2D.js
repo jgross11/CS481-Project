@@ -15,8 +15,8 @@ QUnit.module("InstructionController2D", {
         beaker2.equipment.setCapacity(100);
         ins = new Instruction(beaker1, beaker2, beaker1.pourInto);
         controller = new InstructionController2D(ins);
-        chem1 = new Chemical(6.0, "equ", 20.0, [10, 20, 40]);
-        chem2 = new Chemical(4.0, "equ", 20.0, [10, 10, 10]);
+        chem1 = idToChemical(ID_CHEM_TEST_BLUE, 6.0, 1).chemical;
+        chem2 = idToChemical(ID_CHEM_TEST_BLACK, 4.0, 1).chemical;
     }
 });
 

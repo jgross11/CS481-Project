@@ -28,10 +28,10 @@ QUnit.module("ContainerController2D", {
         beakerControl1 = new BeakerController2D(beaker1);
         beakerControl2 = new BeakerController2D(beaker2);
 
-        chem1 = new Chemical(30, "", 20, [100, 120, 140]);
-        chem2 = new Chemical(20, "", 20, [10, 20, 40]);
-        chem3 = new Chemical(70, "", 20, [100, 120, 140]);
-        chem4 = new Chemical(50, "", 20, [10, 20, 40]);
+        chem1 = idToChemical(ID_CHEM_TEST_RED, 30, 1).chemical;
+        chem2 = idToChemical(ID_CHEM_TEST_BLUE, 20, 1).chemical;
+        chem3 = idToChemical(ID_CHEM_TEST_RED, 70, 1).chemical;
+        chem4 = idToChemical(ID_CHEM_TEST_BLUE, 50, 1).chemical;
         chemControl1 = new ChemicalController2D(chem1);
         chemControl2 = new ChemicalController2D(chem2);
     }
@@ -117,7 +117,6 @@ QUnit.test('pourInto:', function(assert){
     assert.true(beakerControl1.pourInto(beakerControl2), "Pouring into a valid controller should succeed");
     var cont = beakerControl2.equipment.contents;
     assert.equal(cont[0].mass, 50, "Container should contain modified chemical with mass 50");
-    assert.deepEqual(cont[0].texture, [64, 80, 100], "Container should contain modified chemical with color [64, 80, 100]");
 
     chem1.setMass(30);
     chem2.setMass(20);
@@ -215,7 +214,6 @@ QUnit.test('addTo:', function(assert){
     assert.deepEqual(beaker1.contents, [chem1], "The container should contain chemical 1");
 
     assert.true(beakerControl1.addTo(chemControl2), "Should successfully add the chemical");
-    assert.deepEqual(beaker1.contents[0].texture, [55, 70, 90], "The container should contain a mix of chemical 1 and 2");
 
     assert.false(beakerControl1.addTo(null), "Should fail to add a null parameter");
 

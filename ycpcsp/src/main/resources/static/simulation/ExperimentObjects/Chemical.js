@@ -6,19 +6,16 @@ class Chemical extends ExperimentObject{
     /**
     Create a new Chemical with the given information
     mass: A floating point value, the amount of mass in this Chemical, in grams
-    equation: A string, the equation for the components of this Chemical
+    properties: A ChemProperties object used to specify the properties of this Chemical
     temperature: A floating point value, the temperature, in celsius, of this Chemical
     texture: Either a list of rgb colors [red, green, blue] representing the color of this Chemical
                 or an image file representing the texture of this Chemical
     concentration: A floating point value in the range [0, 1] of the concentration of the chemical, default: 1
     */
-
-    //TODO Give Formula
-    constructor(mass = 1.0, equation = "", temperature = 20.0, texture = [127, 127, 127], concentration = 1){
+    constructor(mass = 1.0, properties = null, temperature = 20.0, concentration = 1){
         super(mass);
-        this.equation = equation;
+        this.properties = properties;
         this.temperature = temperature;
-        this.texture = texture;
         this.concentration = concentration;
 
         // The current state of matter for this Chemical, based on temperature
@@ -26,11 +23,11 @@ class Chemical extends ExperimentObject{
     }
 
     /**
-    Set the equation of this Chemical
-    equation: A string, the equation for the components of this Chemical
+    Set the properties object of this Chemical
+    properties: The properties object
     */
-    setEquation(equation){
-        this.equation = equation;
+    setProperties(properties){
+        this.properties = properties;
     }
 
     /**
@@ -42,12 +39,11 @@ class Chemical extends ExperimentObject{
     }
 
     /**
-    Set the texture to use for rendering this Chemical
-    texture: Either a list of rgb colors [red, green, blue] representing the color of this Chemical
-                or an image file representing the texture of this Chemical
+    Get the texture to use for rendering this Chemical
+    return: A list of 3 or 4 values [red, green, blue, alpha], alpha is option representing the color of this Chemical
     */
-    setTexture(texture){
-        this.texture = texture;
+    getTexture(){
+        return this.properties.getTexture();
     }
 
     /**
@@ -65,14 +61,7 @@ class Chemical extends ExperimentObject{
     Get the ID representing this Chemical type
     */
     getID(){
-        switch(this.equation){
-            case "R": return ID_CHEM_TEST_RED;
-            case "B": return ID_CHEM_TEST_BLUE;
-            case "W": return ID_CHEM_TEST_WHITE;
-            case "G": return ID_CHEM_TEST_GREEN;
-            case "BL": return ID_CHEM_TEST_BLACK;
-            default: return null;
-        }
+        return this.properties.getID();
     }
 }
 
@@ -177,8 +166,8 @@ class ChemicalController2D extends ExperimentObjectController2D{
         let c2 = copy;
         if(c1 === null || c1 === undefined || c2 === null || c2 === undefined) return null;
 
-        let t1 = c1.texture;
-        let t2 = c2.texture;
+        let t1 = c1.getTexture();
+        let t2 = c2.getTexture();
 
         let totalMass = c1.mass + c2.mass;
         let r1 = c1.mass / totalMass;
@@ -193,7 +182,10 @@ class ChemicalController2D extends ExperimentObjectController2D{
             control.setChemical(chems[i]);
             newChems.push(control.copyChem());
         }
-        newChems[0].setTexture(tex);
+
+        //temp code for creating a new color, replace with proper chemical combining
+        //newChems[0].setTexture(tex);
+        newChems[0].setProperties(c2.properties);
         newChems[0].setMass(totalMass);
 
         return newChems;
@@ -223,7 +215,7 @@ class ChemicalController2D extends ExperimentObjectController2D{
     copyChem(){
         let c = this.chemical
         if(c === null) return null;
-        return new Chemical(c.mass, c.equation, c.temperature, c.texture, c.concentration);
+        return new Chemical(c.mass, c.properties, c.temperature, c.concentration);
     }
 
     /**
@@ -238,7 +230,7 @@ class ChemicalController2D extends ExperimentObjectController2D{
     graphics: The P5 graphics to use
     */
     drawRect(x, y, fillPercent, width, baseHeight, heightOffset, graphics){
-        let tex = this.chemical.texture;
+        let tex = this.chemical.getTexture();
         if(tex !== null && tex !== undefined){
             graphics.fill(color(tex));
             graphics.noStroke();
@@ -246,6 +238,38 @@ class ChemicalController2D extends ExperimentObjectController2D{
             let oh = h * (1 - heightOffset);
             graphics.rect(x, y + h * heightOffset + oh * (1 - fillPercent), width, oh * fillPercent);
         }
+    }
+
+    /**
+    Draw this chemical as a shape defined by vertices. Part of the shape can be drawn based on a percentage
+    graphics: The P5 graphics object to draw the final picture onto
+    buffer: The P5 graphics object to use as a buffer for drawing to graphics
+        This buffer should be the size of the total space which the chemical visual cane take up
+    x: The x coordinates to draw the chemical to graphics
+    y: The y coordinates to draw the chemical to graphics
+    vertices: A list of 2 element lists representing coordinates of where the chemical shape will be drawn
+        All should be in the range of [0, 1], and will be scaled to fit the buffer
+        The first and last vertices in the list will also connect together, completing the shape
+    fillRatio: The percentage of the total shape which will be drawn. The shape starts being drawn at the bottom
+    bottomFillPercent: The total percentage of buffer which is used to draw the shape, beginning with the bottom
+    */
+    drawShape(graphics, buffer, x, y, vertices, fillRatio, bottomFillPercent){
+        let w = buffer.width;
+        let h = buffer.height;
+
+        buffer.push();
+        buffer.fill(this.chemical.getTexture());
+        buffer.noStroke();
+        buffer.scale(w, h);
+        buffer.beginShape();
+        for(var i = 0; i < vertices.length; i++){
+            buffer.vertex(vertices[i][0], vertices[i][1]);
+        }
+        buffer.endShape(CLOSE);
+        buffer.pop();
+        let ratio = h * bottomFillPercent * fillRatio;
+        let hr = h - ratio;
+        graphics.image(buffer, x, y + hr, w, ratio, 0, hr, w, ratio);
     }
 
 }

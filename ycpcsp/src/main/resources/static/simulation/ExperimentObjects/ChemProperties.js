@@ -67,6 +67,15 @@ class ChemProperties{
     }
 
     /**
+    Get the getID used to refer to this ChemProperties by the database.
+    returns: The id
+    Always throws an error as a generic ChemProperties object
+    */
+    getID(){
+        throw new Error("All ChemProperties objects must implement getID");
+    }
+
+    /**
     Get the name used to refer to this ChemProperties in plain english.
     returns: The name
     Always throws an error as a generic ChemProperties object
@@ -82,6 +91,16 @@ class ChemProperties{
     */
     getSymbol(){
         throw new Error("All ChemProperties objects must implement getSymbol");
+    }
+
+    /*
+    Get the texture for rendering this ChemProperties. Should be a list of 3 or 4 values,
+        each in the range [0-255], the list should be [red, green, blue, alpha], alpha is optional
+    returns: The texture
+    Always throws an error as a generic ChemProperties object
+    */
+    getTexture(){
+        throw new Error("All ChemProperties objects must implement getTexture");
     }
 
     /**
@@ -134,8 +153,8 @@ class ElementProperties extends ChemProperties{
     */
     constructor(atomicNumber, creator = null){
         super(atomicNumber, 1, creator);
-        let newElement = CHEM_PROPERTIES[atomicNumber];
-        if(newElement !== undefined) this.setCreator(newElement[CHEM_PROPERTY_CREATOR]);
+        let newElement = ELEMENT_PROPERTIES[atomicNumber];
+        if(newElement !== undefined) this.setCreator(newElement[ELEMENT_PROPERTY_CREATOR]);
     }
 
     /**
@@ -151,8 +170,16 @@ class ElementProperties extends ChemProperties{
     return: The properties, or an empty object if no entry exists with the given atomic number
     */
     chemFromProperties(){
-        let c = CHEM_PROPERTIES[this.getAtomicNumber()];
+        let c = ELEMENT_PROPERTIES[this.getAtomicNumber()];
         return (c === undefined) ? {} : c;
+    }
+
+    /**
+    Get the getID used to refer to this ElementProperties by the database. Should simply be the atomic number
+    returns: The id
+    */
+    getID(){
+        return this.getAtomicNumber();
     }
 
     /**
@@ -160,7 +187,7 @@ class ElementProperties extends ChemProperties{
     returns: The name
     */
     getName(){
-        return this.chemFromProperties()[CHEM_PROPERTY_NAME];
+        return this.chemFromProperties()[ELEMENT_PROPERTY_NAME];
     }
 
     /**
@@ -168,8 +195,16 @@ class ElementProperties extends ChemProperties{
     returns: The symbol
     */
     getSymbol(){
-        let s = this.chemFromProperties()[CHEM_PROPERTY_SYMBOL];
+        let s = this.chemFromProperties()[ELEMENT_PROPERTY_SYMBOL];
         return (s === undefined) ? "" : s;
+    }
+
+    /*
+    Get the texture for rendering this ElementProperties.
+    returns: The texture
+    */
+    getTexture(){
+        return this.chemFromProperties()[ELEMENT_PROPERTY_TEXTURE];
     }
 
     /**
@@ -177,7 +212,7 @@ class ElementProperties extends ChemProperties{
     returns: The molar mass
     */
     getMolarMass(){
-        return this.chemFromProperties()[CHEM_PROPERTY_MOLAR_MASS];
+        return this.chemFromProperties()[ELEMENT_PROPERTY_MOLAR_MASS];
     }
 
     /**
@@ -185,7 +220,7 @@ class ElementProperties extends ChemProperties{
     returns: The temperature, in Celsius
     */
     getMeltingPoint(){
-        return this.chemFromProperties()[CHEM_PROPERTY_MELTING_POINT];
+        return this.chemFromProperties()[ELEMENT_PROPERTY_MELTING_POINT];
     }
 
     /**
@@ -193,7 +228,7 @@ class ElementProperties extends ChemProperties{
     returns: The temperature, in Celsius
     */
     getBoilingPoint(){
-        return this.chemFromProperties()[CHEM_PROPERTY_BOILING_POINT];
+        return this.chemFromProperties()[ELEMENT_PROPERTY_BOILING_POINT];
     }
 
     /**
@@ -201,7 +236,7 @@ class ElementProperties extends ChemProperties{
     returns: The density
     */
     getDensity(){
-        return this.chemFromProperties()[CHEM_PROPERTY_DENSITY];
+        return this.chemFromProperties()[ELEMENT_PROPERTY_DENSITY];
     }
 
 }
@@ -215,18 +250,31 @@ class CompoundProperties extends ChemProperties{
     chem: A list of ChemProperties objects
     count: The number of molecules of the compound, i.e. a hydrogen molecule has a count of 2, and a hydrogen atom has a count of 1
     creator: The name of the creator of this ChemProperties.
+    id: The integer ID used to refer to this CompoundProperties by the database, should not be an atomic number
     name: The name of this ChemProperties.
+    texture: The texture to use for the compound, should be a list of 3 or 4 values,
+        each in the range [0-255], the list should be [red, green, blue, alpha], alpha is optional
     meltingPoint: The temperature, in celsius, at which the compound melts.
     boilingPoint: The temperature, in celsius, at which the compound boils.
     density: The density of the compound.
     */
-    constructor(chem, count, creator, name, meltingPoint, boilingPoint, density){
+    constructor(chem, count, creator, id, name, texture, meltingPoint, boilingPoint, density){
         super(chem, count, creator);
 
+        this.id = id;
         this.name = name;
+        this.texture = texture;
         this.meltingPoint = meltingPoint;
         this.boilingPoint = boilingPoint;
         this.density = density;
+    }
+
+    /**
+    Get the getID used to refer to this CompoundProperties by the database.
+    returns: The id
+    */
+    getID(){
+        return this.id;
     }
 
     /**
@@ -249,6 +297,14 @@ class CompoundProperties extends ChemProperties{
         symbol += oneChem ? ")" : "";
         let num = this.getCount();
         return ((num === 1) ? "" : num) + symbol;
+    }
+
+    /*
+    Get the texture for rendering this CompoundProperties.
+    returns: The texture
+    */
+    getTexture(){
+        return this.texture;
     }
 
     /**
@@ -297,37 +353,45 @@ let ELEMENT_HELIUM_ATOMIC_NUM = 2;
 let ELEMENT_LITHIUM_ATOMIC_NUM = 3;
 
 // A test "database" holding a few chemical properties
-let CHEM_PROPERTY_SYMBOL = "symbol";
-let CHEM_PROPERTY_NAME = "name";
-let CHEM_PROPERTY_CREATOR = "creator";
-let CHEM_PROPERTY_ATOMIC_NUMBER = "atomicNumber";
-let CHEM_PROPERTY_MOLAR_MASS = "molarMass";
-let CHEM_PROPERTY_MELTING_POINT = "meltingPoint";
-let CHEM_PROPERTY_BOILING_POINT = "boilingPoint";
-let CHEM_PROPERTY_DENSITY = "density";
+let ELEMENT_PROPERTY_SYMBOL = "symbol";
+let ELEMENT_PROPERTY_NAME = "name";
+let ELEMENT_PROPERTY_CREATOR = "creator";
+let ELEMENT_PROPERTY_TEXTURE = "texture";
+let ELEMENT_PROPERTY_ATOMIC_NUMBER = "atomicNumber";
+let ELEMENT_PROPERTY_MOLAR_MASS = "molarMass";
+let ELEMENT_PROPERTY_MELTING_POINT = "meltingPoint";
+let ELEMENT_PROPERTY_BOILING_POINT = "boilingPoint";
+let ELEMENT_PROPERTY_DENSITY = "density";
 
-let CHEM_PROPERTIES;
+let ELEMENT_PROPERTIES;
 
 function initTestChemProperties(){
 
-    let makeChem = function(chemList, symbol, name, creator, atomicNumber, molarMass, meltingPoint, boilingPoint, density){
+    let makeChem = function(chemList, symbol, name, creator, texture, atomicNumber, molarMass, meltingPoint, boilingPoint, density){
         chemList[atomicNumber] = {};
         let c = chemList[atomicNumber];
-        c[CHEM_PROPERTY_SYMBOL] = symbol;
-        c[CHEM_PROPERTY_NAME] = name;
-        c[CHEM_PROPERTY_CREATOR] = creator;
-        c[CHEM_PROPERTY_ATOMIC_NUMBER] = atomicNumber;
-        c[CHEM_PROPERTY_MOLAR_MASS] = molarMass;
-        c[CHEM_PROPERTY_MELTING_POINT] = meltingPoint;
-        c[CHEM_PROPERTY_BOILING_POINT] = boilingPoint;
-        c[CHEM_PROPERTY_DENSITY] = density;
+        c[ELEMENT_PROPERTY_SYMBOL] = symbol;
+        c[ELEMENT_PROPERTY_NAME] = name;
+        c[ELEMENT_PROPERTY_CREATOR] = creator;
+        c[ELEMENT_PROPERTY_TEXTURE] = texture;
+        c[ELEMENT_PROPERTY_ATOMIC_NUMBER] = atomicNumber;
+        c[ELEMENT_PROPERTY_MOLAR_MASS] = molarMass;
+        c[ELEMENT_PROPERTY_MELTING_POINT] = meltingPoint;
+        c[ELEMENT_PROPERTY_BOILING_POINT] = boilingPoint;
+        c[ELEMENT_PROPERTY_DENSITY] = density;
     }
 
     let chems = [];
     chems[0] = null;
-    makeChem(chems, "H", "Hydrogen", "Nature", ELEMENT_HYDROGEN_ATOMIC_NUM, 1.008, -259, -253, 0.09);
-    makeChem(chems, "He", "Helium", "Nature", ELEMENT_HELIUM_ATOMIC_NUM, 4.003, -272, -269, 0.18);
-    makeChem(chems, "Li", "Lithium", "Nature", ELEMENT_LITHIUM_ATOMIC_NUM, 6.941, 180, 1347, 0.53);
+    makeChem(chems, "H", "Hydrogen", "Nature", [255, 255, 200], ELEMENT_HYDROGEN_ATOMIC_NUM, 1.008, -259, -253, 0.09);
+    makeChem(chems, "He", "Helium", "Nature", [255, 255, 150], ELEMENT_HELIUM_ATOMIC_NUM, 4.003, -272, -269, 0.18);
+    makeChem(chems, "Li", "Lithium", "Nature", [200, 200, 255], ELEMENT_LITHIUM_ATOMIC_NUM, 6.941, 180, 1347, 0.53);
 
-    CHEM_PROPERTIES = chems;
+    makeChem(chems, "Ruu", "Red", "Fake", [255, 0, 0], ID_CHEM_TEST_RED, 9, 100, 0, 1);
+    makeChem(chems, "Blu", "Blue", "Fake", [0, 0, 255], ID_CHEM_TEST_BLUE, 9, 100, 0, 1);
+    makeChem(chems, "Wuu", "White", "Fake", [255, 255, 255], ID_CHEM_TEST_WHITE, 9, 100, 0, 1);
+    makeChem(chems, "Guu", "Green", "Fake", [0, 255, 0], ID_CHEM_TEST_GREEN, 9, 100, 0, 1);
+    makeChem(chems, "Buu", "Black", "Fake", [0, 0, 0], ID_CHEM_TEST_BLACK, 9, 100, 0, 1);
+
+    ELEMENT_PROPERTIES = chems;
 }

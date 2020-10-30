@@ -13,6 +13,7 @@ var beakerControl3;
 var beakerControl4;
 var beakerControl5;
 var chem;
+var chemControl;
 
 var dList;
 var eList;
@@ -31,6 +32,9 @@ var camera3;
 function createGraphics(){}
 
 QUnit.module("ExperimentController2D", {
+    before: function(){
+        initTestChemProperties();
+    },
     beforeEach: function(){
         currentInstanceID = 1;
         mouseX = 0;
@@ -69,7 +73,9 @@ QUnit.module("ExperimentController2D", {
         beakerControl3 = new BeakerController2D(beaker3);
         beakerControl4 = new BeakerController2D(beaker4);
         beakerControl5 = new BeakerController2D(beaker5);
-        chem = new Chemical(1, "", 20.0, [2, 4, 7]);
+
+        chem = idToChemical(ID_CHEM_TEST_RED, 1, 1).chemical;
+        chemControl = idToChemical(ID_CHEM_TEST_BLACK, 5, 1);
 
         dList = new DisplayBoxList();
         eList = new EquipmentBoxList();
@@ -293,14 +299,13 @@ QUnit.test('setInstructionCounter:', function(assert){
 });
 
 QUnit.test('nextInstruction:', function(assert){
-    beaker1.setContents(new Chemical(5, "", 20.0, [0, 0, 0]));
-    beaker2.setContents(new Chemical(5, "", 20.0, [0, 0, 0]));
+    beaker1.setContents(chemControl.copyChem());
+    beaker2.setContents(chemControl.copyChem());
     controller.addEquipment(beakerControl1, true);
     controller.addEquipment(beakerControl2, true);
     let eqs = exp.equipment;
     let instructions = [];
     for(var i = 0; i < 2; i++) instructions.push(new InstructionController2D(new Instruction(eqs[0], eqs[1], eqs[0].pourInto)));
-    var chemControl = new ChemicalController2D(new Chemical(1, "", 20.0, [0, 0, 0]));
     instructions.push(new InstructionController2D(new Instruction(eqs[0], chemControl, eqs[0].addTo)));
 
     exp.setInstructions(instructions);
@@ -309,13 +314,13 @@ QUnit.test('nextInstruction:', function(assert){
     controller.nextInstruction();
     assert.equal(controller.instructionCounter, 1, "Instruction should be on 1");
 
-    beaker1.setContents(new Chemical(5, "", 20.0, [0, 0, 0]));
-    beaker2.setContents(new Chemical(5, "", 20.0, [0, 0, 0]));
+    beaker1.setContents(chemControl.copyChem());
+    beaker2.setContents(chemControl.copyChem());
     controller.nextInstruction();
     assert.equal(controller.instructionCounter, 2, "Instruction should be on 2");
 
-    beaker1.setContents(new Chemical(5, "", 20.0, [0, 0, 0]));
-    beaker2.setContents(new Chemical(5, "", 20.0, [0, 0, 0]));
+    beaker1.setContents(chemControl.copyChem());
+    beaker2.setContents(chemControl.copyChem());
     controller.nextInstruction();
     assert.equal(controller.instructionCounter, 3, "Instruction should be on 3, ending the instruction list");
 
@@ -328,15 +333,15 @@ QUnit.test('nextInstruction:', function(assert){
     controller.nextInstruction();
     assert.equal(controller.instructionCounter, 0, "Instruction should still be on 0 without placed beakers");
 
-    beaker1.setContents(new Chemical(5, "", 20.0, [0, 0, 0]));
-    beaker2.setContents(new Chemical(5, "", 20.0, [0, 0, 0]));
+    beaker1.setContents(chemControl.copyChem());
+    beaker2.setContents(chemControl.copyChem());
     controller.placeEquipment(0);
     controller.placeEquipment(1);
     controller.nextInstruction();
     assert.equal(controller.instructionCounter, 1, "Instruction should be on 1 after placing beakers");
 
-    beaker1.setContents(new Chemical(5, "", 20.0, [0, 0, 0]));
-    beaker2.setContents(new Chemical(5, "", 20.0, [0, 0, 0]));
+    beaker1.setContents(chemControl.copyChem());
+    beaker2.setContents(chemControl.copyChem());
     controller.nextInstruction();
     assert.equal(controller.instructionCounter, 2, "Instruction should be on 2");
 

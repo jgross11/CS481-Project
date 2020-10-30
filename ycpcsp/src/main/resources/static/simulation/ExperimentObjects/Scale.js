@@ -1,24 +1,17 @@
 /**
-A scale used to weigh containers
+A Scale used to weigh containers
 */
 class Scale extends Equipment{
 
     /**
-     Create a new, empty, SCale object with the given position, mass, capacity, residue, id, and sprite
-     position: A list [x, y] of the upper left hand corner coordinates of the scale's location in the Experiment
-     size: A list [width, height] of the size of the Equipment in pixels
-     mass: A floating point value, the mass, in grams, of this Container
-     capacity: A floating point value, the maximum amount of Weight  which this Scale can hold
-     residue: A floating point value in range [0-1], the percentage of this Container's capacity
-     which will be left behind when the object that this container holds are removed from it.
-     sprite: A P5 image file used to display this piece of Container
+     Create a new, empty, Scale object holding the given object
+     objectToBeWeighed: The object which will be placed on the scale, default null
      */
-    constructor(ObjectToBeWeighed = null){
-        super([1,1], [120, 60], 100, SPRITE_SCALE);
-        this.DisplayedWeight = 0.0;
-        this.ObjectToBeWeighed = ObjectToBeWeighed;
-        this.ZeroOut = 0.0;
-        // The weight of  contained by this Container
+    constructor(objectToBeWeighed = null){
+        super([0, 0], [120, 60], 100, SPRITE_SCALE);
+        this.setDisplayedWeight(0.0);
+        this.setObjectToBeWeighed(objectToBeWeighed);
+        this.setZeroOut(0.0);
     }
 
     /**
@@ -27,55 +20,69 @@ class Scale extends Equipment{
     */
     setPosition(pos){
         super.setPosition(pos);
-        // Update the position of the equipment
-        let obj = this.ObjectToBeWeighed;
+        this.updateHeldPosition();
+    }
+
+    /**
+    If this Scale holds an object, update its position so that it is on top of the scale
+    */
+    updateHeldPosition(){
+        let obj = this.objectToBeWeighed;
         if(obj !== null){
             let scaleControl = new ScaleController2D(this);
             let eq = obj.equipment;
+            let pos = this.position;
             eq.setPosition([scaleControl.getCenter()[0] - eq.size[0] * 0.5, pos[1] - eq.size[1]]);
         }
     }
 
+    /**
+    Set the weight displayed on this scale
+    displayedWeight: The weight
+    */
     setDisplayedWeight(displayedWeight){
-        this.DisplayedWeight = displayedWeight;
-    }
-
-    setObjectToBeWeighed(NewObjectToBeWeighed){
-        this.ObjectToBeWeighed = NewObjectToBeWeighed;
-        // Update the position of this Scale, and the position of the object to be weighed
-        this.setPosition(this.position);
-    }
-
-    getID() {
-        return ID_EQUIP_SCALE;
-    }
-
-    setZeroOut(value){
-        this.ZeroOut = value;
-    }
-
-    getZeroOut(){
-        return this.ZeroOut;
+        this.displayedWeight = displayedWeight;
     }
 
     /**
-     Set given weigth based on the weight of Equipment
-     */
-
-    getWeightObj(){
-            this.DisplayedWeight = this.ObjectToBeWeighed.getTotalMass() - this.zeroOut;
+    Set the object which this scale is currently weighing
+    */
+    setObjectToBeWeighed(objectToBeWeighed){
+        this.objectToBeWeighed = objectToBeWeighed;
+        // Update the position of the object to be weighed
+        this.updateHeldPosition();
     }
 
+    /**
+    Set the value to which this scale has been zeroed out
+    */
+    setZeroOut(zeroOut){
+        this.zeroOut = zeroOut;
+    }
+
+    /**
+     Set given weight based on the weight of Equipment
+     */
+    getWeightObj(){
+        this.displayedWeight = this.objectToBeWeighed.getTotalMass() - this.zeroOut;
+    }
 
     // TODO Zero out
     getHeldWeight(){
-        return this.DisplayedWeight;
+        return this.displayedWeight;
+    }
+
+    /**
+    Get the ID of the Scale object
+    */
+    getID(){
+        return ID_EQUIP_SCALE;
     }
 }
 
 
 // Constants for identifying which functions have which ids
-let ID_FUNC_To_Take_Weight = 1;
+let ID_FUNC_TO_TAKE_WEIGHT = 1;
 
 class ScaleController2D extends EquipmentController2D{
 
@@ -84,23 +91,25 @@ class ScaleController2D extends EquipmentController2D{
     }
 
     /**
+    Set the object held by this ScaleController2D. Scales can only hold ContainerController2D objects
+    objectToBeWeighed: The object to eight
+    */
+    setScaleObject(objectToBeWeighed){
+        // Scales only can weigh containers
+        if(!(objectToBeWeighed instanceof ContainerController2D)) return;
+
+        this.equipment.setObjectToBeWeighed(objectToBeWeighed);
+        this.updateWeighingObjectMass();
+    }
+
+    /**
      Convert the given id to its corresponding function
      id: The id to convert
      returns: The function of the id
      */
-    //TODO ScaleObject(Needs)
-    // To either set the object that the scale is weighing or to update the object that the scale is weighing
-    setScaleObject(NewObjectTOBeWeighed){
-        // Scales only can weigh containers
-        if(!(NewObjectTOBeWeighed instanceof ContainerController2D)) return;
-
-        this.equipment.setObjectToBeWeighed(NewObjectTOBeWeighed);
-        this.updateWeighingObjectMass();
-    }
-
     idToFunc(id){
         switch(id){
-            case ID_FUNC_To_Take_Weight: return this.setScaleObject;
+            case ID_FUNC_TO_TAKE_WEIGHT: return this.setScaleObject;
             default: return null;
         }
     }
@@ -110,10 +119,9 @@ class ScaleController2D extends EquipmentController2D{
      func: The function to convert
      returns: The id of the function
      */
-
     funcToId(func){
         switch(func){
-            case this.setScaleObject: return ID_FUNC_To_Take_Weight;
+            case this.setScaleObject: return ID_FUNC_TO_TAKE_WEIGHT;
             default: return null;
         }
     }
@@ -130,7 +138,7 @@ class ScaleController2D extends EquipmentController2D{
     Update the displayed mass of this Container's scale based on the mass of the current object
     */
     updateWeighingObjectMass(){
-        let eqControl = this.equipment.ObjectToBeWeighed;
+        let eqControl = this.equipment.objectToBeWeighed;
         this.equipment.setDisplayedWeight((eqControl === null) ? 0 : eqControl.equipment.getTotalMass());
     }
 
@@ -145,21 +153,22 @@ class ScaleController2D extends EquipmentController2D{
     /**
         The zero out function takes the current weight on the scale
         and stores it into the the zeroOut field in the scale object
-        After that it substracts the zerout value from the displayed
+        After that it subtracts the zero out value from the displayed
         Weight
         Example
         Beaker weight 15.00
         zeroOut()
-        zeroout value in the scale object becomes 15.00
+        zero out value in the scale object becomes 15.00
         displayed weight which is equal to displayedWeight = Equipment.totalWeight - ZeroutValue
         so becomes displayedWeight = 15.00 - 15.00 = 0
     */
     zeroOut(){
-        this.equipment.ZeroOut = ScaleObject.getHeldWeight();
+        let eq = this.equipment;
+        eq.setZeroOut(eq.getHeldWeight());
     }
 
     clearZeroOut(){
-        this.equipment.ZeroOut = 0.0;
+        this.equipment.setZeroOut(0.0);
     }
 
     /**
@@ -167,7 +176,10 @@ class ScaleController2D extends EquipmentController2D{
     */
     update(){
         this.updateWeighingObjectMass();
-        // TODO find a way to set the Scale to be holding nothing when the user moves the Scale's Container
+        /*
+        TODO find a way to set the Scale to be holding nothing when the user moves the Scale's Container
+            Also find out how to do these operations without using update()
+        */
     }
 
     /**
@@ -181,7 +193,7 @@ class ScaleController2D extends EquipmentController2D{
         graphics.noStroke();
         graphics.fill(0);
         graphics.textSize(15);
-        graphics.text("" + this.equipment.DisplayedWeight, this.x() + this.width() * 0.3, this.y() + this.height() * 0.7);
+        graphics.text("" + this.equipment.displayedWeight.toFixed(2), this.x() + this.width() * 0.25, this.y() + this.height() * 0.7);
     }
 
 }
