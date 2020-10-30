@@ -19,6 +19,24 @@ let ID_EQUIP_FLASK_50mL = 12;
 let ID_EQUIP_FLASK_100mL = 13;
 let ID_EQUIP_FLASK_1000mL = 14;
 
+var EquipID = [
+    { Equip: 'BEAKER_50mL', ID:1},
+    { Equip: 'BEAKER_150mL',ID:2},
+    { Equip: 'BEAKER_250mL',ID:3},
+    { Equip: 'BEAKER_600mL',ID:4},
+    { Equip: 'SCALE',ID:5},
+    { Equip: 'TRASHCAN',ID:6},
+    { Equip: 'GRADUATED_25mL',ID:7 },
+    { Equip: 'GRADUATED_50mL',ID:8 },
+    { Equip: 'GRADUATED_100mL',ID:10 },
+    { Equip: 'GRADUATED_1000mL',ID:11 },
+    { Equip: 'FLASK_25mL',ID:12 },
+    { Equip: 'FLASK_50mL',ID:13 },
+    { Equip: 'FLASK_100mL',ID:14 },
+    { Equip: 'FLASK_1000mL',ID:15 }
+];
+
+sessionStorage.setItem("EquipID", JSON.stringify(EquipID));
 
 // Constants for IDs of Chemicals
 let ID_CHEM_TEST_RED = 1001;
@@ -26,6 +44,15 @@ let ID_CHEM_TEST_BLUE = 1002;
 let ID_CHEM_TEST_WHITE = 1003;
 let ID_CHEM_TEST_GREEN = 1004;
 let ID_CHEM_TEST_BLACK = 1005;
+
+var ChemID = [
+    { Chem: 'RED',ID:1001 },
+    { Chem: 'BLUE',ID:1002 },
+    { Chem: 'WHITE',ID:1003 },
+    { Chem: 'GREEN',ID:1004 },
+    { Chem: 'BLACK',ID:1005 }
+];
+sessionStorage.setItem("ChemID", JSON.stringify(ChemID));
 
 /**
 Take an integer ID and convert it to a valid piece of Equipment
