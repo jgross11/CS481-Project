@@ -91,21 +91,23 @@
    function LoadEquip(){
        let EquipID = JSON.parse(sessionStorage.getItem("EquipID"));
        for (i = 0; i < EquipID.length  ; i++) {
-            document.getElementById("Equip").innerHTML += "<button onclick=AddEquip(id) ID="+EquipID[i].ID+">" + EquipID[i].Equip+ "</button>";
+            document.getElementById("Equip").innerHTML += "<button onclick=AddEquip(this) ID="+EquipID[i].ID+">" + EquipID[i].Equip+ "</button>";
        }
 
    }
     function LoadChem(){
         let ChemID = JSON.parse(sessionStorage.getItem("ChemID"));
         for (i = 0; i < ChemID.length  ; i++) {
-            document.getElementById("Chem").innerHTML += "<button onclick=AddChem(id) ID="+ChemID[i].ID+">" + ChemID[i].Chem+ "</button>";
+            document.getElementById("Chem").innerHTML += "<button onclick=AddChem(this) ID="+ChemID[i].ID+">" + ChemID[i].Chem+ "</button>";
         }
 
     }
-    function AddChem(id){
+    function AddChem(Chem){
+        alert(Chem.id);
 
     }
-    function AddEquip(id){
+    function AddEquip(Equip){
+        alert(Equip.id);
 
 
     }
