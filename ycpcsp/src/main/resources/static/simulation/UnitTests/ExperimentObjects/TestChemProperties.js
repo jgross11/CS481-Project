@@ -76,6 +76,8 @@ QUnit.test('getDensity:', function(assert){
 
 
 var elementHydrogen;
+var elementHelium;
+var elementLithium;
 var elementNew;
 
 QUnit.module("ElementProperties", {
@@ -83,8 +85,10 @@ QUnit.module("ElementProperties", {
         initTestChemProperties();
     },
     beforeEach: function(){
-        elementHydrogen = new ElementProperties(ELEMENT_HYDROGEN_ATOMIC_NUM);
-        elementNew = new ElementProperties(9999, "person");
+        elementHydrogen = new ElementProperties(ELEMENT_HYDROGEN_ATOMIC_NUM, 1);
+        elementHelium = new ElementProperties(ELEMENT_HELIUM_ATOMIC_NUM); // TODO make these use more than 1 for count
+        elementLithium = new ElementProperties(ELEMENT_LITHIUM_ATOMIC_NUM);
+        elementNew = new ElementProperties(9999, 1, "person");
     }
 });
 
@@ -102,7 +106,7 @@ QUnit.test('getAtomicNumber:', function(assert){
 });
 
 QUnit.test('chemFromProperties:', function(assert){
-    assert.deepEqual(elementHydrogen.chemFromProperties(), ELEMENT_PROPERTIES[ELEMENT_HYDROGEN_ATOMIC_NUM],
+    assert.deepEqual(elementHydrogen.chemFromProperties(), CHEMICAL_PROPERTIES[ELEMENT_HYDROGEN_ATOMIC_NUM],
         "Should get the properties of Hydrogen");
     assert.deepEqual(elementNew.chemFromProperties(), {}, "Should get an empty object from an unknown atomic number");
 });
@@ -118,7 +122,9 @@ QUnit.test('getName:', function(assert){
 });
 
 QUnit.test('getSymbol:', function(assert){
-    assert.equal(elementHydrogen.getSymbol(), "H", "Should get H for the symbol of Hydrogen");
+    assert.equal(elementHydrogen.getSymbol(), "H", "Should get the symbol of Hydrogen");
+    assert.equal(elementHelium.getSymbol(), "He", "Should get the symbol of Helium");
+    assert.equal(elementLithium.getSymbol(), "Li", "Should get the symbol of Lithium");
     assert.equal(elementNew.getSymbol(), "", "Undefined element symbol should be an empty string");
 });
 
@@ -129,7 +135,7 @@ QUnit.test('getTexture:', function(assert){
 
 QUnit.test('getMolarMass:', function(assert){
     assert.equal(elementHydrogen.getMolarMass(), 1.008, "Should get 1.008 for the molar mass of Hydrogen");
-    assert.equal(elementNew.getMolarMass(), undefined, "Undefined element molar mass should be undefined");
+    assert.deepEqual(elementNew.getMolarMass(), NaN, "Undefined element molar mass should be NaN");
 });
 
 QUnit.test('getMeltingPoint:', function(assert){
@@ -147,17 +153,17 @@ QUnit.test('getDensity:', function(assert){
     assert.equal(elementNew.getDensity(), undefined, "Undefined element density should be undefined");
 });
 
-
-var elementHelium;
-var elementLithium;
-
-var compoundHydrogen;
-var compoundHelium;
-var compoundLithium;
+var compoundHydrogen2;
+var compoundHelium2;
+var compoundLithium3;
 
 var compoundHydroThium;
 var compoundHelThium;
 var compoundHydroHelThium;
+var compoundHydroHelThiumAtoms;
+
+var compoundWater;
+
 let DELTA = 0.000001;
 
 QUnit.module("CompoundProperties", {
@@ -169,59 +175,76 @@ QUnit.module("CompoundProperties", {
         elementHelium = new ElementProperties(ELEMENT_HELIUM_ATOMIC_NUM);
         elementLithium = new ElementProperties(ELEMENT_LITHIUM_ATOMIC_NUM);
 
-        compoundHydrogen = new CompoundProperties([elementHydrogen], 2, "Nature", 10001, "HydrogenDouble", [1, 2, 3], 1, 2, 3);
-        compoundHelium = new CompoundProperties([elementHelium], 2, "Nature", 10002, "HeliumDouble", [4, 5, 6], 4, 5, 6);
-        compoundLithium = new CompoundProperties([elementLithium], 3, "Nature", 10003, "LithiumTriple", [7, 8, 9], 7, 8, 9);
+        compoundHydrogen2 = new CompoundProperties(90001, 2, "Test", [elementHydrogen], "HydrogenDouble", [1, 2, 3], 1, 2, 3);
+        compoundHelium2 = new CompoundProperties(90002, 2, "Test", [elementHelium], "HeliumDouble", [4, 5, 6], 4, 5, 6);
+        compoundLithium3 = new CompoundProperties(90003, 3, "Test", [elementLithium], "LithiumTriple", [7, 8, 9], 7, 8, 9);
 
-        compoundHydroThium = new CompoundProperties([compoundHydrogen, elementLithium], 1, "Nature", 10004, "HydroThium", [10, 20, 30], 1.5, 2.5, 3.5);
-        compoundHelThium = new CompoundProperties([compoundHelium, compoundLithium], 2, "Nature", 10005, "HelThium", [40, 50, 60], 4.5, 5.5, 6.5);
-        compoundHydroHelThium = new CompoundProperties([compoundHydroThium, compoundHelThium], 3, "Nature", 10006, [70, 80, 90], "HydroHelThium", 7.5, 8.5, 9.5);
+        compoundHydroThium = new CompoundProperties(90004, 1, "Test", [compoundHydrogen2, elementLithium], "HydroThium", [10, 20, 30], 1.5, 2.5, 3.5);
+        compoundHelThium = new CompoundProperties(90005, 2, "Test", [compoundHelium2, compoundLithium3], "HelThium", [40, 50, 60], 4.5, 5.5, 6.5);
+        compoundHydroHelThium = new CompoundProperties(90006, 3, "Test", [compoundHydroThium, compoundHelThium], [70, 80, 90], "HydroHelThium", 7.5, 8.5, 9.5);
+        compoundHydroHelThiumAtoms = new CompoundProperties(90006, 1, "Test", [
+                new ElementProperties(ELEMENT_HYDROGEN_ATOMIC_NUM, 2),
+                new ElementProperties(ELEMENT_HELIUM_ATOMIC_NUM, 3),
+                new ElementProperties(ELEMENT_LITHIUM_ATOMIC_NUM, 4),
+                compoundHydroHelThium
+            ], [75, 85, 95], "HydroHelThium", 70.5, 80.5, 90.5);
+
+        compoundWater = new CompoundProperties(COMPOUND_WATER_ID);
     }
 });
 
 QUnit.test('constructor:', function(assert){
-    assert.equal(compoundHydrogen.name, "HydrogenDouble", "Name should match given name in constructor");
-    assert.equal(compoundHydrogen.meltingPoint, 1, "Melting point should match given melting point in constructor");
-    assert.equal(compoundHydrogen.boilingPoint, 2, "Boiling point should match given boiling point in constructor");
-    assert.equal(compoundHydrogen.density, 3, "Density should match given density in constructor");
+    assert.equal(compoundHydrogen2.name, "HydrogenDouble", "Name should match given name in constructor");
+    assert.equal(compoundHydrogen2.meltingPoint, 1, "Melting point should match given melting point in constructor");
+    assert.equal(compoundHydrogen2.boilingPoint, 2, "Boiling point should match given boiling point in constructor");
+    assert.equal(compoundHydrogen2.density, 3, "Density should match given density in constructor");
 });
 
 QUnit.test('getID:', function(assert){
-    assert.equal(compoundHydrogen.getID(), 10001, "Get ID should match given ID in constructor");
-    assert.equal(compoundHelium.getID(), 10002, "Get ID should match given ID in constructor");
-    assert.equal(compoundLithium.getID(), 10003, "Get ID should match given ID in constructor");
+    assert.equal(compoundHydrogen2.getID(), 90001, "Get ID should match given ID in constructor");
+    assert.equal(compoundHelium2.getID(), 90002, "Get ID should match given ID in constructor");
+    assert.equal(compoundLithium3.getID(), 90003, "Get ID should match given ID in constructor");
+
+    assert.equal(compoundWater.getID(), COMPOUND_WATER_ID, "Get ID should match given ID for water in constructor");
 });
 
 QUnit.test('getName:', function(assert){
-    assert.equal(compoundHydrogen.getName(), "HydrogenDouble", "Get name should match given name in constructor");
-    assert.equal(compoundHelium.getName(), "HeliumDouble", "Get name should match given name in constructor");
-    assert.equal(compoundLithium.getName(), "LithiumTriple", "Get name should match given name in constructor");
+    assert.equal(compoundHydrogen2.getName(), "HydrogenDouble", "Get name should match given name in constructor");
+    assert.equal(compoundHelium2.getName(), "HeliumDouble", "Get name should match given name in constructor");
+    assert.equal(compoundLithium3.getName(), "LithiumTriple", "Get name should match given name in constructor");
+
+    assert.equal(compoundWater.getName(), "Water", "Get name should match from database entry");
 });
 
 QUnit.test('getSymbol:', function(assert){
-    assert.equal(compoundHydrogen.getSymbol(), "2H", "Should find correct symbol");
-    assert.equal(compoundHelium.getSymbol(), "2He", "Should find correct symbol");
-    assert.equal(compoundLithium.getSymbol(), "3Li", "Should find correct symbol");
+    assert.equal(compoundHydrogen2.getSymbol(), "2H", "Should find correct symbol");
+    assert.equal(compoundHelium2.getSymbol(), "2He", "Should find correct symbol");
+    assert.equal(compoundLithium3.getSymbol(), "3Li", "Should find correct symbol");
 
-    assert.equal(compoundHydroThium.getSymbol(), "(2HLi)", "Should find correct symbol");
+    assert.equal(compoundHydroThium.getSymbol(), "2HLi", "Should find correct symbol");
     assert.equal(compoundHelThium.getSymbol(), "2(2He3Li)", "Should find correct symbol");
-    assert.equal(compoundHydroHelThium.getSymbol(), "3((2HLi)2(2He3Li))", "Should find correct symbol");
+    assert.equal(compoundHydroHelThium.getSymbol(), "3((2HLi)(2(2He3Li)))", "Should find correct symbol");
+    assert.equal(compoundHydroHelThiumAtoms.getSymbol(), "H2He3Li4(3((2HLi)(2(2He3Li))))", "Should find correct symbol");
+
+    assert.equal(compoundWater.getSymbol(), "H2O", "Get symbol should match from the database entry");
 });
 
 QUnit.test('getTexture:', function(assert){
-    assert.deepEqual(compoundHydrogen.getTexture(), [1, 2, 3], "Get texture should match given texture in constructor");
-    assert.deepEqual(compoundHelium.getTexture(), [4, 5, 6], "Get texture should match given texture in constructor");
-    assert.deepEqual(compoundLithium.getTexture(), [7, 8, 9], "Get texture should match given texture in constructor");
+    assert.deepEqual(compoundHydrogen2.getTexture(), [1, 2, 3], "Get texture should match given texture in constructor");
+    assert.deepEqual(compoundHelium2.getTexture(), [4, 5, 6], "Get texture should match given texture in constructor");
+    assert.deepEqual(compoundLithium3.getTexture(), [7, 8, 9], "Get texture should match given texture in constructor");
+
+    assert.deepEqual(compoundWater.getTexture(), [100, 100, 255], "Get texture should match from the database entry");
 });
 
 QUnit.test('getMolarMass:', function(assert){
     var m;
 
-    m = compoundHydrogen.getMolarMass();
+    m = compoundHydrogen2.getMolarMass();
     assert.true(Math.abs(m - 2.016) < DELTA, "Molar mass of 2H should be 2.016, was " + m);
-    m = compoundHelium.getMolarMass();
+    m = compoundHelium2.getMolarMass();
     assert.true(Math.abs(m - 8.006) < DELTA, "Molar mass of 2He should be 4.006, was " + m);
-    m = compoundLithium.getMolarMass();
+    m = compoundLithium3.getMolarMass();
     assert.true(Math.abs(m - 20.823) < DELTA, "Molar mass of 3Li should be 20.823, was " + m);
 
     m = compoundHydroThium.getMolarMass();
@@ -229,23 +252,26 @@ QUnit.test('getMolarMass:', function(assert){
     m = compoundHelThium.getMolarMass();
     assert.true(Math.abs(m - 57.658) < DELTA, "Molar mass of 2(3Li2He) should be 20.823, was " + m);
     m = compoundHydroHelThium.getMolarMass();
-    assert.true(Math.abs(m - 199.845) < DELTA, "Molar mass of 3((Li2H)2(3Li2He)) should be 20.823, was " + m);
+    assert.true(Math.abs(m - 199.845) < DELTA, "Molar mass of 3((Li2H)2(3Li2He)) should be 199.845, was " + m);
+
+    m = compoundWater.getMolarMass();
+    assert.true(Math.abs(m - 18.015) < DELTA, "Molar mass of water should be 18.015, was " + m);
 });
 
 QUnit.test('getMeltingPoint:', function(assert){
-    assert.equal(compoundHydrogen.getMeltingPoint(), 1, "Get melting point should match given melting point in constructor");
-    assert.equal(compoundHelium.getMeltingPoint(), 4, "Get melting point should match given melting point in constructor");
-    assert.equal(compoundLithium.getMeltingPoint(), 7, "Get melting point should match given melting point in constructor");
+    assert.equal(compoundHydrogen2.getMeltingPoint(), 1, "Get melting point should match given melting point in constructor");
+    assert.equal(compoundHelium2.getMeltingPoint(), 4, "Get melting point should match given melting point in constructor");
+    assert.equal(compoundLithium3.getMeltingPoint(), 7, "Get melting point should match given melting point in constructor");
 });
 
 QUnit.test('getBoilingPoint:', function(assert){
-    assert.equal(compoundHydrogen.getBoilingPoint(), 2, "Get boiling point should match given boiling point in constructor");
-    assert.equal(compoundHelium.getBoilingPoint(), 5, "Get boiling point should match given boiling point in constructor");
-    assert.equal(compoundLithium.getBoilingPoint(), 8, "Get boiling point should match given boiling point in constructor");
+    assert.equal(compoundHydrogen2.getBoilingPoint(), 2, "Get boiling point should match given boiling point in constructor");
+    assert.equal(compoundHelium2.getBoilingPoint(), 5, "Get boiling point should match given boiling point in constructor");
+    assert.equal(compoundLithium3.getBoilingPoint(), 8, "Get boiling point should match given boiling point in constructor");
 });
 
 QUnit.test('getDensity:', function(assert){
-    assert.equal(compoundHydrogen.getDensity(), 3, "Get density should match given density in constructor");
-    assert.equal(compoundHelium.getDensity(), 6, "Get density should match given density in constructor");
-    assert.equal(compoundLithium.getDensity(), 9, "Get density should match given density in constructor");
+    assert.equal(compoundHydrogen2.getDensity(), 3, "Get density should match given density in constructor");
+    assert.equal(compoundHelium2.getDensity(), 6, "Get density should match given density in constructor");
+    assert.equal(compoundLithium3.getDensity(), 9, "Get density should match given density in constructor");
 });
