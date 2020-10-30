@@ -8,11 +8,10 @@ class Scale extends Equipment{
      objectToBeWeighed: The object which will be placed on the scale, default null
      */
     constructor(objectToBeWeighed = null){
-        super([1,1], [120, 60], 100, SPRITE_SCALE);
-        this.displayedWeight = 0.0;
-        this.objectToBeWeighed = objectToBeWeighed;
-        this.zeroOut = 0.0;
-        // The weight of  contained by this Container
+        super([0, 0], [120, 60], 100, SPRITE_SCALE);
+        this.setDisplayedWeight(0.0);
+        this.setObjectToBeWeighed(objectToBeWeighed);
+        this.setZeroOut(0.0);
     }
 
     /**
@@ -21,55 +20,69 @@ class Scale extends Equipment{
     */
     setPosition(pos){
         super.setPosition(pos);
-        // Update the position of the equipment
+        this.updateHeldPosition();
+    }
+
+    /**
+    If this Scale holds an object, update its position so that it is on top of the scale
+    */
+    updateHeldPosition(){
         let obj = this.objectToBeWeighed;
         if(obj !== null){
             let scaleControl = new ScaleController2D(this);
             let eq = obj.equipment;
+            let pos = this.position;
             eq.setPosition([scaleControl.getCenter()[0] - eq.size[0] * 0.5, pos[1] - eq.size[1]]);
         }
     }
 
+    /**
+    Set the weight displayed on this scale
+    displayedWeight: The weight
+    */
     setDisplayedWeight(displayedWeight){
         this.displayedWeight = displayedWeight;
     }
 
+    /**
+    Set the object which this scale is currently weighing
+    */
     setObjectToBeWeighed(objectToBeWeighed){
         this.objectToBeWeighed = objectToBeWeighed;
-        // Update the position of this Scale, and the position of the object to be weighed
-        this.setPosition(this.position);
+        // Update the position of the object to be weighed
+        this.updateHeldPosition();
     }
 
-    getID() {
-        return ID_EQUIP_SCALE;
-    }
-
+    /**
+    Set the value to which this scale has been zeroed out
+    */
     setZeroOut(zeroOut){
         this.zeroOut = zeroOut;
     }
 
-    getZeroOut(){
-        return this.zeroOut;
-    }
-
     /**
-     Set given weigth based on the weight of Equipment
+     Set given weight based on the weight of Equipment
      */
-
     getWeightObj(){
         this.displayedWeight = this.objectToBeWeighed.getTotalMass() - this.zeroOut;
     }
-
 
     // TODO Zero out
     getHeldWeight(){
         return this.displayedWeight;
     }
+
+    /**
+    Get the ID of the Scale object
+    */
+    getID(){
+        return ID_EQUIP_SCALE;
+    }
 }
 
 
 // Constants for identifying which functions have which ids
-let ID_FUNC_To_Take_Weight = 1;
+let ID_FUNC_TO_TAKE_WEIGHT = 1;
 
 class ScaleController2D extends EquipmentController2D{
 
@@ -78,12 +91,9 @@ class ScaleController2D extends EquipmentController2D{
     }
 
     /**
-     Convert the given id to its corresponding function
-     id: The id to convert
-     returns: The function of the id
-     */
-    //TODO ScaleObject(Needs)
-    // To either set the object that the scale is weighing or to update the object that the scale is weighing
+    Set the object held by this ScaleController2D. Scales can only hold ContainerController2D objects
+    objectToBeWeighed: The object to eight
+    */
     setScaleObject(objectToBeWeighed){
         // Scales only can weigh containers
         if(!(objectToBeWeighed instanceof ContainerController2D)) return;
@@ -92,9 +102,14 @@ class ScaleController2D extends EquipmentController2D{
         this.updateWeighingObjectMass();
     }
 
+    /**
+     Convert the given id to its corresponding function
+     id: The id to convert
+     returns: The function of the id
+     */
     idToFunc(id){
         switch(id){
-            case ID_FUNC_To_Take_Weight: return this.setScaleObject;
+            case ID_FUNC_TO_TAKE_WEIGHT: return this.setScaleObject;
             default: return null;
         }
     }
@@ -104,10 +119,9 @@ class ScaleController2D extends EquipmentController2D{
      func: The function to convert
      returns: The id of the function
      */
-
     funcToId(func){
         switch(func){
-            case this.setScaleObject: return ID_FUNC_To_Take_Weight;
+            case this.setScaleObject: return ID_FUNC_TO_TAKE_WEIGHT;
             default: return null;
         }
     }
