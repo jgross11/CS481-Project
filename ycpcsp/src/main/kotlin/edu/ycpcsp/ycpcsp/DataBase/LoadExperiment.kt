@@ -37,7 +37,7 @@ fun LoadExperiment(id: String) : Experiment {
 
 
         //Equipment query
-        val rs2 = st.executeQuery("Select Distinct name, object_ID, amount from Database.Equipments join Database.Experiments on Database.Experiments.ExperimentsID = Database.Equipments.experiment_ID where ExperimentsID = \"$id\" ")
+        val rs2 = st.executeQuery("Select Distinct object_ID, amount from Database.Equipments join Database.Experiments on Database.Experiments.ExperimentsID = Database.Equipments.experiment_ID where ExperimentsID = \"$id\" ")
         rs2.last()
         val num = rs2.row
         rs2.beforeFirst()
