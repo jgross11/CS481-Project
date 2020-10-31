@@ -22,6 +22,16 @@ data class Experiment(
 
     }
 
+    fun setEquipmentListSize(size : Int){
+        equipment = Array(size){ EquipmentObject(-1, -1) }
+    }
+    fun setChemicalListSize(size : Int){
+        chemicals = Array(size){ ChemicalObject(-1, -1.0, -1.0) }
+    }
+    fun setStepListSize(size : Int){
+        steps = Array(size){Step(-1, -1, false, -1, false, -1)}
+    }
+
     override fun toString(): String {
         var result = "$title, made by\n"
         for(step in steps){
