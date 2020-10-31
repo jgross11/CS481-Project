@@ -62,7 +62,13 @@ let COMPOUND_HYDROGEN_GAS_ID = 10000;
 let COMPOUND_WATER_ID = 10001;
 let COMPOUND_GLUCOSE_ID = 10002;
 let COMPOUND_TABLE_SALT_ID = 10003;
-
+var ChemID = [
+    { Chem: 'HYDROGEN GAS',ID:10000 },
+    { Chem: 'WATER',ID:10001 },
+    { Chem: 'GLUCOSE',ID:10002 },
+    { Chem: 'TABLE SALT',ID:10003 }
+];
+sessionStorage.setItem("ChemID", JSON.stringify(ChemID));
 
 
 /**
