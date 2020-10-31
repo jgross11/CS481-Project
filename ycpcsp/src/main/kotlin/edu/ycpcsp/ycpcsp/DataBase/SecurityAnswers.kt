@@ -7,32 +7,24 @@ import edu.ycpcsp.ycpcsp.Models.*
 
 
 fun verifySecurityQuestion(email: String, securityQuestion: SecurityQuestion): Boolean {
-    val serverCredentials = serverCredential()
-    val username = serverCredentials?.get(0)
-    val password = serverCredentials?.get(1)
-    val url = serverCredentials?.get(2)
-
-    val connectionProps = Properties()
-    connectionProps["user"] = username
-    connectionProps["password"] = password
-    connectionProps["useSSL"] = "false"
+    val connection = getDBConnection()
 
     try {
-        //test class fails here
-        Class.forName("com.mysql.jdbc.Driver")
+        if(connection != null) {
+            var preparedSt = connection.prepareStatement("SELECT ans? FROM Database.Users where email = ?;")
+            preparedSt.setInt(1, securityQuestion.questionIndex)
+            preparedSt.setString(2, email)
+            val rs = preparedSt.executeQuery()
 
-        val conn = DriverManager.getConnection(url, connectionProps)
-        val st = conn.createStatement()
-        val rs = st.executeQuery("SELECT ans"+securityQuestion.questionIndex+" FROM Database.Users where email = \"$email\";")
-
-        try{
-            rs.next()
-            return rs.getString(1).compareTo(securityQuestion.answer) == 0
-        } catch (ex: SQLException){
-            println("Error the query returned with a null result set. The query must have been entered incorrectly")
-            ex.printStackTrace()
+            try {
+                rs.next()
+                return rs.getString(1).compareTo(securityQuestion.answer) == 0
+            } catch (ex: SQLException) {
+                println("Error the query returned with a null result set. The query must have been entered incorrectly")
+                ex.printStackTrace()
+            }
+            return false
         }
-        return false
 
         //This means the query failed to find anything
         return false

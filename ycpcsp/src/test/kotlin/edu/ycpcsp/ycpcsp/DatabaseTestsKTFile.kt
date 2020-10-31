@@ -23,22 +23,22 @@ fun main(){
 //    println("=============================End VerifyUser Test=============================")
 //
 //    //TODO this section of code tests LoadUser
-    println("=============================Begin LoadUser Test=============================")
-
-    var testUser = LoadUser(email)
-    var testCompare : Array<String> = arrayOf("Test", "Name", "test@test.com","TheBest")
-    if(testUser != null) {
-        assert(testUser.firstName.compareTo(testCompare[0]) == 0)
-        assert(testUser.lastName.compareTo(testCompare[1]) == 0)
-        assert(testUser.email.compareTo(testCompare[2]) == 0)
-        if(testUser.school.compareTo(testCompare[3]) == 0){
-            println("LoadUser works just fine")
-        }
-
-
-    }
-    println()
-    println("=============================End LoadUser Test=============================")
+//    println("=============================Begin LoadUser Test=============================")
+//
+//    var testUser = LoadUser(email)
+//    var testCompare : Array<String> = arrayOf("Test", "Name", "test@test.com","TheBest")
+//    if(testUser != null) {
+//        assert(testUser.firstName.compareTo(testCompare[0]) == 0)
+//        assert(testUser.lastName.compareTo(testCompare[1]) == 0)
+//        assert(testUser.email.compareTo(testCompare[2]) == 0)
+//        if(testUser.school.compareTo(testCompare[3]) == 0){
+//            println("LoadUser works just fine")
+//        }
+//
+//
+//    }
+//    println()
+//    println("=============================End LoadUser Test=============================")
 //
 //    //TODO ModifyUser test
 //    println("=============================Begin Modify User Test=============================")
@@ -58,23 +58,23 @@ fun main(){
 //    println("=============================End Modify User Test=============================")
 //    //Todo Security Question Answer Verification Test
 //
-//    println("=============================Begin Security Question Answer Test=============================")
-//    val secQuestion1 = SecurityQuestion(1,"test")
-//    val secQuestion2 = SecurityQuestion(1, "wrong")
-//
-//    //This should run a correct test
-//    if(verifySecurityQuestion(email,secQuestion1)){
-//        println("Security Question 1's answer was the correct")
-//    } else{
-//        println("Security Question 1's answer was incorrect")
-//    }
-//    //This Should run an incorrect test
-//    if(verifySecurityQuestion(email,secQuestion2)){
-//        println("Security Question 2's answer was the correct")
-//    } else{
-//        println("Security Question 2's answer was incorrect")
-//    }
-//    println("=============================End Security Question Answer Test=============================")
+    println("=============================Begin Security Question Answer Test=============================")
+    val secQuestion1 = SecurityQuestion(1,"test")
+    val secQuestion2 = SecurityQuestion(1, "wrong")
+
+    //This should run a correct test
+    if(verifySecurityQuestion(email,secQuestion1)){
+        println("Security Question 1's answer was the correct")
+    } else{
+        println("Security Question 1's answer was incorrect")
+    }
+    //This Should run an incorrect test
+    if(verifySecurityQuestion(email,secQuestion2)){
+        println("Security Question 2's answer was the correct but it should be wrong")
+    } else{
+        println("Security Question 2's answer was incorrect which is what the result should be")
+    }
+    println("=============================End Security Question Answer Test=============================")
 
 //    println("=============================Begin Create Experiment Test=============================")
 //    var newExperiment = Experiment("Cool Experiment", "Yeah")
