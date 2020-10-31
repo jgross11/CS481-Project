@@ -9,53 +9,61 @@ import kotlin.math.exp
 
 fun ModifyExperiment(experiment: Experiment): Boolean {
 
-    val serverCredentials = serverCredential()
-    val username = serverCredentials?.get(0)
-    val password = serverCredentials?.get(1)
-    val url = serverCredentials?.get(2)
-
-    val connectionProps = Properties()
-    connectionProps["user"] = username
-    connectionProps["password"] = password
-    edu.ycpcsp.ycpcsp.DataBase.password
-    connectionProps["useSSL"] = "false"
+    var connection = getDBConnection()
 
     try {
-        //test class fails here
-        Class.forName("com.mysql.jdbc.Driver")
+        if(connection != null) {
 
-        val conn = DriverManager.getConnection(url, connectionProps)
-        val st = conn.createStatement()
+            //Edit Experiment table, delete later?
+            //Need to modify all experiment id
+            var preparedSt = connection.prepareStatement("UPDATE Database.Experiments" +
+                    "SET title = ?" +
+                    "WHERE ExperimentsID = ?;")
+            preparedSt.setString(1, experiment.title)
+            preparedSt.setInt(2, experiment.experimentID)
+            preparedSt.executeUpdate()
 
-        //Edit Experiment table, delete later?
-        //Need to modify all experiment id
-        st.executeUpdate("UPDATE Database.Experiments" +
-                            "SET title = '${experiment.title}'" +
-                            "WHERE ExperimentsID = '$experiment.id';")
+            //Edit Chemistry table
+            for (chemical in experiment.chemicals) {
+                preparedSt = connection.prepareStatement("UPDATE Database.Chemicals" +
+                        "SET type_id = ?, mass = ?, concentration = ?" +
+                        "WHERE experiment_ID = ?;")
+                preparedSt.setInt(1, chemical.id)
+                preparedSt.setDouble(2, chemical.mass)
+                preparedSt.setDouble(3, chemical.concentration)
+                preparedSt.setInt(4, experiment.experimentID)
+                preparedSt.executeUpdate()
+            }
 
-        //Edit Chemistry table
-        for(chemical in experiment.chemicals){
-            st.executeUpdate("UPDATE Database.Chemicals" +
-                    "SET type_id = '${chemical.id}', mass = '${chemical.mass}', concentration = '${chemical.concentration}'" +
-                    "WHERE experiment_ID = '$experiment.id';")
+
+            //Edit Equipment table
+            for (equipment in experiment.equipment) {
+                preparedSt = connection.prepareStatement("UPDATE Database.Equipments" +
+                        "SET object_ID = ?, amount = ?" +
+                        "WHERE experiment_ID = ?;")
+                preparedSt.setInt(1, equipment.objectID)
+                preparedSt.setInt(2, equipment.amount)
+                preparedSt.setInt(3, experiment.experimentID)
+                preparedSt.executeUpdate()
+            }
+
+            //edit Steps table
+            for (steps in experiment.steps) {
+                preparedSt = connection.prepareStatement("UPDATE Database.Steps" +
+                        "SET step_number = ?, actor_index = ?, actor_ID = ?, receiver_index = ?, receiver_ID = ?, functionID = ?" +
+                        "WHERE experiment_ID = ?;")
+                preparedSt.setInt(1, steps.stepNumber)
+                preparedSt.setInt(2, steps.actorIndex)
+                preparedSt.setBoolean(3, steps.actorID)
+                preparedSt.setInt(4, steps.receiverIndex)
+                preparedSt.setBoolean(5, steps.receiverID)
+                preparedSt.setInt(6, steps.functionID)
+                preparedSt.setInt(7, experiment.experimentID)
+                preparedSt.executeUpdate()
+            }
+
+            return true
         }
-
-
-        //Edit Equipment table
-        for(equipment in experiment.equipment){
-            st.executeUpdate("UPDATE Database.Equipments" +
-                    "SET object_ID = '${equipment.objectID}', amount = '${equipment.amount}'" +
-                    "WHERE experiment_ID = '$experiment.id';")
-        }
-
-        //edit Steps table
-        for(steps in experiment.steps){
-            st.executeUpdate("UPDATE Database.Steps" +
-                    "SET step_number = '${steps.stepNumber}', actor_index = '${steps.actorIndex}', actor_ID = '${steps.actorID}', receiver_index = '${steps.receiverIndex}', receiver_ID = '${steps.receiverID}', functionID = '${steps.functionID}'" +
-                    "WHERE experiment_ID = '$experiment.id';")
-        }
-
-        return true
 
     } catch (ex: SQLException) {
         // handle any errors

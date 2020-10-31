@@ -48,7 +48,7 @@ fun main(){
 //    if(ModifyUser(modifyUser)){
 //        if(originalUser != null){
 //            //if you wish to verify whether or not the ModifyUser is actually working comment out the line below
-//            ModifyUser(originalUser)
+//            //ModifyUser(originalUser)
 //        }
 //        println("Modify User successfully ran")
 //    } else{
@@ -120,24 +120,24 @@ fun main(){
 //
 //    println("=============================End Create Quarantine User=============================")
 
-    println("=============================Begin Find My Experiments=============================")
-    val userID = LoadUser("jgross11@ycp.edu")
-    val testExperiment = Experiment("Color", "Josh Gross", 1)
-
-    val experiments = FindMyExperiments(userID)
-    //kotlin has this cool experiment iterator
-    //the native iterator for each natively sets the variable to "it"
-    experiments.iterator().forEach {
-        if (it.title.compareTo(testExperiment.title) == 0) {
-            println("The title is " + it.title)
-            if (it.creatorName.compareTo(testExperiment.creatorName) == 0) {
-                println("Find My Experiments works so far")
-            }
-            println("The creator Name is " + it.creatorName)
-        } else {
-            println("Error: Find My Experiments did not work")
-        }
-
-    }
-    println("=============================End Find My Experiments=============================")
+//    println("=============================Begin Find My Experiments=============================")
+//    val userID = LoadUser("jgross11@ycp.edu")
+//    val testExperiment = Experiment("Color", "Josh  Gross", 1)
+//
+//    val experiments = FindMyExperiments(userID)
+//    //kotlin has this cool experiment iterator
+//    //the native iterator for each natively sets the variable to "it"
+//    experiments.iterator().forEach {
+//        if (it.title.compareTo(testExperiment.title) == 0) {
+//            println("The title is " + it.title)
+//            if (it.creatorName.compareTo(testExperiment.creatorName) == 0) {
+//                println("Find My Experiments works so far")
+//            }
+//            //println("The creator Name is " + it.creatorName)
+//        } else {
+//            println("Error: Find My Experiments did not work")
+//        }
+//
+//    }
+//    println("=============================End Find My Experiments=============================")
 }

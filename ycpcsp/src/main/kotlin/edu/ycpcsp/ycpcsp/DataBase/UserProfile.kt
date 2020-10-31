@@ -10,26 +10,21 @@ import java.util.*
 
 
 fun UserProfile (id: String?){
-    val connectionProps = Properties()
-    connectionProps["user"] = username
-    connectionProps["password"] = edu.ycpcsp.ycpcsp.DataBase.password
-    connectionProps["useSSL"] = "false"
+    val connection= getDBConnection()
 
     try{
-        Class.forName("com.mysql.jdbc.Driver")
-        //Connection for the database to get it connected and then execute the query
-        val conn = DriverManager.getConnection(url, connectionProps)
-        val st = conn.createStatement()
-        val rs = st.executeQuery("Select * from Database.Users")
+        if(connection != null) {
+            var preparedSt = connection.prepareStatement("Select * from Database.Users where ")
+            val rs = preparedSt.executeQuery()
 
-        val array = arrayOfNulls<String?>(13)// make empty array to store the values of the database in but make it 13
+            val array = arrayOfNulls<String?>(13)// make empty array to store the values of the database in but make it 13
 
-        rs.next()   // required to get to the rs
-        for (x in 1..12) {  //go to twelve so you're grabbing 12 items from the return statement from the database.
-            //each value in the array corresponds to the order they are in, in the database
-            array[x] = rs.getString(x)
+            rs.next()   // required to get to the rs
+            for (x in 1..12) {  //go to twelve so you're grabbing 12 items from the return statement from the database.
+                //each value in the array corresponds to the order they are in, in the database
+                array[x] = rs.getString(x)
+            }
         }
-
 
 
     }catch (ex: SQLException) {
