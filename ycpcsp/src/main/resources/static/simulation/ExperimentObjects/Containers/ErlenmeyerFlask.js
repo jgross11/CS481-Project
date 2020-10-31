@@ -71,7 +71,7 @@ class ErlenmeyerFlaskController2D extends ContainerController2D{
                 [0.95, 0.8], [0.82, 0.6], [0.64, 0.3],
                 [0.3, 0.3], [0.15, 0.6], [0.05, 0.8]
             ];
-            chemController.drawShape(graphics, this.chemFill, this.x(), this.y(), vertices, chem.mass / eq.capacity, 0.65);
+            chemController.drawShape(graphics, this.chemFill, this.x(), this.y(), vertices, eq.getTotalContentsMass() / eq.capacity, 0.65);
         }
 
         // Draw the base Flask sprite

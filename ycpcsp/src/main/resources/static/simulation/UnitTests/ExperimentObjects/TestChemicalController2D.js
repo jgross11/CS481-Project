@@ -1,9 +1,11 @@
 var chem1;
 var chem2;
 var chem3;
+var chem4;
 var control1;
 var control2;
 var control3;
+var control4;
 
 QUnit.module("ChemicalController2D", {
     before(){
@@ -13,9 +15,11 @@ QUnit.module("ChemicalController2D", {
         chem1 = idToChemical(ID_CHEM_TEST_BLUE, 6.0, 1).chemical;
         chem2 = idToChemical(ID_CHEM_TEST_BLACK, 4.0, 1).chemical;
         chem3 = idToChemical(ID_CHEM_TEST_BLACK, 10.0, 1).chemical;
+        chem4 = idToChemical(ID_CHEM_TEST_BLACK, 9.0, 1).chemical;
         control1 = new ChemicalController2D(chem1);
         control2 = new ChemicalController2D(chem2);
         control3 = new ChemicalController2D(chem3);
+        control4 = new ChemicalController2D(chem4);
     }
 });
 
@@ -64,22 +68,29 @@ QUnit.todo('calculateMatterState:', function(assert){
 
 QUnit.test('combine:', function(assert){
     control1.setChemical(null);
-    control2.setChemical(null);
-    assert.deepEqual(control1.combine(null), null, "Combine should fail");
+    assert.deepEqual(control1.combine(null), null, "Combine should fail with null chems parameter");
 
     control1.setChemical(chem1);
-    assert.deepEqual(control1.combine(chem2), null, "Combine should fail");
-
-    control1.setChemical(chem1);
-    assert.deepEqual(control1.combine([]), [chem1], "Combine should fail");
-
-    control1.setChemical(chem1);
-    assert.deepEqual(control1.combine(null), null, "Combine should fail");
+    assert.deepEqual(control1.combine([]), [chem1], "Combine should add nothing to the list");
 
     control1.setChemical(chem1);
     var result = control1.combine([chem2]);
+    let beaker = new Beaker(ID_EQUIP_BEAKER_600mL);
+    beaker.setContents(result);
     assert.notDeepEqual(result, null, "Combine should be successful");
-    assert.equal(result[0].mass, 10.0, "Combined mass should be 15.0");
+    assert.equal(beaker.getTotalContentsMass(), 10.0, "Combined mass should be 10.0");
+    assert.equal(chem1.mass, 6, "After combining, original mass should still be the same");
+    assert.equal(chem2.mass, 4, "After combining, original mass should still be the same");
+
+    control3.setChemical(chem3);
+    let chemList = [chem1, chem4];
+    result = control3.combine(chemList);
+    beaker.setContents(result);
+    assert.equal(result.length, 2, "Testing that combining common chemicals combines them, not stores them as two separate chemicals.");
+    assert.equal(beaker.getTotalContentsMass(), 25, "Testing that combining common chemicals has the correct mass.");
+    assert.equal(chem1.mass, 6, "After combining, original mass should still be the same");
+    assert.equal(chem3.mass, 10, "After combining, original mass should still be the same");
+    assert.equal(chem4.mass, 9, "After combining, original mass should still be the same");
 });
 
 QUnit.test('split:', function(assert){
