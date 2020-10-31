@@ -39,7 +39,7 @@
         var email = getAndTrimById("email");
         var password = getAndTrimById("password");
         var school = getAndTrimById("school");
-        var passwordGood = verifyInformation(password.value, TYPE_NAME);
+        var passwordGood =  password.value.length != 0;
         var fnameGood = verifyInformation(fname.value, TYPE_NAME);
         var lnameGood = verifyInformation(lname.value, TYPE_NAME);
         var emailGood = verifyInformation(email.value, TYPE_EMAIL);
