@@ -1,11 +1,12 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
+import edu.ycpcsp.ycpcsp.PostDataClasses.SearchFormData
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.*
 
 
-fun SearchExperiment(searchCriteria: String) : MutableList<String> {
+fun SearchExperiment(searchCriteria: SearchFormData) : MutableList<String> {
     val serverCredentials = serverCredential()
     val username = serverCredentials?.get(0)
     val password = serverCredentials?.get(1)
@@ -22,7 +23,7 @@ fun SearchExperiment(searchCriteria: String) : MutableList<String> {
         //Connection for the database to get it connected and then execute the query to insert the values into the database
         val conn = DriverManager.getConnection(url, connectionProps)
         //Experiment Search Query
-        val query = "Select * from Database.Experiments where title like ?"
+        val query = "Select title from Database.Experiments where title like ?"
         val ps = conn.prepareStatement(query)
         ps.setString(1, "%$searchCriteria%")
         val rs = ps.executeQuery()

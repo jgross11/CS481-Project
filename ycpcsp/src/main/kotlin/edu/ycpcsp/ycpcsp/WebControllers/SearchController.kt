@@ -1,10 +1,7 @@
 package edu.ycpcsp.ycpcsp.WebControllers
 
-import edu.ycpcsp.ycpcsp.DataBase.IsEmailInDB
-import edu.ycpcsp.ycpcsp.DataBase.LoadUser
-import edu.ycpcsp.ycpcsp.DataBase.UserSignup
-import edu.ycpcsp.ycpcsp.Models.User
-import edu.ycpcsp.ycpcsp.PostDataClasses.SignupFormData
+import edu.ycpcsp.ycpcsp.DataBase.SearchExperiment
+import edu.ycpcsp.ycpcsp.PostDataClasses.SearchFormData
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 
@@ -21,5 +18,15 @@ class SearchController {
         return "SearchPage.html"
     }
 
-    //given what the user searches for paste what information they want.
+    @PostMapping(path = ["/search-submit"], consumes = ["application/json"], produces = ["application/json"])
+    @ResponseBody
+    fun search(@RequestBody searchFormData: SearchFormData) : MutableList<String>{
+        println("Received the search input")
+        println(searchFormData)
+        var experimentName: MutableList<String> = arrayListOf()
+
+        experimentName = SearchExperiment(searchFormData)
+
+        return experimentName
+    }
 }

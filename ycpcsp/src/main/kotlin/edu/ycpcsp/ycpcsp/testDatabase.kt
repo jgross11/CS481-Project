@@ -2,7 +2,6 @@ package edu.ycpcsp.ycpcsp
 
 import edu.ycpcsp.ycpcsp.DataBase.*
 import java.util.Scanner
-import javax.naming.directory.SearchResult
 
 fun main(){
 
@@ -63,10 +62,5 @@ fun main(){
         //VerifyUser(username!!, password!!)
     }
 
-    else if(answer ==5){
-        print("Search: ")
-        val stringy = readLine()
-        SearchExperiment(stringy!!)
-    }
 }
 
