@@ -72,10 +72,12 @@ class StirRodController2D extends EquipmentController2D{
     /**
     Stir around the contents of the given Container's Controller
     contControl: The Controller with the container to stir
+    returns: true if the object was stirred, false otherwise
     */
     stir(contControl){
         // StirRods can only stir Containers
-        if(!(contControl instanceof ContainerController2D)) return;
+        if(!(contControl instanceof ContainerController2D)) return false;
+        return true;
     }
 
 }
