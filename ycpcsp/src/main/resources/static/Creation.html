@@ -71,12 +71,14 @@
 
     </div>
 </div>
+<p id="demo"></p>
 
 
 
 </body>
 <script>
-
+    var sendchem = [];
+    var sendequip = [];
     LoadEquip();
     LoadChem();
 
@@ -102,13 +104,18 @@
         }
 
     }
+
     function AddChem(Chem){
-        alert(Chem.id);
+
 
     }
     function AddEquip(Equip){
-        alert(Equip.id);
-
+        var amount = prompt("Please enter the amount you need","");
+        if (amount == null || amount == "") {
+        } else {
+            //var send = [{ Equip: Equip.Equip , Amount: amount}];
+            sendequip.push(amount);
+            document.getElementById("demo").innerHTML = sendequip;        }
 
     }
 
