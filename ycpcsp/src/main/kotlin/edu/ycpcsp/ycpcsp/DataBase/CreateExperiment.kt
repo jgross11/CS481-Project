@@ -53,8 +53,8 @@ fun CreateExperiment(userAndExperiment: UserAndExperiment): Boolean {
             }
             // TODO insert equipment
             for(equipment in userAndExperiment.experiment.equipment){
-                st.executeUpdate("INSERT INTO Database.Equipments (experiment_ID, name, object_ID, amount)\n" +
-                        "VALUES ($newExperimentKey, \"why do we have this field\", ${equipment.objectID}, ${equipment.amount})")
+                st.executeUpdate("INSERT INTO Database.Equipments (experiment_ID, object_ID, amount)\n" +
+                        "VALUES ($newExperimentKey, ${equipment.objectID}, ${equipment.amount})")
             }
             // TODO ensure all queries actually execute and handle errors accordingly
             //if the updates work this method will return false
