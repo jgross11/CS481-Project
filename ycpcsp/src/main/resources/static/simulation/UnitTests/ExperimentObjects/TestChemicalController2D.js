@@ -121,3 +121,7 @@ QUnit.todo('drawRect:', function(assert){
 QUnit.todo('drawShape:', function(assert){
     assert.true(false);
 });
+
+QUnit.todo('drawChemicalRectMultiple:', function(assert){
+    assert.true(false);
+});

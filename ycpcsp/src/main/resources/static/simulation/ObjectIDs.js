@@ -152,7 +152,7 @@ function initTestChemProperties(){
 
     makeCompound(COMPOUND_WATER_ID,
         [new CompoundProperties(COMPOUND_HYDROGEN_GAS_ID), new ElementProperties(ELEMENT_OXYGEN_ATOMIC_NUM)],
-        "Water", "Nature", [100, 100, 255], 0, 100, 1000);
+        "Water", "Nature", [100, 100, 255], 0, 100, 1);
 
     makeCompound(COMPOUND_GLUCOSE_ID,
         [new ElementProperties(ELEMENT_CARBON_ATOMIC_NUM, 6), new ElementProperties(ELEMENT_HYDROGEN_ATOMIC_NUM, 12), new ElementProperties(ELEMENT_OXYGEN_ATOMIC_NUM, 6)],

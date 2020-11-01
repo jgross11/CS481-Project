@@ -10,7 +10,7 @@ let CANVAS_HEIGHT = 800;
 // The background color of the canvas
 let CANVAS_BACKGROUND_COLOR = 120;
 // The background color of the experiment
-let EXP_BACKGROUND_COLOR = 230;
+let EXP_BACKGROUND_COLOR = 60;
 
 // The size of the border displayed at the edge of the Experiment
 let EXP_BORDER_SIZE = 25;

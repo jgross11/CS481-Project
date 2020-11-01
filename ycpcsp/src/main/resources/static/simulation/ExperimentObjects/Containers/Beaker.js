@@ -63,10 +63,12 @@ class BeakerController2D extends ContainerController2D{
         // Draw the color of the Chemical, if one exists
         let eq = this.equipment;
         if(!this.equipment.isEmpty()){
-            let chem = eq.contents[0];
-            let chemController = new ChemicalController2D(chem);
             let w = this.width();
-            chemController.drawRect(this.x() + w * .12, this.y(), eq.getTotalContentsMass() / eq.capacity, w * .85, this.height() * .99, 0.2, graphics);
+            let h = this.height();
+            // TODO make this a method in ContainerController2D
+            // TODO make render constants
+            drawChemicalRectMultiple(graphics, eq.contents, eq.capacity,
+                this.x() + w * .12, this.y() + h * 0.2, w * .85, h * .8);
         }
 
         // Draw the base Beaker sprite

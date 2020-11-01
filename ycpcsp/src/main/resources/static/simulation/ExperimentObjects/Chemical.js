@@ -158,6 +158,7 @@ class ChemicalController2D extends ExperimentObjectController2D{
     This method will combine all common elements in the given list, i.e. if the list has two instances of chemicalA,
         they wil both be combined into one instance of chemicalA, with the combined mass of both instances of chemicalA.
     Currently combines common Chemicals, but does not perform chemical equation interactions
+    Also ensures that the chemicals are sorted by density.
     chems: The Chemicals to combine
     returns: The list of Chemicals, or null if they could not be combined
     */
@@ -192,7 +193,15 @@ class ChemicalController2D extends ExperimentObjectController2D{
             }
             // TODO handle interactions when chemicals should combine to produce something new
         }
-        return chems;
+
+        // Sort the chemicals by their densities, smallest at the end
+        // TODO improve this by inserting new chemicals based on their density, rather than sorting each time
+        return chems.sort(function(a, b){
+            let ad = a.properties.getDensity();
+            let bd = b.properties.getDensity();
+            if(ad === bd) return 0;
+            return (ad > bd) ? -1 : 1;
+        });
     }
 
     /**
@@ -235,13 +244,12 @@ class ChemicalController2D extends ExperimentObjectController2D{
     */
     drawRect(x, y, fillPercent, width, baseHeight, heightOffset, graphics){
         let tex = this.chemical.getTexture();
-        if(tex !== null && tex !== undefined){
-            graphics.fill(color(tex));
-            graphics.noStroke();
-            let h = baseHeight;
-            let oh = h * (1 - heightOffset);
-            graphics.rect(x, y + h * heightOffset + oh * (1 - fillPercent), width, oh * fillPercent);
-        }
+        if(tex === null || tex === undefined) return;
+        graphics.fill(tex);
+        graphics.noStroke();
+        let h = baseHeight;
+        let oh = h * (1 - heightOffset);
+        graphics.rect(x, y + h * heightOffset + oh * (1 - fillPercent), width, oh * fillPercent);
     }
 
     /**
@@ -258,11 +266,14 @@ class ChemicalController2D extends ExperimentObjectController2D{
     bottomFillPercent: The total percentage of buffer which is used to draw the shape, beginning with the bottom
     */
     drawShape(graphics, buffer, x, y, vertices, fillRatio, bottomFillPercent){
+        let tex = this.chemical.getTexture();
+        if(tex === null || tex === undefined) return;
+
         let w = buffer.width;
         let h = buffer.height;
 
         buffer.push();
-        buffer.fill(this.chemical.getTexture());
+        buffer.fill(tex);
         buffer.noStroke();
         buffer.scale(w, h);
         buffer.beginShape();
@@ -276,4 +287,30 @@ class ChemicalController2D extends ExperimentObjectController2D{
         graphics.image(buffer, x, y + hr, w, ratio, 0, hr, w, ratio);
     }
 
+}
+
+/**
+Draw all of the chemicals in a rectangle.
+Chemicals at the beginning of the list get drawn first at the bottom of the rectangle
+graphics: The P5 graphics object to draw the rectangles to
+chems: The list of Chemical objects to be rendered
+totalQuantity: The total of the quantities of all the Chemicals in chems
+x: The x position to draw the rectangles
+y: The y position to draw the rectangles
+w: The width to draw the rectangle
+h: The height to draw the rectangle
+*/
+function drawChemicalRectMultiple(graphics, chems, totalQuantity, x, y, w, h){
+    var currentY = y + h;
+    for(var i = 0; i < chems.length; i++){
+        let c = chems[i];
+        let tex = c.getTexture();
+        if(tex !== null && tex !== undefined){
+            var hPerc = h * c.mass / totalQuantity;
+            graphics.fill(tex);
+            graphics.noStroke();
+            currentY -= hPerc;
+            graphics.rect(x, currentY, w, hPerc);
+        }
+    }
 }
