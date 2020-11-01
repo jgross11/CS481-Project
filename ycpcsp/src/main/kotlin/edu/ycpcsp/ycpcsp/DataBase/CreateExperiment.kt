@@ -17,7 +17,7 @@ fun CreateExperiment(userAndExperiment: UserAndExperiment): Boolean {
             try {
                 //Model classes have not been updated, so the execute will not work
                 var preparedSt = connection.prepareStatement("INSERT INTO Database.Experiments (title, creatorID, tags)\n" +
-                        "VALUES (?, '?', 0101)", Statement.RETURN_GENERATED_KEYS)
+                        "VALUES (?, ?, 0101)", Statement.RETURN_GENERATED_KEYS)
                 preparedSt.setString(1, userAndExperiment.experiment.title)
                 preparedSt.setInt(2, userAndExperiment.user.id)
 

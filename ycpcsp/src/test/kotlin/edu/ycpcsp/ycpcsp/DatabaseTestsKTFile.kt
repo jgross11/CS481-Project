@@ -41,49 +41,53 @@ fun main(){
 //    println("=============================End LoadUser Test=============================")
 //
 //    //TODO ModifyUser test
-//    println("=============================Begin Modify User Test=============================")
-//
-//    var originalUser = LoadUser(email)
-//    var modifyUser = User("Firstname", "Lastname", "test@test.com", "1234", "TheBest")
-//    if(ModifyUser(modifyUser)){
-//        if(originalUser != null){
-//            //if you wish to verify whether or not the ModifyUser is actually working comment out the line below
-//            //ModifyUser(originalUser)
-//        }
-//        println("Modify User successfully ran")
-//    } else{
-//        println("Modify User did not successfully run")
-//        println("Double check the database table to make sure the data is not corrupted")
-//    }
-//    println("=============================End Modify User Test=============================")
+    println("=============================Begin Modify User Test=============================")
+
+    var originalUser = LoadUser(email)
+    var modifyUser = User("Firstname", "Lastname", "test@test.com", "1234", "TheBest")
+    if(ModifyUser(modifyUser)){
+        if(originalUser != null){
+            //if you wish to verify whether or not the ModifyUser is actually working comment out the line below
+            //ModifyUser(originalUser)
+        }
+        println("Modify User successfully ran")
+    } else{
+        println("Modify User did not successfully run")
+        println("Double check the database table to make sure the data is not corrupted")
+    }
+    println("=============================End Modify User Test=============================")
 //    //Todo Security Question Answer Verification Test
 //
-    println("=============================Begin Security Question Answer Test=============================")
-    val secQuestion1 = SecurityQuestion(1,"test")
-    val secQuestion2 = SecurityQuestion(1, "wrong")
-
-    //This should run a correct test
-    if(verifySecurityQuestion(email,secQuestion1)){
-        println("Security Question 1's answer was the correct")
-    } else{
-        println("Security Question 1's answer was incorrect")
-    }
-    //This Should run an incorrect test
-    if(verifySecurityQuestion(email,secQuestion2)){
-        println("Security Question 2's answer was the correct but it should be wrong")
-    } else{
-        println("Security Question 2's answer was incorrect which is what the result should be")
-    }
-    println("=============================End Security Question Answer Test=============================")
-
-//    println("=============================Begin Create Experiment Test=============================")
-//    var newExperiment = Experiment("Cool Experiment", "Yeah")
-//    originalUser= LoadUser(email)
-//    var userAndExp = UserAndExperiment(originalUser, newExperiment)
-//   CreateExperiment(userAndExp)
-//    //TODO Delete Experiment & Delete all of the steps too
+//    println("=============================Begin Security Question Answer Test=============================")
+//    val secQuestion1 = SecurityQuestion(1,"test")
+//    val secQuestion2 = SecurityQuestion(1, "wrong")
 //
-//    println("=============================End Create Experiment Test=============================")
+//    //This should run a correct test
+//    if(verifySecurityQuestion(email,secQuestion1)){
+//        println("Security Question 1's answer was the correct")
+//    } else{
+//        println("Security Question 1's answer was incorrect")
+//    }
+//    //This Should run an incorrect test
+//    if(verifySecurityQuestion(email,secQuestion2)){
+//        println("Security Question 2's answer was the correct but it should be wrong")
+//    } else{
+//        println("Security Question 2's answer was incorrect which is what the result should be")
+//    }
+//    println("=============================End Security Question Answer Test=============================")
+
+    println("=============================Begin Create Experiment Test=============================")
+    var newExperiment = Experiment("Cool Experiment", "Yeah", -1)
+    originalUser= LoadUser(email)
+    var userAndExp = UserAndExperiment(originalUser, newExperiment)
+   if(CreateExperiment(userAndExp)){
+       println("Create Experiment successfully ran")
+   }else{
+       println("Create Experiment did not run successfully")
+   }
+    //TODO Delete Experiment & Delete all of the steps too
+
+    println("=============================End Create Experiment Test=============================")
 
 //    println("=============================Begin Delete Experiment Test=============================")
 //    //Test case will no longer work since experimentID 8 is deleted
