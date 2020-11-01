@@ -114,6 +114,7 @@ class ScaleController2D extends EquipmentController2D{
     */
     removeScaleObject(){
         this.equipment.setObjectToBeWeighed(null);
+        this.updateWeighingObjectMass();
     }
 
     /**

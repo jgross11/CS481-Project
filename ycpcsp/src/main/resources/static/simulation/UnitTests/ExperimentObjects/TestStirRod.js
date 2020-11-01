@@ -52,5 +52,5 @@ QUnit.test('reset:', function(assert){
 
 QUnit.test('stir:', function(assert){
     assert.true(control.stir(beakerControl), "Stir rod should successfully stir a beaker controller");
-    assert.false(controla.stir(beakerControl.equipment), "Stir rod should be unable to stir a beaker, not controller");
+    assert.false(control.stir(beakerControl.equipment), "Stir rod should be unable to stir a beaker, not controller");
 });
