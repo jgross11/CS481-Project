@@ -306,3 +306,7 @@ QUnit.test('update:', function(assert){
     controller.update();
     assert.expect(0);
 });
+
+QUnit.todo('drawContentsRect:', function(assert){
+    assert.true(false);
+});

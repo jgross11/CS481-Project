@@ -60,16 +60,9 @@ class BeakerController2D extends ContainerController2D{
     graphics: The P5 graphics to use
     */
     draw(graphics){
-        // Draw the color of the Chemical, if one exists
-        let eq = this.equipment;
-        if(!this.equipment.isEmpty()){
-            let w = this.width();
-            let h = this.height();
-            // TODO make this a method in ContainerController2D
-            // TODO make render constants
-            drawChemicalRectMultiple(graphics, eq.contents, eq.capacity,
-                this.x() + w * .12, this.y() + h * 0.2, w * .85, h * .8);
-        }
+        // Draw the chemicals
+        this.drawContentsRect(graphics, BEAKER_X_OFFSET, BEAKER_Y_OFFSET,
+            BEAKER_WIDTH_OFFSET, BEAKER_HEIGHT_OFFSET);
 
         // Draw the base Beaker sprite
         super.draw(graphics);

@@ -319,4 +319,20 @@ class ContainerController2D extends EquipmentController2D{
         super.update();
     }
 
+    /**
+    Draw the contents of this container as a rectangle based on the position and size of this Controller's Container
+    graphics: The P5 graphics object to use to draw
+    xOffset: The percentage of the width of this object to offset the rectangle on the x axis
+    yOffset: The percentage of the height of this object to offset the rectangle on the y axis
+    widthFactor: The percentage of the width of the container for the rectangle
+    heightFactor: The percentage of the height of the container for the rectangle
+    */
+    drawContentsRect(graphics, xOffset, yOffset, widthFactor, heightFactor){
+        let eq = this.equipment;
+        let w = this.width();
+        let h = this.height();
+        drawChemicalRectMultiple(graphics, eq.contents, eq.capacity,
+            this.x() + w * xOffset, this.y() + h * yOffset, w * widthFactor, h * heightFactor);
+    }
+
 }

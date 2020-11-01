@@ -314,3 +314,42 @@ function drawChemicalRectMultiple(graphics, chems, totalQuantity, x, y, w, h){
         }
     }
 }
+
+/**
+Draw all of the chemicals in a shape defined by vertices, splitting the shape based on the amount of each chemical.
+Chemicals at the beginning of the list get drawn first at the bottom of the shape
+graphics: The P5 graphics object to draw the shape to
+chems: The list of Chemical objects to be rendered
+totalQuantity: The total of the quantities of all the Chemicals in chems
+vertices: A list of [x, y] coordinates for where the vertices will be placed.
+    These are percentages based on the width and height of buffer
+x: The x position to draw the shape
+y: The y position to draw the shape
+buffer: The P5 graphics object used for drawing the shapes.
+*/
+function drawChemicalShapeMultiple(graphics, chems, totalQuantity, vertices, x, y, buffer){
+    let w = buffer.width;
+    let h = buffer.height;
+    buffer.push();
+    buffer.noStroke();
+    buffer.scale(w, h);
+    var currentY = y + h;
+    for(var i = 0; i < chems.length; i++){
+        let c = chems[i];
+        let tex = c.getTexture();
+        if(tex !== null && tex !== undefined){
+            buffer.clear();
+            buffer.fill(tex);
+            buffer.beginShape();
+            for(var j = 0; j < vertices.length; j++){
+                buffer.vertex(vertices[j][0], vertices[j][1]);
+            }
+            buffer.endShape(CLOSE);
+            let ratio = h * c.mass / totalQuantity;
+            let hr = h - ratio;
+            currentY -= ratio;
+            graphics.image(buffer, x, currentY, w, ratio, 0, currentY - y, w, ratio);
+        }
+    }
+    buffer.pop();
+}

@@ -45,7 +45,7 @@ class ErlenmeyerFlaskController2D extends ContainerController2D{
     */
     constructor(erlenmeyer){
         super(erlenmeyer);
-        this.chemFill = createGraphics(this.width(), this.height());
+        this.chemFill = createGraphics(this.width(), this.height() * ERLENMEYER_FLASK_HEIGHT_RATIO);
     }
 
     /**
@@ -61,17 +61,11 @@ class ErlenmeyerFlaskController2D extends ContainerController2D{
     graphics: The P5 graphics to use
     */
     draw(graphics){
-        // Draw the color of the Chemical, if one exists
+        // Draw the chemicals
         let eq = this.equipment;
-        if(!this.equipment.isEmpty()){
-            let chem = eq.contents[0];
-            let chemController = new ChemicalController2D(chem);
-            let vertices = [
-                [0.01, 0.95], [0.5, 0.99], [0.99, 0.95],
-                [0.95, 0.8], [0.82, 0.6], [0.64, 0.3],
-                [0.3, 0.3], [0.15, 0.6], [0.05, 0.8]
-            ];
-            chemController.drawShape(graphics, this.chemFill, this.x(), this.y(), vertices, eq.getTotalContentsMass() / eq.capacity, 0.65);
+        if(eq !== null && eq !== undefined){
+            drawChemicalShapeMultiple(graphics, eq.contents, eq.capacity, ERLENMEYER_FLASK_VERTICES,
+                this.x(), this.y() + this.height() * ERLENMEYER_FLASK_CHEM_HEIGHT, this.chemFill);
         }
 
         // Draw the base Flask sprite
