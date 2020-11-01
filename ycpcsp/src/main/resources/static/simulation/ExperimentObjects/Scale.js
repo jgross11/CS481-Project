@@ -61,15 +61,13 @@ class Scale extends Equipment{
     }
 
     /**
-     Set given weight based on the weight of Equipment
-     */
-    getWeightObj(){
-        this.displayedWeight = this.objectToBeWeighed.getTotalMass() - this.zeroOut;
-    }
-
-    // TODO Zero out
-    getHeldWeight(){
-        return this.displayedWeight;
+    Get the mass of the scale as zeroed out
+    returns: The mass
+    */
+    getZeroedWeight(){
+        let obj = this.objectToBeWeighed;
+        let m = (obj === null || obj === undefined) ? 0 : obj.equipment.getTotalMass();
+        return m - this.zeroOut;
     }
 
     /**
@@ -82,12 +80,21 @@ class Scale extends Equipment{
 
 
 // Constants for identifying which functions have which ids
-let ID_FUNC_TO_TAKE_WEIGHT = 1;
+let ID_FUNC_SCALE_TO_TAKE_WEIGHT = 1;
+let ID_FUNC_SCALE_REMOVE_OBJECT = 2;
+let ID_FUNC_SCALE_ZERO_OUT = 3;
+let ID_FUNC_SCALE_CLEAR_ZERO = 4;
 
+/**
+An object used to control Scales
+*/
 class ScaleController2D extends EquipmentController2D{
 
-    constructor(ScaleObject){
-        super(ScaleObject);
+    /**
+    Create a ScaleController with the given Scale
+    */
+    constructor(scaleObject){
+        super(scaleObject);
     }
 
     /**
@@ -103,13 +110,23 @@ class ScaleController2D extends EquipmentController2D{
     }
 
     /**
+    Take the object on this Controller's Scale off of the Scale
+    */
+    removeScaleObject(){
+        this.equipment.setObjectToBeWeighed(null);
+    }
+
+    /**
      Convert the given id to its corresponding function
      id: The id to convert
      returns: The function of the id
      */
     idToFunc(id){
         switch(id){
-            case ID_FUNC_TO_TAKE_WEIGHT: return this.setScaleObject;
+            case ID_FUNC_SCALE_TO_TAKE_WEIGHT: return this.setScaleObject;
+            case ID_FUNC_SCALE_REMOVE_OBJECT: return this.removeScaleObject;
+            case ID_FUNC_SCALE_ZERO_OUT: return this.zeroOut;
+            case ID_FUNC_SCALE_CLEAR_ZERO: return this.clearZeroOut;
             default: return null;
         }
     }
@@ -121,7 +138,10 @@ class ScaleController2D extends EquipmentController2D{
      */
     funcToId(func){
         switch(func){
-            case this.setScaleObject: return ID_FUNC_TO_TAKE_WEIGHT;
+            case this.setScaleObject: return ID_FUNC_SCALE_TO_TAKE_WEIGHT;
+            case this.removeScaleObject: return ID_FUNC_SCALE_REMOVE_OBJECT;
+            case this.zeroOut: return ID_FUNC_SCALE_ZERO_OUT;
+            case this.clearZeroOut: return ID_FUNC_SCALE_CLEAR_ZERO;
             default: return null;
         }
     }
@@ -130,16 +150,16 @@ class ScaleController2D extends EquipmentController2D{
     Reset this Controller's Scale by resetting the zero value and removing equipment
     */
     reset(){
-        this.equipment.setObjectToBeWeighed(null);
-        this.equipment.setZeroOut(0);
+        this.removeScaleObject();
+        this.clearZeroOut();
     }
 
     /**
     Update the displayed mass of this Container's scale based on the mass of the current object
     */
     updateWeighingObjectMass(){
-        let eqControl = this.equipment.objectToBeWeighed;
-        this.equipment.setDisplayedWeight((eqControl === null) ? 0 : eqControl.equipment.getTotalMass());
+        let eq = this.equipment;
+        eq.setDisplayedWeight(eq.getZeroedWeight());
     }
 
     /**
@@ -147,7 +167,7 @@ class ScaleController2D extends EquipmentController2D{
     returns: the list of strings
     */
     getFuncDescriptions(){
-        return ["Place Equipment"];
+        return ["Place Container", "Remove Container", "Zero Out", "Clear Zero"];
     }
 
     /**
@@ -164,9 +184,12 @@ class ScaleController2D extends EquipmentController2D{
     */
     zeroOut(){
         let eq = this.equipment;
-        eq.setZeroOut(eq.getHeldWeight());
+        eq.setZeroOut(eq.objectToBeWeighed.equipment.getTotalMass());
     }
 
+    /**
+    Reset the zeroed out value of this Controller's Scale to default
+    */
     clearZeroOut(){
         this.equipment.setZeroOut(0.0);
     }
@@ -191,10 +214,18 @@ class ScaleController2D extends EquipmentController2D{
 
         // Draw the mass on the scale
         graphics.noStroke();
-        graphics.fill(0);
-        graphics.textSize(15);
-        // TODO make render constants
-        graphics.text("" + this.equipment.displayedWeight.toFixed(2), this.x() + this.width() * 0.25, this.y() + this.height() * 0.7);
+        graphics.fill(SCALE_TEXT_COLOR);
+        graphics.textSize(SCALE_TEXT_SIZE);
+
+        let eq = this.equipment;
+        let hOff = this.height() * SCALE_MASS_TEXT_Y_OFFSET;
+        graphics.text("" + eq.displayedWeight.toFixed(SCALE_MASS_TEXT_DECIMAL_PLACES),
+            this.x() + this.width() * SCALE_MASS_TEXT_X_OFFSET, this.y() + hOff);
+
+        // Indicate if the scale is zeroed out
+        if(eq.zeroOut !== 0){
+            graphics.text("Z", this.x() + this.width() * SCALE_ZEROED_TEXT_X_OFFSET, this.y() + hOff);
+        }
     }
 
 }
