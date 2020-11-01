@@ -71,7 +71,8 @@
 
     </div>
 </div>
-<p id="demo"></p>
+<p id="CHLIST"></p>
+<p id="EQLIST"></p>
 
 
 
@@ -93,30 +94,40 @@
    function LoadEquip(){
        let EquipID = JSON.parse(sessionStorage.getItem("EquipID"));
        for (i = 0; i < EquipID.length  ; i++) {
-            document.getElementById("Equip").innerHTML += "<button onclick=AddEquip(this) ID="+EquipID[i].ID+">" + EquipID[i].Equip+ "</button>";
+            document.getElementById("Equip").innerHTML += "<button onclick=AddEquip(this) ID='"+EquipID[i].ID+"' name="+EquipID[i].Equip +">" + EquipID[i].Equip+ "</button>";
        }
 
    }
     function LoadChem(){
         let ChemID = JSON.parse(sessionStorage.getItem("ChemID"));
         for (i = 0; i < ChemID.length  ; i++) {
-            document.getElementById("Chem").innerHTML += "<button onclick=AddChem(this) ID="+ChemID[i].ID+">" + ChemID[i].Chem+ "</button>";
+            document.getElementById("Chem").innerHTML += "<button onclick=AddChem(this) ID='"+ChemID[i].ID+"' name="+ChemID[i].Chem +">" + ChemID[i].Chem+ "</button>";
         }
 
     }
 
     function AddChem(Chem){
-
+        var mass = prompt("Enter mass in g.","")
+        var Chem2 = Chem.name;
+        var ID = Chem.id;
+        var send = {Chem2, ID ,mass };
+        if (mass == null || mass == "") {
+        } else {
+            sendchem.push(send);
+            document.getElementById("CHLIST").innerHTML = JSON.stringify(sendchem);
+        }
 
     }
     function AddEquip(Equip){
-        var amount = prompt("Please enter the amount you need","");
+        var amount = prompt("Enter amount.","")
+        var Equipment = Equip.name;
+        var ID = Equip.id;
+        var send = {Equipment, ID ,amount };
         if (amount == null || amount == "") {
         } else {
-            //var send = [{ Equip: Equip.Equip , Amount: amount}];
-            sendequip.push(amount);
-            document.getElementById("demo").innerHTML = sendequip;        }
-
+            sendequip.push(send);
+            document.getElementById("EQLIST").innerHTML = JSON.stringify(sendequip);
+        }
     }
 
 

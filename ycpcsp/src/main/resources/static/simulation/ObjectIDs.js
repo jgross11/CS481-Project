@@ -49,6 +49,17 @@ let ELEMENT_CARBON_ATOMIC_NUM = 6;
 let ELEMENT_OXYGEN_ATOMIC_NUM = 8;
 let ELEMENT_SODIUM_ATOMIC_NUM = 11;
 let ELEMENT_CHLORINE_ATOMIC_NUM = 17;
+var ChemID = [
+    { Chem: 'HYDROGEN',ID:1 },
+    { Chem: 'HELIUM',ID:2 },
+    { Chem: 'LITHIUM',ID:3 },
+    { Chem: 'CARBON',ID:6 },
+    { Chem: 'OXYGEN',ID:8 },
+    { Chem: 'SODIUM',ID:11 },
+    { Chem: 'CHLORINE',ID:17 }
+
+];
+sessionStorage.setItem("ChemID", JSON.stringify(ChemID));
 
 // Test elements
 let ID_CHEM_TEST_RED = 1001;
@@ -57,19 +68,12 @@ let ID_CHEM_TEST_WHITE = 1003;
 let ID_CHEM_TEST_GREEN = 1004;
 let ID_CHEM_TEST_BLACK = 1005;
 
+
 // Compounds
 let COMPOUND_HYDROGEN_GAS_ID = 10000;
 let COMPOUND_WATER_ID = 10001;
 let COMPOUND_GLUCOSE_ID = 10002;
 let COMPOUND_TABLE_SALT_ID = 10003;
-var ChemID = [
-    { Chem: 'HYDROGEN GAS',ID:10000 },
-    { Chem: 'WATER',ID:10001 },
-    { Chem: 'GLUCOSE',ID:10002 },
-    { Chem: 'TABLE SALT',ID:10003 }
-];
-sessionStorage.setItem("ChemID", JSON.stringify(ChemID));
-
 
 /**
 Take an integer ID and convert it to a valid piece of Equipment
