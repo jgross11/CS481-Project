@@ -93,14 +93,26 @@ let BEAKER_WIDTH_OFFSET = 0.85;
 // The percentage of a beaker's height which is used to render chemicals
 let BEAKER_HEIGHT_OFFSET = 0.8;
 
-// X offset for rendering the beaker contents, percentage based on width of beaker
+// X offset for rendering the graduated cylinder contents, percentage based on width of cylinder
 let GRADUATED_CYLINDER_X_OFFSET = 0.135;
-// Y offset for rendering the beaker contents, percentage based on height of beaker
+// Y offset for rendering the graduated cylinder contents, percentage based on height of cylinder
 let GRADUATED_CYLINDER_Y_OFFSET = 0.1;
-// The percentage of a beaker's width which is used to render chemicals
+// The percentage of a graduated cylinder's width which is used to render chemicals
 let GRADUATED_CYLINDER_WIDTH_OFFSET = 0.72;
-// The percentage of a beaker's height which is used to render chemicals
+// The percentage of a graduated cylinder's height which is used to render chemicals
 let GRADUATED_CYLINDER_HEIGHT_OFFSET = 0.83;
+
+// X offset for rendering the weigh boat contents, percentage based on width of weigh boat
+let WEIGH_BOAT_X_OFFSET = 0.075;
+// Y offset for rendering the weigh boat contents, percentage based on height of weigh boat
+let WEIGH_BOAT_Y_OFFSET = 0.5;
+// The percentage of a graduated cylinder's width which is used to render chemicals
+let WEIGH_BOAT_CHEM_WIDTH = 0.85;
+// The percentage of a graduated cylinder's height which is used to render chemicals
+let WEIGH_BOAT_CHEM_HEIGHT = 3;
+// The vertices used to render the shape of the weigh boat's chemicals
+let WEIGH_BOAT_VERTICES = [[0, 1], [1, 1], [0.5, 0]];;
+
 
 // Constants used for key inputs for Experiment
 

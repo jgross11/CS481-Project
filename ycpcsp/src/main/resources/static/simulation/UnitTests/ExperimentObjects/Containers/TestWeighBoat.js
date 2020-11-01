@@ -9,9 +9,9 @@ QUnit.module("WeighBoat", {
 
 QUnit.test('constructor:', function(assert){
     assert.deepEqual(boat.position, [0, 0], 'default position should be [0, 0]');
-    assert.deepEqual(boat.size, [75, 75], 'default size should be [75, 75]');
+    assert.deepEqual(boat.size, [88, 14.3], 'default size should be [75, 75]');
     assert.equal(boat.mass, 3, 'default mass should be 3');
-    assert.equal(boat.capacity, 1000, 'default capacity should be 1000');
+    assert.equal(boat.capacity, 500, 'default capacity should be 1000');
     assert.equal(boat.residue, 0.03, 'default residue should be 0.03');
     assert.equal(boat.instanceID, 0, 'instanceID should be 0');
     assert.equal(boat.sprite, SPRITE_WEIGH_BOAT, 'sprite should be SPRITE_WEIGH_BOAT');
@@ -47,4 +47,9 @@ QUnit.test('canContain:', function(assert){
 
 QUnit.todo('draw:', function(assert){
     assert.true(false);
+});
+
+QUnit.test('shouldRender:', function(assert){
+    assert.true(controller.shouldRender([0, -5, 10, 10]), "Checking rendering when near edge of bounds, but should render");
+    assert.false(controller.shouldRender([0, -50, 10, 10]), "Checking rendering when near edge of bounds, but shouldn't render");
 });
