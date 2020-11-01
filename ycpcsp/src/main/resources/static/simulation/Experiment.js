@@ -698,7 +698,7 @@ class ExperimentController2D{
 
         // TODO remove, only here for testing purposes
         // Draw instructions
-        g.fill(0);
+        g.fill(200);
         g.noStroke();
         g.textSize(18);
         var y = 490;

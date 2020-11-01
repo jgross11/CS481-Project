@@ -10,7 +10,7 @@ let CANVAS_HEIGHT = 800;
 // The background color of the canvas
 let CANVAS_BACKGROUND_COLOR = 120;
 // The background color of the experiment
-let EXP_BACKGROUND_COLOR = 230;
+let EXP_BACKGROUND_COLOR = 60;
 
 // The size of the border displayed at the edge of the Experiment
 let EXP_BORDER_SIZE = 25;
@@ -67,6 +67,40 @@ let EXP_BOX_FILL_COLOR = 200;
 // The color used to display that a rendered box is selected
 let EXP_BOX_SELECT_COLOR = [200, 200, 255, 200];
 
+
+// Constants for equipment rendering
+
+// Vertices for defining the rendering of the shape of the Erlenmeyer flask chemical
+let ERLENMEYER_FLASK_VERTICES = [
+    // bottom
+    [0.01, 0.95], [0.5, 1.0], [0.99, 0.95],
+    // right edge
+    [0.94, 0.7], [0.86, 0.45], [0.66, 0.0],
+    // left edge
+    [0.28, 0.0], [0.12, 0.45], [0.05, 0.7]
+];
+// The percentage of the height of the Erlenmeyer flask where chemicals are rendered
+let ERLENMEYER_FLASK_HEIGHT_RATIO = 0.64
+// The percentage of the height where the Erlenmeyer flash chemicals begin rendering
+let ERLENMEYER_FLASK_CHEM_HEIGHT = 0.35;
+
+// X offset for rendering the beaker contents, percentage based on width of beaker
+let BEAKER_X_OFFSET = 0.12;
+// Y offset for rendering the beaker contents, percentage based on height of beaker
+let BEAKER_Y_OFFSET = 0.2;
+// The percentage of a beaker's width which is used to render chemicals
+let BEAKER_WIDTH_OFFSET = 0.85;
+// The percentage of a beaker's height which is used to render chemicals
+let BEAKER_HEIGHT_OFFSET = 0.8;
+
+// X offset for rendering the beaker contents, percentage based on width of beaker
+let GRADUATED_CYLINDER_X_OFFSET = 0.135;
+// Y offset for rendering the beaker contents, percentage based on height of beaker
+let GRADUATED_CYLINDER_Y_OFFSET = 0.1;
+// The percentage of a beaker's width which is used to render chemicals
+let GRADUATED_CYLINDER_WIDTH_OFFSET = 0.72;
+// The percentage of a beaker's height which is used to render chemicals
+let GRADUATED_CYLINDER_HEIGHT_OFFSET = 0.83;
 
 // Constants used for key inputs for Experiment
 

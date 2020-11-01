@@ -115,8 +115,7 @@ QUnit.test('pourInto:', function(assert){
     beakerControl1.setEquipment(beaker1);
     beakerControl2.setEquipment(beaker2);
     assert.true(beakerControl1.pourInto(beakerControl2), "Pouring into a valid controller should succeed");
-    var cont = beakerControl2.equipment.contents;
-    assert.equal(cont[0].mass, 50, "Container should contain modified chemical with mass 50");
+    assert.equal(beaker2.getTotalContentsMass(), 50, "Container should contain modified chemical with mass 50");
 
     chem1.setMass(30);
     chem2.setMass(20);
@@ -124,15 +123,14 @@ QUnit.test('pourInto:', function(assert){
     beaker1.setContents(chem1);
     beaker2.setContents(chem2);
     assert.true(beakerControl1.pourInto(beakerControl2), "Pouring into a valid controller should succeed");
-    cont = beakerControl2.equipment.contents;
-    assert.equal(cont[0].mass, 47, "Container should contain modified chemical with mass 47 after leaving residue");
+    assert.equal(beaker2.getTotalContentsMass(), 47, "Container should contain modified chemical with mass 47 after leaving residue");
 
     beaker1.setContents(chem3);
     beaker2.setContents(chem4);
     beaker1.setResidue(0);
     assert.true(beakerControl1.pourInto(beakerControl2), "Pouring into a valid controller should succeed");
-    assert.equal(beakerControl2.equipment.contents[0].mass, 100, "Container poured into should be full with mass 50");
-    assert.equal(beakerControl1.equipment.contents[0].mass, 20, "Container poured out should have 20 mass");
+    assert.equal(beakerControl2.equipment.getTotalContentsMass(), 100, "Container poured into should be full with mass 50");
+    assert.equal(beakerControl1.equipment.getTotalContentsMass(), 20, "Container poured out should have 20 mass");
 
     chem1.setMass(5);
     chem2.setMass(10);
@@ -307,4 +305,8 @@ QUnit.test('reset:', function(assert){
 QUnit.test('update:', function(assert){
     controller.update();
     assert.expect(0);
+});
+
+QUnit.todo('drawContentsRect:', function(assert){
+    assert.true(false);
 });

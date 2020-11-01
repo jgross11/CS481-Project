@@ -161,11 +161,11 @@ function initTestChemProperties(){
     makeElement("Na", "Sodium", "Nature", [220, 255, 220], ELEMENT_SODIUM_ATOMIC_NUM, 22.990, 98, 883, 0.97);
     makeElement("Cl", "Chlorine", "Nature", [255, 220, 220], ELEMENT_CHLORINE_ATOMIC_NUM, 35.453, -101, -35, 3.21);
 
-    makeElement("Ruu", "Red", "Fake", [255, 0, 0], ID_CHEM_TEST_RED, 9, 100, 0, 1);
-    makeElement("Blu", "Blue", "Fake", [0, 0, 255], ID_CHEM_TEST_BLUE, 9, 100, 0, 1);
-    makeElement("Wuu", "White", "Fake", [255, 255, 255], ID_CHEM_TEST_WHITE, 9, 100, 0, 1);
-    makeElement("Guu", "Green", "Fake", [0, 255, 0], ID_CHEM_TEST_GREEN, 9, 100, 0, 1);
-    makeElement("Buu", "Black", "Fake", [0, 0, 0], ID_CHEM_TEST_BLACK, 9, 100, 0, 1);
+    makeElement("Ruu", "Red", "Fake", [255, 0, 0], ID_CHEM_TEST_RED, 9, 100, 0, 0.6);
+    makeElement("Blu", "Blue", "Fake", [0, 0, 255], ID_CHEM_TEST_BLUE, 9, 100, 0, 0.7);
+    makeElement("Wuu", "White", "Fake", [255, 255, 255], ID_CHEM_TEST_WHITE, 9, 100, 0, 0.8);
+    makeElement("Guu", "Green", "Fake", [0, 255, 0], ID_CHEM_TEST_GREEN, 9, 100, 0, 0.9);
+    makeElement("Buu", "Black", "Fake", [0, 0, 0], ID_CHEM_TEST_BLACK, 9, 100, 0, 1.1);
 
     /*
     TODO Also need verification for all melting point, boiling point, and density values for compounds
@@ -177,7 +177,7 @@ function initTestChemProperties(){
 
     makeCompound(COMPOUND_WATER_ID,
         [new CompoundProperties(COMPOUND_HYDROGEN_GAS_ID), new ElementProperties(ELEMENT_OXYGEN_ATOMIC_NUM)],
-        "Water", "Nature", [100, 100, 255], 0, 100, 1000);
+        "Water", "Nature", [100, 100, 255], 0, 100, 1);
 
     makeCompound(COMPOUND_GLUCOSE_ID,
         [new ElementProperties(ELEMENT_CARBON_ATOMIC_NUM, 6), new ElementProperties(ELEMENT_HYDROGEN_ATOMIC_NUM, 12), new ElementProperties(ELEMENT_OXYGEN_ATOMIC_NUM, 6)],
