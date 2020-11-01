@@ -19,6 +19,7 @@ let ID_EQUIP_FLASK_50mL = 12;
 let ID_EQUIP_FLASK_100mL = 13;
 let ID_EQUIP_FLASK_1000mL = 14;
 let ID_EQUIP_WEIGH_BOAT = 15;
+let ID_EQUIP_STIR_ROD = 16;
 
 
 // Constants for indexing chemicals
@@ -72,6 +73,7 @@ function idToEquipment(id){
         case ID_EQUIP_WEIGH_BOAT: return new WeighBoatController2D(new WeighBoat());
         case ID_EQUIP_SCALE: return new ScaleController2D(new Scale());
         case ID_EQUIP_TRASHCAN: return new TrashcanController2D(new Trashcan());
+        case ID_EQUIP_STIR_ROD: return new StirRodController2D(new StirRod());
 
         default: return null;
     }
