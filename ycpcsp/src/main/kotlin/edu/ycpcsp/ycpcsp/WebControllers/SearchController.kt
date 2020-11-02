@@ -1,6 +1,7 @@
 package edu.ycpcsp.ycpcsp.WebControllers
 
 import edu.ycpcsp.ycpcsp.DataBase.SearchExperiment
+import edu.ycpcsp.ycpcsp.Models.SearchObject
 import edu.ycpcsp.ycpcsp.PostDataClasses.SearchFormData
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
@@ -20,13 +21,11 @@ class SearchController {
 
     @PostMapping(path = ["/search-submit"], consumes = ["application/json"], produces = ["application/json"])
     @ResponseBody
-    fun search(@RequestBody searchFormData: SearchFormData) : MutableList<String>{
+    fun search(@RequestBody searchFormData: SearchFormData) : MutableList<SearchObject>{
         println("Received the search input")
         println(searchFormData)
-        var experimentName: MutableList<String> = arrayListOf()
-
-        experimentName = SearchExperiment(searchFormData)
-
-        return experimentName
+        var experiment: MutableList<SearchObject> = arrayListOf()
+        experiment = SearchExperiment(searchFormData)
+        return experiment
     }
 }
