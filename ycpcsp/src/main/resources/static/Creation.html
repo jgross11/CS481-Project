@@ -74,15 +74,19 @@
 <p id="CHLIST"></p>
 <p id="EQLIST"></p>
 
+<p id="Steps"></p>
 
 
 </body>
 <script>
-    var sendchem = [];
-    var sendequip = [];
+    var listchem = [];
+    let sendchem = [];
+    var listequip = [];
+    let sendequip = [];
+
     LoadEquip();
     LoadChem();
-
+    LoadFunc();
     /* When the user clicks on the button,
     toggle between hiding and showing the dropdown content */
     function CFunction() {
@@ -105,6 +109,16 @@
         }
 
     }
+    function LoadFunc(){
+        let Func = JSON.parse(sessionStorage.getItem("Expfunc"));
+        for (i = 0; i < Func.length  ; i++) {
+            document.getElementById("Steps").innerHTML += "<button onclick=Addstep(this) ID='"+Func[i].ID+"' name="+Func[i].Function +">" + Func[i].Function+ "</button>";
+        }
+
+    }
+    function Addstep(step){
+
+    }
 
     function AddChem(Chem){
         var mass = prompt("Enter mass in g.","")
@@ -113,8 +127,10 @@
         var send = {Chem2, ID ,mass };
         if (mass == null || mass == "") {
         } else {
-            sendchem.push(send);
-            document.getElementById("CHLIST").innerHTML = JSON.stringify(sendchem);
+            listchem.push(send);
+            document.getElementById("CHLIST").innerHTML = JSON.stringify(listchem);
+            sendchem.push(makeTestChemicalJSON(idToChemical(ID),mass,1));
+
         }
 
     }
@@ -125,11 +141,22 @@
         var send = {Equipment, ID ,amount };
         if (amount == null || amount == "") {
         } else {
-            sendequip.push(send);
-            document.getElementById("EQLIST").innerHTML = JSON.stringify(sendequip);
+            listequip.push(send);
+            document.getElementById("EQLIST").innerHTML = JSON.stringify(listequip);
+            sendequip.push(makeTestEquipmentJSON(idToEquipment(ID),amount));
+
         }
     }
+    function CreateExp(){
+        let exp = {};
+        exp[EXP_JSON_TITLE] = "Color";
+        exp[EXP_JSON_CREATOR] = "Zaq";
 
+        exp[EXP_JSON_EQUIPMENT] = sortArrayByKey(sendequip, EXP_JSON_EQUIP_OBJ_ID, false);
+        exp[EXP_JSON_CHEMICALS] = sortArrayByKey(sendchem, [EXP_JSON_CHEM_ID, EXP_JSON_CHEM_MASS, EXP_JSON_CHEM_CONCENTRATION], true);
+        exp[EXP_JSON_INSTRUCTIONS] = sortArrayByKey(steps, EXP_JSON_INS_STEP_NUM, false);;
+
+    }
 
         // Close the dropdown if the user clicks outside of it
     window.onclick = function(event) {
