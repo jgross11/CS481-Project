@@ -79,6 +79,8 @@
 
 </body>
 <script>
+    let user = JSON.parse(sessionStorage.getItem("user"));
+
     var listchem = [];
     let sendchem = [];
     var listequip = [];
@@ -132,7 +134,7 @@
         } else {
             listchem.push(send);
             document.getElementById("CHLIST").innerHTML = JSON.stringify(listchem);
-            sendchem.push(makeTestChemicalJSON(idToChemical(ID),mass,concentration));
+            sendchem.push(makeTestChemicalJSON(Chemical,mass,concentration));
 
         }
 
@@ -146,14 +148,16 @@
         } else {
             listequip.push(send);
             document.getElementById("EQLIST").innerHTML = JSON.stringify(listequip);
-            sendequip.push(makeTestEquipmentJSON(idToEquipment(ID),amount));
+            sendequip.push(makeTestEquipmentJSON(Equipment,amount));
 
         }
     }
     function CreateExp(){
         let exp = {};
-        exp[EXP_JSON_TITLE] = "Color";
-        exp[EXP_JSON_CREATOR] = "Zaq";
+        var title = prompt("Enter a Title.","")
+
+        exp[EXP_JSON_TITLE] = title;
+        exp[EXP_JSON_CREATOR] = user.name;
 
         exp[EXP_JSON_EQUIPMENT] = sortArrayByKey(sendequip, EXP_JSON_EQUIP_OBJ_ID, false);
         exp[EXP_JSON_CHEMICALS] = sortArrayByKey(sendchem, [EXP_JSON_CHEM_ID, EXP_JSON_CHEM_MASS, EXP_JSON_CHEM_CONCENTRATION], true);
