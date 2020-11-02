@@ -30,17 +30,34 @@ var EquipID = [
     { Equip: 'TRASHCAN',ID:6},
     { Equip: 'GRADUATED_25mL',ID:7 },
     { Equip: 'GRADUATED_50mL',ID:8 },
-    { Equip: 'GRADUATED_100mL',ID:10 },
-    { Equip: 'GRADUATED_1000mL',ID:11 },
-    { Equip: 'FLASK_25mL',ID:12 },
-    { Equip: 'FLASK_50mL',ID:13 },
-    { Equip: 'FLASK_100mL',ID:14 },
-    { Equip: 'FLASK_1000mL',ID:15 }
+    { Equip: 'GRADUATED_100mL',ID:9 },
+    { Equip: 'GRADUATED_1000mL',ID:10 },
+    { Equip: 'FLASK_25mL',ID:11 },
+    { Equip: 'FLASK_50mL',ID:12 },
+    { Equip: 'FLASK_100mL',ID:13 },
+    { Equip: 'FLASK_1000mL',ID:14 },
+    { Equip: 'WEIGH_BOAT',ID:15 },
+    { Equip: 'STIR_ROD',ID:16 }
 ];
 
 sessionStorage.setItem("EquipID", JSON.stringify(EquipID));
 
 // Constants for indexing chemicals
+
+
+var Expfunc =[
+    {Function:'SCALE_TO_TAKE_WEIGHT' , ID:1},
+    {Function:'SCALE_REMOVE_OBJECT' , ID:2},
+    {Function:'SCALE_ZERO_OUT' , ID:3},
+    {Function:'SCALE_CLEAR_ZERO' , ID:4},
+    {Function:'ADD_TO', ID:5},
+    {Function:'POUR_INTO', ID:6},
+    {Function:'DISPOSE', ID:7},
+    {Function:'STIR' , ID:8}
+];
+sessionStorage.setItem("Expfunc", JSON.stringify(Expfunc));
+
+
 
 // Elements
 let ELEMENT_HYDROGEN_ATOMIC_NUM = 1;
@@ -60,6 +77,8 @@ var ChemID = [
     { Chem: 'CHLORINE',ID:17 }
 
 ];
+
+
 sessionStorage.setItem("ChemID", JSON.stringify(ChemID));
 
 // Test elements
