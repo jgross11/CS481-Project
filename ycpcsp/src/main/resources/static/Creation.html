@@ -83,7 +83,8 @@
     let sendchem = [];
     var listequip = [];
     let sendequip = [];
-
+    let sendsteps = [];
+    var stepcount = 0;
     LoadEquip();
     LoadChem();
     LoadFunc();
@@ -112,24 +113,26 @@
     function LoadFunc(){
         let Func = JSON.parse(sessionStorage.getItem("Expfunc"));
         for (i = 0; i < Func.length  ; i++) {
-            document.getElementById("Steps").innerHTML += "<button onclick=Addstep(this) ID='"+Func[i].ID+"' name="+Func[i].Function +">" + Func[i].Function+ "</button>";
+            document.getElementById("Steps").innerHTML += "<button onclick=AddStep(this) ID='"+Func[i].ID+"' name="+Func[i].Function +">" + Func[i].Function+ "</button>";
         }
 
     }
-    function Addstep(step){
-
+    function AddStep(step){
+        //sendsteps.push(makeTestInstructionJSON(stepcount,,,,,step.Function));
+        stepcount++;
     }
 
     function AddChem(Chem){
         var mass = prompt("Enter mass in g.","")
-        var Chem2 = Chem.name;
+        var concentration = prompt("Enter concentration.","")
+        var Chemical = Chem.name;
         var ID = Chem.id;
-        var send = {Chem2, ID ,mass };
-        if (mass == null || mass == "") {
+        var send = {Chemical, ID ,mass, concentration };
+        if (mass == null || mass == "" || concentration == null || concentration == "") {
         } else {
             listchem.push(send);
             document.getElementById("CHLIST").innerHTML = JSON.stringify(listchem);
-            sendchem.push(makeTestChemicalJSON(idToChemical(ID),mass,1));
+            sendchem.push(makeTestChemicalJSON(idToChemical(ID),mass,concentration));
 
         }
 

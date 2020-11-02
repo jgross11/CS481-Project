@@ -46,14 +46,14 @@ sessionStorage.setItem("EquipID", JSON.stringify(EquipID));
 
 
 var Expfunc =[
-    {Function:'SCALE_TO_TAKE_WEIGHT' , ID:1},
-    {Function:'SCALE_REMOVE_OBJECT' , ID:2},
-    {Function:'SCALE_ZERO_OUT' , ID:3},
-    {Function:'SCALE_CLEAR_ZERO' , ID:4},
-    {Function:'ADD_TO', ID:5},
-    {Function:'POUR_INTO', ID:6},
-    {Function:'DISPOSE', ID:7},
-    {Function:'STIR' , ID:8}
+    {Function:'ID_FUNC_SCALE_TO_TAKE_WEIGHT' , ID:1},
+    {Function:'ID_FUNC_SCALE_REMOVE_OBJECT' , ID:2},
+    {Function:'ID_FUNC_SCALE_ZERO_OUT' , ID:3},
+    {Function:'ID_FUNC_SCALE_CLEAR_ZERO' , ID:4},
+    {Function:'ID_FUNC_CONTAINER_ADD_TO', ID:1},
+    {Function:'ID_FUNC_CONTAINER_POUR_INTO', ID:2},
+    {Function:'ID_FUNC_DISPOSER_DISPOSE', ID:1},
+    {Function:'ID_FUNC_STIR_ROD_STIR' , ID:1}
 ];
 sessionStorage.setItem("Expfunc", JSON.stringify(Expfunc));
 
