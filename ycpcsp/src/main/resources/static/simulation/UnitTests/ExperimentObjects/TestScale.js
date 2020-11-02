@@ -55,12 +55,14 @@ QUnit.test('setZeroOut:', function(assert){
     assert.equal(scale.zeroOut, 10, 'Checking for correct set zero out value');
 });
 
-QUnit.todo('getWeightObj:', function(assert){
-    assert.true(false); // TODO
-});
+QUnit.test('getZeroedWeight:', function(assert){
+    assert.equal(scale.getZeroedWeight(), 0, "Checking that scale initially has nothing for zeroed out value");
 
-QUnit.todo('getHeldWeight:', function(assert){
-    assert.true(false); // TODO
+    scale.setObjectToBeWeighed(beakerControl);
+    assert.equal(scale.getZeroedWeight(), 15, "Checking that scale now has the mass of the beaker for zeroed out value");
+
+    beakerControl.addTo(idToChemical(ID_CHEM_TEST_RED, 5, 1));
+    assert.equal(scale.getZeroedWeight(), 20, "Checking that scale now has the mass of the beaker, and it's contents for zeroed out value");
 });
 
 QUnit.test('getID:', function(assert){
@@ -94,16 +96,38 @@ QUnit.test('setScaleObject:', function(assert){
     assert.equal(scale.displayedWeight, 15, "Check that the displayed weight matches the mass of the beaker");
 });
 
+QUnit.test('removeScaleObject:', function(assert){
+    scaleControl.setScaleObject(beakerControl);
+    assert.deepEqual(scale.objectToBeWeighed, beakerControl, "Checking that the object to be weighed was set");
+    assert.notEqual(scale.displayedWeight, 0, "Checking that displayed weight is different after adding a beaker");
+
+    scaleControl.removeScaleObject();
+    assert.deepEqual(scale.objectToBeWeighed, null, "Checking that the object to be weighed was removed");
+    assert.equal(scale.displayedWeight, 0, "Checking that displayed weight is zero after removing a beaker");
+});
+
 QUnit.test('idToFunc:', function(assert){
-    assert.equal(scaleControl.idToFunc(ID_FUNC_TO_TAKE_WEIGHT), scaleControl.setScaleObject,
+    assert.equal(scaleControl.idToFunc(ID_FUNC_SCALE_TO_TAKE_WEIGHT), scaleControl.setScaleObject,
         "Check scale controller has correct function for setScaleObject ID");
+    assert.equal(scaleControl.idToFunc(ID_FUNC_SCALE_REMOVE_OBJECT), scaleControl.removeScaleObject,
+        "Check scale controller has correct function for removeScaleObject ID");
+    assert.equal(scaleControl.idToFunc(ID_FUNC_SCALE_ZERO_OUT), scaleControl.zeroOut,
+        "Check scale controller has correct function for zeroOut ID");
+    assert.equal(scaleControl.idToFunc(ID_FUNC_SCALE_CLEAR_ZERO), scaleControl.clearZeroOut,
+        "Check scale controller has correct function for clearZeroOut ID");
     assert.equal(scaleControl.idToFunc(-1), null,
         "Check scale controller returns null for invalid id");
 });
 
 QUnit.test('funcToId:', function(assert){
-    assert.equal(scaleControl.funcToId(scaleControl.setScaleObject), ID_FUNC_TO_TAKE_WEIGHT,
+    assert.equal(scaleControl.funcToId(scaleControl.setScaleObject), ID_FUNC_SCALE_TO_TAKE_WEIGHT,
         "Check scale controller has correct ID for setScaleObject");
+    assert.equal(scaleControl.funcToId(scaleControl.removeScaleObject), ID_FUNC_SCALE_REMOVE_OBJECT,
+        "Check scale controller has correct ID for removeScaleObject");
+    assert.equal(scaleControl.funcToId(scaleControl.zeroOut), ID_FUNC_SCALE_ZERO_OUT,
+        "Check scale controller has correct ID for zeroOut");
+    assert.equal(scaleControl.funcToId(scaleControl.clearZeroOut), ID_FUNC_SCALE_CLEAR_ZERO,
+        "Check scale controller has correct ID for clearZeroOut");
     assert.equal(scaleControl.funcToId(null), null,
         "Check scale controller returns null for invalid function");
 });
@@ -119,27 +143,41 @@ QUnit.test('reset:', function(assert){
     assert.equal(scale.zeroOut, 0, "Before calling reset, scale should have zero out value 0");
 });
 
-QUnit.todo('updateWeighingObjectMass:', function(assert){
-    assert.true(false); // TODO
+QUnit.test('updateWeighingObjectMass:', function(assert){
+    scaleControl.setScaleObject(beakerControl);
+    assert.deepEqual(scale.objectToBeWeighed, beakerControl, "Checking that the object to be weighed was set");
+    assert.equal(scale.displayedWeight, beakerControl.equipment.mass, "Checking that displayed weight is the mass of the set beaker");
+
 });
 
 QUnit.test('getFuncDescriptions:', function(assert){
-    assert.equal(scaleControl.getFuncDescriptions().length, 1, "Checking that scales have one function description");
-    assert.equal(scaleControl.getFuncDescriptions()[0], "Place Equipment", "Checking that scales have correct description names");
+    assert.equal(scaleControl.getFuncDescriptions().length, 4, "Checking that scales have one function description");
 });
 
-QUnit.todo('zeroOut:', function(assert){
-    assert.true(false); // TODO
+QUnit.test('zeroOut:', function(assert){
+    scaleControl.setScaleObject(beakerControl);
+    assert.equal(scale.getZeroedWeight(), beakerControl.equipment.mass, "Checking that zeroed mass is the beaker's mass before zeroing out");
+
+    scaleControl.zeroOut();
+    assert.equal(scale.getZeroedWeight(), 0, "Checking that zeroing out made the zeroed mass 0");
+
+    scaleControl.removeScaleObject();
+    assert.equal(scale.getZeroedWeight(), -beakerControl.equipment.mass, "Checking that after removing object, zeroed mass is negative that of the object");
 });
 
-QUnit.todo('clearZeroOut:', function(assert){
-    assert.true(false); // TODO
+QUnit.test('clearZeroOut:', function(assert){
+    scaleControl.setScaleObject(beakerControl);
+    scaleControl.zeroOut();
+    assert.equal(scale.getZeroedWeight(), 0, "Checking that zeroed mass is 0 after zeroing out scale");
+
+    scaleControl.clearZeroOut();
+    assert.equal(scale.getZeroedWeight(), beakerControl.equipment.mass, "Checking that zeroed mass is the beaker's mass after resetting zeroed out value");
 });
 
 QUnit.todo('update:', function(assert){
-    assert.true(false); // TODO
+    assert.true(false);
 });
 
 QUnit.todo('draw:', function(assert){
-    assert.true(false); // TODO
+    assert.true(false);
 });

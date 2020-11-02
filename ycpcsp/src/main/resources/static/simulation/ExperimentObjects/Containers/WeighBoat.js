@@ -20,12 +20,12 @@ class WeighBoat extends Container{
 
 
 /**
-A class for handling controlling a Beaker in a 2D environment
+A class for handling controlling a WeighBoat in a 2D environment
 */
 class WeighBoatController2D extends ContainerController2D{
     /**
-    Create a new BeakerController to control the given Beaker
-    beaker: The Beaker which this Controller will control
+    Create a new WeighBoat to control the given WeighBoat
+    weighBoat: The WeighBoat which this Controller will control
     */
     constructor(weighBoat){
         super(weighBoat);
@@ -46,7 +46,7 @@ class WeighBoatController2D extends ContainerController2D{
     }
 
     /**
-    Draw this Controller's Beaker along with its data
+    Draw this Controller's WeighBoat along with its data
     graphics: The P5 graphics to use
     */
     draw(graphics){

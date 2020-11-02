@@ -253,6 +253,7 @@ function getTestJSON(){
     equips.push(makeTestEquipmentJSON(ID_EQUIP_WEIGH_BOAT, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_FLASK_1000mL, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_GRADUATED_1000mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_STIR_ROD, 1));
     exp[EXP_JSON_EQUIPMENT] = sortArrayByKey(equips, EXP_JSON_EQUIP_OBJ_ID, false);
 
     let chems = [];

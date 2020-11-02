@@ -111,7 +111,20 @@ let WEIGH_BOAT_CHEM_WIDTH = 0.85;
 // The percentage of a graduated cylinder's height which is used to render chemicals
 let WEIGH_BOAT_CHEM_HEIGHT = 3;
 // The vertices used to render the shape of the weigh boat's chemicals
-let WEIGH_BOAT_VERTICES = [[0, 1], [1, 1], [0.5, 0]];;
+let WEIGH_BOAT_VERTICES = [[0, 1], [1, 1], [0.5, 0]];
+
+// The color of the text on scales
+let SCALE_TEXT_COLOR = 0;
+// The size of the text displayed on scales
+let SCALE_TEXT_SIZE = 15;
+// The number of decimal places for displaying masses on a scale
+let SCALE_MASS_TEXT_DECIMAL_PLACES = 2;
+// The percentage of a scale's width where the text for the mass on the scale is rendered
+let SCALE_MASS_TEXT_X_OFFSET = 0.25;
+// The percentage of a scale's width where the text for the zeroed out value on the scale is rendered
+let SCALE_ZEROED_TEXT_X_OFFSET = 0.1;
+// The percentage of a scale's height where the text on the scale is rendered
+let SCALE_MASS_TEXT_Y_OFFSET = 0.7;
 
 
 // Constants used for key inputs for Experiment

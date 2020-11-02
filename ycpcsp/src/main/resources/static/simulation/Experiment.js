@@ -498,14 +498,10 @@ class ExperimentController2D{
     */
     keyPress(){
         // TODO this is just temporary controls via keyboard
-        if(this.selectedActor !== null && this.selectedReceiver !== null && (key === '1' || key === '2' || key === '3')){
+        if(this.selectedActor !== null && this.selectedReceiver !== null && (key >= '1' && key <= '9')){
             var funcID;
-            switch(key){
-                case '1': funcID = 1; break;
-                case '2': funcID = 2; break;
-                case '3': funcID = 3; break;
-                default: funcID = null;
-            }
+            if(key >= '1' && key <= '9') funcID = parseInt(key);
+            else funcID = null;
             if(funcID !== null){
                 this.selectedEquipFunction(funcID);
                 this.setSelectedActor(null);
