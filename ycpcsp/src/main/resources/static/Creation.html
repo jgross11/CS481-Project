@@ -54,6 +54,21 @@
 
 <script src="simulation/ObjectIDs.js"></script>
 
+<script src="simulation/ExperimentObjects/ExperimentObject.js"></script>
+<script src="simulation/ExperimentObjects/Equipment.js"></script>
+<script src="simulation/ExperimentObjects/Chemical.js"></script>
+<script src="simulation/ExperimentObjects/ChemProperties.js"></script>
+<script src="simulation/ExperimentObjects/Scale.js"></script>
+<script src="simulation/ExperimentObjects/StirRod.js"></script>
+
+<script src="simulation/ExperimentObjects/Containers/Container.js"></script>
+<script src="simulation/ExperimentObjects/Containers/Beaker.js"></script>
+<script src="simulation/ExperimentObjects/Containers/ErlenmeyerFlask.js"></script>
+<script src="simulation/ExperimentObjects/Containers/GraduatedCylinder.js"></script>
+<script src="simulation/ExperimentObjects/Containers/WeighBoat.js"></script>
+
+<script src="simulation/ExperimentObjects/Disposers/Disposer.js"></script>
+<script src="simulation/ExperimentObjects/Disposers/Trashcan.js"></script>
 
 
 <div class="dropdown">
@@ -76,6 +91,15 @@
 
 <p id="Steps"></p>
 
+<select id="ChemOrEquip1"></select>
+<select id="insert1"></select>
+<select id="Function"></select>
+<select id="ChemOrEquip2"></select>
+<select id="insert2"></select>
+
+
+<button onclick="AddStep()">Add Step</button>
+<button onclick="CreateExp()">Create</button>
 
 </body>
 <script>
@@ -85,6 +109,7 @@
     let sendchem = [];
     var listequip = [];
     let sendequip = [];
+    var liststeps = [];
     let sendsteps = [];
     var stepcount = 0;
     LoadEquip();
@@ -113,15 +138,72 @@
 
     }
     function LoadFunc(){
+        var options = "";
+        options += "<option value='false'>Chem</option>";
+        options += "<option value='true'>Equip</option>";
+        document.getElementById("ChemOrEquip1").innerHTML = options;
+
         let Func = JSON.parse(sessionStorage.getItem("Expfunc"));
-        for (i = 0; i < Func.length  ; i++) {
-            document.getElementById("Steps").innerHTML += "<button onclick=AddStep(this) ID='"+Func[i].ID+"' name="+Func[i].Function +">" + Func[i].Function+ "</button>";
+
+        var funopt ="";
+        for(i = 0; i < Func.length  ; i++){
+            funopt += "<option value='"+Func[i].Function +"'>"+ Func[i].Function +"</option>";
         }
+        document.getElementById("Function").innerHTML = funopt;
+
+        let ChemID = JSON.parse(sessionStorage.getItem("ChemID"));
+        let EquipID = JSON.parse(sessionStorage.getItem("EquipID"));
+
+
+        var act ="";
+        for(i = 0; i < ChemID.length  ; i++){
+            act += "<option value='"+ChemID[i].ID +"'>"+ ChemID[i].Chem +"</option>";
+        }
+        for(i = 0; i < EquipID.length  ; i++){
+            act += "<option value='"+EquipID[i].ID +"'>"+ EquipID[i].Equip +"</option>";
+        }
+        document.getElementById("insert1").innerHTML = act;
+
+
+        var options2 = "";
+        options2 += "<option value='false'>Chem</option>";
+        options2 += "<option value='true'>Equip</option>";
+        document.getElementById("ChemOrEquip2").innerHTML = options2;
+
+
+
+        var rec ="";
+        for(i = 0; i < ChemID.length  ; i++){
+            rec += "<option value='"+ChemID[i].ID +"'>"+ ChemID[i].Chem +"</option>";
+        }
+        for(i = 0; i < EquipID.length  ; i++){
+            rec += "<option value='"+EquipID[i].ID +"'>"+ EquipID[i].Equip +"</option>";
+        }
+        document.getElementById("insert2").innerHTML = rec;
+
+
 
     }
-    function AddStep(step){
-        //sendsteps.push(makeTestInstructionJSON(stepcount,,,,,step.Function));
+    function AddStep(){
+        var op1 = document.getElementById("ChemOrEquip1");
+        var opti1 = op1.value;
+        var a = document.getElementById("insert1");
+        var act = a.value;
+        var f = document.getElementById("Function");
+        var func = f.value;
+        var op2 = document.getElementById("ChemOrEquip2");
+        var opti2 = op2.value;
+        var r = document.getElementById("insert2");
+        var rec = r.value;
+
+        var current = stepcount;
+        var send = {current,act,opti1,rec,opti2,func};
+        liststeps.push(send);
+        document.getElementById("Steps").innerHTML = JSON.stringify(listchem);
+
+        sendsteps.push(makeTestInstructionJSON(stepcount,act,opti1,rec,opti2,func));
         stepcount++;
+
     }
 
     function AddChem(Chem){
@@ -155,13 +237,12 @@
     function CreateExp(){
         let exp = {};
         var title = prompt("Enter a Title.","")
-
         exp[EXP_JSON_TITLE] = title;
         exp[EXP_JSON_CREATOR] = user.name;
 
         exp[EXP_JSON_EQUIPMENT] = sortArrayByKey(sendequip, EXP_JSON_EQUIP_OBJ_ID, false);
         exp[EXP_JSON_CHEMICALS] = sortArrayByKey(sendchem, [EXP_JSON_CHEM_ID, EXP_JSON_CHEM_MASS, EXP_JSON_CHEM_CONCENTRATION], true);
-        exp[EXP_JSON_INSTRUCTIONS] = sortArrayByKey(steps, EXP_JSON_INS_STEP_NUM, false);;
+        exp[EXP_JSON_INSTRUCTIONS] = sortArrayByKey(sendsteps, EXP_JSON_INS_STEP_NUM, false);;
 
     }
 
