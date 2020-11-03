@@ -1,8 +1,10 @@
 package edu.ycpcsp.ycpcsp.WebControllers
 
+import edu.ycpcsp.ycpcsp.DataBase.CreateQuarantineUser
 import edu.ycpcsp.ycpcsp.DataBase.IsEmailInDB
-import edu.ycpcsp.ycpcsp.DataBase.LoadUser
 import edu.ycpcsp.ycpcsp.DataBase.UserSignup
+import edu.ycpcsp.ycpcsp.DataBase.isEmailInQuarantineDB
+import edu.ycpcsp.ycpcsp.EmailSender
 import edu.ycpcsp.ycpcsp.Models.User
 import edu.ycpcsp.ycpcsp.PostDataClasses.SignupFormData
 import org.springframework.stereotype.Controller
@@ -36,21 +38,30 @@ class SignupController {
         var user = User()
 
         // check if email not in DB
-        if(!IsEmailInDB(signupFormData.email)){
+        if(!IsEmailInDB(signupFormData.email) && !isEmailInQuarantineDB(signupFormData.email)){
             // ensure name is capitalized
             println("user not in DB, adding")
             signupFormData.firstName = signupFormData.firstName.capitalize()
             signupFormData.lastName = signupFormData.lastName.capitalize()
 
             // insert into DB if email not found
-            if(UserSignup(signupFormData)){
+            val newID = CreateQuarantineUser(signupFormData)
+            if(newID != -1){
                 user.setContentsFromForm(signupFormData)
-                println("new user successfully added to DB")
+                user.isQuarantined = true
+                println("new user successfully added to quarantine DB")
+                user.id = newID
+                if(EmailSender().sendSignupEmail(user)){
+                    println("Verification email sent successfully!")
+                } else{
+                    println("Could not send verification email")
+                }
+
             } else{
-                println("unable to add user to DB")
+                println("unable to add user to quarantine DB")
             }
         }else{
-            println("email already in DB")
+            println("email already in quarantine DB")
         }
         // returns to home page
         return user
