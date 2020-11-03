@@ -32,7 +32,7 @@ fun LoadExperiment(id: String) : Experiment {
 
 
             //Equipment query
-            preparedSt = connection.prepareStatement("Select Distinct name, object_ID, amount from Database.Equipments join Database.Experiments on Database.Experiments.ExperimentsID = Database.Equipments.experiment_ID where ExperimentsID = ? ")
+            preparedSt = connection.prepareStatement("Select Distinct object_ID, amount from Database.Equipments join Database.Experiments on Database.Experiments.ExperimentsID = Database.Equipments.experiment_ID where ExperimentsID = ? ")
             preparedSt.setString(1, id)
 
             val rs2 = preparedSt.executeQuery()

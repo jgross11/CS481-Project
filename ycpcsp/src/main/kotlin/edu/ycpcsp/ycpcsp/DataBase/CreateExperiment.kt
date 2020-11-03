@@ -43,7 +43,6 @@ fun CreateExperiment(userAndExperiment: UserAndExperiment): Boolean {
                     preparedSt.setInt(7, step.functionID)
 
                     preparedSt.executeUpdate()
-
                 }
 
                 // TODO insert chemicals
