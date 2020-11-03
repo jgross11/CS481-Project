@@ -53,9 +53,7 @@ QUnit.test('funcToId:', function(assert){
 
 QUnit.test('getFuncDescriptions:', function(assert){
     let desc = controller.getFuncDescriptions();
-    assert.equal(desc.length, 2, "Containers should have two function descriptions");
-    assert.true(typeof desc[0] === "string", "Elements of the function descriptions must be strings.");
-    assert.true(typeof desc[1] === "string", "Elements of the function descriptions must be strings.");
+    assert.equal(desc.length, 3, "Containers should have three function descriptions");
 });
 
 QUnit.test('hasResidue:', function(assert){

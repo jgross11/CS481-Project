@@ -320,14 +320,14 @@ function getLab3aJSON(){
     steps.push(makeTestInstructionJSON(s++, cylinder, true, water, false, ID_FUNC_CONTAINER_ADD_TO));
     steps.push(makeTestInstructionJSON(s++, cylinder, true, flask, true, ID_FUNC_CONTAINER_POUR_INTO));
     steps.push(makeTestInstructionJSON(s++, scale, true, boat, true, ID_FUNC_SCALE_TO_TAKE_WEIGHT));
-    steps.push(makeTestInstructionJSON(s++, scale, true, boat, true, ID_FUNC_SCALE_ZERO_OUT));
+    steps.push(makeTestInstructionJSON(s++, scale, true, null, true, ID_FUNC_SCALE_ZERO_OUT));
     steps.push(makeTestInstructionJSON(s++, boat, true, salt, false, ID_FUNC_CONTAINER_ADD_TO));
-    steps.push(makeTestInstructionJSON(s++, scale, true, boat, true, ID_FUNC_SCALE_REMOVE_OBJECT));
+    steps.push(makeTestInstructionJSON(s++, scale, true, null, true, ID_FUNC_SCALE_REMOVE_OBJECT));
     steps.push(makeTestInstructionJSON(s++, boat, true, flask, true, ID_FUNC_CONTAINER_POUR_INTO));
     steps.push(makeTestInstructionJSON(s++, rod, true, flask, true, ID_FUNC_STIR_ROD_STIR));
-    steps.push(makeTestInstructionJSON(s++, scale, true, flask, true, ID_FUNC_SCALE_CLEAR_ZERO));
+    steps.push(makeTestInstructionJSON(s++, scale, true, null, true, ID_FUNC_SCALE_CLEAR_ZERO));
     steps.push(makeTestInstructionJSON(s++, scale, true, flask, true, ID_FUNC_SCALE_TO_TAKE_WEIGHT));
-    steps.push(makeTestInstructionJSON(s++, scale, true, flask, true, ID_FUNC_SCALE_REMOVE_OBJECT));
+    steps.push(makeTestInstructionJSON(s++, scale, true, null, true, ID_FUNC_SCALE_REMOVE_OBJECT));
     exp[EXP_JSON_INSTRUCTIONS] = sortArrayByKey(steps, EXP_JSON_INS_STEP_NUM, false);
 
     return exp;
