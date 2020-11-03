@@ -58,7 +58,7 @@ fun CreateExperiment(userAndExperiment: UserAndExperiment): Boolean {
                 }
                 // TODO insert equipment
                 for (equipment in userAndExperiment.experiment.equipment) {
-                    preparedSt = connection.prepareStatement("INSERT INTO Database.Equipments (experiment_ID, name, object_ID, amount)\n" +
+                    preparedSt = connection.prepareStatement("INSERT INTO Database.Equipments (experiment_ID, object_ID, amount)\n" +
                             "VALUES (?, ?, ?)")
                     preparedSt.setInt(1, newExperimentKey)
                     preparedSt.setInt(2, equipment.objectID)

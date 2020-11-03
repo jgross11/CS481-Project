@@ -14,7 +14,7 @@ fun UserProfile (id: String?){
 
     try{
         if(connection != null) {
-            var preparedSt = connection.prepareStatement("Select * from Database.Users where ")
+            var preparedSt = connection.prepareStatement("Select * from Database.Users")
             val rs = preparedSt.executeQuery()
 
             val array = arrayOfNulls<String?>(13)// make empty array to store the values of the database in but make it 13

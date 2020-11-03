@@ -60,7 +60,7 @@ fun loadQuarantineUserByID(userID : String) : User{
         return try{
             val preparedStatement = connection.prepareStatement("SELECT * FROM Database.Quarantine_Users WHERE quID = ?;")
             preparedStatement.setString(1, userID)
-            
+
             val rs = preparedStatement.executeQuery()
             return if(rs.first()){
                 val user = User(rs.getString(FirstName),rs.getString(LastName),rs.getString(Email),rs.getString(Password),rs.getString(School), rs.getInt(ID))
