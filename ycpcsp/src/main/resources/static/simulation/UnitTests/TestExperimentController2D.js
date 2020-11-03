@@ -39,8 +39,6 @@ QUnit.module("ExperimentController2D", {
         currentInstanceID = 1;
         mouseX = 0;
         mouseY = 0;
-        exp = new Experiment("a title", "a name");
-        controller = new ExperimentController2D(exp);
 
         currentInstanceID = 10;
         beaker1 = new Beaker(ID_EQUIP_BEAKER_50mL);
@@ -73,6 +71,10 @@ QUnit.module("ExperimentController2D", {
         beakerControl3 = new BeakerController2D(beaker3);
         beakerControl4 = new BeakerController2D(beaker4);
         beakerControl5 = new BeakerController2D(beaker5);
+
+        exp = new Experiment("a title", "a name");
+        exp.setEquipment([beakerControl1]);
+        controller = new ExperimentController2D(exp);
 
         chem = idToChemical(ID_CHEM_TEST_RED, 1, 1).chemical;
         chemControl = idToChemical(ID_CHEM_TEST_BLACK, 5, 1);
@@ -212,7 +214,14 @@ QUnit.test('selectedEquipFunction:', function(assert){
     mouseX = badX;
     mouseY = badY;
     result = controller.selectedEquipFunction(ID_FUNC_CONTAINER_POUR_INTO);
-    assert.false(result, "Calling the function without a valid equipment in selection range should fail.");
+    assert.true(result, "Calling the function without a valid equipment in selection range should succeed.");
+
+    controller.setSelectedActor(beakerControl1);
+    controller.setSelectedReceiver(null);
+    mouseX = badX;
+    mouseY = badY;
+    result = controller.selectedEquipFunction(ID_FUNC_CONTAINER_POUR_INTO);
+    assert.true(result, "Calling the function without a valid receiver but a valid actor should succeed.");
 
     controller.setSelectedActor(beakerControl1);
     controller.setSelectedReceiver(beakerControl2);
@@ -330,9 +339,6 @@ QUnit.test('nextInstruction:', function(assert){
     controller.reset();
     assert.equal(controller.instructionCounter, 0, "Instruction should be on 0 after reset");
 
-    controller.nextInstruction();
-    assert.equal(controller.instructionCounter, 0, "Instruction should still be on 0 without placed beakers");
-
     beaker1.setContents(chemControl.copyChem());
     beaker2.setContents(chemControl.copyChem());
     controller.placeEquipment(0);
@@ -344,14 +350,6 @@ QUnit.test('nextInstruction:', function(assert){
     beaker2.setContents(chemControl.copyChem());
     controller.nextInstruction();
     assert.equal(controller.instructionCounter, 2, "Instruction should be on 2");
-
-    controller.unPlaceEquipment(eqs[0]);
-    controller.nextInstruction();
-    assert.equal(controller.instructionCounter, 2, "Instruction should still be on 2 without beaker 0 in the Experiment");
-
-    controller.placeEquipment(0);
-    controller.nextInstruction();
-    assert.equal(controller.instructionCounter, 3, "Instruction should be on 3 with beaker 0 in the Experiment");
 });
 
 QUnit.test('displayEquipmentBoxes:', function(assert){
@@ -395,6 +393,8 @@ QUnit.test('isDisplayChemicals:', function(assert){
 });
 
 QUnit.test('addEquipment:', function(assert){
+    exp.setEquipment([]);
+    controller.reset();
     assert.deepEqual(exp.equipment, [], "Experiment Equipment list should be empty.");
     assert.deepEqual(controller.placedEquipment, [], "Controller placed Equipment list should be empty.");
 
@@ -420,28 +420,31 @@ QUnit.test('addEquipment:', function(assert){
 });
 
 QUnit.test('placeEquipment:', function(assert){
-    controller.addEquipment(beaker1);
-    assert.true(exp.equipment.includes(beaker1), "Experiment should have the added beaker.");
+    assert.true(exp.equipment.includes(beakerControl1), "Experiment should have the added beaker.");
     assert.deepEqual(controller.placedEquipment, [], "Controller placed Equipment list should still be empty.");
 
     controller.placeEquipment(-1);
-    assert.true(exp.equipment.includes(beaker1), "Experiment should still have the added beaker.");
+    assert.true(exp.equipment.includes(beakerControl1), "Experiment should still have the added beaker.");
     assert.deepEqual(controller.placedEquipment, [], "Controller placed Equipment list should still be empty.");
 
     controller.placeEquipment(1);
-    assert.true(exp.equipment.includes(beaker1), "Experiment should still have the added beaker.");
+    assert.true(exp.equipment.includes(beakerControl1), "Experiment should still have the added beaker.");
     assert.deepEqual(controller.placedEquipment, [], "Controller placed Equipment list should still be empty.");
 
     controller.placeEquipment(0);
-    assert.true(exp.equipment.includes(beaker1), "Experiment should have the added beaker.");
-    assert.true(controller.placedEquipment.includes(beaker1), "Controller placed Equipment list should have the added beaker.");
+    assert.true(exp.equipment.includes(beakerControl1), "Experiment should have the added beaker.");
+    assert.true(controller.placedEquipment.includes(beakerControl1), "Controller placed Equipment list should have the added beaker.");
+    assert.false(controller.equipmentBoxes.remove(beakerControl1),
+        "Should be unable to remove the beaker from the equipment box list because should no longer be there");
 
     controller.placeEquipment(0);
-    assert.true(controller.placedEquipment.includes(beaker1), "Controller placed Equipment list should have the added beaker.");
+    assert.true(controller.placedEquipment.includes(beakerControl1), "Controller placed Equipment list should have the added beaker.");
     assert.equal(controller.placedEquipment.length, 1, "Controller placed Equipment list should have only one beaker.");
 });
 
 QUnit.test('removeEquipment:', function(assert){
+    exp.setEquipment([]);
+    controller.reset();
     controller.addEquipment(beaker1);
     assert.true(exp.equipment.includes(beaker1), "Experiment should have the added beaker.");
     assert.deepEqual(controller.placedEquipment, [], "Controller placed Equipment list should still be empty.");
@@ -506,7 +509,7 @@ QUnit.test('reset:', function(assert){
     assert.equal(controller.instructionCounter, 0, "instructionCounter should be 0.");
 
     controller.nextInstruction();
-    assert.equal(controller.instructionCounter, 0, "instructionCounter should be on 0");
+    assert.equal(controller.instructionCounter, 1, "instructionCounter should be on 1");
 
     let chemControl = new ChemicalController2D(chem);
     var chemCopy = chemControl.copyChem();
@@ -515,10 +518,8 @@ QUnit.test('reset:', function(assert){
     assert.deepEqual(beaker1.contents, [chem], "Beaker 1 should have chem");
     assert.deepEqual(beaker2.contents, [], "Beaker 2 should be empty");
 
-    controller.placeEquipment(0);
-    controller.placeEquipment(1);
     controller.nextInstruction();
-    assert.equal(controller.instructionCounter, 1, "instructionCounter should be on 1");
+    assert.equal(controller.instructionCounter, 2, "instructionCounter should be on 2");
     assert.deepEqual(beaker1.contents, [], "Beaker 1 should have poured its contents");
     assert.deepEqual(beaker2.contents, [chemCopy], "Beaker 2 should have received beaker 1 contents");
 });

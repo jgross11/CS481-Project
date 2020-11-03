@@ -158,7 +158,6 @@ class ExperimentController2D{
         let func = actor.idToFunc(id);
         if(func === null || func === undefined) return false;
         if(receiver === null) receiver = this.selectedReceiver;
-        if(receiver === null || receiver === undefined) return false;
         func.bind(actor, receiver)();
         return true;
     }
@@ -193,8 +192,7 @@ class ExperimentController2D{
             var pos = this.experimentMousePos();
             pos[0] += this.movingEquipAnchor[0];
             pos[1] += this.movingEquipAnchor[1];
-            eq.equipment.setPosition(pos);
-            eq.keepInBounds(EXP_CAMERA_OUTLINE_BOUNDS);
+            eq.equipment.setPosition(pos, EXP_CAMERA_OUTLINE_BOUNDS);
         }
     }
 
@@ -217,12 +215,39 @@ class ExperimentController2D{
         if(this.instructionCounter < instructions.length){
             let insC = instructions[this.instructionCounter];
             let ins = insC.instruction;
-            let eqs = this.placedEquipment;
+            let act = ins.actor;
+            let rec = ins.receiver;
+            let pEqs = this.placedEquipment;
+            let eqs = this.experiment.equipment;
 
             // Check to ensure that the Instruction's ExperimentObject has been placed in the lab, if possible
-            //  if either object can be placed and it's not placed, do nothing
-            if((ins.actor.canPlace() !== eqs.includes(ins.actor)) ||
-               (ins.receiver !== null && ins.receiver.canPlace() !== eqs.includes(ins.receiver))) return;
+            // If either object can be placed and it's not placed, place it
+            var adds = [];
+            if(act.canPlace() && !pEqs.includes(act)) adds.push(act);
+            if(rec !== null && rec !== undefined && rec.canPlace() && !pEqs.includes(rec)) adds.push(rec);
+            var success = true;
+            // TODO Move this loop to its own function
+            for(var i = 0; i < adds.length; i++){
+                let index = eqs.indexOf(adds[i]);
+                // If there is no valid index, do nothing
+                if(index < 0){
+                    success = false;
+                    break;
+                }
+
+                // Otherwise, place the object at the center of the screen
+                let eq = eqs[index];
+                let pos = this.camera.pos;
+                eq.setCenter(
+                    pos[0] + EXP_BOUNDS[2] * (0.2 + 0.3 * Math.random()),
+                    pos[1] + EXP_BOUNDS[3] * (0.2 + 0.3 * Math.random())
+                );
+                if(!this.placeEquipment(index)){
+                    success = false;
+                    break;
+                }
+            }
+            if(!success) return;
 
             insC.activate();
             this.instructionCounter++;
@@ -278,13 +303,21 @@ class ExperimentController2D{
     Place a piece of Equipment to the placed list of this Controller.
     Does nothing if the index is not in the range of the list
     index: The index of the piece of Equipment from the Experiment of this Controller to add to the placed list
+    returns: true if the Equipment could be placed, false otherwise
     */
     placeEquipment(index){
         let eqs = this.experiment.equipment;
         let pEqs = this.placedEquipment;
-        if(index < 0 || index > eqs.length - 1) return;
+        let boxes = this.equipmentBoxes;
+        if(index < 0 || index > eqs.length - 1) return false;
         let toAdd = eqs[index];
-        if(!pEqs.includes(toAdd)) pEqs.push(toAdd);
+        if(!pEqs.includes(toAdd)){
+            pEqs.push(toAdd);
+            // Remove the placed equipment from the equipment boxes
+            boxes.remove(toAdd);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -327,7 +360,7 @@ class ExperimentController2D{
         this.placedEquipment = [];
         this.equipmentBoxes = new EquipmentBoxList();
         this.chemicalBoxes = new ChemicalBoxList();
-        this.selectedActor= null;
+        this.selectedActor = null;
         this.selectedReceiver = null;
         this.instructionCounter = 0;
 
@@ -498,35 +531,28 @@ class ExperimentController2D{
     */
     keyPress(){
         // TODO this is just temporary controls via keyboard
-        if(this.selectedActor !== null && this.selectedReceiver !== null && (key === '1' || key === '2' || key === '3')){
-            var funcID;
-            switch(key){
-                case '1': funcID = 1; break;
-                case '2': funcID = 2; break;
-                case '3': funcID = 3; break;
-                default: funcID = null;
-            }
-            if(funcID !== null){
+        let k = key;
+        if(k >= '1' && k <= '9'){
+            if(this.selectedActor !== null && (this.selectedReceiver !== null || keyIsDown(ALT))){
+                var funcID = parseInt(k);
                 this.selectedEquipFunction(funcID);
                 this.setSelectedActor(null);
                 this.setSelectedReceiver(null);
             }
         }
-        else{
-            switch(keyCode){
-                case KEY_EXP_RESET_SELECTED: this.clearSelected(); break;
-                case KEY_EXP_NEXT_INSTRUCTION: this.nextInstruction(); break;
-                case KEY_EXP_RESET: this.reset(); break;
-                case KEY_EXP_DISPLAY_CHEMS: this.displayChemicalBoxes(); break;
-                case KEY_EXP_DISPLAY_EQUIPS: this.displayEquipmentBoxes(); break;
+        switch(keyCode){
+            case KEY_EXP_RESET_SELECTED: this.clearSelected(); break;
+            case KEY_EXP_NEXT_INSTRUCTION: this.nextInstruction(); break;
+            case KEY_EXP_RESET: this.reset(); break;
+            case KEY_EXP_DISPLAY_CHEMS: this.displayChemicalBoxes(); break;
+            case KEY_EXP_DISPLAY_EQUIPS: this.displayEquipmentBoxes(); break;
 
-                case KEY_EXP_ADD_CHEM_1:
-                case KEY_EXP_ADD_CHEM_5:
-                case KEY_EXP_ADD_CHEM_10:
-                case KEY_EXP_ADD_CHEM_20:
-                case KEY_EXP_ADD_CHEM_25: this.addChemicalToSelectedBeaker(keyCode); break;
-                default: break;
-            }
+            case KEY_EXP_ADD_CHEM_1:
+            case KEY_EXP_ADD_CHEM_5:
+            case KEY_EXP_ADD_CHEM_10:
+            case KEY_EXP_ADD_CHEM_20:
+            case KEY_EXP_ADD_CHEM_25: this.addChemicalToSelectedBeaker(keyCode); break;
+            default: break;
         }
     }
 
@@ -536,7 +562,6 @@ class ExperimentController2D{
     massIndex: The index for which mass size to use
     */
     addChemicalToSelectedBeaker(massIndex){
-        // TODO implement better solution for if this is an instance of a Container if it should activate
         if(!(this.selectedActor instanceof ContainerController2D)) return;
         let box = this.chemicalBoxes.selected;
         if(box === null) return;
@@ -544,15 +569,15 @@ class ExperimentController2D{
         if(chemControl === null) return;
         var mass;
         switch(massIndex){
-            case KEY_EXP_ADD_CHEM_1: mass = 1; break;
-            case KEY_EXP_ADD_CHEM_5: mass = 5; break;
-            case KEY_EXP_ADD_CHEM_10: mass = 10; break;
-            case KEY_EXP_ADD_CHEM_20: mass = 20; break;
-            case KEY_EXP_ADD_CHEM_25: mass = 25; break;
+            case KEY_EXP_ADD_CHEM_1: mass = 0.1; break;
+            case KEY_EXP_ADD_CHEM_5: mass = 1; break;
+            case KEY_EXP_ADD_CHEM_10: mass = 5; break;
+            case KEY_EXP_ADD_CHEM_20: mass = 10; break;
+            case KEY_EXP_ADD_CHEM_25: mass = 50; break;
             default: mass = null; break;
         }
         if(mass === null) return;
-        chemControl.chemical.setMass(mass);
+        chemControl.chemical.setMass(mass * (1 + (Math.random() - 0.5) * 2 * 0.05));
         this.selectedEquipFunction(ID_FUNC_CONTAINER_ADD_TO, chemControl);
     }
 
@@ -698,16 +723,18 @@ class ExperimentController2D{
 
         // TODO remove, only here for testing purposes
         // Draw instructions
-        g.fill(0);
+        g.fill(200);
         g.noStroke();
         g.textSize(18);
-        var y = 490;
+        var y = 450;
         let x = 650;
         g.text("Left click equipment to move it", x, y += 20);
         g.text("Right click a equipment to select, blue = actor, green = receiver", x, y += 20);
         g.text("Press ESC to unselect selected Equipment", x, y += 20);
-        g.text("Pres 1, 2, or 3 to perform actions on selected actor and receiver", x, y += 20);
-        g.text("Press 1, 2, 3, 4, 5 to add 1, 5, 10, 20, or 25 units to selected actor, if container", x, y += 20);
+        g.text("Press 1 - 9 to perform actions on selected actor and receiver", x, y += 20);
+        g.text("Also hold alt and press 1 - 9 to perform actions on only selected actor", x, y += 20);
+        g.text("Press 1, 2, 3, 4, 5 to add .1, 1, 5, 10, or 50 units to selected container", x, y += 20);
+        g.text("\tChemicals added have 0% to 5% error", x, y += 20);
         g.text("Press I to run the next instruction", x, y += 20);
         g.text("Press R to reset the simulation", x, y += 20);
         g.text("Press C to view Chemical tab, then click a chemical to select", x, y += 20);
@@ -715,8 +742,9 @@ class ExperimentController2D{
         g.text("Use arrow keys to move camera", x, y += 20);
 
         // Draw the list of possible actions for the selected actor
-        if(this.selectedActor !== null && this.selectedReceiver !== null){
+        if(this.selectedActor !== null){
             // TODO make render constants
+            // TODO Place this code in equipmentController2D
             let options = selAct.getFuncDescriptions();
             g.textSize(16);
             let baseX = mouseX + 15;
@@ -900,9 +928,7 @@ class EquipmentBoxList extends DisplayBoxList{
             let index = eqs.indexOf(sel.obj);
             if(index < 0) success = false;
             else{
-                expControl.placeEquipment(index);
-                this.remove(sel.obj);
-                success = true;
+                success = expControl.placeEquipment(index);
             }
         }
         // Let go of the inserting equipment

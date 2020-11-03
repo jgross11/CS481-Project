@@ -60,14 +60,9 @@ class GraduatedCylinderController2D extends ContainerController2D{
     graphics: The P5 graphics to use
     */
     draw(graphics){
-        // Draw the color of the Chemical, if one exists
-        let eq = this.equipment;
-        if(eq.contents.length > 0){
-            let chem = eq.contents[0];
-            let chemController = new ChemicalController2D(chem);
-            let w = this.width();
-            chemController.drawRect(this.x() + w * .135, this.y(), chem.mass / eq.capacity, w * .72, this.height() * 0.93, 0.1, graphics);
-        }
+        // Draw the chemicals
+        this.drawContentsRect(graphics, GRADUATED_CYLINDER_X_OFFSET, GRADUATED_CYLINDER_Y_OFFSET,
+            GRADUATED_CYLINDER_WIDTH_OFFSET, GRADUATED_CYLINDER_HEIGHT_OFFSET);
 
         // Draw the base Cylinder sprite
         super.draw(graphics);
