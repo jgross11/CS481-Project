@@ -16,7 +16,7 @@ let ID_EQUIP_GRADUATED_100mL= 9;
 let ID_EQUIP_GRADUATED_1000mL = 10;
 let ID_EQUIP_FLASK_25mL = 11;
 let ID_EQUIP_FLASK_50mL = 12;
-let ID_EQUIP_FLASK_100mL = 13;
+let ID_EQUIP_FLASK_125mL = 13;
 let ID_EQUIP_FLASK_1000mL = 14;
 let ID_EQUIP_WEIGH_BOAT = 15;
 let ID_EQUIP_STIR_ROD = 16;
@@ -67,7 +67,7 @@ function idToEquipment(id){
 
         case ID_EQUIP_FLASK_25mL:
         case ID_EQUIP_FLASK_50mL:
-        case ID_EQUIP_FLASK_100mL:
+        case ID_EQUIP_FLASK_125mL:
         case ID_EQUIP_FLASK_1000mL: return new ErlenmeyerFlaskController2D(new ErlenmeyerFlask(id));
 
         case ID_EQUIP_WEIGH_BOAT: return new WeighBoatController2D(new WeighBoat());

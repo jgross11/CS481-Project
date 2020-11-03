@@ -15,7 +15,7 @@ class ErlenmeyerFlask extends Container{
             // All Beaker sizes
             case ID_EQUIP_FLASK_25mL: newAttributes = [[50, 80], 15.0, 25.0]; break;
             case ID_EQUIP_FLASK_50mL: newAttributes = [[62.5, 100], 20.0, 50.0]; break;
-            case ID_EQUIP_FLASK_100mL: newAttributes = [[84, 136], 30.0, 100.0]; break;
+            case ID_EQUIP_FLASK_125mL: newAttributes = [[84, 136], 30.0, 125.0]; break;
             case ID_EQUIP_FLASK_1000mL: newAttributes = [[125, 200], 50.0, 1000.0]; break;
             default: break;
         }

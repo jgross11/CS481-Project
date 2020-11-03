@@ -21,7 +21,7 @@ QUnit.test('getID:', function(assert){
     assert.equal(flask.getID(), ID_EQUIP_FLASK_25mL, 'Should get the correct ID for flask');
 
     assert.equal(new ErlenmeyerFlask(ID_EQUIP_FLASK_50mL).getID(), ID_EQUIP_FLASK_50mL, 'Should get the correct ID for flask');
-    assert.equal(new ErlenmeyerFlask(ID_EQUIP_FLASK_100mL).getID(), ID_EQUIP_FLASK_100mL, 'Should get the correct ID for flask');
+    assert.equal(new ErlenmeyerFlask(ID_EQUIP_FLASK_125mL).getID(), ID_EQUIP_FLASK_125mL, 'Should get the correct ID for flask');
     assert.equal(new ErlenmeyerFlask(ID_EQUIP_FLASK_1000mL).getID(), ID_EQUIP_FLASK_1000mL, 'Should get the correct ID for flask');
 });
 

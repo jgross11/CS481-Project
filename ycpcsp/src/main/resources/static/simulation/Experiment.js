@@ -540,11 +540,11 @@ class ExperimentController2D{
         if(chemControl === null) return;
         var mass;
         switch(massIndex){
-            case KEY_EXP_ADD_CHEM_1: mass = 1; break;
-            case KEY_EXP_ADD_CHEM_5: mass = 5; break;
-            case KEY_EXP_ADD_CHEM_10: mass = 10; break;
-            case KEY_EXP_ADD_CHEM_20: mass = 20; break;
-            case KEY_EXP_ADD_CHEM_25: mass = 25; break;
+            case KEY_EXP_ADD_CHEM_1: mass = 0.1; break;
+            case KEY_EXP_ADD_CHEM_5: mass = 1; break;
+            case KEY_EXP_ADD_CHEM_10: mass = 1; break;
+            case KEY_EXP_ADD_CHEM_20: mass = 10; break;
+            case KEY_EXP_ADD_CHEM_25: mass = 50; break;
             default: mass = null; break;
         }
         if(mass === null) return;
@@ -703,7 +703,7 @@ class ExperimentController2D{
         g.text("Right click a equipment to select, blue = actor, green = receiver", x, y += 20);
         g.text("Press ESC to unselect selected Equipment", x, y += 20);
         g.text("Pres 1, 2, or 3 to perform actions on selected actor and receiver", x, y += 20);
-        g.text("Press 1, 2, 3, 4, 5 to add 1, 5, 10, 20, or 25 units to selected actor, if container", x, y += 20);
+        g.text("Press 1, 2, 3, 4, 5 to add .1, 1, 1, 10, or 50 units to selected actor, if container", x, y += 20);
         g.text("Press I to run the next instruction", x, y += 20);
         g.text("Press R to reset the simulation", x, y += 20);
         g.text("Press C to view Chemical tab, then click a chemical to select", x, y += 20);
