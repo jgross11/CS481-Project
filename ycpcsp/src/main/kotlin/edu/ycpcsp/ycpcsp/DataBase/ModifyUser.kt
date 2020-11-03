@@ -1,11 +1,12 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
+import edu.ycpcsp.ycpcsp.PostDataClasses.EditUserFormData
 import edu.ycpcsp.ycpcsp.Models.User
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.*
 
-fun ModifyUser(user: User): Boolean {
+fun ModifyUser(editUserFormData: EditUserFormData): Boolean {
     val serverCredentials = serverCredential()
     val username = serverCredentials?.get(0)
     val password = serverCredentials?.get(1)
@@ -25,8 +26,8 @@ fun ModifyUser(user: User): Boolean {
 
         try{
             val rs = st.executeUpdate("update Database.Users " +
-                    "SET firstName = \'${user.firstName}\', lastName =\'${user.lastName}\', password = \'${user.password}\', organization = \'${user.school}\'" +
-                    "WHERE email = \'${user.email}\';")
+                    "SET firstName = \'${editUserFormData.firstName}\', lastName =\'${editUserFormData.lastName}\', password = \'${editUserFormData.password}\', organization = \'${editUserFormData.school}\'" +
+                    "WHERE email = \'${editUserFormData.email}\';")
             //The method will return true if the query was able to successful update the desired User row
             return true
         } catch (ex: SQLException){
