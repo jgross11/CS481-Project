@@ -15,32 +15,26 @@ var Password = 5
 var School = 6
 
 fun LoadUser(email: String): User {
-    val serverCredentials = serverCredential()
-    val username = serverCredentials?.get(0)
-    val password = serverCredentials?.get(1)
-    val url = serverCredentials?.get(2)
-
-    val connectionProps = Properties()
-    connectionProps["user"] = username
-    connectionProps["password"] = password
-    connectionProps["useSSL"] = "false"
+    val connection = getDBConnection()
 
     try {
-        //test class fails here
-        Class.forName("com.mysql.jdbc.Driver")
+        if(connection != null) {
+            val preparedSt = connection.prepareStatement("SELECT * FROM Database.Users where email = ?;")
+            preparedSt.setString(1, email)
+            val rs = preparedSt.executeQuery()
 
-        val conn = DriverManager.getConnection(url, connectionProps)
-        val st = conn.createStatement()
-        val rs = st.executeQuery("SELECT * FROM Database.Users where email = \"$email\";")
-
-        try{
-            rs.next()
-            return User(rs.getString(FirstName),rs.getString(LastName),rs.getString(Email),rs.getString(Password),rs.getString(School), rs.getInt(ID))
-        } catch (ex: SQLException){
-            println("Error the query returned with a null result set. The query must have been entered incorrectly")
-            ex.printStackTrace()
+            try {
+                return if (rs.first()) {
+                    User(rs.getString(FirstName), rs.getString(LastName), rs.getString(Email), rs.getString(Password), rs.getString(School), rs.getInt(ID))
+                } else {
+                    User()
+                }
+            } catch (ex: SQLException) {
+                println("Error the query returned with a null result set. The query must have been entered incorrectly")
+                ex.printStackTrace()
+            }
+            return User()
         }
-        return User()
 
     } catch (ex: SQLException) {
         // handle any errors

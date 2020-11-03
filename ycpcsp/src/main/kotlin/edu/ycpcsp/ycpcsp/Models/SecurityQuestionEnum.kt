@@ -9,6 +9,7 @@ package edu.ycpcsp.ycpcsp.Models
 
 enum class SecurityQuestionEnum(val question : String){
     PET("What is the name of your first pet?"),
+    SPORT("What is your favorite sport?"),
     ADDRESS("What is your first address?"),
     MOVIE("What is your favorite movie?"),
     MOTHER("What is your mothers name?"),

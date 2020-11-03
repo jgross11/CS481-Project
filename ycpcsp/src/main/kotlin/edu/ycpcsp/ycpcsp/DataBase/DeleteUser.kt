@@ -5,28 +5,25 @@ import java.sql.SQLException
 import java.util.*
 
 fun DeleteUser(id: String?): Boolean{
-    val connectionProps = Properties()
-    connectionProps["user"] = username
-    connectionProps["password"] = edu.ycpcsp.ycpcsp.DataBase.password
-    connectionProps["useSSL"] = "false"
+    val connection = getDBConnection()
+    if(connection != null) {
+        try {
+            val preparedSt = connection.prepareStatement("DELETE FROM Database.Users WHERE id = ?")
 
-    try {
-        //test the driver to make sure that it works
-        Class.forName("com.mysql.jdbc.Driver")
-        //Connection for the database to get it connected and then execute the query to insert the values into the database
-        val conn = DriverManager.getConnection(url, connectionProps)
-        val st = conn.createStatement()
-        val rs = st.executeUpdate("DELETE FROM Database.Users WHERE id = '$id'")
+            preparedSt.setString(1, id)
+            preparedSt.executeUpdate()
 
-        return true
+            return true
 
-    }catch (ex: SQLException) {
-        // handle any errors
-        ex.printStackTrace()
-    } catch (ex: Exception) {
-        // handle any errors
-        ex.printStackTrace()
+        } catch (ex: SQLException) {
+            // handle any errors
+            ex.printStackTrace()
+        } catch (ex: Exception) {
+            // handle any errors
+            ex.printStackTrace()
+        }
+
+
     }
-
     return false
 }

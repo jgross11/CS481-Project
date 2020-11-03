@@ -16,6 +16,8 @@ repositories {
 }
 
 dependencies {
+	// 'import' all jars in src/Jars folder
+	implementation(fileTree(mapOf("dir" to "src/Jars", "include" to listOf("*.jar"))))
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
