@@ -89,13 +89,13 @@
 <p id="CHLIST"></p>
 <p id="EQLIST"></p>
 
-<p id="Steps"></p>
 
 <select id="ChemOrEquip1"></select>
 <select id="insert1"></select>
 <select id="Function"></select>
 <select id="ChemOrEquip2"></select>
 <select id="insert2"></select>
+<p id="Steps"></p>
 
 
 <button onclick="AddStep()">Add Step</button>
@@ -111,7 +111,6 @@
     let sendequip = [];
     var liststeps = [];
     let sendsteps = [];
-    var stepcount = 0;
     LoadEquip();
     LoadChem();
     LoadFunc();
@@ -184,7 +183,9 @@
 
 
     }
+    var stepcount=0;
     function AddStep(){
+
         var op1 = document.getElementById("ChemOrEquip1");
         var opti1 = op1.value;
         var a = document.getElementById("insert1");
@@ -195,15 +196,12 @@
         var opti2 = op2.value;
         var r = document.getElementById("insert2");
         var rec = r.value;
-
         var current = stepcount;
         var send = {current,act,opti1,rec,opti2,func};
         liststeps.push(send);
-        document.getElementById("Steps").innerHTML = JSON.stringify(listchem);
-
-        sendsteps.push(makeTestInstructionJSON(stepcount,act,opti1,rec,opti2,func));
+        document.getElementById("Steps").innerHTML = JSON.stringify(liststeps);
+        sendsteps.push(makeTestInstructionJSON(current,act,opti1,rec,opti2,func));
         stepcount++;
-
     }
 
     function AddChem(Chem){
