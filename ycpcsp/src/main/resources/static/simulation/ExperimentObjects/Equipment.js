@@ -21,9 +21,12 @@ class Equipment extends ExperimentObject{
     /**
     Set the current position of this piece of Equipment
     pos: The new position, a list [x, y] of coordinates
+    bounds: The bounds to keep the position inside of, or null to ignore, default null
     */
-    setPosition(pos){
+    setPosition(pos, bounds = null){
         this.position = pos
+        let control = new EquipmentController2D(this);
+        if(bounds !== null) control.keepInBounds(bounds);
     }
 
     /**

@@ -158,7 +158,6 @@ class ExperimentController2D{
         let func = actor.idToFunc(id);
         if(func === null || func === undefined) return false;
         if(receiver === null) receiver = this.selectedReceiver;
-        if(receiver === null || receiver === undefined) return false;
         func.bind(actor, receiver)();
         return true;
     }
@@ -193,8 +192,7 @@ class ExperimentController2D{
             var pos = this.experimentMousePos();
             pos[0] += this.movingEquipAnchor[0];
             pos[1] += this.movingEquipAnchor[1];
-            eq.equipment.setPosition(pos);
-            eq.keepInBounds(EXP_CAMERA_OUTLINE_BOUNDS);
+            eq.equipment.setPosition(pos, EXP_CAMERA_OUTLINE_BOUNDS);
         }
     }
 
@@ -226,7 +224,7 @@ class ExperimentController2D{
             // If either object can be placed and it's not placed, place it
             var adds = [];
             if(act.canPlace() && !pEqs.includes(act)) adds.push(act);
-            if(rec !== null && rec.canPlace() && !pEqs.includes(rec)) adds.push(rec);
+            if(rec !== null && rec !== undefined && rec.canPlace() && !pEqs.includes(rec)) adds.push(rec);
             // TODO move this loop to a separate method
             var success = true;
             for(var i = 0; i < adds.length; i++){
@@ -362,7 +360,7 @@ class ExperimentController2D{
         this.placedEquipment = [];
         this.equipmentBoxes = new EquipmentBoxList();
         this.chemicalBoxes = new ChemicalBoxList();
-        this.selectedActor= null;
+        this.selectedActor = null;
         this.selectedReceiver = null;
         this.instructionCounter = 0;
 
@@ -533,31 +531,28 @@ class ExperimentController2D{
     */
     keyPress(){
         // TODO this is just temporary controls via keyboard
-        if(this.selectedActor !== null && this.selectedReceiver !== null && (key >= '1' && key <= '9')){
-            var funcID;
-            if(key >= '1' && key <= '9') funcID = parseInt(key);
-            else funcID = null;
-            if(funcID !== null){
+        let k = key;
+        if(k >= '1' && k <= '9'){
+            if(this.selectedActor !== null && (this.selectedReceiver !== null || keyIsDown(ALT))){
+                var funcID = parseInt(k);
                 this.selectedEquipFunction(funcID);
                 this.setSelectedActor(null);
                 this.setSelectedReceiver(null);
             }
         }
-        else{
-            switch(keyCode){
-                case KEY_EXP_RESET_SELECTED: this.clearSelected(); break;
-                case KEY_EXP_NEXT_INSTRUCTION: this.nextInstruction(); break;
-                case KEY_EXP_RESET: this.reset(); break;
-                case KEY_EXP_DISPLAY_CHEMS: this.displayChemicalBoxes(); break;
-                case KEY_EXP_DISPLAY_EQUIPS: this.displayEquipmentBoxes(); break;
+        switch(keyCode){
+            case KEY_EXP_RESET_SELECTED: this.clearSelected(); break;
+            case KEY_EXP_NEXT_INSTRUCTION: this.nextInstruction(); break;
+            case KEY_EXP_RESET: this.reset(); break;
+            case KEY_EXP_DISPLAY_CHEMS: this.displayChemicalBoxes(); break;
+            case KEY_EXP_DISPLAY_EQUIPS: this.displayEquipmentBoxes(); break;
 
-                case KEY_EXP_ADD_CHEM_1:
-                case KEY_EXP_ADD_CHEM_5:
-                case KEY_EXP_ADD_CHEM_10:
-                case KEY_EXP_ADD_CHEM_20:
-                case KEY_EXP_ADD_CHEM_25: this.addChemicalToSelectedBeaker(keyCode); break;
-                default: break;
-            }
+            case KEY_EXP_ADD_CHEM_1:
+            case KEY_EXP_ADD_CHEM_5:
+            case KEY_EXP_ADD_CHEM_10:
+            case KEY_EXP_ADD_CHEM_20:
+            case KEY_EXP_ADD_CHEM_25: this.addChemicalToSelectedBeaker(keyCode); break;
+            default: break;
         }
     }
 
@@ -583,7 +578,7 @@ class ExperimentController2D{
             default: mass = null; break;
         }
         if(mass === null) return;
-        chemControl.chemical.setMass(mass);
+        chemControl.chemical.setMass(mass * (1 + (Math.random() - 0.5) * 2 * 0.05));
         this.selectedEquipFunction(ID_FUNC_CONTAINER_ADD_TO, chemControl);
     }
 
@@ -732,13 +727,15 @@ class ExperimentController2D{
         g.fill(200);
         g.noStroke();
         g.textSize(18);
-        var y = 490;
+        var y = 450;
         let x = 650;
         g.text("Left click equipment to move it", x, y += 20);
         g.text("Right click a equipment to select, blue = actor, green = receiver", x, y += 20);
         g.text("Press ESC to unselect selected Equipment", x, y += 20);
-        g.text("Pres 1, 2, or 3 to perform actions on selected actor and receiver", x, y += 20);
-        g.text("Press 1, 2, 3, 4, 5 to add .1, 1, 5, 10, or 50 units to selected actor, if container", x, y += 20);
+        g.text("Press 1 - 9 to perform actions on selected actor and receiver", x, y += 20);
+        g.text("Also hold alt and press 1 - 9 to perform actions on only selected actor", x, y += 20);
+        g.text("Press 1, 2, 3, 4, 5 to add .1, 1, 5, 10, or 50 units to selected container", x, y += 20);
+        g.text("\tChemicals added have 0% to 5% error", x, y += 20);
         g.text("Press I to run the next instruction", x, y += 20);
         g.text("Press R to reset the simulation", x, y += 20);
         g.text("Press C to view Chemical tab, then click a chemical to select", x, y += 20);
@@ -746,8 +743,9 @@ class ExperimentController2D{
         g.text("Use arrow keys to move camera", x, y += 20);
 
         // Draw the list of possible actions for the selected actor
-        if(this.selectedActor !== null && this.selectedReceiver !== null){
+        if(this.selectedActor !== null){
             // TODO make render constants
+            // TODO Place this code in equipmentController2D
             let options = selAct.getFuncDescriptions();
             g.textSize(16);
             let baseX = mouseX + 15;

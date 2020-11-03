@@ -79,6 +79,7 @@ class Container extends Equipment{
 // Constants for identifying which functions have which ids
 let ID_FUNC_CONTAINER_POUR_INTO = 1;
 let ID_FUNC_CONTAINER_ADD_TO = 2;
+let ID_FUNC_CONTAINER_EMPTY_IN_TRASH = 3;
 
 /**
 A class for handling controlling a Container in a 2D environment
@@ -101,6 +102,7 @@ class ContainerController2D extends EquipmentController2D{
         switch(id){
             case ID_FUNC_CONTAINER_POUR_INTO: return this.pourInto;
             case ID_FUNC_CONTAINER_ADD_TO: return this.addTo;
+            case ID_FUNC_CONTAINER_EMPTY_IN_TRASH: return this.emptyOut;
             default: return null;
         }
     }
@@ -114,6 +116,7 @@ class ContainerController2D extends EquipmentController2D{
         switch(func){
             case this.pourInto: return ID_FUNC_CONTAINER_POUR_INTO;
             case this.addTo: return ID_FUNC_CONTAINER_ADD_TO;
+            case this.emptyOut: return ID_FUNC_CONTAINER_EMPTY_IN_TRASH;
             default: return null;
         }
     }
@@ -123,7 +126,7 @@ class ContainerController2D extends EquipmentController2D{
     returns: the list of strings
     */
     getFuncDescriptions(){
-        return ["Pour Into", "Add To"];
+        return ["Pour Into", "Add To", "Dispose Contents in Trash"];
     }
 
     /**
