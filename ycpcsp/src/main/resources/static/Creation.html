@@ -183,7 +183,7 @@
 
 
     }
-    var stepcount=0;
+    var stepcount = -1;
     function AddStep(){
 
         var op1 = document.getElementById("ChemOrEquip1");
@@ -196,12 +196,11 @@
         var opti2 = op2.value;
         var r = document.getElementById("insert2");
         var rec = r.value;
-        var current = stepcount;
-        var send = {current,act,opti1,rec,opti2,func};
+        stepcount++;
+        var send = {stepcount,act,opti1,rec,opti2,func};
         liststeps.push(send);
         document.getElementById("Steps").innerHTML = JSON.stringify(liststeps);
-        sendsteps.push(makeTestInstructionJSON(current,act,opti1,rec,opti2,func));
-        stepcount++;
+        sendsteps.push(makeTestInstructionJSON(stepcount,act,opti1,rec,opti2,func));
     }
 
     function AddChem(Chem){
