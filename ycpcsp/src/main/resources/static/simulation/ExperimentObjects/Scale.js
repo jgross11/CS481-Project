@@ -113,6 +113,10 @@ class ScaleController2D extends EquipmentController2D{
     Take the object on this Controller's Scale off of the Scale
     */
     removeScaleObject(){
+        let weigh = this.equipment.objectToBeWeighed;
+        if(weigh === null) return;
+        let center = this.getCenter();
+        weigh.setCenter(center[0] - weigh.width() - this.width(), center[1]);
         this.equipment.setObjectToBeWeighed(null);
         this.updateWeighingObjectMass();
     }

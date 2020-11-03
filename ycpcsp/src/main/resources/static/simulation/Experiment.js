@@ -217,12 +217,39 @@ class ExperimentController2D{
         if(this.instructionCounter < instructions.length){
             let insC = instructions[this.instructionCounter];
             let ins = insC.instruction;
-            let eqs = this.placedEquipment;
+            let act = ins.actor;
+            let rec = ins.receiver;
+            let pEqs = this.placedEquipment;
+            let eqs = this.experiment.equipment;
 
             // Check to ensure that the Instruction's ExperimentObject has been placed in the lab, if possible
-            //  if either object can be placed and it's not placed, do nothing
-            if((ins.actor.canPlace() !== eqs.includes(ins.actor)) ||
-               (ins.receiver !== null && ins.receiver.canPlace() !== eqs.includes(ins.receiver))) return;
+            // If either object can be placed and it's not placed, place it
+            var adds = [];
+            if(act.canPlace() && !pEqs.includes(act)) adds.push(act);
+            if(rec !== null && rec.canPlace() && !pEqs.includes(rec)) adds.push(rec);
+            // TODO move this loop to a separate method
+            var success = true;
+            for(var i = 0; i < adds.length; i++){
+                let index = eqs.indexOf(adds[i]);
+                // If there is no valid index, do nothing
+                if(index < 0){
+                    success = false;
+                    break;
+                }
+
+                // Otherwise, place the object at the center of the screen
+                let eq = eqs[index];
+                let pos = this.camera.pos;
+                eq.setCenter(
+                    pos[0] + EXP_BOUNDS[2] * (0.2 + 0.3 * Math.random()),
+                    pos[1] + EXP_BOUNDS[3] * (0.2 + 0.3 * Math.random())
+                );
+                if(!this.placeEquipment(index)){
+                    success = false;
+                    break;
+                }
+            }
+            if(!success) return;
 
             insC.activate();
             this.instructionCounter++;
@@ -278,13 +305,21 @@ class ExperimentController2D{
     Place a piece of Equipment to the placed list of this Controller.
     Does nothing if the index is not in the range of the list
     index: The index of the piece of Equipment from the Experiment of this Controller to add to the placed list
+    returns: true if the Equipment could be placed, false otherwise
     */
     placeEquipment(index){
         let eqs = this.experiment.equipment;
         let pEqs = this.placedEquipment;
-        if(index < 0 || index > eqs.length - 1) return;
+        let boxes = this.equipmentBoxes;
+        if(index < 0 || index > eqs.length - 1) return false;
         let toAdd = eqs[index];
-        if(!pEqs.includes(toAdd)) pEqs.push(toAdd);
+        if(!pEqs.includes(toAdd)){
+            pEqs.push(toAdd);
+            // Remove the placed equipment from the equipment boxes
+            boxes.remove(toAdd);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -542,7 +577,7 @@ class ExperimentController2D{
         switch(massIndex){
             case KEY_EXP_ADD_CHEM_1: mass = 0.1; break;
             case KEY_EXP_ADD_CHEM_5: mass = 1; break;
-            case KEY_EXP_ADD_CHEM_10: mass = 1; break;
+            case KEY_EXP_ADD_CHEM_10: mass = 5; break;
             case KEY_EXP_ADD_CHEM_20: mass = 10; break;
             case KEY_EXP_ADD_CHEM_25: mass = 50; break;
             default: mass = null; break;
@@ -703,7 +738,7 @@ class ExperimentController2D{
         g.text("Right click a equipment to select, blue = actor, green = receiver", x, y += 20);
         g.text("Press ESC to unselect selected Equipment", x, y += 20);
         g.text("Pres 1, 2, or 3 to perform actions on selected actor and receiver", x, y += 20);
-        g.text("Press 1, 2, 3, 4, 5 to add .1, 1, 1, 10, or 50 units to selected actor, if container", x, y += 20);
+        g.text("Press 1, 2, 3, 4, 5 to add .1, 1, 5, 10, or 50 units to selected actor, if container", x, y += 20);
         g.text("Press I to run the next instruction", x, y += 20);
         g.text("Press R to reset the simulation", x, y += 20);
         g.text("Press C to view Chemical tab, then click a chemical to select", x, y += 20);
@@ -896,9 +931,7 @@ class EquipmentBoxList extends DisplayBoxList{
             let index = eqs.indexOf(sel.obj);
             if(index < 0) success = false;
             else{
-                expControl.placeEquipment(index);
-                this.remove(sel.obj);
-                success = true;
+                success = expControl.placeEquipment(index);
             }
         }
         // Let go of the inserting equipment
