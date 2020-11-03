@@ -1,31 +1,9 @@
 var mainExperiment = null;
 var mainExpController = null;
+var mainExpCanvas = null;
 
-/*
-
-TODO:
-    Create code for Chemicals, display a Chemical tab
-        Make a key toggle showing and interacting with chemicals vs equipment
-        Click on a chemical to be able to add it to a beaker, use func ids
-    Test cases ChemicalBox, EquipmentBox.getImage, DisplayBox
-        Need to allow them to turn graphics on or off
-    Allow users to select different actions for each piece of equipment
-    Allow equipment and chemicals to be disposed
-    Make a better way of Chemicals in Instructions to keep their stats so they don't change, or maybe have a reset?
-    Make proper layout page with home button
-    Add camera panning
-        Use x and y camera coordinates in the ExperimentController2D
-        Use P5 translate for graphics
-        Create global function to get x and y mouse positions
-        Objects which will not be on the screen should not be rendered, i.e. a renderBounds() method
-        Objects in the experiment should be forced to stay within the experiment bounds
-    Make basic layout for Experiment
-        Update clicking and dragging to change indexes for ExperimentBoxes when they are removed from the list
-        Split Experiment render code into individual methods
-    Optimize performance of searching for adding and removing Equipment, pick a better data structure
-    Create a method to render a static loading screen while the simulator loads
-
-*/
+// true to load data from the actual database, false to use test data defined by the return of getTestJSON()
+let LOAD_EXPERIMENT_FROM_SERVER = false;
 
 /**
 P5.js function, called when script is initially loaded
@@ -35,8 +13,20 @@ function setup(){
     let canvas = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
     canvas.position(50, 50, "relative");
 
-    // First load image assets
+    // Set the frame rate
+    frameRate(EXPERIMENT_FRAME_RATE);
+
+    // Set up control constants from RenderConstants2D
+    setUpControlConstants();
+
+    // Create the experiment graphics
+    mainExpCanvas = createGraphics(CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    // Load image assets
     loadImages();
+
+    // Set up chemical properties test database
+    initTestChemProperties();
 
     // Grab data from session storage
     loadSessionData();
@@ -46,7 +36,8 @@ function setup(){
 Initialize the experiment and controller objects from the session data
 */
 function initExperiment(data){
-    mainExperiment = parseExperiment(data);
+    if(LOAD_EXPERIMENT_FROM_SERVER) mainExperiment = parseExperiment(data);
+    else mainExperiment = parseExperiment(getTestJSON());
     mainExpController = new ExperimentController2D(mainExperiment, true);
 }
 
@@ -54,7 +45,12 @@ function initExperiment(data){
 P5.js function, called when screen is redrawn
 */
 function draw(){
-    if(mainExpController !== null) mainExpController.render();
+    if(mainExpController !== null){
+        mainExpController.update();
+
+        mainExpController.render(mainExpCanvas);
+        image(mainExpCanvas, 0, 0);
+    }
 }
 
 /**
@@ -90,6 +86,13 @@ P5.js function, called when a key on the keyboard is pressed
 */
 function keyPressed(){
     if(mainExpController !== null) mainExpController.keyPress();
+}
+
+/**
+P5.js function, called when a key on the keyboard is released
+*/
+function keyReleased(){
+    if(mainExpController !== null) mainExpController.keyRelease();
 }
 
 /**

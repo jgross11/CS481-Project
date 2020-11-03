@@ -6,8 +6,8 @@ QUnit.module("Experiment", {
     beforeEach: function(){
         exp = new Experiment("The Title", "The Name");
         equip = new Equipment([0, 0], [100, 100], 1, null);
-        beaker1 = new BeakerController2D(new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01));
-        beaker2 = new BeakerController2D(new Beaker([250, 200], [150, 150], 20.0, 50.0, 0.01));
+        beaker1 = new BeakerController2D(new Beaker(ID_EQUIP_BEAKER_50mL));
+        beaker2 = new BeakerController2D(new Beaker(ID_EQUIP_BEAKER_250mL));
     }
 });
 

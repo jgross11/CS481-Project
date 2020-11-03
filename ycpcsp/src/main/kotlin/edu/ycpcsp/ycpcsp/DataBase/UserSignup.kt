@@ -7,7 +7,9 @@ import java.util.*
 
 
 fun UserSignup(signupFormData: SignupFormData): Boolean {
+
     val connection = getDBConnection()
+
     try{
         if(connection != null) {
             //test the driver to make sure that it works

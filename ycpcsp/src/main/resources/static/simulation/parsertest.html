@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    // single elements
+    parseChemical("H");
+    parseChemical("H2");
+    parseChemical("H234");
+    parseChemical("He");
+    parseChemical("He2");
+    parseChemical("He23213");
+    parseChemical("Uub");
+    parseChemical("Uub2");
+
+
+    parseChemical("Uub232342232");
+    parseChemical("H2He");
+    parseChemical("H2He2");
+    parseChemical("H2He2O7");
+    parseChemical("H2He2OOOO");
+    parseChemical("(H)");
+    parseChemical("(H)2");
+    parseChemical("(HO)2");
+    parseChemical("S(O2)2");
+    parseChemical("SO(SO2)2");
+    parseChemical("S(S2)(S3)(S4)");
+    parseChemical("ABCDEFG");
+    parseChemical("(A2B2A2B2)2");
+    parseChemical("A(A(A)2)2");
+    parseChemical("(AuBuCuDuEuFuGu)1");
+    parseChemical("(AuBuCuDuEuFuGu)100");
+    parseChemical("(AuBuCuDuEuFuGu)100Au");
+    parseChemical("Au(Au2)2(Au3)3(Au4)4");
+    parseChemical("Uub123");
+    parseChemical("Uu123");
+    parseChemical("U123");
+
+    parseEquation("H2 + O -> H2O ");
+    parseEquation("H2O -> H2 + O ");
+    parseEquation("H + H + H + H -> H4");
+    parseEquation("(HO)4 + (OH)2 -> H6 + O6");
+    parseEquation("A + B + C + D + E -> (ABCDE)1");
+
+    function parseEquation(name){
+        console.log("Parsing equation: " + name);
+        let reactants = [];
+        let products = [];
+        let nameLength = name.length;
+        let buildingSubString = false;
+        let subStringStart = 0;
+        let inProducts = false;
+        for(var i = 0; i < nameLength+1; i++){
+            let char = name[i];
+            if(char == " " || char == "+" || char == "-" || i == nameLength){
+                if(buildingSubString){
+                    // console.log("building substring: " + name.substring(subStringStart, i));
+                    if(inProducts){
+                        products.push(parseChemical(name.substring(subStringStart, i)));
+                    }
+                    else{
+                        reactants.push(parseChemical(name.substring(subStringStart, i)));
+                    }
+                    buildingSubString = false;
+                }
+                else{
+                    continue;
+                }
+            }
+            else if(char == ">"){
+                inProducts = true;
+            }
+            else if(!buildingSubString){
+                buildingSubString = true;
+                subStringStart = i;
+            }
+        }
+
+        console.log("Parsed reactants: ");
+        console.log(reactants);
+        console.log("Parsed products: ");
+        console.log(products);
+    }
+
+    function parseChemical(name, indexValue){
+        let list = {};
+        let startValue = indexValue == null ? 0 : indexValue;
+        if(startValue == 0) console.log("parsing " + name);
+        let nameLength = name.length;
+        for(var i = startValue; i < nameLength;){
+            let char = name[i];
+
+            // first letter - uppercase
+            if(char.toUpperCase() != char.toLowerCase()){
+                // single letter, single value
+                if (i+1 >= nameLength){
+                    list[char] = list[char] == null ? 1 : list[char] + 1;
+                    break;
+                }
+                let next = name[i+1];
+                // second letter - lowercase
+                if(next.toUpperCase() != next.toLowerCase() && next.toLowerCase() == next){
+                    if(i+2 >= nameLength){
+                        list[char+next] = list[char+next] == null ? 1 : list[char+next] + 1;
+                        break;
+                    }
+                    let nextnext = name[i+2];
+                    // third letter - lowercase
+                    if(nextnext.toUpperCase() != nextnext.toLowerCase() && nextnext.toLowerCase() == nextnext){
+                        if(i+3 >= nameLength){
+                            list[char+next+nextnext] = list[char+next+nextnext] == null ? 1 : list[char+next+nextnext] + 1;
+                            break;
+                        }
+                        let next3 = name[i+3];
+                        if(!isNaN(next3)){
+                            let coefficient = parseInt(next3);
+                            let index = i+4;
+                            while(!isNaN(name[index])){
+                                coefficient = coefficient * 10 + parseInt(name[index++]);
+                            }
+                            list[char+next+nextnext] = list[char+next+nextnext] == null ? coefficient : list[char+next+nextnext] + coefficient;
+                            i = index;
+                        }
+                        else{
+                            list[char+next+nextnext] = list[char+next+nextnext] == null ? 1 : list[char+next+nextnext] + 1;
+                            i+=3;
+                        }
+                    }
+                    else if(!isNaN(nextnext)){
+                        let index = i+3;
+                        let coefficient = parseInt(nextnext);
+                        while(!isNaN(name[index])){
+                            coefficient = coefficient * 10 + parseInt(name[index++]);
+                        }
+                        list[char+next] = list[char+next] == null ? coefficient : list[char+next] + coefficient;
+                        i = index;
+                    }
+                    // paren or start of next element
+                    else{
+                        list[char+next] = list[char+next] == null ? 1 : list[char+next] + 1;
+                        i+=2;
+                    }
+                }
+                // number
+                else if(!isNaN(next)){
+                    let index = i+2;
+                    let coefficient = parseInt(next);
+                    while(!isNaN(name[index])){
+                        coefficient = coefficient * 10 + parseInt(name[index++]);
+                    }
+                    list[char] = list[char] == null ? coefficient : list[char] + coefficient;
+                    i = index;
+                }
+                // paren or start of next element
+                else{
+                    list[char] = list[char] == null ? 1 : list[char] + 1;
+                    i+=1;
+                }
+            }
+            else if(char == '('){
+                let tempList = parseChemical(name, i+1);
+                //console.log("received from recursive call: ");
+                //console.log(tempList);
+                let tempListKeys = Object.keys(tempList);
+                let tempListValues = Object.values(tempList);
+
+                for(var k = 0; k < tempListKeys.length; k++){
+                    //console.log(tempListKeys[k]);
+                    //console.log(tempListValues[k]);
+                    //console.log(list[tempListKeys[k]]);
+                    list[tempListKeys[k]] = list[tempListKeys[k]] == null ? tempListValues[k] : list[tempListKeys[k]] + tempListValues[k];
+                }
+                i = tempList["nextIndex"];
+                delete list["nextIndex"];
+                //console.log("after recursion, i set to: " + i);
+            }
+            else if(char == ')'){
+                //console.log("reached end of paren with list: ");
+                //console.log(list);
+                if(i+1 >= nameLength){
+                    // at end of string
+                    list["nextIndex"] = i+1;
+                    return list;
+                }
+                let possibleMultiplier = name[i+1];
+                if(!isNaN(possibleMultiplier)){
+                    let index = i+2;
+                    let coefficient = possibleMultiplier;
+                    while(!isNaN(name[index])){
+                        coefficient = coefficient * 10 + parseInt(name[index++]);
+                    }
+                    list["nextIndex"] = index;
+                    let listKeys = Object.keys(list);
+                    for(var j = 0; j < listKeys.length; j++){
+                        if(listKeys[j] == "nextIndex"){
+                            continue;
+                        } else{
+                            list[listKeys[j]] = list[listKeys[j]] == null ? coefficient : list[listKeys[j]] * coefficient;
+                        }
+                    }
+                    return list;
+                }
+                else{
+                    list["nextIndex"] = i+1;
+                    let listKeys = Object.keys(list);
+                    for(var j = 0; j < listKeys.length; j++){
+                        if(listKeys[j] == "nextIndex"){
+                            continue;
+                        } else{
+                            list[listKeys[j]] = list[listKeys[j]] == null ? 1 : list[listKeys[j]];
+                        }
+                    }
+                    return list;
+                }
+            }
+        }
+        //console.log("completed list: ");
+        console.log(list);
+        return list;
+    }
+</script>
+</body>
+</html>
