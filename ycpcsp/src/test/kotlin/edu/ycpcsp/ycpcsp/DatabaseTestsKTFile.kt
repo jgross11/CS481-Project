@@ -41,21 +41,21 @@ fun main(){
 //    println("=============================End LoadUser Test=============================")
 //
 //    //TODO ModifyUser test
-    println("=============================Begin Modify User Test=============================")
-
-    var originalUser = LoadUser(email)
-    var modifyUser = User("Firstname", "Lastname", "test@test.com", "1234", "TheBest")
-    if(ModifyUser(modifyUser)){
-        if(originalUser != null){
-            //if you wish to verify whether or not the ModifyUser is actually working comment out the line below
-            //ModifyUser(originalUser)
-        }
-        println("Modify User successfully ran")
-    } else{
-        println("Modify User did not successfully run")
-        println("Double check the database table to make sure the data is not corrupted")
-    }
-    println("=============================End Modify User Test=============================")
+//    println("=============================Begin Modify User Test=============================")
+//
+//    var originalUser = LoadUser(email)
+//    var modifyUser = User("test", "test", "test@test.com", "1234", "TheBest")
+//    if(ModifyUser(modifyUser)){
+//        if(originalUser != null){
+//            //if you wish to verify whether or not the ModifyUser is actually working comment out the line below
+//            //ModifyUser(originalUser)
+//        }
+//        println("Modify User successfully ran")
+//    } else{
+//        println("Modify User did not successfully run")
+//        println("Double check the database table to make sure the data is not corrupted")
+//    }
+//    println("=============================End Modify User Test=============================")
 //    //Todo Security Question Answer Verification Test
 //
 //    println("=============================Begin Security Question Answer Test=============================")
@@ -76,18 +76,18 @@ fun main(){
 //    }
 //    println("=============================End Security Question Answer Test=============================")
 
-    println("=============================Begin Create Experiment Test=============================")
-    var newExperiment = Experiment("Cool Experiment", "Yeah", -1)
-    originalUser= LoadUser(email)
-    var userAndExp = UserAndExperiment(originalUser, newExperiment)
-   if(CreateExperiment(userAndExp)){
-       println("Create Experiment successfully ran")
-   }else{
-       println("Create Experiment did not run successfully")
-   }
-    //TODO Delete Experiment & Delete all of the steps too
-
-    println("=============================End Create Experiment Test=============================")
+//    println("=============================Begin Create Experiment Test=============================")
+//    var newExperiment = Experiment("Cool Experiment", "Yeah", -1)
+//    originalUser= LoadUser(email)
+//    var userAndExp = UserAndExperiment(originalUser, newExperiment)
+//   if(CreateExperiment(userAndExp)){
+//       println("Create Experiment successfully ran")
+//   }else{
+//       println("Create Experiment did not run successfully")
+//   }
+//    //TODO Delete Experiment & Delete all of the steps too
+//
+//    println("=============================End Create Experiment Test=============================")
 
 //    println("=============================Begin Delete Experiment Test=============================")
 //    //Test case will no longer work since experimentID 8 is deleted
@@ -123,17 +123,17 @@ fun main(){
 //    }
 //
 //    println("=============================End Create Quarantine User=============================")
-
+//
 //    println("=============================Begin Find My Experiments=============================")
 //    val userID = LoadUser("jgross11@ycp.edu")
-//    val testExperiment = Experiment("Color", "Josh  Gross", 1)
+//    val testExperiment = Experiment("Color", "Josh Gross", 1)
 //
 //    val experiments = FindMyExperiments(userID)
 //    //kotlin has this cool experiment iterator
 //    //the native iterator for each natively sets the variable to "it"
 //    experiments.iterator().forEach {
 //        if (it.title.compareTo(testExperiment.title) == 0) {
-//            println("The title is " + it.title)
+//            //println("The title is " + it.title)
 //            if (it.creatorName.compareTo(testExperiment.creatorName) == 0) {
 //                println("Find My Experiments works so far")
 //            }
@@ -144,4 +144,5 @@ fun main(){
 //
 //    }
 //    println("=============================End Find My Experiments=============================")
+
 }
