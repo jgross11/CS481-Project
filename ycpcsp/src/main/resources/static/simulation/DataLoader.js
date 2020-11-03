@@ -153,7 +153,8 @@ function parseInstructions(equips, chems, rawIns){
         let actI = ins[EXP_JSON_INS_ACTOR_INDEX];
         let recI = ins[EXP_JSON_INS_RECEIVER_INDEX];
         let act = (ins[EXP_JSON_INS_ACTOR_IS_EQUIP]) ? equips[actI] : chems[actI];
-        let rec = (ins[EXP_JSON_INS_RECEIVER_IS_EQUIP]) ? equips[recI] : chems[recI];
+        // If the receiverID is less than 0, use a null receiver, otherwise get the correct receiver from the equipment or chemical list
+        let rec = (recI < 0) ? null : ((ins[EXP_JSON_INS_RECEIVER_IS_EQUIP]) ? equips[recI] : chems[recI]);
         let func = act.idToFunc(ins[EXP_JSON_INS_FUNC_ID]);
 
         instructions.push(new InstructionController2D(new Instruction(act, rec, func)));
@@ -240,60 +241,141 @@ Temporary function for getting a test JSON file
 */
 function getTestJSON(){
     let exp = {};
+
     exp[EXP_JSON_TITLE] = "Color";
     exp[EXP_JSON_CREATOR] = "Zaq";
 
     let equips = [];
-    let equip = {}
-    equip[EXP_JSON_EQUIP_OBJ_ID] = 1;
-    equip[EXP_JSON_EQUIP_AMOUNT] = 3;
-    equips.push(equip);
-    exp[EXP_JSON_EQUIPMENT] = equips;
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_SCALE, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_BEAKER_50mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_BEAKER_150mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_BEAKER_250mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_BEAKER_600mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_GRADUATED_25mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_GRADUATED_50mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_GRADUATED_100mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_GRADUATED_1000mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_FLASK_25mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_FLASK_50mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_FLASK_125mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_FLASK_1000mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_WEIGH_BOAT, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_STIR_ROD, 1));
+    exp[EXP_JSON_EQUIPMENT] = sortArrayByKey(equips, EXP_JSON_EQUIP_OBJ_ID, false);
 
-    let chems = [{}, {}, {}];
-    chems[0][EXP_JSON_CHEM_ID] = 1;
-    chems[0][EXP_JSON_CHEM_MASS] = 5;
-    chems[0][EXP_JSON_CHEM_CONCENTRATION] = 1;
-    chems[1][EXP_JSON_CHEM_ID] = 2;
-    chems[1][EXP_JSON_CHEM_MASS] = 5;
-    chems[1][EXP_JSON_CHEM_CONCENTRATION] = 1;
-    chems[2][EXP_JSON_CHEM_ID] = 3;
-    chems[2][EXP_JSON_CHEM_MASS] = 20;
-    chems[2][EXP_JSON_CHEM_CONCENTRATION] = 1;
-    exp[EXP_JSON_CHEMICALS] = chems;
+    let chems = [];
+    chems.push(makeTestChemicalJSON(ID_CHEM_TEST_RED, 20, 1));
+    chems.push(makeTestChemicalJSON(ID_CHEM_TEST_BLUE, 20, 1));
+    chems.push(makeTestChemicalJSON(ID_CHEM_TEST_WHITE, 50, 1));
+    chems.push(makeTestChemicalJSON(ID_CHEM_TEST_GREEN, 10, 1));
+    chems.push(makeTestChemicalJSON(ID_CHEM_TEST_BLACK, 10, 1));
+    chems.push(makeTestChemicalJSON(COMPOUND_TABLE_SALT_ID, 10, 1));
+    chems.push(makeTestChemicalJSON(COMPOUND_WATER_ID, 10, 1));
+    chems.push(makeTestChemicalJSON(ELEMENT_HYDROGEN_ATOMIC_NUM, 10, 1));
+    exp[EXP_JSON_CHEMICALS] = sortArrayByKey(chems, [EXP_JSON_CHEM_ID, EXP_JSON_CHEM_MASS, EXP_JSON_CHEM_CONCENTRATION], true);
 
-    let steps = [{}, {}, {}, {}, {}];
-    steps[0][EXP_JSON_INS_STEP_NUM] = 0;
-    steps[0][EXP_JSON_INS_ACTOR_INDEX] = 0;
-    steps[0][EXP_JSON_INS_ACTOR_IS_EQUIP] = true;
-    steps[0][EXP_JSON_INS_RECEIVER_INDEX] = 0;
-    steps[0][EXP_JSON_INS_RECEIVER_IS_EQUIP] = false;
-    steps[0][EXP_JSON_INS_FUNC_ID] = ID_FUNC_CONTAINER_ADD_TO;
-    steps[1][EXP_JSON_INS_STEP_NUM] = 1;
-    steps[1][EXP_JSON_INS_ACTOR_INDEX] = 1;
-    steps[1][EXP_JSON_INS_ACTOR_IS_EQUIP] = true;
-    steps[1][EXP_JSON_INS_RECEIVER_INDEX] = 1;
-    steps[1][EXP_JSON_INS_RECEIVER_IS_EQUIP] = false;
-    steps[1][EXP_JSON_INS_FUNC_ID] = ID_FUNC_CONTAINER_ADD_TO;
-    steps[2][EXP_JSON_INS_STEP_NUM] = 2;
-    steps[2][EXP_JSON_INS_ACTOR_INDEX] = 0;
-    steps[2][EXP_JSON_INS_ACTOR_IS_EQUIP] = true;
-    steps[2][EXP_JSON_INS_RECEIVER_INDEX] = 1;
-    steps[2][EXP_JSON_INS_RECEIVER_IS_EQUIP] = true;
-    steps[2][EXP_JSON_INS_FUNC_ID] = ID_FUNC_CONTAINER_POUR_INTO;
-    steps[3][EXP_JSON_INS_STEP_NUM] = 3;
-    steps[3][EXP_JSON_INS_ACTOR_INDEX] = 1;
-    steps[3][EXP_JSON_INS_ACTOR_IS_EQUIP] = true;
-    steps[3][EXP_JSON_INS_RECEIVER_INDEX] = 2;
-    steps[3][EXP_JSON_INS_RECEIVER_IS_EQUIP] = true;
-    steps[3][EXP_JSON_INS_FUNC_ID] = ID_FUNC_CONTAINER_POUR_INTO;
-    steps[4][EXP_JSON_INS_STEP_NUM] = 4;
-    steps[4][EXP_JSON_INS_ACTOR_INDEX] = 2;
-    steps[4][EXP_JSON_INS_ACTOR_IS_EQUIP] = true;
-    steps[4][EXP_JSON_INS_RECEIVER_INDEX] = 2;
-    steps[4][EXP_JSON_INS_RECEIVER_IS_EQUIP] = false;
-    steps[4][EXP_JSON_INS_FUNC_ID] = ID_FUNC_CONTAINER_ADD_TO;
-    exp[EXP_JSON_INSTRUCTIONS] = steps;
+    let steps = [];
+    steps.push(makeTestInstructionJSON(0, 0, true, 0, false, ID_FUNC_CONTAINER_ADD_TO));
+    steps.push(makeTestInstructionJSON(1, 1, true, 1, false, ID_FUNC_CONTAINER_ADD_TO));
+    steps.push(makeTestInstructionJSON(2, 0, true, 1, true, ID_FUNC_CONTAINER_POUR_INTO));
+    steps.push(makeTestInstructionJSON(3, 1, true, 2, true, ID_FUNC_CONTAINER_POUR_INTO));
+    steps.push(makeTestInstructionJSON(4, 2, true, 2, false, ID_FUNC_CONTAINER_ADD_TO));
+    exp[EXP_JSON_INSTRUCTIONS] = sortArrayByKey(steps, EXP_JSON_INS_STEP_NUM, false);
 
     return exp;
+}
+
+/**
+Temporary function for getting lab 3 JSON file
+*/
+function getLab3aJSON(){
+    let exp = {};
+    exp[EXP_JSON_TITLE] = "Lab 3A";
+    exp[EXP_JSON_CREATOR] = "Gen Chem";
+
+    let equips = [];
+    let scale = 0;
+    let cylinder = 1;
+    let flask = 2;
+    let boat = 3;
+    let rod = 4;
+    let water = 0;
+    let salt = 1;
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_SCALE, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_GRADUATED_50mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_FLASK_125mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_WEIGH_BOAT, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_STIR_ROD, 1));
+    exp[EXP_JSON_EQUIPMENT] = sortArrayByKey(equips, EXP_JSON_EQUIP_OBJ_ID, false);
+
+    let chems = [];
+    chems.push(makeTestChemicalJSON(COMPOUND_WATER_ID, 50, 1));
+    chems.push(makeTestChemicalJSON(COMPOUND_TABLE_SALT_ID, 1.7, 1));
+    exp[EXP_JSON_CHEMICALS] = sortArrayByKey(chems, [EXP_JSON_CHEM_ID, EXP_JSON_CHEM_MASS, EXP_JSON_CHEM_CONCENTRATION], true);
+
+    let steps = [];
+    var s = 0;
+    steps.push(makeTestInstructionJSON(s++, scale, true, flask, true, ID_FUNC_SCALE_TO_TAKE_WEIGHT));
+    steps.push(makeTestInstructionJSON(s++, scale, true, flask, true, ID_FUNC_SCALE_REMOVE_OBJECT));
+    steps.push(makeTestInstructionJSON(s++, cylinder, true, water, false, ID_FUNC_CONTAINER_ADD_TO));
+    steps.push(makeTestInstructionJSON(s++, cylinder, true, flask, true, ID_FUNC_CONTAINER_POUR_INTO));
+    steps.push(makeTestInstructionJSON(s++, scale, true, boat, true, ID_FUNC_SCALE_TO_TAKE_WEIGHT));
+    steps.push(makeTestInstructionJSON(s++, scale, true, boat, true, ID_FUNC_SCALE_ZERO_OUT));
+    steps.push(makeTestInstructionJSON(s++, boat, true, salt, false, ID_FUNC_CONTAINER_ADD_TO));
+    steps.push(makeTestInstructionJSON(s++, scale, true, boat, true, ID_FUNC_SCALE_REMOVE_OBJECT));
+    steps.push(makeTestInstructionJSON(s++, boat, true, flask, true, ID_FUNC_CONTAINER_POUR_INTO));
+    steps.push(makeTestInstructionJSON(s++, rod, true, flask, true, ID_FUNC_STIR_ROD_STIR));
+    steps.push(makeTestInstructionJSON(s++, scale, true, flask, true, ID_FUNC_SCALE_CLEAR_ZERO));
+    steps.push(makeTestInstructionJSON(s++, scale, true, flask, true, ID_FUNC_SCALE_TO_TAKE_WEIGHT));
+    steps.push(makeTestInstructionJSON(s++, scale, true, flask, true, ID_FUNC_SCALE_REMOVE_OBJECT));
+    exp[EXP_JSON_INSTRUCTIONS] = sortArrayByKey(steps, EXP_JSON_INS_STEP_NUM, false);
+
+    return exp;
+}
+
+/**
+Create a json object for a piece of Equipment which can be placed in the database, or parsed to actual equipment
+id: The ID of the Equipment
+amount: The number of pieces of Equipment of type id
+returns: The json object
+*/
+function makeTestEquipmentJSON(id, amount){
+    let eq = {};
+    eq[EXP_JSON_EQUIP_OBJ_ID] = id;
+    eq[EXP_JSON_EQUIP_AMOUNT] = amount;
+    return eq;
+}
+
+/**
+Create a json object for a Chemical which can be placed in the database, or parse to the actual chemical
+id: The ID of the Chemical
+mass: The mass of the Chemical
+concentration: The concentration of the Chemical
+*/
+function makeTestChemicalJSON(id, mass, concentration){
+    let c = {};
+    c[EXP_JSON_CHEM_ID] = id;
+    c[EXP_JSON_CHEM_MASS] = mass;
+    c[EXP_JSON_CHEM_CONCENTRATION] = concentration;
+    return c;
+}
+
+/*
+Create a json object for a step, also known as instruction, which can be placed in the database, or parse into the actual instruction
+stepNum: The number for the order of when this step happens
+actIndex: The index in the list of objects to which the actor refers
+actIsEquip: true if actIndex is an index of the Equipment list, false for the Chemical list
+recIndex: The index in the list of objects to which the receiver refers
+recIsEquip: true if recIndex is an index of the Equipment list, false for the Chemical list
+funcID: The ID of the function which the actor will use on the receiver
+*/
+function makeTestInstructionJSON(stepNum, actIndex, actIsEquip, recIndex, recIsEquip, funcID){
+    let i = {};
+    i[EXP_JSON_INS_STEP_NUM] = stepNum;
+    i[EXP_JSON_INS_ACTOR_INDEX] = actIndex;
+    i[EXP_JSON_INS_ACTOR_IS_EQUIP] = actIsEquip;
+    i[EXP_JSON_INS_RECEIVER_INDEX] = recIndex;
+    i[EXP_JSON_INS_RECEIVER_IS_EQUIP] = recIsEquip;
+    i[EXP_JSON_INS_FUNC_ID] = funcID;
+    return i;
 }
