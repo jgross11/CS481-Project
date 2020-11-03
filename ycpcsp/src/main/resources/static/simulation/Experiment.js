@@ -193,8 +193,7 @@ class ExperimentController2D{
             var pos = this.experimentMousePos();
             pos[0] += this.movingEquipAnchor[0];
             pos[1] += this.movingEquipAnchor[1];
-            eq.equipment.setPosition(pos);
-            eq.keepInBounds(EXP_CAMERA_OUTLINE_BOUNDS);
+            eq.equipment.setPosition(pos, EXP_CAMERA_OUTLINE_BOUNDS);
         }
     }
 

@@ -105,6 +105,9 @@ class ScaleController2D extends EquipmentController2D{
         // Scales only can weigh containers
         if(!(objectToBeWeighed instanceof ContainerController2D)) return;
 
+        // If there is already an object on the scale, first remove it
+        if(this.equipment.objectToBeWeighed !== null) this.removeScaleObject();
+
         this.equipment.setObjectToBeWeighed(objectToBeWeighed);
         this.updateWeighingObjectMass();
     }
@@ -117,6 +120,7 @@ class ScaleController2D extends EquipmentController2D{
         if(weigh === null) return;
         let center = this.getCenter();
         weigh.setCenter(center[0] - weigh.width() - this.width(), center[1]);
+        weigh.keepInBounds(EXP_CAMERA_OUTLINE_BOUNDS);
         this.equipment.setObjectToBeWeighed(null);
         this.updateWeighingObjectMass();
     }
