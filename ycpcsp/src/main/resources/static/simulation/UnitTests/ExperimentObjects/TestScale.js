@@ -72,10 +72,12 @@ QUnit.test('getID:', function(assert){
 
 
 var scaleControl;
+var flaskControl;
 
 QUnit.module("ScaleController2D", {
     beforeEach: function(){
         beakerControl = idToEquipment(ID_EQUIP_BEAKER_50mL);
+        flaskControl = idToEquipment(ID_EQUIP_FLASK_125mL);
         scale = new Scale(null);
         scaleControl = new ScaleController2D(scale);
     }
@@ -94,6 +96,13 @@ QUnit.test('setScaleObject:', function(assert){
     assert.deepEqual(scale.objectToBeWeighed, beakerControl,
         "Check that scale object still holds the given beaker controller after setting object to it");
     assert.equal(scale.displayedWeight, 15, "Check that the displayed weight matches the mass of the beaker");
+
+    let oldPos = beakerControl.getCenter();
+    scaleControl.setScaleObject(flaskControl);
+    assert.deepEqual(scale.objectToBeWeighed, flaskControl,
+        "Check that scale object still holds the given flask controller after setting object to it");
+    assert.equal(scale.displayedWeight, 30, "Check that the displayed weight matches the mass of the flask");
+    assert.notDeepEqual(beakerControl.getCenter(), oldPos, "Checking that the beaker on the scale was moved off of the scale");
 });
 
 QUnit.test('removeScaleObject:', function(assert){
@@ -101,9 +110,11 @@ QUnit.test('removeScaleObject:', function(assert){
     assert.deepEqual(scale.objectToBeWeighed, beakerControl, "Checking that the object to be weighed was set");
     assert.notEqual(scale.displayedWeight, 0, "Checking that displayed weight is different after adding a beaker");
 
+    let oldPos = beakerControl.getCenter();
     scaleControl.removeScaleObject();
     assert.deepEqual(scale.objectToBeWeighed, null, "Checking that the object to be weighed was removed");
     assert.equal(scale.displayedWeight, 0, "Checking that displayed weight is zero after removing a beaker");
+    assert.notDeepEqual(beakerControl.getCenter(), oldPos, "Checking that the beaker was moved off of the scale");
 });
 
 QUnit.test('idToFunc:', function(assert){

@@ -44,11 +44,13 @@ QUnit.test('constructor:', function(assert){
 QUnit.test('idToFunc:', function(assert){
     assert.equal(controller.idToFunc(ID_FUNC_CONTAINER_POUR_INTO), controller.pourInto, "Should get the function pourInto");
     assert.equal(controller.idToFunc(ID_FUNC_CONTAINER_ADD_TO), controller.addTo, "Should get the function addTo");
+    assert.equal(controller.idToFunc(ID_FUNC_CONTAINER_EMPTY_IN_TRASH), controller.emptyOut, "Should get the function emptyOut");
 });
 
 QUnit.test('funcToId:', function(assert){
     assert.equal(controller.funcToId(controller.pourInto), ID_FUNC_CONTAINER_POUR_INTO, "Should get the ID for pourInto");
     assert.equal(controller.funcToId(controller.addTo), ID_FUNC_CONTAINER_ADD_TO, "Should get the ID for addTo");
+    assert.equal(controller.funcToId(controller.emptyOut), ID_FUNC_CONTAINER_EMPTY_IN_TRASH, "Should get the ID for emptyOut");
 });
 
 QUnit.test('getFuncDescriptions:', function(assert){

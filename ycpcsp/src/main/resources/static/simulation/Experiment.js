@@ -225,8 +225,8 @@ class ExperimentController2D{
             var adds = [];
             if(act.canPlace() && !pEqs.includes(act)) adds.push(act);
             if(rec !== null && rec !== undefined && rec.canPlace() && !pEqs.includes(rec)) adds.push(rec);
-            // TODO move this loop to a separate method
             var success = true;
+            // TODO Move this loop to its own function
             for(var i = 0; i < adds.length; i++){
                 let index = eqs.indexOf(adds[i]);
                 // If there is no valid index, do nothing
@@ -562,7 +562,6 @@ class ExperimentController2D{
     massIndex: The index for which mass size to use
     */
     addChemicalToSelectedBeaker(massIndex){
-        // TODO implement better solution for if this is an instance of a Container if it should activate
         if(!(this.selectedActor instanceof ContainerController2D)) return;
         let box = this.chemicalBoxes.selected;
         if(box === null) return;

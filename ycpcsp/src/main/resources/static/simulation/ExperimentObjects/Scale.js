@@ -108,6 +108,7 @@ class ScaleController2D extends EquipmentController2D{
         // If there is already an object on the scale, first remove it
         if(this.equipment.objectToBeWeighed !== null) this.removeScaleObject();
 
+        // Set the actual Container and update the scale's displayed mass
         this.equipment.setObjectToBeWeighed(objectToBeWeighed);
         this.updateWeighingObjectMass();
     }
