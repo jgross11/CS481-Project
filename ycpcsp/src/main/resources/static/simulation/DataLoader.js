@@ -241,18 +241,25 @@ Temporary function for getting a test JSON file
 */
 function getTestJSON(){
     let exp = {};
+
     exp[EXP_JSON_TITLE] = "Color";
     exp[EXP_JSON_CREATOR] = "Zaq";
 
     let equips = [];
     equips.push(makeTestEquipmentJSON(ID_EQUIP_SCALE, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_BEAKER_50mL, 1));
-    equips.push(makeTestEquipmentJSON(ID_EQUIP_BEAKER_600mL, 2));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_BEAKER_150mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_BEAKER_250mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_BEAKER_600mL, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_GRADUATED_25mL, 1));
-    equips.push(makeTestEquipmentJSON(ID_EQUIP_FLASK_25mL, 1));
-    equips.push(makeTestEquipmentJSON(ID_EQUIP_WEIGH_BOAT, 1));
-    equips.push(makeTestEquipmentJSON(ID_EQUIP_FLASK_1000mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_GRADUATED_50mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_GRADUATED_100mL, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_GRADUATED_1000mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_FLASK_25mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_FLASK_50mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_FLASK_125mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_FLASK_1000mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_WEIGH_BOAT, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_STIR_ROD, 1));
     exp[EXP_JSON_EQUIPMENT] = sortArrayByKey(equips, EXP_JSON_EQUIP_OBJ_ID, false);
 
@@ -273,7 +280,55 @@ function getTestJSON(){
     steps.push(makeTestInstructionJSON(2, 0, true, 1, true, ID_FUNC_CONTAINER_POUR_INTO));
     steps.push(makeTestInstructionJSON(3, 1, true, 2, true, ID_FUNC_CONTAINER_POUR_INTO));
     steps.push(makeTestInstructionJSON(4, 2, true, 2, false, ID_FUNC_CONTAINER_ADD_TO));
-    exp[EXP_JSON_INSTRUCTIONS] = sortArrayByKey(steps, EXP_JSON_INS_STEP_NUM, false);;
+    exp[EXP_JSON_INSTRUCTIONS] = sortArrayByKey(steps, EXP_JSON_INS_STEP_NUM, false);
+
+    return exp;
+}
+
+/**
+Temporary function for getting lab 3 JSON file
+*/
+function getLab3aJSON(){
+    let exp = {};
+    exp[EXP_JSON_TITLE] = "Lab 3A";
+    exp[EXP_JSON_CREATOR] = "Gen Chem";
+
+    let equips = [];
+    let scale = 0;
+    let cylinder = 1;
+    let flask = 2;
+    let boat = 3;
+    let rod = 4;
+    let water = 0;
+    let salt = 1;
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_SCALE, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_GRADUATED_50mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_FLASK_125mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_WEIGH_BOAT, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_STIR_ROD, 1));
+    exp[EXP_JSON_EQUIPMENT] = sortArrayByKey(equips, EXP_JSON_EQUIP_OBJ_ID, false);
+
+    let chems = [];
+    chems.push(makeTestChemicalJSON(COMPOUND_WATER_ID, 50, 1));
+    chems.push(makeTestChemicalJSON(COMPOUND_TABLE_SALT_ID, 1.7, 1));
+    exp[EXP_JSON_CHEMICALS] = sortArrayByKey(chems, [EXP_JSON_CHEM_ID, EXP_JSON_CHEM_MASS, EXP_JSON_CHEM_CONCENTRATION], true);
+
+    let steps = [];
+    var s = 0;
+    steps.push(makeTestInstructionJSON(s++, scale, true, flask, true, ID_FUNC_SCALE_TO_TAKE_WEIGHT));
+    steps.push(makeTestInstructionJSON(s++, scale, true, flask, true, ID_FUNC_SCALE_REMOVE_OBJECT));
+    steps.push(makeTestInstructionJSON(s++, cylinder, true, water, false, ID_FUNC_CONTAINER_ADD_TO));
+    steps.push(makeTestInstructionJSON(s++, cylinder, true, flask, true, ID_FUNC_CONTAINER_POUR_INTO));
+    steps.push(makeTestInstructionJSON(s++, scale, true, boat, true, ID_FUNC_SCALE_TO_TAKE_WEIGHT));
+    steps.push(makeTestInstructionJSON(s++, scale, true, boat, true, ID_FUNC_SCALE_ZERO_OUT));
+    steps.push(makeTestInstructionJSON(s++, boat, true, salt, false, ID_FUNC_CONTAINER_ADD_TO));
+    steps.push(makeTestInstructionJSON(s++, scale, true, boat, true, ID_FUNC_SCALE_REMOVE_OBJECT));
+    steps.push(makeTestInstructionJSON(s++, boat, true, flask, true, ID_FUNC_CONTAINER_POUR_INTO));
+    steps.push(makeTestInstructionJSON(s++, rod, true, flask, true, ID_FUNC_STIR_ROD_STIR));
+    steps.push(makeTestInstructionJSON(s++, scale, true, flask, true, ID_FUNC_SCALE_CLEAR_ZERO));
+    steps.push(makeTestInstructionJSON(s++, scale, true, flask, true, ID_FUNC_SCALE_TO_TAKE_WEIGHT));
+    steps.push(makeTestInstructionJSON(s++, scale, true, flask, true, ID_FUNC_SCALE_REMOVE_OBJECT));
+    exp[EXP_JSON_INSTRUCTIONS] = sortArrayByKey(steps, EXP_JSON_INS_STEP_NUM, false);
 
     return exp;
 }

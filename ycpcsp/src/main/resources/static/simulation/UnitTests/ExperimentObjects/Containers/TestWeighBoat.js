@@ -8,12 +8,11 @@ QUnit.module("WeighBoat", {
 });
 
 QUnit.test('constructor:', function(assert){
-    assert.deepEqual(boat.position, [0, 0], 'default position should be [0, 0]');
-    assert.deepEqual(boat.size, [88, 14.3], 'default size should be [75, 75]');
-    assert.equal(boat.mass, 3, 'default mass should be 3');
-    assert.equal(boat.capacity, 500, 'default capacity should be 1000');
-    assert.equal(boat.residue, 0.03, 'default residue should be 0.03');
-    assert.equal(boat.instanceID, 0, 'instanceID should be 0');
+    assert.deepEqual(boat.position, [0, 0], 'Checking default position');
+    assert.deepEqual(boat.size, [88, 14.3], 'Checking default size');
+    assert.equal(boat.mass, 1, 'Checking default mass');
+    assert.equal(boat.capacity, 10, 'Checking default capacity');
+    assert.equal(boat.residue, 0, 'Checking default residue');
     assert.equal(boat.sprite, SPRITE_WEIGH_BOAT, 'sprite should be SPRITE_WEIGH_BOAT');
 });
 

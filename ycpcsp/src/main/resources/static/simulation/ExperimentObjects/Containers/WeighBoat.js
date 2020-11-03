@@ -7,7 +7,7 @@ class WeighBoat extends Container{
     Create a new Weight Boat
     */
     constructor(){
-        super([0, 0], [88, 14.3], 3, 500, 0.03, SPRITE_WEIGH_BOAT);
+        super([0, 0], [88, 14.3], 1, 10, 0, SPRITE_WEIGH_BOAT);
     }
 
     /**
