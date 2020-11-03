@@ -578,7 +578,7 @@ class ExperimentController2D{
             default: mass = null; break;
         }
         if(mass === null) return;
-        chemControl.chemical.setMass(mass);
+        chemControl.chemical.setMass(mass * (1 + (Math.random() - 0.5) * 2 * 0.05));
         this.selectedEquipFunction(ID_FUNC_CONTAINER_ADD_TO, chemControl);
     }
 
@@ -727,14 +727,15 @@ class ExperimentController2D{
         g.fill(200);
         g.noStroke();
         g.textSize(18);
-        var y = 470;
+        var y = 450;
         let x = 650;
         g.text("Left click equipment to move it", x, y += 20);
         g.text("Right click a equipment to select, blue = actor, green = receiver", x, y += 20);
         g.text("Press ESC to unselect selected Equipment", x, y += 20);
         g.text("Press 1 - 9 to perform actions on selected actor and receiver", x, y += 20);
         g.text("Also hold alt and press 1 - 9 to perform actions on only selected actor", x, y += 20);
-        g.text("Press 1, 2, 3, 4, 5 to add .1, 1, 5, 10, or 50 units to selected actor, if container", x, y += 20);
+        g.text("Press 1, 2, 3, 4, 5 to add .1, 1, 5, 10, or 50 units to selected container", x, y += 20);
+        g.text("\tChemicals added have 0% to 5% error", x, y += 20);
         g.text("Press I to run the next instruction", x, y += 20);
         g.text("Press R to reset the simulation", x, y += 20);
         g.text("Press C to view Chemical tab, then click a chemical to select", x, y += 20);
