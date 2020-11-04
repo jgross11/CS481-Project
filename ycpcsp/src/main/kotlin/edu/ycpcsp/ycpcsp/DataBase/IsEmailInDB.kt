@@ -7,29 +7,22 @@ import java.sql.SQLException
 import java.util.*
 
 fun IsEmailInDB(email : String) : Boolean{
-    val serverCredentials = serverCredential()
-    val username = serverCredentials?.get(0)
-    val password = serverCredentials?.get(1)
-    val url = serverCredentials?.get(2)
-
-    val connectionProps = Properties()
-    connectionProps["user"] = username
-    connectionProps["password"] = password
-    connectionProps["useSSL"] = "false"
+    var connection = getDBConnection()
 
     try {
-        Class.forName("com.mysql.jdbc.Driver")
-        val conn = DriverManager.getConnection(url, connectionProps)
-        val st = conn.createStatement()
-        val rs = st.executeQuery("SELECT email FROM Database.Users WHERE email = \"$email\"")
+        if(connection != null) {
+            var preparedSt = connection.prepareStatement("SELECT email FROM Database.Users WHERE email = ?")
+            preparedSt.setString(1, email)
+            val rs = preparedSt.executeQuery()
 
-        try{
-            return rs.first()
-        } catch (ex: SQLException){
-            println("Error the query returned with a null result set. The query must have been entered incorrectly")
-            ex.printStackTrace()
+            try {
+                return rs.first()
+            } catch (ex: SQLException) {
+                println("Error the query returned with a null result set. The query must have been entered incorrectly")
+                ex.printStackTrace()
+            }
+            return true
         }
-        return true
 
     } catch (ex: SQLException) {
         // handle any errors

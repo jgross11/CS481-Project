@@ -7,36 +7,30 @@ import java.sql.SQLException
 import java.util.*
 
 fun ModifyUser(editUserFormData: EditUserFormData): Boolean {
-    val serverCredentials = serverCredential()
-    val username = serverCredentials?.get(0)
-    val password = serverCredentials?.get(1)
-    val url = serverCredentials?.get(2)
-
-    val connectionProps = Properties()
-    connectionProps["user"] = username
-    connectionProps["password"] = password
-    connectionProps["useSSL"] = "false"
+    var connection = getDBConnection()
 
     try {
-        //test class fails here
-        Class.forName("com.mysql.jdbc.Driver")
+        if(connection != null) {
 
-        val conn = DriverManager.getConnection(url, connectionProps)
-        val st = conn.createStatement()
-
-        try{
-            val rs = st.executeUpdate("update Database.Users " +
-                    "SET firstName = \'${editUserFormData.firstName}\', lastName =\'${editUserFormData.lastName}\', password = \'${editUserFormData.password}\', organization = \'${editUserFormData.school}\'" +
-                    "WHERE email = \'${editUserFormData.email}\';")
-            //The method will return true if the query was able to successful update the desired User row
-            return true
-        } catch (ex: SQLException){
-            println("Error the query returned with a null result set. The query must have been entered incorrectly")
-            ex.printStackTrace()
+            try {
+                var preparedSt = connection.prepareStatement("update Database.Users " +
+                        "SET firstName = ?, lastName = ?, password = ?, organization = ? " +
+                        "WHERE email = ?;")
+                preparedSt.setString(1, user.firstName)
+                preparedSt.setString(2, user.lastName)
+                preparedSt.setString(3, user.password)
+                preparedSt.setString(4, user.school)
+                preparedSt.setString(5, user.email)
+                preparedSt.executeUpdate()
+                //The method will return true if the query was able to successful update the desired User row
+                return true
+            } catch (ex: SQLException) {
+                println("Error the query returned with a null result set. The query must have been entered incorrectly")
+                ex.printStackTrace()
+            }
+            //The method will return false if the query was unsuccessful
+            return false
         }
-        //The method will return false if the query was unsuccessful
-
-        return false
     } catch (ex: SQLException) {
         // handle any errors
         ex.printStackTrace()

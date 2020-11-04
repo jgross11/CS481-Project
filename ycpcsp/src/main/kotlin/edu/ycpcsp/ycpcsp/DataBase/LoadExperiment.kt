@@ -19,7 +19,7 @@ fun LoadExperiment(id: String) : Experiment {
 
             //User query
             //These queries dont' have
-            var preparedSt = connection?.prepareStatement("Select Distinct title, firstName, lastName from Database.Experiments join Database.Users on Database.Experiments.creatorID = Database.Users.UserID where ExperimentsID = ? ")
+            var preparedSt = connection.prepareStatement("Select Distinct title, firstName, lastName from Database.Experiments join Database.Users on Database.Experiments.creatorID = Database.Users.UserID where ExperimentsID = ? ")
             preparedSt.setString(1, id)
             val rs = preparedSt.executeQuery()
 

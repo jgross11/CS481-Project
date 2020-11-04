@@ -6,9 +6,10 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 
 internal class ExperimentTest {
-    var Josh = Experiment("The Big Fun house","Josh")
-    var Adrian = Experiment("The Tiny Fun house","Adrian")
-    var Dennis = Experiment("The Medium Fun house","Dennis")
+    //experimentIDs were not added here originally, I only added numbers to remove coding errors
+    var Josh = Experiment("The Big Fun house","Josh", 1)
+    var Adrian = Experiment("The Tiny Fun house","Adrian", 2)
+    var Dennis = Experiment("The Medium Fun house","Dennis", 3)
     var water = ChemicalObject(101, 1.0, 0.0)
     var beaker = EquipmentObject(0, 0)
     var waterInBeakerStep = Step(1, 0, true, 0, false, 0)

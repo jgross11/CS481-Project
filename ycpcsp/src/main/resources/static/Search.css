@@ -1,0 +1,11 @@
+body {
+   background: #eceffc;
+}
+
+#SearchBar {
+    border:
+    position: fixed;
+    top: 20%;
+    left: 40%
+}
+
