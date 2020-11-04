@@ -1,5 +1,6 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
+import edu.ycpcsp.ycpcsp.Models.Compound
 import edu.ycpcsp.ycpcsp.Models.User
 import java.sql.DriverManager
 import java.sql.SQLException
@@ -38,4 +39,21 @@ fun IsEmailInDB(email : String) : Boolean{
         ex.printStackTrace()
     }
     return false
+}
+
+fun isEmailInQuarantineDB(email : String) : Boolean{
+    val connection = getDBConnection()
+    if(connection != null){
+        return try{
+            val preparedStatement = connection.prepareStatement("SELECT quID FROM Database.Quarantine_Users WHERE email = ?;")
+            preparedStatement.setString(1, email)
+            val rs = preparedStatement.executeQuery()
+            return rs.first()
+
+        } catch(ex : SQLException){
+            ex.printStackTrace()
+            false
+        }
+    }
+    return false;
 }

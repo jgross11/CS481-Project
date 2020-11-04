@@ -1,8 +1,6 @@
 package edu.ycpcsp.ycpcsp.WebControllers
 
-import edu.ycpcsp.ycpcsp.DataBase.LoadUser
-import edu.ycpcsp.ycpcsp.DataBase.RecentExperimentSearch
-import edu.ycpcsp.ycpcsp.DataBase.VerifyUser
+import edu.ycpcsp.ycpcsp.DataBase.*
 import edu.ycpcsp.ycpcsp.Models.User
 import edu.ycpcsp.ycpcsp.PostDataClasses.LoginFormData
 import edu.ycpcsp.ycpcsp.PostDataClasses.RecentExperimentLoad
@@ -38,8 +36,13 @@ class HomeController {
             // TODO construct user object from the appropriate DB query
 
             // TODO this is currently only half done...
-            println("login successful")
+            println("normal login successful")
             return LoadUser(loginFormData.email)
+        } else if(verifyQuarantineUser(loginFormData)){
+            println("quarantine login successful")
+            user = LoadQuarantineUser(loginFormData.email)
+            user.isQuarantined = true
+            return user
         }
 
         // return constructed user object, or null, to indicate no user was found (login failed)

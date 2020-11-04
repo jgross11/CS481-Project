@@ -54,6 +54,7 @@ fun RecentExperimentSearch(userId: Int) : ArrayList<String> {
         ex.printStackTrace()
     }
 
+
     //If you get here then there was a failure so return empty array
     return arrayListOf()
 }
