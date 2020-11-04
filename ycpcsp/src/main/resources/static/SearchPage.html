@@ -1,0 +1,39 @@
+<html>
+<script src="helperFunctions.js"></script>
+<link rel="stylesheet" href="Search.css">
+<head>
+   Search Page
+</head>
+<form id="search" name="SearchBar" action="/search-submit" method="post">
+    <input type="text" id ="input" placeholder="Search...">
+    <input value="Search" type="button" id="searchFunction" name="searchFunctionButton" onclick="submitSearchFunction()">
+</form>
+
+<body>
+    <div id="SearchBar">
+        <p id="text"></p>
+    </div>
+</body>
+
+
+<script>
+    function submitSearchFunction(){
+            var experimentName = document.getElementById("input").value;
+            var experiment = {
+                title: experimentName
+            };
+            postData('search-submit', experiment).then(function(data){
+                console.log(data);
+                var mutable = data;
+                var i;
+                var text = "";
+                for(i = 0; i <mutable.length; i++){
+                    text += mutable[i].title + ", " + mutable[i].creatorName + "<br>";
+                    //document.getElementById("title").innerHTML = mutable[0].title;
+                    //document.getElementById("name").innerHTML = mutable[0].creatorName;
+                }
+                document.getElementById("text").innerHTML = text;
+            });
+    }
+</script>
+</html>
