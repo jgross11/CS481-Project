@@ -12,7 +12,7 @@ fun RecentExperimentSearch(userId: Int) : ArrayList<String> {
     try{
           if(connection != null) {
             var preparedSt = connection.prepareStatement("SELECT * FROM Database.RecentExperiments where idRecentExperiments = ?;")
-            preparedSt.setInt(1, UserObject.id)
+            preparedSt.setInt(1, userId)
 
             val rs = preparedSt.executeQuery()
 
