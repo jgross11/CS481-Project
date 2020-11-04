@@ -97,9 +97,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.12.0/js/md5.min.js"></script>
 
 <div class="Search">
-    <form action="search.php" method="GET">
-        <input type="text" id ="input" size ="40" placeholder="Search..." name="query"/>
-        <button type="submit" value="Search"><i class="fa fa-search"></i></button>
+    <form action="/SearchPage" method="GET">
+            <input type="submit" value="Search"><a href="/SearchPage"></a>
     </form>
 </div>
 
@@ -168,7 +167,7 @@
 </body>
 
 <script>
-    var userid = 4;
+    /*var userid = 4;
     postData('Recent-experiment', userid).then(function(data){
         console.log(data);
         array = data
@@ -177,7 +176,7 @@
     postData('Playlist', user.id).then(function(data){
         console.log(data);
         PlayList = data;
-    });
+    }); */
 
     var array ;
     function display(elm) {
@@ -254,30 +253,6 @@
     function loadSimulation(simulationID){
         sessionStorage.setItem("simulationToLoad", simulationID);
         window.location.href = "/simulation";
-    }
-    array = ["String Cheese", "Please work"];
-    function searchBar() {
-        var input, filter, ul, li, a, i, txtValue;
-        input = document.getElementById("search");
-        filter = input.value.toUpperCase();
-        ul = document.getElementById("");
-    }
-    array.forEach(function(item) {
-        var li = document.createElement("li");
-        var text = document.createTextNode(item);
-        li.appendChild(text);
-        document.getElementById("RecentExperiments").appendChild(li);
-    });
-
-    var select = document.getElementById("selectNumber");
-    var PlayList = ["Iodine", "Salt Water", "Jeebus Crist", "4", "5"];
-
-    for(var i = 0; i < PlayList.length; i++) {
-        var opt = PlayList[i];
-        var el = document.createElement("option");
-        el.textContent = opt;
-        el.value = opt;
-        select.appendChild(el);
     }
 
 </script>
