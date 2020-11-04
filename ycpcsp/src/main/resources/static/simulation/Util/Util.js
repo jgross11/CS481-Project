@@ -7,7 +7,6 @@ function isFloat(n){
 }
 
 /**
-TODO needs test cases to verify functioning correctly
 Helper function for sorting an array in ascending order
 array: The array to sort
 keys: The element of the array to sort by, or a list of elements
@@ -19,17 +18,16 @@ function sortArrayByKey(array, keys, multiple = false){
         if(multiple){
             var result = 0;
             for(var i = 0; i < keys.length; i++){
-                arraySortCompare(a, b, keys[i]);
+                result = arraySortCompare(a, b, keys[i]);
                 if(result !== 0) return result;
             }
             return result;
         }
-        else return arraySortCompare(a, b, key);
+        else return arraySortCompare(a, b, keys);
     });
 }
 
 /**
-TODO needs test cases to verify functioning correctly
 Helper function for sortArrayByKey. Determine if a is greater than b.
 a: The first element
 b: The second element

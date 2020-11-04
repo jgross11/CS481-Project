@@ -5,6 +5,7 @@ import java.sql.SQLException
 import java.util.*
 
 fun DeleteUser(id: String?): Boolean{
+  
     val connection = getDBConnection()
     if(connection != null) {
         try {

@@ -3,6 +3,13 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
+
+        .Search {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+        }
+
         .dropbtn {
             background-color: #3498DB;
             color: white;
@@ -83,10 +90,18 @@
 
         .dropdown:hover .dropbtn2 {background-color: #3e8e41;}
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 <script src="helperFunctions.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.12.0/js/md5.min.js"></script>
+
+<div class="Search">
+    <form action="search.php" method="GET">
+        <input type="text" id ="input" size ="40" placeholder="Search..." name="query"/>
+        <button type="submit" value="Search"><i class="fa fa-search"></i></button>
+    </form>
+</div>
 
 <div class="dropdown">
     <button class="dropbtn">Login</button>
@@ -104,7 +119,21 @@
     </div>
 </div>
 <div class="boxed">
+    <div id="RecentBox">
+   <ul id="RecentExperiments">
+   </ul>
+    </div>
+
+    <div id="PlaylistBox">
+        <form id="myForm">
+            <select id="selectNumber">
+                <option>Choose a number</option>
+            </select>
+        </form>
+
+    </div>>
 </div>
+
 
 <div class="dropup">
     <button class="dropbtn2">FaQ</button>
@@ -139,6 +168,23 @@
 </body>
 
 <script>
+    var userid = 4;
+    postData('Recent-experiment', userid).then(function(data){
+        console.log(data);
+        array = data
+    });
+
+    postData('Playlist', user.id).then(function(data){
+        console.log(data);
+        PlayList = data;
+    });
+
+    var array ;
+    function display(elm) {
+        var x = elm.getAttribute('value');
+        //TODO here is where we want to search for
+        console.log(x);
+    }
 
     checkForLogin();
 
@@ -181,22 +227,58 @@
                 var user = data;
                 if(user.firstName != ""){
                     sessionStorage.setItem("user", JSON.stringify(user));
+                    //TODO PostRecentExperiment post goes here.
+                    postData('Recent-experiment', user.id).then(function(data){
+                        console.log(data);
+                        array = ["String Cheese", "Please work"];
+                    });
+
+                    postData('Playlist', user.id).then(function(data){
+                        console.log(data);
+                        PlayList = data; 
+                    });
                     window.location.href = "/";
                 }
                 else{
                     setErrorDivMessageByValue("email", "LOGIN FAILED", false);
                 }
             });
+
+
         }
         else{
             setErrorDivMessageByValue("email", "Please enter a valid email.", emailGood);
             setErrorDivMessageByValue("password", "Please enter a valid password.", passGood);
         }
     }
-
     function loadSimulation(simulationID){
         sessionStorage.setItem("simulationToLoad", simulationID);
         window.location.href = "/simulation";
     }
+    array = ["String Cheese", "Please work"];
+    function searchBar() {
+        var input, filter, ul, li, a, i, txtValue;
+        input = document.getElementById("search");
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("");
+    }
+    array.forEach(function(item) {
+        var li = document.createElement("li");
+        var text = document.createTextNode(item);
+        li.appendChild(text);
+        document.getElementById("RecentExperiments").appendChild(li);
+    });
+
+    var select = document.getElementById("selectNumber");
+    var PlayList = ["Iodine", "Salt Water", "Jeebus Crist", "4", "5"];
+
+    for(var i = 0; i < PlayList.length; i++) {
+        var opt = PlayList[i];
+        var el = document.createElement("option");
+        el.textContent = opt;
+        el.value = opt;
+        select.appendChild(el);
+    }
+
 </script>
 </html>
