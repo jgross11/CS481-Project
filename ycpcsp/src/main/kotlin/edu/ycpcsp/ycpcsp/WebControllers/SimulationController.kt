@@ -25,7 +25,7 @@ class SimulationController {
     // otherwise populates and returns Experiment object with relevant info
     @PostMapping(path = ["/simulation-data"], consumes = ["application/json"], produces = ["application/json"])
     @ResponseBody
-    fun getSimulationData(@RequestBody id : Integer) : Experiment{
+    fun getSimulationData(@RequestBody id : Int) : Experiment{
         var exp = Experiment()
         println(id)
         exp = LoadExperiment("$id");

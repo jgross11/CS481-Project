@@ -6,7 +6,8 @@ package edu.ycpcsp.ycpcsp.Models
  */
 data class Experiment(
                     var title : String,
-                    var creatorName : String
+                    var creatorName : String,
+                    var experimentID : Int
                     )
 {
     var equipment : Array<EquipmentObject> = arrayOf<EquipmentObject>()
@@ -18,8 +19,18 @@ data class Experiment(
     }
 
     // null constructor
-    constructor() : this("", ""){
+    constructor() : this("", "", -1){
 
+    }
+
+    fun setEquipmentListSize(size : Int){
+        equipment = Array(size){ EquipmentObject(-1, -1) }
+    }
+    fun setChemicalListSize(size : Int){
+        chemicals = Array(size){ ChemicalObject(-1, -1.0, -1.0) }
+    }
+    fun setStepListSize(size : Int){
+        steps = Array(size){Step(-1, -1, false, -1, false, -1)}
     }
 
     override fun toString(): String {

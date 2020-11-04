@@ -7,10 +7,16 @@ package edu.ycpcsp.ycpcsp.Models
  */
 data class SecurityQuestion(var questionIndex : Int, var answer : String) {
     var question : String = ""
+    var indexInDB = -1
 
 
     // 'null' constructor
     constructor() : this(-1, ""){}
+
+    // indexInDB constructor
+    constructor(questionIndex : Int, answer : String, indexInDB : Int) : this(questionIndex, answer){
+        this.indexInDB = indexInDB
+    }
 
     // if a valid question index is given, fetch and store the question
     init{
@@ -20,10 +26,11 @@ data class SecurityQuestion(var questionIndex : Int, var answer : String) {
             ""
     }
 
+
     // constructor used when only question index is known
     constructor(questionIndex : Int) : this(questionIndex, ""){}
 
     override fun toString() : String{
-        return "$question | $answer"
+        return "questionIndex=$questionIndex, indexInDB=$indexInDB : $question | $answer"
     }
 }
