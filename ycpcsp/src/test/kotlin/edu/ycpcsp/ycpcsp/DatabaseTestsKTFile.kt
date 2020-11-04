@@ -3,6 +3,7 @@ package edu.ycpcsp.ycpcsp
 
 import edu.ycpcsp.ycpcsp.DataBase.*
 import edu.ycpcsp.ycpcsp.Models.*
+import edu.ycpcsp.ycpcsp.PostDataClasses.EditUserFormData
 import edu.ycpcsp.ycpcsp.PostDataClasses.LoginFormData
 import edu.ycpcsp.ycpcsp.PostDataClasses.SignupFormData
 import edu.ycpcsp.ycpcsp.PostDataClasses.UserAndExperiment
@@ -46,7 +47,7 @@ fun main(){
     println("=============================Begin Modify User Test=============================")
 
     var originalUser = LoadUser(email)
-    var modifyUser = User("test", "test", "test@test.com", "1234", "TheBest")
+    var modifyUser = EditUserFormData("test", "test", "test@test.com", "1234", "TheBest")
     if(ModifyUser(modifyUser)){
         if(originalUser != null){
             //if you wish to verify whether or not the ModifyUser is actually working comment out the line below
@@ -90,6 +91,8 @@ fun main(){
     //TODO Delete Experiment & Delete all of the steps too
 
     //This should run a correct test
+    val secQuestion1 = SecurityQuestion(1,"test")
+    val secQuestion2 = SecurityQuestion(1, "wrong")
     if(verifySecurityQuestion(email,secQuestion1)){
         println("Security Question 1's answer was the correct")
     } else{
@@ -104,9 +107,9 @@ fun main(){
     println("=============================End Security Question Answer Test=============================")
 
     println("=============================Begin Create Experiment Test=============================")
-    var newExperiment = Experiment("Cool Experiment", "Yeah", 8)
+    newExperiment = Experiment("Cool Experiment", "Yeah", 8)
     originalUser= LoadUser(email)
-    var userAndExp = UserAndExperiment(originalUser, newExperiment)
+    userAndExp = UserAndExperiment(originalUser, newExperiment)
    if(CreateExperiment(userAndExp)){
        println("Create Experiment successfully ran")
    }else{
