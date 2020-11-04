@@ -21,8 +21,43 @@ let ID_EQUIP_FLASK_1000mL = 14;
 let ID_EQUIP_WEIGH_BOAT = 15;
 let ID_EQUIP_STIR_ROD = 16;
 
+var EquipID = [
+    { Equip: 'BEAKER_50mL', ID:1},
+    { Equip: 'BEAKER_150mL',ID:2},
+    { Equip: 'BEAKER_250mL',ID:3},
+    { Equip: 'BEAKER_600mL',ID:4},
+    { Equip: 'SCALE',ID:5},
+    { Equip: 'TRASHCAN',ID:6},
+    { Equip: 'GRADUATED_25mL',ID:7 },
+    { Equip: 'GRADUATED_50mL',ID:8 },
+    { Equip: 'GRADUATED_100mL',ID:9 },
+    { Equip: 'GRADUATED_1000mL',ID:10 },
+    { Equip: 'FLASK_25mL',ID:11 },
+    { Equip: 'FLASK_50mL',ID:12 },
+    { Equip: 'FLASK_100mL',ID:13 },
+    { Equip: 'FLASK_1000mL',ID:14 },
+    { Equip: 'WEIGH_BOAT',ID:15 },
+    { Equip: 'STIR_ROD',ID:16 }
+];
+
+sessionStorage.setItem("EquipID", JSON.stringify(EquipID));
 
 // Constants for indexing chemicals
+
+
+var Expfunc =[
+    {Function:'ID_FUNC_SCALE_TO_TAKE_WEIGHT' , ID:1},
+    {Function:'ID_FUNC_SCALE_REMOVE_OBJECT' , ID:2},
+    {Function:'ID_FUNC_SCALE_ZERO_OUT' , ID:3},
+    {Function:'ID_FUNC_SCALE_CLEAR_ZERO' , ID:4},
+    {Function:'ID_FUNC_CONTAINER_ADD_TO', ID:1},
+    {Function:'ID_FUNC_CONTAINER_POUR_INTO', ID:2},
+    {Function:'ID_FUNC_DISPOSER_DISPOSE', ID:1},
+    {Function:'ID_FUNC_STIR_ROD_STIR' , ID:1}
+];
+sessionStorage.setItem("Expfunc", JSON.stringify(Expfunc));
+
+
 
 // Elements
 let ELEMENT_HYDROGEN_ATOMIC_NUM = 1;
@@ -32,6 +67,19 @@ let ELEMENT_CARBON_ATOMIC_NUM = 6;
 let ELEMENT_OXYGEN_ATOMIC_NUM = 8;
 let ELEMENT_SODIUM_ATOMIC_NUM = 11;
 let ELEMENT_CHLORINE_ATOMIC_NUM = 17;
+var ChemID = [
+    { Chem: 'HYDROGEN',ID:1 },
+    { Chem: 'HELIUM',ID:2 },
+    { Chem: 'LITHIUM',ID:3 },
+    { Chem: 'CARBON',ID:6 },
+    { Chem: 'OXYGEN',ID:8 },
+    { Chem: 'SODIUM',ID:11 },
+    { Chem: 'CHLORINE',ID:17 }
+
+];
+
+
+sessionStorage.setItem("ChemID", JSON.stringify(ChemID));
 
 // Test elements
 let ID_CHEM_TEST_RED = 1001;
@@ -40,12 +88,12 @@ let ID_CHEM_TEST_WHITE = 1003;
 let ID_CHEM_TEST_GREEN = 1004;
 let ID_CHEM_TEST_BLACK = 1005;
 
+
 // Compounds
 let COMPOUND_HYDROGEN_GAS_ID = 10000;
 let COMPOUND_WATER_ID = 10001;
 let COMPOUND_GLUCOSE_ID = 10002;
 let COMPOUND_TABLE_SALT_ID = 10003;
-
 
 /**
 Take an integer ID and convert it to a valid piece of Equipment

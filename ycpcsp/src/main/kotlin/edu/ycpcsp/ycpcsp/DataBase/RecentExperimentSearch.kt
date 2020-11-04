@@ -1,38 +1,39 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
-
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.*
-import edu.ycpcsp.ycpcsp.Models.*
-import edu.ycpcsp.ycpcsp.PostDataClasses.RecentExperimentObject
+import kotlin.collections.ArrayList
 
 
-var Experiment1 = 1;
-var Experiment1Date = 1;
-var Experiment2 = 1;
-var Experiment2Date = 1;
-var Experiment3 = 1;
-var Experiment1Dat3 = 1;
-
-fun LoadUser(UserObject: User): RecentExperimentObject{
+fun RecentExperimentSearch(userId: Int) : ArrayList<String> {
     var connection = getDBConnection()
 
-    try {
-        if(connection != null) {
+    try{
+          if(connection != null) {
             var preparedSt = connection.prepareStatement("SELECT * FROM Database.RecentExperiments where idRecentExperiments = ?;")
             preparedSt.setInt(1, UserObject.id)
 
             val rs = preparedSt.executeQuery()
 
-            try {
-                rs.next()
-                return RecentExperimentObject(rs.getString(Experiment1), rs.getString(Experiment1Date), rs.getString(Experiment2), rs.getString(Experiment2Date), rs.getString(Experiment3), rs.getString(Experiment1Dat3))
-            } catch (ex: SQLException) {
-                println("Error the query returned with a null result set. The query must have been entered incorrectly")
-                ex.printStackTrace()
+            //make string list to store the names in
+            val RecentExperiments = arrayListOf<String>()
+
+            //find the fetch size by going to end
+            rs.last()
+            val num = rs.row
+            rs.beforeFirst()
+            rs.fetchSize = num
+
+            //go to first value and start putting the names of the experiments in the list
+            rs.next()
+            for (x in 1..rs.fetchSize) {
+
+                RecentExperiments.add(rs.getString("ExperimentName"))
             }
-            return RecentExperimentObject()
+
+            //return the names mutable list
+            return RecentExperiments
         }
 
     } catch (ex: SQLException) {
@@ -42,7 +43,7 @@ fun LoadUser(UserObject: User): RecentExperimentObject{
         // handle any errors
         ex.printStackTrace()
     }
-    return RecentExperimentObject()
+
+    //If you get here then there was a failure so return empty array
+    return arrayListOf()
 }
-
-

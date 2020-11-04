@@ -10,9 +10,7 @@ import java.util.*
 
 
 fun UserProfile (id: String?){
-
     val connection= getDBConnection()
-
 
     try{
         if(connection != null) {

@@ -1,11 +1,12 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
+import edu.ycpcsp.ycpcsp.PostDataClasses.EditUserFormData
 import edu.ycpcsp.ycpcsp.Models.User
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.*
 
-fun ModifyUser(user: User): Boolean {
+fun ModifyUser(editUserFormData: EditUserFormData): Boolean {
     var connection = getDBConnection()
 
     try {
@@ -20,7 +21,6 @@ fun ModifyUser(user: User): Boolean {
                 preparedSt.setString(3, user.password)
                 preparedSt.setString(4, user.school)
                 preparedSt.setString(5, user.email)
-
                 preparedSt.executeUpdate()
                 //The method will return true if the query was able to successful update the desired User row
                 return true
@@ -29,7 +29,6 @@ fun ModifyUser(user: User): Boolean {
                 ex.printStackTrace()
             }
             //The method will return false if the query was unsuccessful
-
             return false
         }
     } catch (ex: SQLException) {

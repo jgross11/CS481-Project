@@ -3,6 +3,7 @@ package edu.ycpcsp.ycpcsp.WebControllers
 import edu.ycpcsp.ycpcsp.DataBase.*
 import edu.ycpcsp.ycpcsp.Models.User
 import edu.ycpcsp.ycpcsp.PostDataClasses.LoginFormData
+import edu.ycpcsp.ycpcsp.PostDataClasses.RecentExperimentLoad
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 
@@ -47,4 +48,35 @@ class HomeController {
         // return constructed user object, or null, to indicate no user was found (login failed)
         return user
     }
+
+    @PostMapping(path = ["/Recent-experiment"], consumes = ["application/json"], produces = ["application/json"])
+    @ResponseBody
+    fun recentExperimentSearch(@RequestBody userid: Int): ArrayList<String> {
+        println("Loading Users Recent Experiments")
+        println(userid)
+        var ListOfRecent = arrayListOf<String>()
+        ListOfRecent = RecentExperimentSearch(userid);
+        println(ListOfRecent[0])
+
+        //For Now Here Is a fake one
+
+
+        return ListOfRecent;
+    }
+
+    @PostMapping(path = ["/Playlist"], consumes = ["application/json"], produces = ["application/json"])
+    @ResponseBody
+    fun PlaylistSearch(@RequestBody userid: Int): ArrayList<String> {
+        println("Loading Users Recent Experiments")
+        println(userid)
+        var ListOfRecent = arrayListOf<String>()
+        ListOfRecent = PlaylistSearch(userid);
+        println(ListOfRecent[0])
+
+        //For Now Here Is a fake one
+
+
+        return ListOfRecent;
+    }
+
 }

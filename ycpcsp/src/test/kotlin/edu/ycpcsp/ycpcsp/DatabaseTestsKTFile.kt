@@ -58,11 +58,36 @@ fun main(){
         println("Double check the database table to make sure the data is not corrupted")
     }
     println("=============================End Modify User Test=============================")
-    //Todo Security Question Answer Verification Test
+//    //Todo Security Question Answer Verification Test
+//
+//    println("=============================Begin Security Question Answer Test=============================")
+//    val secQuestion1 = SecurityQuestion(1,"test")
+//    val secQuestion2 = SecurityQuestion(1, "wrong")
+//
+//    //This should run a correct test
+//    if(verifySecurityQuestion(email,secQuestion1)){
+//        println("Security Question 1's answer was the correct")
+//    } else{
+//        println("Security Question 1's answer was incorrect")
+//    }
+//    //This Should run an incorrect test
+//    if(verifySecurityQuestion(email,secQuestion2)){
+//        println("Security Question 2's answer was the correct but it should be wrong")
+//    } else{
+//        println("Security Question 2's answer was incorrect which is what the result should be")
+//    }
+//    println("=============================End Security Question Answer Test=============================")
 
-    println("=============================Begin Security Question Answer Test=============================")
-    val secQuestion1 = SecurityQuestion(1,"test")
-    val secQuestion2 = SecurityQuestion(1, "wrong")
+    println("=============================Begin Create Experiment Test=============================")
+    var newExperiment = Experiment("Cool Experiment", "Yeah", -1)
+    originalUser= LoadUser(email)
+    var userAndExp = UserAndExperiment(originalUser, newExperiment)
+   if(CreateExperiment(userAndExp)){
+       println("Create Experiment successfully ran")
+   }else{
+       println("Create Experiment did not run successfully")
+   }
+    //TODO Delete Experiment & Delete all of the steps too
 
     //This should run a correct test
     if(verifySecurityQuestion(email,secQuestion1)){
@@ -146,4 +171,24 @@ fun main(){
     }
     println("=============================End Find My Experiments=============================")
 
+//    println("=============================Begin Find My Experiments=============================")
+//    val userID = LoadUser("jgross11@ycp.edu")
+//    val testExperiment = Experiment("Color", "Josh  Gross", 1)
+//
+//    val experiments = FindMyExperiments(userID)
+//    //kotlin has this cool experiment iterator
+//    //the native iterator for each natively sets the variable to "it"
+//    experiments.iterator().forEach {
+//        if (it.title.compareTo(testExperiment.title) == 0) {
+//            println("The title is " + it.title)
+//            if (it.creatorName.compareTo(testExperiment.creatorName) == 0) {
+//                println("Find My Experiments works so far")
+//            }
+//            //println("The creator Name is " + it.creatorName)
+//        } else {
+//            println("Error: Find My Experiments did not work")
+//        }
+//
+//    }
+//    println("=============================End Find My Experiments=============================")
 }

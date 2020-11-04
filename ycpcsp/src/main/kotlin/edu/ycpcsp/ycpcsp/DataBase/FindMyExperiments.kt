@@ -8,7 +8,7 @@ import java.util.*
 
 fun FindMyExperiments(user: User): MutableList<Experiment> {
     var connection = getDBConnection()
-
+  
     val CREATORID = 1
     val TITLE = 2
 

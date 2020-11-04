@@ -5,7 +5,6 @@ import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.*
 
-
 fun DeleteExperiment(experimentId: Int) : Boolean {
     //experimentId, front end needs to somehow know what the experiments Id is
     var connection = getDBConnection()
