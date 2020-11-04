@@ -118,6 +118,19 @@
     </div>
 </div>
 <div class="boxed">
+    <div id="RecentBox">
+   <ul id="RecentExperiments">
+   </ul>
+    </div>
+
+    <div id="PlaylistBox">
+        <form id="myForm">
+            <select id="selectNumber">
+                <option>Choose a number</option>
+            </select>
+        </form>
+
+    </div>>
 </div>
 
 
@@ -154,6 +167,23 @@
 </body>
 
 <script>
+    /*var userid = 4;
+    postData('Recent-experiment', userid).then(function(data){
+        console.log(data);
+        array = data
+    });
+
+    postData('Playlist', user.id).then(function(data){
+        console.log(data);
+        PlayList = data;
+    }); */
+
+    var array ;
+    function display(elm) {
+        var x = elm.getAttribute('value');
+        //TODO here is where we want to search for
+        console.log(x);
+    }
 
     checkForLogin();
 
@@ -196,25 +226,34 @@
                 var user = data;
                 if(user.firstName != ""){
                     sessionStorage.setItem("user", JSON.stringify(user));
+                    //TODO PostRecentExperiment post goes here.
+                    postData('Recent-experiment', user.id).then(function(data){
+                        console.log(data);
+                        array = ["String Cheese", "Please work"];
+                    });
+
+                    postData('Playlist', user.id).then(function(data){
+                        console.log(data);
+                        PlayList = data; 
+                    });
                     window.location.href = "/";
                 }
                 else{
                     setErrorDivMessageByValue("email", "LOGIN FAILED", false);
                 }
             });
+
+
         }
         else{
             setErrorDivMessageByValue("email", "Please enter a valid email.", emailGood);
             setErrorDivMessageByValue("password", "Please enter a valid password.", passGood);
         }
     }
-
     function loadSimulation(simulationID){
         sessionStorage.setItem("simulationToLoad", simulationID);
         window.location.href = "/simulation";
     }
-
-
 
 </script>
 </html>

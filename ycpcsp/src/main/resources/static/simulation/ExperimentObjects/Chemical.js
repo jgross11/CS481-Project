@@ -6,19 +6,16 @@ class Chemical extends ExperimentObject{
     /**
     Create a new Chemical with the given information
     mass: A floating point value, the amount of mass in this Chemical, in grams
-    equation: A string, the equation for the components of this Chemical
+    properties: A ChemProperties object used to specify the properties of this Chemical
     temperature: A floating point value, the temperature, in celsius, of this Chemical
     texture: Either a list of rgb colors [red, green, blue] representing the color of this Chemical
                 or an image file representing the texture of this Chemical
     concentration: A floating point value in the range [0, 1] of the concentration of the chemical, default: 1
     */
-
-    //TODO Give Formula
-    constructor(mass = 1.0, equation = "", temperature = 20.0, texture = [127, 127, 127], concentration = 1){
+    constructor(mass = 1.0, properties = null, temperature = 20.0, concentration = 1){
         super(mass);
-        this.equation = equation;
+        this.properties = properties;
         this.temperature = temperature;
-        this.texture = texture;
         this.concentration = concentration;
 
         // The current state of matter for this Chemical, based on temperature
@@ -26,11 +23,11 @@ class Chemical extends ExperimentObject{
     }
 
     /**
-    Set the equation of this Chemical
-    equation: A string, the equation for the components of this Chemical
+    Set the properties object of this Chemical
+    properties: The properties object
     */
-    setEquation(equation){
-        this.equation = equation;
+    setProperties(properties){
+        this.properties = properties;
     }
 
     /**
@@ -42,12 +39,11 @@ class Chemical extends ExperimentObject{
     }
 
     /**
-    Set the texture to use for rendering this Chemical
-    texture: Either a list of rgb colors [red, green, blue] representing the color of this Chemical
-                or an image file representing the texture of this Chemical
+    Get the texture to use for rendering this Chemical
+    return: A list of 3 or 4 values [red, green, blue, alpha], alpha is option representing the color of this Chemical
     */
-    setTexture(texture){
-        this.texture = texture;
+    getTexture(){
+        return this.properties.getTexture();
     }
 
     /**
@@ -65,14 +61,7 @@ class Chemical extends ExperimentObject{
     Get the ID representing this Chemical type
     */
     getID(){
-        switch(this.equation){
-            case "R": return ID_CHEM_TEST_RED;
-            case "B": return ID_CHEM_TEST_BLUE;
-            case "W": return ID_CHEM_TEST_WHITE;
-            case "G": return ID_CHEM_TEST_GREEN;
-            case "BL": return ID_CHEM_TEST_BLACK;
-            default: return null;
-        }
+        return this.properties.getID();
     }
 }
 
@@ -163,40 +152,56 @@ class ChemicalController2D extends ExperimentObjectController2D{
     }
 
     /**
-    Mix a list of Chemicals with a copy of this Controller's Chemical, and return the newly mixed Chemicals as a list
-    Does nothing if either this Controller's Chemical, or the list, is null.
-    Currently just mixes The chemical of this Controller with the first Chemical in the list
-    chems: The Chemicals to mix
-    returns: The list of chemicals Chemicals, or null if they could not be combined
+    Mix a list of Chemicals with a copy of this Controller's Chemical, and return the newly mixed Chemicals as a list.
+    Does nothing if the list is null. Will still operate on list of Chemicals if this Controller's chemical is null.
+    This method does not change this Controller's Chemical.
+    This method will combine all common elements in the given list, i.e. if the list has two instances of chemicalA,
+        they wil both be combined into one instance of chemicalA, with the combined mass of both instances of chemicalA.
+    Currently combines common Chemicals, but does not perform chemical equation interactions
+    Also ensures that the chemicals are sorted by density.
+    chems: The Chemicals to combine
+    returns: The list of Chemicals, or null if they could not be combined
     */
     combine(chems){
-        if(chems === null) return null;
-        let copy = this.copyChem();
-        if(chems.length < 1) return [copy];
-        let c1 = chems[0];
-        let c2 = copy;
-        if(c1 === null || c1 === undefined || c2 === null || c2 === undefined) return null;
+        // Checking to make sure parameters exist
+        if(!Array.isArray(chems) || chems === null) return null;
+        if(this.chemical !== null) chems.push(this.copyChem());
+        if(chems.length < 1) return chems;
 
-        let t1 = c1.texture;
-        let t2 = c2.texture;
-
-        let totalMass = c1.mass + c2.mass;
-        let r1 = c1.mass / totalMass;
-        let r2 = c2.mass / totalMass;
-
-        // Set the amount for each color based on the ratio of the mass of each chemical
-        let tex = [t1[0] * r1 + t2[0] * r2, t1[1] * r1 + t2[1] * r2, t1[2] * r1 + t2[2] * r2];
-
-        let newChems = [];
+        // Go through each Chemical in the list and see if the chemical can be added
+        //  also add each Chemical to the list to return
+        let indexes = {};
         let control = new ChemicalController2D(null);
         for(var i = 0; i < chems.length; i++){
-            control.setChemical(chems[i]);
-            newChems.push(control.copyChem());
-        }
-        newChems[0].setTexture(tex);
-        newChems[0].setMass(totalMass);
+            let c = chems[i];
+            let cID = c.getID();
+            let indexed = indexes[cID];
 
-        return newChems;
+            // If the current chemical has not yet been indexed, add it to the index dictionary
+            if(indexed === undefined){
+                control.setChemical(c);
+                let newC = control.copyChem();
+                indexes[cID] = newC;
+                chems[i] = newC;
+            }
+            // If the chemical exists, combine their masses and remove the common instance from the list
+            else{
+                // TODO handle concentration values
+                indexed.setMass(indexed.mass + c.mass);
+                chems.splice(i, 1);
+                i--;
+            }
+            // TODO handle interactions when chemicals should combine to produce something new
+        }
+
+        // Sort the chemicals by their densities, smallest at the end
+        // TODO improve this by inserting new chemicals based on their density, rather than sorting each time
+        return chems.sort(function(a, b){
+            let ad = a.properties.getDensity();
+            let bd = b.properties.getDensity();
+            if(ad === bd) return 0;
+            return (ad > bd) ? -1 : 1;
+        });
     }
 
     /**
@@ -223,7 +228,7 @@ class ChemicalController2D extends ExperimentObjectController2D{
     copyChem(){
         let c = this.chemical
         if(c === null) return null;
-        return new Chemical(c.mass, c.equation, c.temperature, c.texture, c.concentration);
+        return new Chemical(c.mass, c.properties, c.temperature, c.concentration);
     }
 
     /**
@@ -238,14 +243,113 @@ class ChemicalController2D extends ExperimentObjectController2D{
     graphics: The P5 graphics to use
     */
     drawRect(x, y, fillPercent, width, baseHeight, heightOffset, graphics){
-        let tex = this.chemical.texture;
-        if(tex !== null && tex !== undefined){
-            graphics.fill(color(tex));
-            graphics.noStroke();
-            let h = baseHeight;
-            let oh = h * (1 - heightOffset);
-            graphics.rect(x, y + h * heightOffset + oh * (1 - fillPercent), width, oh * fillPercent);
-        }
+        let tex = this.chemical.getTexture();
+        if(tex === null || tex === undefined) return;
+        graphics.fill(tex);
+        graphics.noStroke();
+        let h = baseHeight;
+        let oh = h * (1 - heightOffset);
+        graphics.rect(x, y + h * heightOffset + oh * (1 - fillPercent), width, oh * fillPercent);
     }
 
+    /**
+    Draw this chemical as a shape defined by vertices. Part of the shape can be drawn based on a percentage
+    graphics: The P5 graphics object to draw the final picture onto
+    buffer: The P5 graphics object to use as a buffer for drawing to graphics
+        This buffer should be the size of the total space which the chemical visual cane take up
+    x: The x coordinates to draw the chemical to graphics
+    y: The y coordinates to draw the chemical to graphics
+    vertices: A list of 2 element lists representing coordinates of where the chemical shape will be drawn
+        All should be in the range of [0, 1], and will be scaled to fit the buffer
+        The first and last vertices in the list will also connect together, completing the shape
+    fillRatio: The percentage of the total shape which will be drawn. The shape starts being drawn at the bottom
+    bottomFillPercent: The total percentage of buffer which is used to draw the shape, beginning with the bottom
+    */
+    drawShape(graphics, buffer, x, y, vertices, fillRatio, bottomFillPercent){
+        let tex = this.chemical.getTexture();
+        if(tex === null || tex === undefined) return;
+
+        let w = buffer.width;
+        let h = buffer.height;
+
+        buffer.push();
+        buffer.fill(tex);
+        buffer.noStroke();
+        buffer.scale(w, h);
+        buffer.beginShape();
+        for(var i = 0; i < vertices.length; i++){
+            buffer.vertex(vertices[i][0], vertices[i][1]);
+        }
+        buffer.endShape(CLOSE);
+        buffer.pop();
+        let ratio = h * bottomFillPercent * fillRatio;
+        let hr = h - ratio;
+        graphics.image(buffer, x, y + hr, w, ratio, 0, hr, w, ratio);
+    }
+
+}
+
+/**
+Draw all of the chemicals in a rectangle.
+Chemicals at the beginning of the list get drawn first at the bottom of the rectangle
+graphics: The P5 graphics object to draw the rectangles to
+chems: The list of Chemical objects to be rendered
+totalQuantity: The total of the quantities of all the Chemicals in chems
+x: The x position to draw the rectangles
+y: The y position to draw the rectangles
+w: The width to draw the rectangle
+h: The height to draw the rectangle
+*/
+function drawChemicalRectMultiple(graphics, chems, totalQuantity, x, y, w, h){
+    var currentY = y + h;
+    for(var i = 0; i < chems.length; i++){
+        let c = chems[i];
+        let tex = c.getTexture();
+        if(tex !== null && tex !== undefined){
+            var hPerc = h * c.mass / totalQuantity;
+            graphics.fill(tex);
+            graphics.noStroke();
+            currentY -= hPerc;
+            graphics.rect(x, currentY, w, hPerc);
+        }
+    }
+}
+
+/**
+Draw all of the chemicals in a shape defined by vertices, splitting the shape based on the amount of each chemical.
+Chemicals at the beginning of the list get drawn first at the bottom of the shape
+graphics: The P5 graphics object to draw the shape to
+chems: The list of Chemical objects to be rendered
+totalQuantity: The total of the quantities of all the Chemicals in chems
+vertices: A list of [x, y] coordinates for where the vertices will be placed.
+    These are percentages based on the width and height of buffer
+x: The x position to draw the shape
+y: The y position to draw the shape
+buffer: The P5 graphics object used for drawing the shapes.
+*/
+function drawChemicalShapeMultiple(graphics, chems, totalQuantity, vertices, x, y, buffer){
+    let w = buffer.width;
+    let h = buffer.height;
+    buffer.push();
+    buffer.noStroke();
+    buffer.scale(w, h);
+    var currentY = y + h;
+    for(var i = 0; i < chems.length; i++){
+        let c = chems[i];
+        let tex = c.getTexture();
+        if(tex !== null && tex !== undefined){
+            buffer.clear();
+            buffer.fill(tex);
+            buffer.beginShape();
+            for(var j = 0; j < vertices.length; j++){
+                buffer.vertex(vertices[j][0], vertices[j][1]);
+            }
+            buffer.endShape(CLOSE);
+            let ratio = h * c.mass / totalQuantity;
+            let hr = h - ratio;
+            currentY -= ratio;
+            graphics.image(buffer, x, currentY, w, ratio, 0, currentY - y, w, ratio);
+        }
+    }
+    buffer.pop();
 }

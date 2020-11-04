@@ -5,23 +5,6 @@ var mainExpCanvas = null;
 // true to load data from the actual database, false to use test data defined by the return of getTestJSON()
 let LOAD_EXPERIMENT_FROM_SERVER = false;
 
-/*
-
-TODO:
-    Allow options for interactions to be clicked on
-    Create system for making Experiment Instructions
-    Allow equipment to be disposed via sink
-    Add way to add chemicals to containers over time
-    Fix bug where left clicking one Equipment, then while dragging, right click, makes the equipment not get unselected on letting go of left click
-    Make basic layout for Experiment
-        Update clicking and dragging to change indexes for ExperimentBoxes when they are removed from the list
-        Split Experiment render code into individual methods
-    Optimize performance of searching for adding and removing Equipment, pick a better data structure
-    Create a method to render a static loading screen while the simulator loads
-    Add sample animation
-
-*/
-
 /**
 P5.js function, called when script is initially loaded
 */
@@ -42,6 +25,9 @@ function setup(){
     // Load image assets
     loadImages();
 
+    // Set up chemical properties test database
+    initTestChemProperties();
+
     // Grab data from session storage
     loadSessionData();
 }
@@ -51,7 +37,7 @@ Initialize the experiment and controller objects from the session data
 */
 function initExperiment(data){
     if(LOAD_EXPERIMENT_FROM_SERVER) mainExperiment = parseExperiment(data);
-    else mainExperiment = parseExperiment(getTestJSON());
+    else mainExperiment = parseExperiment(getLab3aJSON());
     mainExpController = new ExperimentController2D(mainExperiment, true);
 }
 

@@ -12,7 +12,7 @@ class ProfileController {
     // sends profile html file to user
     @GetMapping("/profile")
     fun sendHomePage(): String{
-        println("Sending user to home page...")
+        println("Sending user to profile page...")
         return "profile.html"
     }
 }

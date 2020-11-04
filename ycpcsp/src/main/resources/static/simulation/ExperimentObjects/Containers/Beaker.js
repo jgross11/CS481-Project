@@ -60,23 +60,12 @@ class BeakerController2D extends ContainerController2D{
     graphics: The P5 graphics to use
     */
     draw(graphics){
-        // Draw the color of the Chemical, if one exists
-        let eq = this.equipment;
-        if(eq.contents.length > 0){
-            let chem = eq.contents[0];
-            let chemController = new ChemicalController2D(chem);
-            let w = this.width();
-            chemController.drawRect(this.x() + w * .12, this.y(), chem.mass / eq.capacity, w * .85, this.height(), 0.2, graphics);
-        }
+        // Draw the chemicals
+        this.drawContentsRect(graphics, BEAKER_X_OFFSET, BEAKER_Y_OFFSET,
+            BEAKER_WIDTH_OFFSET, BEAKER_HEIGHT_OFFSET);
 
         // Draw the base Beaker sprite
         super.draw(graphics);
-
-        // Draw the text
-        graphics.fill(color(0, 0, 0));
-        graphics.noStroke();
-        graphics.textSize(15);
-        graphics.text("ID: " + eq.instanceID, this.x() + this.width() * 0.4, this.y() + this.height() / 2)
     }
 
 }

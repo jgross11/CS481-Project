@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Creation</title>
+</head>
+<style>
+    .dropbtn {
+        background-color: #3498DB;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .dropbtn:hover, .dropbtn:focus {
+        background-color: #2980B9;
+    }
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f1f1f1;
+        min-width: 160px;
+        overflow: auto;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+    .dropdown-content a {
+        color: #000000;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown a:hover {background-color: #ddd;}
+
+    .show {display: block;}
+</style>
+<body>
+<div>
+    <a href="/" class="button">Home</a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/p5@1.1.9/lib/p5.js"></script>
+<script src="./helperFunctions.js"></script>
+
+
+<script src="simulation/ObjectIDs.js"></script>
+
+<script src="simulation/ExperimentObjects/ExperimentObject.js"></script>
+<script src="simulation/ExperimentObjects/Equipment.js"></script>
+<script src="simulation/ExperimentObjects/Chemical.js"></script>
+<script src="simulation/ExperimentObjects/ChemProperties.js"></script>
+<script src="simulation/ExperimentObjects/Scale.js"></script>
+<script src="simulation/ExperimentObjects/StirRod.js"></script>
+
+<script src="simulation/ExperimentObjects/Containers/Container.js"></script>
+<script src="simulation/ExperimentObjects/Containers/Beaker.js"></script>
+<script src="simulation/ExperimentObjects/Containers/ErlenmeyerFlask.js"></script>
+<script src="simulation/ExperimentObjects/Containers/GraduatedCylinder.js"></script>
+<script src="simulation/ExperimentObjects/Containers/WeighBoat.js"></script>
+
+<script src="simulation/ExperimentObjects/Disposers/Disposer.js"></script>
+<script src="simulation/ExperimentObjects/Disposers/Trashcan.js"></script>
+
+
+<div class="dropdown">
+    <button onclick="EFunction()" class="dropbtn">Equipment</button>
+    <div id="equipDropdown" class="dropdown-content">
+        <p id="Equip"></p>
+
+
+    </div>
+</div>
+<div class="dropdown">
+    <button onclick="CFunction()" class="dropbtn">Chemicals</button>
+    <div id="ChemDropdown" class="dropdown-content">
+        <p id="Chem"></p>
+
+    </div>
+</div>
+<p id="CHLIST"></p>
+<p id="EQLIST"></p>
+
+
+<select id="ChemOrEquip1"></select>
+<select id="insert1"></select>
+<select id="Function"></select>
+<select id="ChemOrEquip2"></select>
+<select id="insert2"></select>
+<p id="Steps"></p>
+
+
+<button onclick="AddStep()">Add Step</button>
+<button onclick="CreateExp()">Create</button>
+
+</body>
+<script>
+    let user = JSON.parse(sessionStorage.getItem("user"));
+
+    var listchem = [];
+    let sendchem = [];
+    var listequip = [];
+    let sendequip = [];
+    var liststeps = [];
+    let sendsteps = [];
+    LoadEquip();
+    LoadChem();
+    LoadFunc();
+    /* When the user clicks on the button,
+    toggle between hiding and showing the dropdown content */
+    function CFunction() {
+        document.getElementById("ChemDropdown").classList.toggle("show");
+    }
+    function EFunction() {
+        document.getElementById("equipDropdown").classList.toggle("show");
+    }
+   function LoadEquip(){
+       let EquipID = JSON.parse(sessionStorage.getItem("EquipID"));
+       for (i = 0; i < EquipID.length  ; i++) {
+            document.getElementById("Equip").innerHTML += "<button onclick=AddEquip(this) ID='"+EquipID[i].ID+"' name="+EquipID[i].Equip +">" + EquipID[i].Equip+ "</button>";
+       }
+
+   }
+    function LoadChem(){
+        let ChemID = JSON.parse(sessionStorage.getItem("ChemID"));
+        for (i = 0; i < ChemID.length  ; i++) {
+            document.getElementById("Chem").innerHTML += "<button onclick=AddChem(this) ID='"+ChemID[i].ID+"' name="+ChemID[i].Chem +">" + ChemID[i].Chem+ "</button>";
+        }
+
+    }
+    function LoadFunc(){
+        var options = "";
+        options += "<option value='false'>Chem</option>";
+        options += "<option value='true'>Equip</option>";
+        document.getElementById("ChemOrEquip1").innerHTML = options;
+
+        let Func = JSON.parse(sessionStorage.getItem("Expfunc"));
+
+        var funopt ="";
+        for(i = 0; i < Func.length  ; i++){
+            funopt += "<option value='"+Func[i].Function +"'>"+ Func[i].Function +"</option>";
+        }
+        document.getElementById("Function").innerHTML = funopt;
+
+        let ChemID = JSON.parse(sessionStorage.getItem("ChemID"));
+        let EquipID = JSON.parse(sessionStorage.getItem("EquipID"));
+
+
+        var act ="";
+        for(i = 0; i < ChemID.length  ; i++){
+            act += "<option value='"+ChemID[i].ID +"'>"+ ChemID[i].Chem +"</option>";
+        }
+        for(i = 0; i < EquipID.length  ; i++){
+            act += "<option value='"+EquipID[i].ID +"'>"+ EquipID[i].Equip +"</option>";
+        }
+        document.getElementById("insert1").innerHTML = act;
+
+
+        var options2 = "";
+        options2 += "<option value='false'>Chem</option>";
+        options2 += "<option value='true'>Equip</option>";
+        document.getElementById("ChemOrEquip2").innerHTML = options2;
+
+
+
+        var rec ="";
+        for(i = 0; i < ChemID.length  ; i++){
+            rec += "<option value='"+ChemID[i].ID +"'>"+ ChemID[i].Chem +"</option>";
+        }
+        for(i = 0; i < EquipID.length  ; i++){
+            rec += "<option value='"+EquipID[i].ID +"'>"+ EquipID[i].Equip +"</option>";
+        }
+        document.getElementById("insert2").innerHTML = rec;
+
+
+
+    }
+    var stepcount = -1;
+    function AddStep(){
+
+        var op1 = document.getElementById("ChemOrEquip1");
+        var opti1 = op1.value;
+        var a = document.getElementById("insert1");
+        var act = a.value;
+        var f = document.getElementById("Function");
+        var func = f.value;
+        var op2 = document.getElementById("ChemOrEquip2");
+        var opti2 = op2.value;
+        var r = document.getElementById("insert2");
+        var rec = r.value;
+        stepcount++;
+        var send = {stepcount,act,opti1,rec,opti2,func};
+        liststeps.push(send);
+        document.getElementById("Steps").innerHTML = JSON.stringify(liststeps);
+        sendsteps.push(makeTestInstructionJSON(stepcount,act,opti1,rec,opti2,func));
+    }
+
+    function AddChem(Chem){
+        var mass = prompt("Enter mass in g.","")
+        var concentration = prompt("Enter concentration.","")
+        var Chemical = Chem.name;
+        var ID = Chem.id;
+        var send = {Chemical, ID ,mass, concentration };
+        if (mass == null || mass == "" || concentration == null || concentration == "") {
+        } else {
+            listchem.push(send);
+            document.getElementById("CHLIST").innerHTML = JSON.stringify(listchem);
+            sendchem.push(makeTestChemicalJSON(Chemical,mass,concentration));
+
+        }
+
+    }
+    function AddEquip(Equip){
+        var amount = prompt("Enter amount.","")
+        var Equipment = Equip.name;
+        var ID = Equip.id;
+        var send = {Equipment, ID ,amount };
+        if (amount == null || amount == "") {
+        } else {
+            listequip.push(send);
+            document.getElementById("EQLIST").innerHTML = JSON.stringify(listequip);
+            sendequip.push(makeTestEquipmentJSON(Equipment,amount));
+
+        }
+    }
+    function CreateExp(){
+        let exp = {};
+        var title = prompt("Enter a Title.","")
+        exp[EXP_JSON_TITLE] = title;
+        exp[EXP_JSON_CREATOR] = user.name;
+
+        exp[EXP_JSON_EQUIPMENT] = sortArrayByKey(sendequip, EXP_JSON_EQUIP_OBJ_ID, false);
+        exp[EXP_JSON_CHEMICALS] = sortArrayByKey(sendchem, [EXP_JSON_CHEM_ID, EXP_JSON_CHEM_MASS, EXP_JSON_CHEM_CONCENTRATION], true);
+        exp[EXP_JSON_INSTRUCTIONS] = sortArrayByKey(sendsteps, EXP_JSON_INS_STEP_NUM, false);;
+
+    }
+
+        // Close the dropdown if the user clicks outside of it
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+</script>
+</html>

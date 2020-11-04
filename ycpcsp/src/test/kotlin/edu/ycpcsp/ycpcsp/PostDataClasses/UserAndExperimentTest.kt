@@ -1,40 +1,23 @@
 package edu.ycpcsp.ycpcsp.PostDataClasses
 
+import edu.ycpcsp.ycpcsp.Models.*
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
 
 internal class UserAndExperimentTest {
+    var testUser = User("josh", "gross", "jgross11@ycp.edu", "123QWEasd", "YCP", 1)
+    var testExperiment = Experiment("Water in Beaker","Josh Gross", 1)
+    var testUserAndExperiment = UserAndExperiment(testUser, testExperiment)
 
     @Test
-    fun testToString() {
+    fun testGetUser() {
+        assertEquals(testUserAndExperiment.user, testUser)
     }
 
-    @Test
-    fun getUser() {
-    }
 
     @Test
-    fun setUser() {
-    }
-
-    @Test
-    fun getExperiment() {
-    }
-
-    @Test
-    fun setExperiment() {
-    }
-
-    @Test
-    operator fun component1() {
-    }
-
-    @Test
-    operator fun component2() {
-    }
-
-    @Test
-    fun copy() {
+    fun testGetExperiment() {
+        assertEquals(testUserAndExperiment.experiment, testExperiment)
     }
 }

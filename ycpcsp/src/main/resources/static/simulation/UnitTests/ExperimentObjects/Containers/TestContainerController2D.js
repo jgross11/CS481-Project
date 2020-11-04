@@ -28,10 +28,10 @@ QUnit.module("ContainerController2D", {
         beakerControl1 = new BeakerController2D(beaker1);
         beakerControl2 = new BeakerController2D(beaker2);
 
-        chem1 = new Chemical(30, "", 20, [100, 120, 140]);
-        chem2 = new Chemical(20, "", 20, [10, 20, 40]);
-        chem3 = new Chemical(70, "", 20, [100, 120, 140]);
-        chem4 = new Chemical(50, "", 20, [10, 20, 40]);
+        chem1 = idToChemical(ID_CHEM_TEST_RED, 30, 1).chemical;
+        chem2 = idToChemical(ID_CHEM_TEST_BLUE, 20, 1).chemical;
+        chem3 = idToChemical(ID_CHEM_TEST_RED, 70, 1).chemical;
+        chem4 = idToChemical(ID_CHEM_TEST_BLUE, 50, 1).chemical;
         chemControl1 = new ChemicalController2D(chem1);
         chemControl2 = new ChemicalController2D(chem2);
     }
@@ -44,18 +44,18 @@ QUnit.test('constructor:', function(assert){
 QUnit.test('idToFunc:', function(assert){
     assert.equal(controller.idToFunc(ID_FUNC_CONTAINER_POUR_INTO), controller.pourInto, "Should get the function pourInto");
     assert.equal(controller.idToFunc(ID_FUNC_CONTAINER_ADD_TO), controller.addTo, "Should get the function addTo");
+    assert.equal(controller.idToFunc(ID_FUNC_CONTAINER_EMPTY_IN_TRASH), controller.emptyOut, "Should get the function emptyOut");
 });
 
 QUnit.test('funcToId:', function(assert){
     assert.equal(controller.funcToId(controller.pourInto), ID_FUNC_CONTAINER_POUR_INTO, "Should get the ID for pourInto");
     assert.equal(controller.funcToId(controller.addTo), ID_FUNC_CONTAINER_ADD_TO, "Should get the ID for addTo");
+    assert.equal(controller.funcToId(controller.emptyOut), ID_FUNC_CONTAINER_EMPTY_IN_TRASH, "Should get the ID for emptyOut");
 });
 
 QUnit.test('getFuncDescriptions:', function(assert){
     let desc = controller.getFuncDescriptions();
-    assert.equal(desc.length, 2, "Containers should have two function descriptions");
-    assert.true(typeof desc[0] === "string", "Elements of the function descriptions must be strings.");
-    assert.true(typeof desc[1] === "string", "Elements of the function descriptions must be strings.");
+    assert.equal(desc.length, 3, "Containers should have three function descriptions");
 });
 
 QUnit.test('hasResidue:', function(assert){
@@ -115,9 +115,7 @@ QUnit.test('pourInto:', function(assert){
     beakerControl1.setEquipment(beaker1);
     beakerControl2.setEquipment(beaker2);
     assert.true(beakerControl1.pourInto(beakerControl2), "Pouring into a valid controller should succeed");
-    var cont = beakerControl2.equipment.contents;
-    assert.equal(cont[0].mass, 50, "Container should contain modified chemical with mass 50");
-    assert.deepEqual(cont[0].texture, [64, 80, 100], "Container should contain modified chemical with color [64, 80, 100]");
+    assert.equal(beaker2.getTotalContentsMass(), 50, "Container should contain modified chemical with mass 50");
 
     chem1.setMass(30);
     chem2.setMass(20);
@@ -125,15 +123,14 @@ QUnit.test('pourInto:', function(assert){
     beaker1.setContents(chem1);
     beaker2.setContents(chem2);
     assert.true(beakerControl1.pourInto(beakerControl2), "Pouring into a valid controller should succeed");
-    cont = beakerControl2.equipment.contents;
-    assert.equal(cont[0].mass, 47, "Container should contain modified chemical with mass 47 after leaving residue");
+    assert.equal(beaker2.getTotalContentsMass(), 47, "Container should contain modified chemical with mass 47 after leaving residue");
 
     beaker1.setContents(chem3);
     beaker2.setContents(chem4);
     beaker1.setResidue(0);
     assert.true(beakerControl1.pourInto(beakerControl2), "Pouring into a valid controller should succeed");
-    assert.equal(beakerControl2.equipment.contents[0].mass, 100, "Container poured into should be full with mass 50");
-    assert.equal(beakerControl1.equipment.contents[0].mass, 20, "Container poured out should have 20 mass");
+    assert.equal(beakerControl2.equipment.getTotalContentsMass(), 100, "Container poured into should be full with mass 50");
+    assert.equal(beakerControl1.equipment.getTotalContentsMass(), 20, "Container poured out should have 20 mass");
 
     chem1.setMass(5);
     chem2.setMass(10);
@@ -215,7 +212,6 @@ QUnit.test('addTo:', function(assert){
     assert.deepEqual(beaker1.contents, [chem1], "The container should contain chemical 1");
 
     assert.true(beakerControl1.addTo(chemControl2), "Should successfully add the chemical");
-    assert.deepEqual(beaker1.contents[0].texture, [55, 70, 90], "The container should contain a mix of chemical 1 and 2");
 
     assert.false(beakerControl1.addTo(null), "Should fail to add a null parameter");
 
@@ -309,4 +305,8 @@ QUnit.test('reset:', function(assert){
 QUnit.test('update:', function(assert){
     controller.update();
     assert.expect(0);
+});
+
+QUnit.todo('drawContentsRect:', function(assert){
+    assert.true(false);
 });
