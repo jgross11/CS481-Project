@@ -148,7 +148,7 @@ class ChemicalController2D extends ExperimentObjectController2D{
     returns: A floating point value, the number of moles
     */
     calculateMoles(){
-        // TODO implement
+        // TODO implement based on molar mass
         return 0;
     }
 
@@ -157,7 +157,7 @@ class ChemicalController2D extends ExperimentObjectController2D{
     The result is stored in the matterState field in the Chemical
     */
     calculateMatterState(){
-        // TODO implement
+        // TODO implement based on melting and boiling point
     }
 
     /**

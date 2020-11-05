@@ -95,6 +95,12 @@ let COMPOUND_WATER_ID = 10001;
 let COMPOUND_GLUCOSE_ID = 10002;
 let COMPOUND_TABLE_SALT_ID = 10003;
 
+
+// Formulas
+let FORMULA_WATER_ID = 1;
+let FORMULA_TABLE_SALT_ID = 2;
+
+
 /**
 Take an integer ID and convert it to a valid piece of Equipment
 id: The integer id
@@ -163,15 +169,18 @@ function idToChemical(id, mass, concentration){
     return new ChemicalController2D(chem);
 }
 
-// A test "database" holding a few chemical properties
+// A directory holding all chemical properties currently available
 let CHEMICAL_PROPERTIES = [];
 
+// A directory holding all formula data currently available
+let FORMULA_PROPERTIES = [];
+
 /**
-Initialize the test database with some default elements and compounds
+Initialize the test database with some default elements, compounds, and formulas
 */
 function initTestChemProperties(){
     /*
-    TODO all values for molar bass, melting point, boiling point, and density need verification
+    All values for molar bass, melting point, boiling point, and density need verification
         temperatures are in celsius, density is in g/cm^3 for solids, and g/L (or kg/m^3) for gases
         Data obtained from:
             https://www.lenntech.com/periodic-chart-elements/density.htm
@@ -216,37 +225,52 @@ function initTestChemProperties(){
         [0, 0, 0, 255], [0, 0, 0, 200], [0, 0, 0, 180],
         ID_CHEM_TEST_BLACK, 9, 100, 0, 1.1, true);
 
-    /*
-    TODO Also need verification for all melting point, boiling point, and density values for compounds
-        All values are from miscellaneous sources, mostly here as placeholders
-    */
-    makeCompound(COMPOUND_HYDROGEN_GAS_ID,
-        [[new ElementProperties(ELEMENT_HYDROGEN_ATOMIC_NUM), 2]],
-        "Hydrogen Gas", "Nature",
+
+    // Also need verification for all melting point, boiling point, and density values for compounds
+    // All values are from miscellaneous sources, mostly here as placeholders
+
+    makeCompound(COMPOUND_HYDROGEN_GAS_ID, [
+            new CompoundComponent(new ElementProperties(ELEMENT_HYDROGEN_ATOMIC_NUM), 2)
+        ], "Hydrogen Gas", "Nature",
         [255, 255, 200, 255], [255, 255, 200, 200], [255, 255, 200, 180],
         -259, -253, 0.09, true);
 
-    makeCompound(COMPOUND_WATER_ID,
-        [[new CompoundProperties(COMPOUND_HYDROGEN_GAS_ID), 1],
-        [new ElementProperties(ELEMENT_OXYGEN_ATOMIC_NUM), 1]],
-        "Water", "Nature",
+    makeCompound(COMPOUND_WATER_ID, [
+            new CompoundComponent(new CompoundProperties(COMPOUND_HYDROGEN_GAS_ID), 1),
+            new CompoundComponent(new ElementProperties(ELEMENT_OXYGEN_ATOMIC_NUM), 1)
+        ], "Water", "Nature",
         [100, 100, 255, 255], [100, 100, 255, 200], [100, 100, 255, 180],
         0, 100, 1, true);
 
-    makeCompound(COMPOUND_GLUCOSE_ID,
-        [[new ElementProperties(ELEMENT_CARBON_ATOMIC_NUM), 6],
-        [new ElementProperties(ELEMENT_HYDROGEN_ATOMIC_NUM), 12],
-        [new ElementProperties(ELEMENT_OXYGEN_ATOMIC_NUM), 6]],
-        "Glucose", "Nature",
+    makeCompound(COMPOUND_GLUCOSE_ID, [
+            new CompoundComponent(new ElementProperties(ELEMENT_CARBON_ATOMIC_NUM), 6),
+            new CompoundComponent(new ElementProperties(ELEMENT_HYDROGEN_ATOMIC_NUM), 12),
+            new CompoundComponent(new ElementProperties(ELEMENT_OXYGEN_ATOMIC_NUM), 6)
+        ], "Glucose", "Nature",
         [100, 255, 255, 255], [100, 255, 255, 200], [100, 255, 255, 180],
         146, 146, 1.56, true);
 
-    makeCompound(COMPOUND_TABLE_SALT_ID,
-        [[new ElementProperties(ELEMENT_SODIUM_ATOMIC_NUM), 1],
-        [new ElementProperties(ELEMENT_CHLORINE_ATOMIC_NUM), 1]],
-        "Table Salt", "Nature",
+    makeCompound(COMPOUND_TABLE_SALT_ID, [
+        new CompoundComponent(new ElementProperties(ELEMENT_SODIUM_ATOMIC_NUM), 1),
+        new CompoundComponent(new ElementProperties(ELEMENT_CHLORINE_ATOMIC_NUM), 1)
+        ], "Table Salt", "Nature",
         [240, 240, 240, 255], [240, 240, 240, 200], [240, 240, 240, 180],
         801, 1465, 2.16, true);
+
+    // These formulas are for testing, and are not necessarily accurate to reality
+    makeFormula(FORMULA_WATER_ID, [
+        new FormulaComponent(1, COMPOUND_HYDROGEN_GAS_ID)
+        new FormulaComponent(1, ELEMENT_OXYGEN_ATOMIC_NUM)
+        ], [
+        new FormulaComponent(1, COMPOUND_WATER_ID);
+        ]);
+
+    makeFormula(FORMULA_TABLE_SALT_ID, [
+        new FormulaComponent(1, ELEMENT_CHLORINE_ATOMIC_NUM)
+        new FormulaComponent(1, ELEMENT_SODIUM_ATOMIC_NUM)
+        ], [
+        new FormulaComponent(1, COMPOUND_TABLE_SALT_ID);
+        ]);
 }
 
 
@@ -264,6 +288,9 @@ let CHEMICAL_PROPERTY_MELTING_POINT = "meltingPoint";
 let CHEMICAL_PROPERTY_BOILING_POINT = "boilingPoint";
 let CHEMICAL_PROPERTY_DENSITY = "density";
 let CHEMICAL_PROPERTY_WATER_SOLUBLE = "waterSoluble";
+
+let FORMULA_PROPERTY_REACTANTS = "reactants";
+let FORMULA_PROPERTY_PRODUCTS = "products";
 
 /**
 Add a new element to the CHEMICAL_PROPERTIES list
@@ -331,4 +358,17 @@ function makeCompound(id, chems, name, creator,
     c[CHEMICAL_PROPERTY_BOILING_POINT] = boilingPoint;
     c[CHEMICAL_PROPERTY_DENSITY] = density;
     c[CHEMICAL_PROPERTY_WATER_SOLUBLE] = waterSoluble;
+}
+
+/**
+Add a new formula to the FORMULA_PROPERTIES
+id: The id of the formula used to access it from FORMULA_PROPERTIES
+reactants: The list of FormulaComponents used in the formula as reactants
+products: The list of FormulaComponents in the formula which get created as products
+*/
+function makeFormula(id, reactants, products){
+    FORMULA_PROPERTIES[id] = {};
+    let f = FORMULA_PROPERTIES[id];
+    f[FORMULA_PROPERTY_REACTANTS] = reactants;
+    f[FORMULA_PROPERTY_PRODUCTS] = products;
 }

@@ -168,12 +168,6 @@ class ElementProperties extends ChemProperties{
 
 }
 
-// The index of an array entry in a chem list associated with a compound for the chemical itself
-let COMPOUND_CHEM_INDEX = 0;
-// The index of an array entry in a chem list associated with a compound for the amount of that chemical
-
-let COMPOUND_COUNT_INDEX = 1;
-
 /**
 A class keeping track of ChemProperties, but one which is specifically a compound
 */
@@ -181,7 +175,7 @@ class CompoundProperties extends ChemProperties{
     /**
     Create new CompoundProperties, using the given stats.
     id: The integer ID used to refer to this CompoundProperties by the database, should not be an atomic number.
-    chems: A list of lists containing [ChemProperties, count] i.e. the ChemProperties type for that entry, and the amount of them
+    chems: A list of CompoundComponents used by this CompoundProperties
     */
     constructor(id){
         super(id);
@@ -201,23 +195,22 @@ class CompoundProperties extends ChemProperties{
         true if this call represents the outer layer of symbols, false otherwise
     returns: The symbol
     */
-    // TODO redo the symbol so numbers are always on the right
     getSymbol(outer = true){
         let c = this.getChem();
         let oneChem = c.length === 1;
         var parenthesis = !oneChem && !outer;
 
         var symbol = "";
-        for(var i = 0; i < c.length; i++) symbol += c[i][COMPOUND_CHEM_INDEX].getSymbol(false);
-        let num = c[i][COMPOUND_COUNT_INDEX];
+        for(var i = 0; i < c.length; i++) symbol += c[i].chemProp.getSymbol(false);
+        let num = c[i].count;
         let oneNum = num === 1;
         parenthesis = !oneNum && !oneChem;
         let extra = !oneChem && !outer;
         return (extra ? "(" : "") +
-               (oneNum ? "" : num) +
                (parenthesis ? "(" : "") +
                symbol +
                (parenthesis ? ")" : "") +
+               (oneNum ? "" : num) +
                (extra ? ")" : "");
     }
 
@@ -230,8 +223,39 @@ class CompoundProperties extends ChemProperties{
         total = 0;
         let c = this.getChem();
         for(var i = 0; i < c.length; i++){
-            total += c[i][COMPOUND_COUNT_INDEX] * c[i][COMPOUND_CHEM_INDEX].getMolarMass();
+            total += c[i].count * c[i].chemProp.getMolarMass();
         }
         return total;
+    }
+}
+
+/**
+A class tracking a ChemProperty and a count associated with it for use in CompoundProperties objects
+*/
+class CompoundComponent{
+    /**
+    Create a new CompoundComponent
+    chemProp: The ChemProperties object to use for this CompoundComponent
+    count: The number of chemProp which exist in this CompoundComponent
+    */
+    constructor(chemProp, count){
+        this.chemProp = chemProp;
+        this.count = count;
+    }
+
+    /**
+    Set the specific ChemProperties of this CompoundComponent
+    chemProp: The new ChemProperties
+    */
+    setChemProp(chemProp){
+        this.chemProp = chemProp;
+    }
+
+    /**
+    Set the count of the ChemProperties of this CompoundComponent
+    count: The new count
+    */
+    setCount(count){
+        this.count = count;
     }
 }
