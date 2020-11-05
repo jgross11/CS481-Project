@@ -1,3 +1,8 @@
+// Constants for keeping track of states of matter
+let MATTER_STATE_SOLID = 0;
+let MATTER_STATE_LIQUID = 1;
+let MATTER_STATE_GAS = 2;
+
 /**
 A class that keeps track of a single Chemical. This can be a single element, or a compound.
 */
@@ -8,8 +13,6 @@ class Chemical extends ExperimentObject{
     mass: A floating point value, the amount of mass in this Chemical, in grams
     properties: A ChemProperties object used to specify the properties of this Chemical
     temperature: A floating point value, the temperature, in celsius, of this Chemical
-    texture: Either a list of rgb colors [red, green, blue] representing the color of this Chemical
-                or an image file representing the texture of this Chemical
     concentration: A floating point value in the range [0, 1] of the concentration of the chemical, default: 1
     */
     constructor(mass = 1.0, properties = null, temperature = 20.0, concentration = 1){
@@ -19,7 +22,7 @@ class Chemical extends ExperimentObject{
         this.concentration = concentration;
 
         // The current state of matter for this Chemical, based on temperature
-        this.matterState = null;
+        this.matterState = MATTER_STATE_LIQUID;
     }
 
     /**
@@ -43,7 +46,12 @@ class Chemical extends ExperimentObject{
     return: A list of 3 or 4 values [red, green, blue, alpha], alpha is option representing the color of this Chemical
     */
     getTexture(){
-        return this.properties.getTexture();
+        switch(this.matterState){
+            case MATTER_STATE_SOLID: return this.properties.getSolidColor();
+            case MATTER_STATE_LIQUID: return this.properties.getLiquidColor();
+            case MATTER_STATE_GAS: return this.properties.getGasColor();
+            default: return null;
+        }
     }
 
     /**
@@ -78,6 +86,7 @@ class ChemicalController2D extends ExperimentObjectController2D{
     constructor(chemical){
         super();
         this.chemical = chemical;
+        this.calculateMatterState();
     }
 
     /**

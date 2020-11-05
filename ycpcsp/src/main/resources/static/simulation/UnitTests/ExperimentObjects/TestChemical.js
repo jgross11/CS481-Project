@@ -16,8 +16,8 @@ QUnit.module("Chemical", {
 QUnit.test('constructor:', function(assert){
     assert.equal(chem.mass, 5.0, "Initial mass should be 5.0");
     assert.equal(chem.temperature, 20.0, "Initial temperature should be 20.0");
-    assert.equal(chem.concentration, 0.5, "Initial concentration should be 1.0");
-    assert.equal(chem.matterState, null, "Initial matter state should be 1.0");
+    assert.equal(chem.concentration, 0.5, "Initial concentration should be 0.5");
+    assert.equal(chem.matterState, MATTER_STATE_LIQUID, "Initial matter state should be 1.0");
 });
 
 QUnit.test('setProperties:', function(assert){
