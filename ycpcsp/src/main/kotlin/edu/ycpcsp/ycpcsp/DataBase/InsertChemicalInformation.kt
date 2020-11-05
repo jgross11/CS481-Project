@@ -2,6 +2,7 @@ package edu.ycpcsp.ycpcsp.DataBase
 
 import edu.ycpcsp.ycpcsp.Models.Compound
 import java.sql.SQLException
+import java.sql.Statement
 
 fun insertElement(){
 
@@ -11,15 +12,29 @@ fun insertCompound(comp : Compound) : Boolean{
     var connection = getDBConnection()
     if(connection != null){
         return try{
-            val preparedStatement = connection.prepareStatement("INSERT INTO Database.Chemical_Information (Chemical_Formula, Chemical_Name, Chemical_Density, Chemical_Water_Soluble, Chemical_Phase_Change_Solid, Chemical_Phase_Change_Gas, Chemical_Phase_Change_Liquid) VALUES (?, ?, ?, ?, ?, ?, ?)")
+            var preparedStatement = connection.prepareStatement("INSERT INTO Database.Chemical_Information (Chemical_Formula, Chemical_Name, Chemical_Mass, Chemical_Density, Chemical_Water_Soluble, Chemical_Phase_Change_Solid, Chemical_Phase_Change_Gas) VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)
             preparedStatement.setString(1, comp.formula)
             preparedStatement.setString(2, comp.name)
-            preparedStatement.setDouble(3, comp.density)
-            preparedStatement.setBoolean(4, comp.isWaterSoluable)
-            preparedStatement.setDouble(5, comp.solidTemp)
-            preparedStatement.setDouble(6, comp.gasTemp)
-            preparedStatement.setDouble(7, comp.liquidTemp)
-            val rs = preparedStatement.executeUpdate()
+            preparedStatement.setDouble(3, comp.mass)
+            preparedStatement.setDouble(4, comp.density)
+            preparedStatement.setBoolean(5, comp.isWaterSoluable)
+            preparedStatement.setDouble(6, comp.solidTemp)
+            preparedStatement.setDouble(7, comp.gasTemp)
+            preparedStatement.executeUpdate()
+            var rs = preparedStatement.generatedKeys
+
+            if(rs.next()){
+                comp.compoundID = rs.getInt(1)
+            }
+
+            preparedStatement = connection.prepareStatement("INSERT INTO Database.ChemistryGraphics (GasInteger, LiquidInteger, SolidInteger, ChemicalID) VALUES (?, ?, ?, ?);")
+            preparedStatement.setInt(1, comp.colors.gasColor)
+            preparedStatement.setInt(2, comp.colors.liquidColor)
+            preparedStatement.setInt(3, comp.colors.solidColor)
+            preparedStatement.setInt(4, comp.compoundID)
+            preparedStatement.executeUpdate()
+
+
             true
         } catch(ex : SQLException){
             ex.printStackTrace()
