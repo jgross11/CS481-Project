@@ -16,12 +16,13 @@ fun ModifyUser(editUserFormData: EditUserFormData): Boolean {
                 var preparedSt = connection.prepareStatement("update Database.Users " +
                         "SET firstName = ?, lastName = ?, password = ?, organization = ? " +
                         "WHERE email = ?;")
-                preparedSt.setString(1, user.firstName)
+
+                /*preparedSt.setString(1, user.firstName)
                 preparedSt.setString(2, user.lastName)
                 preparedSt.setString(3, user.password)
                 preparedSt.setString(4, user.school)
                 preparedSt.setString(5, user.email)
-                preparedSt.executeUpdate()
+                preparedSt.executeUpdate()*/
                 //The method will return true if the query was able to successful update the desired User row
                 return true
             } catch (ex: SQLException) {
