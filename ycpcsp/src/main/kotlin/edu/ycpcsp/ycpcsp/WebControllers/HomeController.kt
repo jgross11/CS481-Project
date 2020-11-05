@@ -55,8 +55,8 @@ class HomeController {
         println("Loading Users Recent Experiments")
         println(userid)
         var ListOfRecent = arrayListOf<String>()
-        ListOfRecent = RecentExperimentSearch(userid);
-        println(ListOfRecent[0])
+        //ListOfRecent = RecentExperimentSearch(userid);
+        //println(ListOfRecent[0])
 
         //For Now Here Is a fake one
 
@@ -70,8 +70,8 @@ class HomeController {
         println("Loading Users Recent Experiments")
         println(userid)
         var ListOfRecent = arrayListOf<String>()
-        ListOfRecent = PlaylistSearch(userid);
-        println(ListOfRecent[0])
+        //ListOfRecent = PlaylistSearch(userid);
+        //println(ListOfRecent[0])
 
         //For Now Here Is a fake one
 

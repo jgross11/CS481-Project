@@ -6,48 +6,28 @@ If no getter or setter exists, do not attempt to access or assign the field
 class ChemProperties{
 
     /**
-    Create new ChemProperties, using the given stats. Only provide chem and count if this is an atom, optionally can include creator.
-    chem: Either a list of ChemProperties objects, or a single integer for the atomic number
-    count: The number of atoms or molecules of this Chemical, i.e. a hydrogen molecule has a count of 2,
-        and a hydrogen atom has a count of 1
-    creator: The name of the creator of this ChemProperties.
+    Create new ChemProperties, used to access properties about a chemical
+    id: A single integer identifying the chemical.
     */
-    constructor(chem, count = 1, creator = null){
-        this.chem = chem;
-        this.count = count;
-        this.creator = creator;
+    constructor(id){
+        this.id = id;
     }
 
     /**
-    Get the component chemicals of this ChemicalProperties, or the atomic number, if this is an atom
-    returns: The component
+    Get the getID used to refer to this ChemProperties by the database.
+    returns: The id
     */
-    getChem(){
-        return this.chem;
+    getID(){
+        return this.id;
     }
 
     /**
-    Set a new ChemicalProperties list.
-    chem: Either a single integer, or the new list, where each list element should be a ChemProperties
+    Get the properties based on this ChemProperties id
+    return: The properties, or an empty object if no entry exists with the given ID
     */
-    setChem(chem){
-        this.chem = chem;
-    }
-
-    /**
-    Get the count of component chemicals of this ChemicalProperties.
-    returns: The count
-    */
-    getCount(){
-        return this.count;
-    }
-
-    /**
-    Set the count of the number of of atoms or molecules
-    count: The new count
-    */
-    setCount(count){
-        this.count = count;
+    chemFromProperties(){
+        let c = CHEMICAL_PROPERTIES[this.getID()];
+        return (c === undefined) ? {} : c;
     }
 
     /**
@@ -55,33 +35,15 @@ class ChemProperties{
     return: The creator
     */
     getCreator(){
-        return this.creator;
-    }
-
-    /**
-    Set the creator of this ChemProperties
-    creator: The creator
-    */
-    setCreator(creator){
-        this.creator = creator;
-    }
-
-    /**
-    Get the getID used to refer to this ChemProperties by the database.
-    returns: The id
-    Always throws an error as a generic ChemProperties object
-    */
-    getID(){
-        throw new Error("All ChemProperties objects must implement getID");
+        return this.chemFromProperties()[CHEMICAL_PROPERTY_CREATOR];
     }
 
     /**
     Get the name used to refer to this ChemProperties in plain english.
     returns: The name
-    Always throws an error as a generic ChemProperties object
     */
     getName(){
-        throw new Error("All ChemProperties objects must implement getName");
+        return this.chemFromProperties()[CHEMICAL_PROPERTY_NAME];
     }
 
     /**
@@ -94,13 +56,30 @@ class ChemProperties{
     }
 
     /*
-    Get the texture for rendering this ChemProperties. Should be a list of 3 or 4 values,
+    Get the color for rendering this ChemProperties when it is solid. Should be a list of 3 or 4 values,
         each in the range [0-255], the list should be [red, green, blue, alpha], alpha is optional
-    returns: The texture
-    Always throws an error as a generic ChemProperties object
+    returns: The color
     */
-    getTexture(){
-        throw new Error("All ChemProperties objects must implement getTexture");
+    getSolidColor(){
+        return this.chemFromProperties()[CHEMICAL_PROPERTY_COLOR_SOLID];
+    }
+
+    /*
+    Get the color for rendering this ChemProperties when it is liquid. Should be a list of 3 or 4 values,
+        each in the range [0-255], the list should be [red, green, blue, alpha], alpha is optional
+    returns: The color
+    */
+    getLiquidColor(){
+        return this.chemFromProperties()[CHEMICAL_PROPERTY_COLOR_LIQUID];
+    }
+
+    /*
+    Get the color for rendering this ChemProperties when it is a gas. Should be a list of 3 or 4 values,
+        each in the range [0-255], the list should be [red, green, blue, alpha], alpha is optional
+    returns: The color
+    */
+    getGasColor(){
+        return this.chemFromProperties()[CHEMICAL_PROPERTY_COLOR_GAS];
     }
 
     /**
@@ -118,7 +97,7 @@ class ChemProperties{
     Always throws an error as a generic ChemProperties object
     */
     getMeltingPoint(){
-        throw new Error("All ChemProperties objects must implement getMeltingPoint");
+        return this.chemFromProperties()[CHEMICAL_PROPERTY_MELTING_POINT];
     }
 
     /**
@@ -127,7 +106,7 @@ class ChemProperties{
     Always throws an error as a generic ChemProperties object
     */
     getBoilingPoint(){
-        throw new Error("All ChemProperties objects must implement getBoilingPoint");
+        return this.chemFromProperties()[CHEMICAL_PROPERTY_BOILING_POINT];
     }
 
     /**
@@ -136,7 +115,15 @@ class ChemProperties{
     Always throws an error as a generic ChemProperties object
     */
     getDensity(){
-        throw new Error("All ChemProperties objects must implement getDensity");
+        return this.chemFromProperties()[CHEMICAL_PROPERTY_DENSITY];
+    }
+
+    /**
+    Determine if this ChemProperties can be dissolved into water
+    returns: true if it can be dissolved, false otherwise
+    */
+    getWaterSolubility(){
+        return this.chemFromProperties()[CHEMICAL_PROPERTY_WATER_SOLUBLE];
     }
 
 }
@@ -149,13 +136,9 @@ class ElementProperties extends ChemProperties{
     /**
     Create new ElementProperties, using the given stats.
     atomicNumber: A single integer for the atomic number
-    count: The amount of the element in this ElementProperties
-    creator: The name of the creator of this ElementProperties.
     */
-    constructor(atomicNumber, count = 1, creator = null){
-        super(atomicNumber, count, creator);
-        let newElement = CHEMICAL_PROPERTIES[atomicNumber];
-        if(newElement !== undefined) this.setCreator(newElement[CHEMICAL_PROPERTY_CREATOR]);
+    constructor(atomicNumber){
+        super(atomicNumber);
     }
 
     /**
@@ -163,32 +146,7 @@ class ElementProperties extends ChemProperties{
     returns: The atomic number
     */
     getAtomicNumber(){
-        return this.chem;
-    }
-
-    /**
-    Get the properties based on this ElementProperties atomic number
-    return: The properties, or an empty object if no entry exists with the given atomic number
-    */
-    chemFromProperties(){
-        let c = CHEMICAL_PROPERTIES[this.getAtomicNumber()];
-        return (c === undefined) ? {} : c;
-    }
-
-    /**
-    Get the getID used to refer to this ElementProperties by the database. Should simply be the atomic number
-    returns: The id
-    */
-    getID(){
-        return this.getAtomicNumber();
-    }
-
-    /**
-    Get the name used to refer to this ElementProperties in plain english.
-    returns: The name
-    */
-    getName(){
-        return this.chemFromProperties()[CHEMICAL_PROPERTY_NAME];
+        return this.getID();
     }
 
     /**
@@ -197,16 +155,7 @@ class ElementProperties extends ChemProperties{
     */
     getSymbol(){
         let s = this.chemFromProperties()[CHEMICAL_PROPERTY_SYMBOL];
-        if(s === undefined) return "";
-        return (this.count === 1) ? s : s + this.count;
-    }
-
-    /*
-    Get the texture for rendering this ElementProperties.
-    returns: The texture
-    */
-    getTexture(){
-        return this.chemFromProperties()[CHEMICAL_PROPERTY_TEXTURE];
+        return (s === undefined) ? "" : s;
     }
 
     /**
@@ -214,34 +163,16 @@ class ElementProperties extends ChemProperties{
     returns: The molar mass
     */
     getMolarMass(){
-        return this.count * this.chemFromProperties()[CHEMICAL_PROPERTY_MOLAR_MASS];
-    }
-
-    /**
-    Get the temperature at which the element melts
-    returns: The temperature, in Celsius
-    */
-    getMeltingPoint(){
-        return this.chemFromProperties()[CHEMICAL_PROPERTY_MELTING_POINT];
-    }
-
-    /**
-    Get the temperature at which the element boils
-    returns: The temperature, in Celsius
-    */
-    getBoilingPoint(){
-        return this.chemFromProperties()[CHEMICAL_PROPERTY_BOILING_POINT];
-    }
-
-    /**
-    Get the density of the element
-    returns: The density
-    */
-    getDensity(){
-        return this.chemFromProperties()[CHEMICAL_PROPERTY_DENSITY];
+        return this.chemFromProperties()[CHEMICAL_PROPERTY_MOLAR_MASS];
     }
 
 }
+
+// The index of an array entry in a chem list associated with a compound for the chemical itself
+let COMPOUND_CHEM_INDEX = 0;
+// The index of an array entry in a chem list associated with a compound for the amount of that chemical
+
+let COMPOUND_COUNT_INDEX = 1;
 
 /**
 A class keeping track of ChemProperties, but one which is specifically a compound
@@ -250,54 +181,18 @@ class CompoundProperties extends ChemProperties{
     /**
     Create new CompoundProperties, using the given stats.
     id: The integer ID used to refer to this CompoundProperties by the database, should not be an atomic number.
-        If this ID corresponds to a known compound, all parameters after count can be disregarded, and they will be set based on the ID
-    count: The number of molecules of the compound
-    creator: The name of the creator of this CompoundProperties.
-    chem: A list of CompoundProperties objects
-    name: The name of this CompoundProperties.
-    texture: The texture to use for the compound, should be a list of 3 or 4 values,
-        each in the range [0-255], the list should be [red, green, blue, alpha], alpha is optional
-    meltingPoint: The temperature, in celsius, at which the compound melts.
-    boilingPoint: The temperature, in celsius, at which the compound boils.
-    density: The density of the compound.
+    chems: A list of lists containing [ChemProperties, count] i.e. the ChemProperties type for that entry, and the amount of them
     */
-    constructor(id, count = 1, creator = null, chem = null, name = null, texture = null, meltingPoint = null, boilingPoint = null, density = null){
-        super(chem, count, creator);
-
-        this.id = id;
-        let comp = CHEMICAL_PROPERTIES[id];
-        if(comp === undefined){
-            this.name = name;
-            this.texture = texture;
-            this.meltingPoint = meltingPoint;
-            this.boilingPoint = boilingPoint;
-            this.density = density;
-        }
-        else{
-            this.creator = CHEMICAL_PROPERTIES[id][CHEMICAL_PROPERTY_CREATOR];
-            this.name = CHEMICAL_PROPERTIES[id][CHEMICAL_PROPERTY_NAME];
-            this.texture = CHEMICAL_PROPERTIES[id][CHEMICAL_PROPERTY_TEXTURE];
-            this.meltingPoint = CHEMICAL_PROPERTIES[id][CHEMICAL_PROPERTY_MELTING_POINT];
-            this.boilingPoint = CHEMICAL_PROPERTIES[id][CHEMICAL_PROPERTY_BOILING_POINT];
-            this.density = CHEMICAL_PROPERTIES[id][CHEMICAL_PROPERTY_DENSITY];
-            this.chem = CHEMICAL_PROPERTIES[id][CHEMICAL_PROPERTY_CHEMS];
-        }
+    constructor(id){
+        super(id);
     }
 
     /**
-    Get the getID used to refer to this CompoundProperties by the database.
-    returns: The id
+    Get the component chemicals of this CompoundProperties
+    returns: The component
     */
-    getID(){
-        return this.id;
-    }
-
-    /**
-    Get the name used to refer to this CompoundProperties in plain english.
-    returns: The name
-    */
-    getName(){
-        return this.name;
+    getChem(){
+        return this.chemFromProperties()[CHEMICAL_PROPERTY_CHEMS];
     }
 
     /**
@@ -306,14 +201,15 @@ class CompoundProperties extends ChemProperties{
         true if this call represents the outer layer of symbols, false otherwise
     returns: The symbol
     */
+    // TODO redo the symbol so numbers are always on the right
     getSymbol(outer = true){
         let c = this.getChem();
         let oneChem = c.length === 1;
         var parenthesis = !oneChem && !outer;
 
         var symbol = "";
-        for(var i = 0; i < c.length; i++) symbol += c[i].getSymbol(false);
-        let num = this.getCount();
+        for(var i = 0; i < c.length; i++) symbol += c[i][COMPOUND_CHEM_INDEX].getSymbol(false);
+        let num = c[i][COMPOUND_COUNT_INDEX];
         let oneNum = num === 1;
         parenthesis = !oneNum && !oneChem;
         let extra = !oneChem && !outer;
@@ -325,14 +221,6 @@ class CompoundProperties extends ChemProperties{
                (extra ? ")" : "");
     }
 
-    /*
-    Get the texture for rendering this CompoundProperties.
-    returns: The texture
-    */
-    getTexture(){
-        return this.texture;
-    }
-
     /**
     Get the molar mass of the compound, including all of its components
     returns: The molar mass
@@ -342,32 +230,8 @@ class CompoundProperties extends ChemProperties{
         total = 0;
         let c = this.getChem();
         for(var i = 0; i < c.length; i++){
-            total += c[i].getMolarMass();
+            total += c[i][COMPOUND_COUNT_INDEX] * c[i][COMPOUND_CHEM_INDEX].getMolarMass();
         }
-        return this.count * total;
-    }
-
-    /**
-    Get the temperature at which the compound melts
-    returns: The temperature, in Celsius
-    */
-    getMeltingPoint(){
-        return this.meltingPoint;
-    }
-
-    /**
-    Get the temperature at which the compound boils
-    returns: The temperature, in Celsius
-    */
-    getBoilingPoint(){
-        return this.boilingPoint;
-    }
-
-    /**
-    Get the density of the compound
-    returns: The density
-    */
-    getDensity(){
-        return this.density;
+        return total;
     }
 }
