@@ -113,6 +113,7 @@
     let sendsteps = [];
     LoadEquip();
     LoadChem();
+    LoadFunc();
     /* When the user clicks on the button,
     toggle between hiding and showing the dropdown content */
     function CFunction() {
@@ -178,7 +179,7 @@
         for(i = 0; i < listequip.length  ; i++){
             var count = listequip[i].amount;
             for(j = 0; j < count  ; j ++) {
-                act += "<option >" + listequip[i].Equipment + "</option>";
+                rec += "<option >" + listequip[i].Equipment + "</option>";
             }        }
         document.getElementById("insert2").innerHTML = rec;
 
