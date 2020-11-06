@@ -38,18 +38,50 @@ class ChemFormula{
 
     /**
     Run the formula based on the given amounts of each reactant
-    quantities: A list of floating point values, the amount of each reactant in the order they are in the formula
-    returns: A list of all of the quantities of all the products, formatted the same as quantities
+    moles: A list of floating point values, the amount of moles of each reactant in the order they are in the formula
+    returns: A list of two lists, all values are in moles.
+        The first list contains the excess reactant of each reactant, formatted the same as moles.
+            If there was no excess reactant for one of these values, the list value will be zero
+        The second list contains the products, formatted the same as moles
     */
-    calculateProducts(quantities){
-        // TODO account for the amount of each product which would be produced based on a balanced equation
-        var total = 0;
-        for(var i = 0; i < quantities.length; i++) total += quantities[i];
+    calculateProducts(moles){
+        // TODO put these sections of code into separate methods
+        let reacts = this.getReactants();
         let prods = this.getProducts();
-        let prodQuantities = [];
-        let amount = total / prods.length;
-        for(var i = 0; i < prods.length; i++) prodQuantities.push(amount);
-        return prodQuantities;
+
+        var lowest = -1;
+        var excessReacts = [];
+        // Find the amount of the first product which each reactant will produce
+        for(var i = 0; i < reacts.length; i++){
+            // Convert the given number of moles to the amount of the first product
+            excessReacts.push(moles[i] * (prods[0].coefficient / reacts[i].coefficient));
+            // Keep track of the index of the lowest producing reactant
+            if(lowest === -1 || excessReacts[i] < excessReacts[lowest]) lowest = i;
+        }
+        // The index of lowest is now the limiting reactant
+        // Take the ratio of the limiting reactant to every other reactant to find the amount of the other reactants which were used
+        for(var i = 0; i < reacts.length; i++){
+            if(i !== lowest){
+                // Convert the number of moles of limiting reactant into the corresponding number of moles for the ith reactant
+                //  then subtract that from the number of moles of the ith reactant given to react
+                excessReacts[i] = moles[i] - (moles[lowest] * reacts[i].coefficient / reacts[lowest].coefficient);
+            }
+        }
+        // Set the limiting reactant to have an excess of 0
+        excessReacts[lowest] = 0;
+
+        // Now use the perfect ratio list to produce the correct reactant moles
+        // All product ratios will be the same at this point
+        let ratio = moles[0] / reacts[0].coefficient;
+
+        // Apply that ratio to all products to get the final mole counts
+        let prodMoles = [];
+        for(var i = 0; i < prods.length; i++){
+            prodMoles.push(prods[i].coefficient * ratio);
+        }
+
+        // Return the amount of excess reactant, and the moles of each product
+        return [excessReacts, prodMoles];
     }
 
     /**
@@ -60,7 +92,10 @@ class ChemFormula{
         Should be treated like a dictionary where the keys are indexes of the sparse list
     */
     processChemList(cDict){
+        // TODO put these sections of code into separate methods
         let reacts = this.getReactants();
+
+        // ids is a list of all the ids of the reactants used in the formula, in the order of the formula
         let ids = [];
         // Search through all chemicals for each reactant.
         //  If all reactants are found, run the formula, otherwise, do nothing
@@ -76,27 +111,45 @@ class ChemFormula{
         if(!foundReactants) return;
 
         // Get the mass of each chemical used in the reaction
-        let reactQuantities = [];
+        let reactMoles = [];
+        let chemControl = new ChemicalController2D(null);
         for(var i = 0; i < ids.length; i++){
-            reactQuantities.push(cDict[ids[i]].mass);
-        }
-
-        // Remove all chemicals from chems that were used in the reaction
-        for(var i = 0; i < ids.length; i++){
-            delete cDict[ids[i]];
+            chemControl.setChemical(cDict[ids[i]]);
+            reactMoles.push(chemControl.calculateMoles());
         }
 
         // Calculate the reaction
-        let prodQuantities = this.calculateProducts(reactQuantities);
+        let reactionResults = this.calculateProducts(reactMoles);
+        let excessMoles = reactionResults[0];
+        let prodMoles = reactionResults[1];
         let products = this.getProducts();
 
-        // Add all the reactants from the reaction
-        for(var p = 0; p < prodQuantities.length; p++){
-            // TODO account for concentration
+        // Remove moles of chemicals from that were used in the reaction
+        for(var i = 0; i < ids.length; i++){
+            let c = cDict[ids[i]];
+            // Delete the chemical if the corresponding reactant has no moles left
+            if(excessMoles[i] === 0) delete cDict[ids[i]];
+
+            // Otherwise, update the mass of that chemical
+            else{
+                chemControl.setChemical(c);
+                c.setMass(chemControl.calculateMass(excessMoles[i]));
+            }
+        }
+
+        // Add all the products from the reaction
+        for(var p = 0; p < prodMoles.length; p++){
             let id = products[p].chemProp.getID();
-            let c = cDict[id];
-            if(c === undefined) cDict[id] = idToChemical(id, prodQuantities[p], 1).chemical;
-            else cDict[id].setMass(c.mass + prodQuantities[p]);
+            var c = cDict[id];
+            // If the chemical does not yet exist, create the chemical and set the variable
+            if(c === undefined){
+                // TODO account for concentration
+                cDict[id] = idToChemical(id, 0, 1).chemical;
+                c = cDict[id];
+            }
+            // Now determine the number of moles for that product
+            chemControl.setChemical(c);
+            c.setMass(c.mass + chemControl.calculateMass(prodMoles[p]));
         }
 
         return cDict;
