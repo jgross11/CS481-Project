@@ -113,7 +113,6 @@
     let sendsteps = [];
     LoadEquip();
     LoadChem();
-    LoadFunc();
     /* When the user clicks on the button,
     toggle between hiding and showing the dropdown content */
     function CFunction() {
@@ -150,8 +149,6 @@
         }
         document.getElementById("Function").innerHTML = funopt;
 
-        let ChemID = JSON.parse(sessionStorage.getItem("ChemID"));
-        let EquipID = JSON.parse(sessionStorage.getItem("EquipID"));
 
         var options2 = "";
         options2 += "<option value='false'>Chem</option>";
@@ -161,13 +158,28 @@
 
 
         var act ="";
-
+        for(i = 0; i < listchem.length  ; i++){
+            act += "<option >"+ listchem[i].Chemical+"</option>";
+        }
+        for(i = 0; i < listequip.length  ; i++){
+            var count = listequip[i].amount;
+            for(j = 0; j < count  ; j ++) {
+                act += "<option >" + listequip[i].Equipment + "</option>";
+            }
+        }
         document.getElementById("insert1").innerHTML = act;
 
 
 
         var rec ="";
-       
+        for(i = 0; i < listchem.length  ; i++){
+            rec += "<option >"+ listchem[i].Chemical+"</option>";
+        }
+        for(i = 0; i < listequip.length  ; i++){
+            var count = listequip[i].amount;
+            for(j = 0; j < count  ; j ++) {
+                act += "<option >" + listequip[i].Equipment + "</option>";
+            }        }
         document.getElementById("insert2").innerHTML = rec;
 
 
@@ -203,10 +215,10 @@
         } else {
             listchem.push(send);
             document.getElementById("CHLIST").innerHTML = JSON.stringify(listchem);
+            LoadFunc();
             sendchem.push(makeTestChemicalJSON(Chemical,mass,concentration));
 
         }
-
     }
     function AddEquip(Equip){
         var amount = prompt("Enter amount.","")
@@ -217,6 +229,7 @@
         } else {
             listequip.push(send);
             document.getElementById("EQLIST").innerHTML = JSON.stringify(listequip);
+            LoadFunc();
             sendequip.push(makeTestEquipmentJSON(Equipment,amount));
 
         }
