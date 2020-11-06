@@ -177,8 +177,7 @@ class ChemicalController2D extends ExperimentObjectController2D{
         if(this.chemical !== null) chems.push(this.copyChem());
         if(chems.length < 1) return chems;
 
-        // Go through each Chemical in the list and see if the chemical can be added
-        //  also add each Chemical to the list to return
+        // Go through each Chemical in the list and see if any chemicals can be combined from having the same ID
         let indexes = {};
         let control = new ChemicalController2D(null);
         for(var i = 0; i < chems.length; i++){
@@ -202,14 +201,34 @@ class ChemicalController2D extends ExperimentObjectController2D{
             }
         }
 
-        // Check if each formulas applies to the chem list
+        // Create a dictionary of chem list
+        // TODO put this whole dictionary to array and back in another method
+        let cDict = [];
+        for(var i = 0; i < chems.length; i++){
+            let c = chems[i];
+            cDict[c.getID()] = c;
+        }
+
+        // Check for if each of the formulas can be applied to the dictionary
         FORMULA_PROPERTIES.forEach(function(obj, id){
             let formula = new ChemFormula(id);
             formula.processChemList(this);
+        }, cDict);
+
+        // Clear out the chems list
+        chems.splice(0, chems.length);
+
+        // Add all elements from the dictionary to the chem list
+        cDict.forEach(function(obj, i){
+            chems.push(obj);
         }, chems);
 
         // Sort the chemicals by their densities, smallest at the end
-        // TODO improve this by inserting new chemicals based on their density, rather than sorting each time
+        /*
+        TODO improve this by inserting new chemicals based on their density, rather than sorting each time,
+            also move it to above the combining
+            This is so they can be inserted by density as they are added back to chem list
+        */
         return chems.sort(function(a, b){
             let ad = a.properties.getDensity();
             let bd = b.properties.getDensity();

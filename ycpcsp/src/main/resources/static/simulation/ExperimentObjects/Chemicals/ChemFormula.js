@@ -53,47 +53,37 @@ class ChemFormula{
     }
 
     /**
-    Take a list of Chemicals and attempt to apply this formula to the list of chemicals.
+    Take a sparse list of Chemicals and attempt to apply this formula to the sparse list of chemicals.
     If all of the reactants exist in the given list, then formula will run, otherwise nothing will happen
+    cDict: The sparse list of Chemicals to apply the formula.
+        Indexes should be the ID of the chemical, the value should be the chemical itself.
+        Should be treated like a dictionary where the keys are indexes of the sparse list
     */
-    processChemList(chems){
-        // TODO create better searching algorithm for combining chemical properties
+    processChemList(cDict){
         let reacts = this.getReactants();
-        let indexes = [];
-        let toRemove = [];
+        let ids = [];
         // Search through all chemicals for each reactant.
         //  If all reactants are found, run the formula, otherwise, do nothing
         var foundReactants = true;
         for(var r = 0; r < reacts.length && foundReactants; r++){
-            var foundChem = false;
-            for(var c = 0; c < chems.length && !foundChem; c++){
-                // If the ID of the chemical matches the ID of the reactant, it is found
-                if(chems[c].getID() === reacts[r].chemProp.getID()){
-                    indexes.push(c);
-                    toRemove.push(c);
-                    foundChem = true;
-                }
-            }
-            if(!foundChem) foundReactants = false;
+            let id = reacts[r].chemProp.getID();
+            let chem = cDict[id];
+            if(chem !== undefined) ids.push(id);
+            else foundReactants = false;
         }
 
         // Do nothing if the reactants are not found
         if(!foundReactants) return;
 
-        // Sort indexes so they are removed from the end first
-        toRemove.sort(function(a, b){
-            if(a === b) return 0;
-            return (a > b) ? 1: -1;
-        });
-
         // Get the mass of each chemical used in the reaction
         let reactQuantities = [];
-        for(var i = 0; i < indexes.length; i++){
-            reactQuantities.push(chems[indexes[i]].mass);
+        for(var i = 0; i < ids.length; i++){
+            reactQuantities.push(cDict[ids[i]].mass);
         }
+
         // Remove all chemicals from chems that were used in the reaction
-        for(var i = 0; i < toRemove.length; i++){
-            chems.splice(toRemove[i], 1);
+        for(var i = 0; i < ids.length; i++){
+            delete cDict[ids[i]];
         }
 
         // Calculate the reaction
@@ -103,8 +93,13 @@ class ChemFormula{
         // Add all the reactants from the reaction
         for(var p = 0; p < prodQuantities.length; p++){
             // TODO account for concentration
-            chems.push(idToChemical(products[p].chemProp.getID(), prodQuantities[p], 1).chemical);
+            let id = products[p].chemProp.getID();
+            let c = cDict[id];
+            if(c === undefined) cDict[id] = idToChemical(id, prodQuantities[p], 1).chemical;
+            else cDict[id].setMass(c.mass + prodQuantities[p]);
         }
+
+        return cDict;
     }
 
 }
