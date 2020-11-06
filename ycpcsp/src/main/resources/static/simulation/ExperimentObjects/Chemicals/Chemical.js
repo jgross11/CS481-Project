@@ -200,8 +200,13 @@ class ChemicalController2D extends ExperimentObjectController2D{
                 chems.splice(i, 1);
                 i--;
             }
-            // TODO handle interactions when chemicals should combine to produce something new
         }
+
+        // Check if each formulas applies to the chem list
+        FORMULA_PROPERTIES.forEach(function(obj, id){
+            let formula = new ChemFormula(id);
+            formula.processChemList(this);
+        }, chems);
 
         // Sort the chemicals by their densities, smallest at the end
         // TODO improve this by inserting new chemicals based on their density, rather than sorting each time

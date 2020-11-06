@@ -269,9 +269,12 @@ function getTestJSON(){
     chems.push(makeTestChemicalJSON(ID_CHEM_TEST_WHITE, 50, 1));
     chems.push(makeTestChemicalJSON(ID_CHEM_TEST_GREEN, 10, 1));
     chems.push(makeTestChemicalJSON(ID_CHEM_TEST_BLACK, 10, 1));
+    chems.push(makeTestChemicalJSON(ELEMENT_SODIUM_ATOMIC_NUM, 10, 1));
+    chems.push(makeTestChemicalJSON(ELEMENT_CHLORINE_ATOMIC_NUM, 10, 1));
     chems.push(makeTestChemicalJSON(COMPOUND_TABLE_SALT_ID, 10, 1));
     chems.push(makeTestChemicalJSON(COMPOUND_WATER_ID, 10, 1));
-    chems.push(makeTestChemicalJSON(ELEMENT_HYDROGEN_ATOMIC_NUM, 10, 1));
+    chems.push(makeTestChemicalJSON(COMPOUND_HYDROGEN_GAS_ID, 10, 1));
+    chems.push(makeTestChemicalJSON(ELEMENT_OXYGEN_ATOMIC_NUM, 10, 1));
     exp[EXP_JSON_CHEMICALS] = sortArrayByKey(chems, [EXP_JSON_CHEM_ID, EXP_JSON_CHEM_MASS, EXP_JSON_CHEM_CONCENTRATION], true);
 
     let steps = [];

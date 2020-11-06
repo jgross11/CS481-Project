@@ -1110,8 +1110,14 @@ class ChemicalBox extends DisplayBox{
     }
 
     getImage(){
-        this.graphics.fill(255);
-        this.obj.drawRect(0, 0, 1, EXP_BOX_SIZE, EXP_BOX_SIZE, 0, this.graphics)
+        let g = this.graphics;
+        g.fill(255);
+        this.obj.drawRect(0, 0, 1, EXP_BOX_SIZE, EXP_BOX_SIZE, 0, g);
+        g.fill(0);
+        g.strokeWeight(2);
+        g.stroke(255)
+        g.textSize(20);
+        g.text(this.obj.chemical.properties.getSymbol(), EXP_BOX_SIZE * 0.2, EXP_BOX_SIZE * 0.5);
         return this.graphics;
     }
 }

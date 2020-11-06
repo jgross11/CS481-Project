@@ -201,16 +201,14 @@ class CompoundProperties extends ChemProperties{
         var parenthesis = !oneChem && !outer;
 
         var symbol = "";
-        for(var i = 0; i < c.length; i++) symbol += c[i].chemProp.getSymbol(false);
-        let num = c[i].count;
-        let oneNum = num === 1;
-        parenthesis = !oneNum && !oneChem;
+        for(var i = 0; i < c.length; i++){
+            let cnt = c[i].count;
+            symbol += c[i].chemProp.getSymbol(false) +
+                      ((cnt === 1) ? "" : cnt);
+        }
         let extra = !oneChem && !outer;
         return (extra ? "(" : "") +
-               (parenthesis ? "(" : "") +
                symbol +
-               (parenthesis ? ")" : "") +
-               (oneNum ? "" : num) +
                (extra ? ")" : "");
     }
 

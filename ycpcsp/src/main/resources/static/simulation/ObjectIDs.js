@@ -259,17 +259,17 @@ function initTestChemProperties(){
 
     // These formulas are for testing, and are not necessarily accurate to reality
     makeFormula(FORMULA_WATER_ID, [
-        new FormulaComponent(1, COMPOUND_HYDROGEN_GAS_ID)
-        new FormulaComponent(1, ELEMENT_OXYGEN_ATOMIC_NUM)
+        new FormulaComponent(1, new CompoundProperties(COMPOUND_HYDROGEN_GAS_ID)),
+        new FormulaComponent(1, new ElementProperties(ELEMENT_OXYGEN_ATOMIC_NUM))
         ], [
-        new FormulaComponent(1, COMPOUND_WATER_ID);
+        new FormulaComponent(1, new CompoundProperties(COMPOUND_WATER_ID))
         ]);
 
     makeFormula(FORMULA_TABLE_SALT_ID, [
-        new FormulaComponent(1, ELEMENT_CHLORINE_ATOMIC_NUM)
-        new FormulaComponent(1, ELEMENT_SODIUM_ATOMIC_NUM)
+        new FormulaComponent(1, new ElementProperties(ELEMENT_CHLORINE_ATOMIC_NUM)),
+        new FormulaComponent(1, new ElementProperties(ELEMENT_SODIUM_ATOMIC_NUM))
         ], [
-        new FormulaComponent(1, COMPOUND_TABLE_SALT_ID);
+        new FormulaComponent(1, new CompoundProperties(COMPOUND_TABLE_SALT_ID))
         ]);
 }
 
