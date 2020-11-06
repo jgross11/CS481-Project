@@ -153,17 +153,6 @@
         let ChemID = JSON.parse(sessionStorage.getItem("ChemID"));
         let EquipID = JSON.parse(sessionStorage.getItem("EquipID"));
 
-
-        var act ="";
-        for(i = 0; i < ChemID.length  ; i++){
-            act += "<option value='"+ChemID[i].ID +"'>"+ ChemID[i].Chem +"</option>";
-        }
-        for(i = 0; i < EquipID.length  ; i++){
-            act += "<option value='"+EquipID[i].ID +"'>"+ EquipID[i].Equip +"</option>";
-        }
-        document.getElementById("insert1").innerHTML = act;
-
-
         var options2 = "";
         options2 += "<option value='false'>Chem</option>";
         options2 += "<option value='true'>Equip</option>";
@@ -171,13 +160,14 @@
 
 
 
+        var act ="";
+
+        document.getElementById("insert1").innerHTML = act;
+
+
+
         var rec ="";
-        for(i = 0; i < ChemID.length  ; i++){
-            rec += "<option value='"+ChemID[i].ID +"'>"+ ChemID[i].Chem +"</option>";
-        }
-        for(i = 0; i < EquipID.length  ; i++){
-            rec += "<option value='"+EquipID[i].ID +"'>"+ EquipID[i].Equip +"</option>";
-        }
+       
         document.getElementById("insert2").innerHTML = rec;
 
 
