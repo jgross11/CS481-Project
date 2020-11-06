@@ -160,12 +160,12 @@
 
         var act ="";
         for(i = 0; i < listchem.length  ; i++){
-            act += "<option >"+ listchem[i].Chemical+"</option>";
+            act += "<option value="+i+" >"+ listchem[i].Chemical+"</option>";
         }
         for(i = 0; i < listequip.length  ; i++){
             var count = listequip[i].amount;
             for(j = 0; j < count  ; j ++) {
-                act += "<option >" + listequip[i].Equipment + "</option>";
+                act += "<option value="+i+j+" >" + listequip[i].Equipment + "</option>";
             }
         }
         document.getElementById("insert1").innerHTML = act;
@@ -174,12 +174,12 @@
 
         var rec ="";
         for(i = 0; i < listchem.length  ; i++){
-            rec += "<option >"+ listchem[i].Chemical+"</option>";
+            rec += "<option value="+i+">" + listchem[i].Chemical+"</option>";
         }
         for(i = 0; i < listequip.length  ; i++){
             var count = listequip[i].amount;
             for(j = 0; j < count  ; j ++) {
-                rec += "<option >" + listequip[i].Equipment + "</option>";
+                rec += "<option value="+i+j +">" + listequip[i].Equipment + "</option>";
             }        }
         document.getElementById("insert2").innerHTML = rec;
 
