@@ -148,8 +148,15 @@ class ChemicalController2D extends ExperimentObjectController2D{
     returns: A floating point value, the number of moles
     */
     calculateMoles(){
-        // TODO implement based on molar mass
-        return 0;
+        return this.chemical.mass / this.chemical.properties.getMolarMass();
+    }
+
+    /**
+    Determine the mass of a given number of moles based on this Controller's Chemical
+    returns: A floating point value, the mass in grams
+    */
+    calculateMass(moles){
+        return moles * this.chemical.properties.getMolarMass();
     }
 
     /**
@@ -229,6 +236,7 @@ class ChemicalController2D extends ExperimentObjectController2D{
             also move it to above the combining
             This is so they can be inserted by density as they are added back to chem list
         */
+
         return chems.sort(function(a, b){
             let ad = a.properties.getDensity();
             let bd = b.properties.getDensity();
