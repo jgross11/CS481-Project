@@ -275,6 +275,7 @@ function getTestJSON(){
     chems.push(makeTestChemicalJSON(COMPOUND_WATER_ID, 10, 1));
     chems.push(makeTestChemicalJSON(COMPOUND_HYDROGEN_GAS_ID, 10, 1));
     chems.push(makeTestChemicalJSON(ELEMENT_OXYGEN_ATOMIC_NUM, 10, 1));
+    chems.push(makeTestChemicalJSON(COMPOUND_OXYGEN_GAS_ID, 10, 1));
     exp[EXP_JSON_CHEMICALS] = sortArrayByKey(chems, [EXP_JSON_CHEM_ID, EXP_JSON_CHEM_MASS, EXP_JSON_CHEM_CONCENTRATION], true);
 
     let steps = [];

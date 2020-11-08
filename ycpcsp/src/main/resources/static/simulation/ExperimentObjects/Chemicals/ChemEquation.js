@@ -1,44 +1,44 @@
 /**
-An object keeping track of data for a chemical formula
+An object keeping track of data for a chemical equation
 */
-class ChemFormula{
+class ChemEquation{
 
     /**
-    Create a new instance of a chemical formula
-    id: The id of the formula
+    Create a new instance of a chemical equation
+    id: The id of the equation
     */
     constructor(id){
         this.id = id;
     }
 
     /**
-    Get the properties based on this ChemFormula id
+    Get the properties based on this ChemEquation id
     return: The properties, or an empty object if no entry exists with the given ID
     */
-    formulaFromProperties(){
-        let f = FORMULA_PROPERTIES[this.id];
+    equationFromProperties(){
+        let f = EQUATION_PROPERTIES[this.id];
         return (f === undefined) ? {} : f;
     }
 
     /**
-    Get a list of all of the reactants of this ChemicalFormula, in the intended order
-    return: The reactants as a list of FormulaComponents
+    Get a list of all of the reactants of this ChemicalEquation, in the intended order
+    return: The reactants as a list of EquationComponents
     */
     getReactants(){
-        return this.formulaFromProperties()[FORMULA_PROPERTY_REACTANTS];
+        return this.equationFromProperties()[EQUATION_PROPERTY_REACTANTS];
     }
 
     /**
-    Get a list of all of the products of this ChemicalFormula, in the intended order
-    return: The products as a list of FormulaComponents
+    Get a list of all of the products of this Chemical, in the intended order
+    return: The products as a list of EquationComponents
     */
     getProducts(){
-        return this.formulaFromProperties()[FORMULA_PROPERTY_PRODUCTS];
+        return this.equationFromProperties()[EQUATION_PROPERTY_PRODUCTS];
     }
 
     /**
-    Run the formula based on the given amounts of each reactant
-    moles: A list of floating point values, the amount of moles of each reactant in the order they are in the formula
+    Run the equation based on the given amounts of each reactant
+    moles: A list of floating point values, the amount of moles of each reactant in the order they are in the equation
     returns: A list of two lists, all values are in moles.
         The first list contains the excess reactant of each reactant, formatted the same as moles.
             If there was no excess reactant for one of these values, the list value will be zero
@@ -85,9 +85,9 @@ class ChemFormula{
     }
 
     /**
-    Take a sparse list of Chemicals and attempt to apply this formula to the sparse list of chemicals.
-    If all of the reactants exist in the given list, then formula will run, otherwise nothing will happen
-    cDict: The sparse list of Chemicals to apply the formula.
+    Take a sparse list of Chemicals and attempt to apply this equation to the sparse list of chemicals.
+    If all of the reactants exist in the given list, then equation will run, otherwise nothing will happen
+    cDict: The sparse list of Chemicals to apply the equation.
         Indexes should be the ID of the chemical, the value should be the chemical itself.
         Should be treated like a dictionary where the keys are indexes of the sparse list
     */
@@ -95,10 +95,10 @@ class ChemFormula{
         // TODO put these sections of code into separate methods
         let reacts = this.getReactants();
 
-        // ids is a list of all the ids of the reactants used in the formula, in the order of the formula
+        // ids is a list of all the ids of the reactants used in the equation, in the order of the equation
         let ids = [];
         // Search through all chemicals for each reactant.
-        //  If all reactants are found, run the formula, otherwise, do nothing
+        //  If all reactants are found, run the equation, otherwise, do nothing
         var foundReactants = true;
         for(var r = 0; r < reacts.length && foundReactants; r++){
             let id = reacts[r].chemProp.getID();
@@ -158,13 +158,13 @@ class ChemFormula{
 }
 
 /**
-An object keeping track of the components of a ChemFormula, i.e. reactants and products
+An object keeping track of the components of a ChemEquation, i.e. reactants and products
 */
-class FormulaComponent{
+class EquationComponent{
     /**
-    Create a FormulaComponent, can be either a reactant or product
-    coefficient: The amount of the chemical in the formula, must be an integer
-    chemProp: The ChemicalProperties used by this FormulaComponent
+    Create a EquationComponent, can be either a reactant or product
+    coefficient: The amount of the chemical in the equation, must be an integer
+    chemProp: The ChemicalProperties used by this EquationComponent
     */
     constructor(coefficient, chemProp){
         this.coefficient = coefficient;
@@ -172,7 +172,7 @@ class FormulaComponent{
     }
 
     /**
-    Set the current coefficient of this FormulaComponent
+    Set the current coefficient of this EquationComponent
     coefficient: The new coefficient, must be a positive integer
     */
     setCoefficient(coefficient){
@@ -180,7 +180,7 @@ class FormulaComponent{
     }
 
     /**
-    Set the current ChemicalProperties of this FormulaComponent
+    Set the current ChemicalProperties of this EquationComponent
     chemProp: The new ChemicalProperties
     */
     setChemProp(chemProp){

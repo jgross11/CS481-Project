@@ -216,10 +216,10 @@ class ChemicalController2D extends ExperimentObjectController2D{
             cDict[c.getID()] = c;
         }
 
-        // Check for if each of the formulas can be applied to the dictionary
-        FORMULA_PROPERTIES.forEach(function(obj, id){
-            let formula = new ChemFormula(id);
-            formula.processChemList(this);
+        // Check for if each of the equations can be applied to the dictionary
+        EQUATION_PROPERTIES.forEach(function(obj, id){
+            let equation = new ChemEquation(id);
+            equation.processChemList(this);
         }, cDict);
 
         // Clear out the chems list
@@ -237,12 +237,16 @@ class ChemicalController2D extends ExperimentObjectController2D{
             This is so they can be inserted by density as they are added back to chem list
         */
 
-        return chems.sort(function(a, b){
+        chems.sort(function(a, b){
             let ad = a.properties.getDensity();
             let bd = b.properties.getDensity();
             if(ad === bd) return 0;
             return (ad > bd) ? -1 : 1;
         });
+
+        // TODO account for chemicals overflowing in a container
+
+        return chems;
     }
 
     /**
