@@ -26,6 +26,30 @@ class Chemical extends ExperimentObject{
     }
 
     /**
+    Get the volume of this Chemical in milliliters
+    return: The volume
+    */
+    getVolume(){
+        return this.getMass() / this.properties.getDensity();
+    }
+
+    /**
+    Set the current volume of this Chemical
+    volume: The volume in milliliters
+    */
+    setVolume(volume){
+        this.setMass(volume * this.properties.getDensity());
+    }
+
+    /**
+    Add the given amount of milliliters to this Chemical
+    volume: The volume to add
+    */
+    addVolume(volume){
+        this.setVolume(this.getVolume() + volume);
+    }
+
+    /**
     Set the properties object of this Chemical
     properties: The properties object
     */
@@ -351,7 +375,7 @@ function drawChemicalRectMultiple(graphics, chems, totalQuantity, x, y, w, h){
         let c = chems[i];
         let tex = c.getTexture();
         if(tex !== null && tex !== undefined){
-            var hPerc = h * c.mass / totalQuantity;
+            var hPerc = h * c.getVolume() / totalQuantity;
             graphics.fill(tex);
             graphics.noStroke();
             currentY -= hPerc;
@@ -390,7 +414,7 @@ function drawChemicalShapeMultiple(graphics, chems, totalQuantity, vertices, x, 
                 buffer.vertex(vertices[j][0], vertices[j][1]);
             }
             buffer.endShape(CLOSE);
-            let ratio = h * c.mass / totalQuantity;
+            let ratio = h * c.getVolume() / totalQuantity;
             let hr = h - ratio;
             currentY -= ratio;
             graphics.image(buffer, x, currentY, w, ratio, 0, currentY - y, w, ratio);

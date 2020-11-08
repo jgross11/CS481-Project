@@ -263,7 +263,7 @@ function initTestChemProperties(){
             new CompoundComponent(new ElementProperties(ELEMENT_OXYGEN_ATOMIC_NUM), 2)
         ], "Oxygen Gas", "Nature",
         [220, 220, 220, 255], [220, 220, 220, 200], [220, 220, 220, 180],
-        15.999, -218, -183, 1.43, true);
+        -218, -183, 1.43, true);
 
 
     // These equations are for testing, and are not necessarily accurate to reality

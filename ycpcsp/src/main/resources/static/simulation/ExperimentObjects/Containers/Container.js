@@ -33,12 +33,24 @@ class Container extends Equipment{
 
     /**
     Get the mass of all the combined Chemicals in this Container
-    returns: The mass total
+    returns: The mass total in grams
     */
     getTotalContentsMass(){
         var total = 0;
         for(var i = 0; i < this.contents.length; i++){
             total += this.contents[i].mass;
+        }
+        return total;
+    }
+
+    /**
+    Get the volume of all the combined Chemicals in this Container
+    returns: The volume total in milliliters
+    */
+    getTotalContentsVolume(){
+        var total = 0;
+        for(var i = 0; i < this.contents.length; i++){
+            total += this.contents[i].getVolume();
         }
         return total;
     }
@@ -269,7 +281,7 @@ class ContainerController2D extends EquipmentController2D{
         if(this.hasResidue()) return true;
         let eq = this.equipment;
         let cont = eq.contents;
-        var mass = eq.getTotalContentsMass() + ((chem === null) ? 0 : chem.mass);
+        var mass = eq.getTotalContentsVolume() + ((chem === null) ? 0 : chem.getVolume());
         return mass <= eq.capacity;
     }
 

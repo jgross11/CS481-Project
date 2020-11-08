@@ -20,6 +20,22 @@ class ExperimentObject{
     }
 
     /**
+    Get the mass of this ExperimentObject
+    returns: The mass
+    */
+    getMass(){
+        return this.mass;
+    }
+
+    /**
+    Add some mass to the current mass of this ExperimentObject
+    mass: The mass to add in grams
+    */
+    addMass(mass){
+        this.setMass(this.mass + mass);
+    }
+
+    /**
     Get the ID representing this ExperimentObject
     */
     getID(){
