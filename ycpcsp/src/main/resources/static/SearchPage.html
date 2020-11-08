@@ -10,13 +10,17 @@
 </form>
 
 <body>
-    <div id="SearchBar">
-        <p id="text"></p>
+    <div id="SearchBar" style="display:none">
+        <p id="title"></p>
+        <p id="name"></p>
+        <button id="button" class="button" onclick="loadExperiment()">Load Experiment</button>
     </div>
 </body>
 
 
 <script>
+    var identify = {};
+
     function submitSearchFunction(){
             var experimentName = document.getElementById("input").value;
             var experiment = {
@@ -26,14 +30,27 @@
                 console.log(data);
                 var mutable = data;
                 var i;
+                identify = mutable[0].id;
                 var text = "";
                 for(i = 0; i <mutable.length; i++){
-                    text += mutable[i].title + ", " + mutable[i].creatorName + "<br>";
-                    //document.getElementById("title").innerHTML = mutable[0].title;
-                    //document.getElementById("name").innerHTML = mutable[0].creatorName;
+                    //text += mutable[i].title + ", " + mutable[i].creatorName + "<br>";
+                    document.getElementById("title").innerHTML = mutable[0].title;
+                    document.getElementById("name").innerHTML = mutable[0].creatorName;
                 }
-                document.getElementById("text").innerHTML = text;
+                //document.getElementById("text").innerHTML = text;
             });
+            var x = document.getElementById("SearchBar");
+            x.style.display = "block";
     }
+
+    function loadSimulation(simulationID){
+        sessionStorage.setItem("simulationToLoad", simulationID);
+        window.location.href = "/simulation";
+    }
+
+    function loadExperiment(){
+        loadSimulation(identify);
+    }
+
 </script>
 </html>
