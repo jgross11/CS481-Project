@@ -94,11 +94,12 @@ let COMPOUND_HYDROGEN_GAS_ID = 10000;
 let COMPOUND_WATER_ID = 10001;
 let COMPOUND_GLUCOSE_ID = 10002;
 let COMPOUND_TABLE_SALT_ID = 10003;
+let COMPOUND_OXYGEN_GAS_ID = 10004;
 
 
-// Formulas
-let FORMULA_WATER_ID = 1;
-let FORMULA_TABLE_SALT_ID = 2;
+// Equations
+let EQUATION_WATER_ID = 1;
+let EQUATION_TABLE_SALT_ID = 2;
 
 
 /**
@@ -162,6 +163,7 @@ function idToChemical(id, mass, concentration){
         case COMPOUND_HYDROGEN_GAS_ID:
         case COMPOUND_WATER_ID:
         case COMPOUND_GLUCOSE_ID:
+        case COMPOUND_OXYGEN_GAS_ID:
         case COMPOUND_TABLE_SALT_ID: properties = new CompoundProperties(id); break;
         default: return null;
     }
@@ -172,11 +174,11 @@ function idToChemical(id, mass, concentration){
 // A directory holding all chemical properties currently available
 let CHEMICAL_PROPERTIES = [];
 
-// A directory holding all formula data currently available
-let FORMULA_PROPERTIES = [];
+// A directory holding all equation data currently available
+let EQUATION_PROPERTIES = [];
 
 /**
-Initialize the test database with some default elements, compounds, and formulas
+Initialize the test database with some default elements, compounds, and equations
 */
 function initTestChemProperties(){
     /*
@@ -257,19 +259,26 @@ function initTestChemProperties(){
         [240, 240, 240, 255], [240, 240, 240, 200], [240, 240, 240, 180],
         801, 1465, 2.16, true);
 
-    // These formulas are for testing, and are not necessarily accurate to reality
-    makeFormula(FORMULA_WATER_ID, [
-        new FormulaComponent(1, new CompoundProperties(COMPOUND_HYDROGEN_GAS_ID)),
-        new FormulaComponent(1, new ElementProperties(ELEMENT_OXYGEN_ATOMIC_NUM))
+    makeCompound(COMPOUND_OXYGEN_GAS_ID, [
+            new CompoundComponent(new ElementProperties(ELEMENT_OXYGEN_ATOMIC_NUM), 2)
+        ], "Oxygen Gas", "Nature",
+        [220, 220, 220, 255], [220, 220, 220, 200], [220, 220, 220, 180],
+        -218, -183, 1.43, true);
+
+
+    // These equations are for testing, and are not necessarily accurate to reality
+    makeEquation(EQUATION_WATER_ID, [
+        new EquationComponent(2, new CompoundProperties(COMPOUND_HYDROGEN_GAS_ID)),
+        new EquationComponent(1, new CompoundProperties(COMPOUND_OXYGEN_GAS_ID))
         ], [
-        new FormulaComponent(1, new CompoundProperties(COMPOUND_WATER_ID))
+        new EquationComponent(2, new CompoundProperties(COMPOUND_WATER_ID))
         ]);
 
-    makeFormula(FORMULA_TABLE_SALT_ID, [
-        new FormulaComponent(1, new ElementProperties(ELEMENT_CHLORINE_ATOMIC_NUM)),
-        new FormulaComponent(1, new ElementProperties(ELEMENT_SODIUM_ATOMIC_NUM))
+    makeEquation(EQUATION_TABLE_SALT_ID, [
+        new EquationComponent(1, new ElementProperties(ELEMENT_CHLORINE_ATOMIC_NUM)),
+        new EquationComponent(1, new ElementProperties(ELEMENT_SODIUM_ATOMIC_NUM))
         ], [
-        new FormulaComponent(1, new CompoundProperties(COMPOUND_TABLE_SALT_ID))
+        new EquationComponent(1, new CompoundProperties(COMPOUND_TABLE_SALT_ID))
         ]);
 }
 
@@ -289,8 +298,8 @@ let CHEMICAL_PROPERTY_BOILING_POINT = "boilingPoint";
 let CHEMICAL_PROPERTY_DENSITY = "density";
 let CHEMICAL_PROPERTY_WATER_SOLUBLE = "waterSoluble";
 
-let FORMULA_PROPERTY_REACTANTS = "reactants";
-let FORMULA_PROPERTY_PRODUCTS = "products";
+let EQUATION_PROPERTY_REACTANTS = "reactants";
+let EQUATION_PROPERTY_PRODUCTS = "products";
 
 /**
 Add a new element to the CHEMICAL_PROPERTIES list
@@ -361,14 +370,14 @@ function makeCompound(id, chems, name, creator,
 }
 
 /**
-Add a new formula to the FORMULA_PROPERTIES
-id: The id of the formula used to access it from FORMULA_PROPERTIES
-reactants: The list of FormulaComponents used in the formula as reactants
-products: The list of FormulaComponents in the formula which get created as products
+Add a new equation to the EQUATION_PROPERTIES
+id: The id of the equation used to access it from EQUATION_PROPERTIES
+reactants: The list of EquationComponents used in the equation as reactants
+products: The list of EquationComponents in the equation which get created as products
 */
-function makeFormula(id, reactants, products){
-    FORMULA_PROPERTIES[id] = {};
-    let f = FORMULA_PROPERTIES[id];
-    f[FORMULA_PROPERTY_REACTANTS] = reactants;
-    f[FORMULA_PROPERTY_PRODUCTS] = products;
+function makeEquation(id, reactants, products){
+    EQUATION_PROPERTIES[id] = {};
+    let f = EQUATION_PROPERTIES[id];
+    f[EQUATION_PROPERTY_REACTANTS] = reactants;
+    f[EQUATION_PROPERTY_PRODUCTS] = products;
 }
