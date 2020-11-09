@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <script src="helperFunctions.js"></script>
+    <div id="insertFormContainer">
+        <div id="equationPreview">
+            
+        </div>
+        <br>
+        <input type="button" value="Add Reactant" onclick="addReactant(); updatePreview()"> 
+        <input type="button" value="Add Product" onclick="addProduct(); updatePreview()">
+        <input type="button" value="Submit Equation" onclick="submitEquation()"><br> 
+        <div id="reactantContainer">
+            Reactants <br>
+            <input type="number" name="reactantCoefficient"
+             value="1" min="1" step="1" style="width: 50px"
+             oninput="updatePreview()"> <input name="reactantFormula"type="text" value="H2" style="width: 70px"oninput="updatePreview()" required>
+        </div>
+        <br>
+        <div id="productContainer">
+            Products <br>
+            <input type="number" name="productCoefficient"
+             value="1" min="1" step="1" style="width: 50px"
+             oninput="updatePreview()"> <input name="productFormula"type="text" value="H2" style="width: 70px"oninput="updatePreview()">
+        </div>
+    </div>
+
+
+<script>
+    let reactantContainer = document.getElementById("reactantContainer");
+    let productContainer = document.getElementById("productContainer");
+    let reactantCoefficients = document.getElementsByName("reactantCoefficient");
+    let reactantFormulas = document.getElementsByName("reactantFormula");
+    let productCoefficients = document.getElementsByName("productCoefficient");
+    let productFormulas = document.getElementsByName("productFormula");
+
+    updatePreview();
+
+    // called when add reactant function is called
+    // temporarily stores reactant coefficient / formula information, 
+    // writes a new coefficient and formula field to reactant container,
+    // then writes old reactant coefficient / formula information
+
+    // NOTE: storing / rewriting required as updating container innerHTML
+    // NOTE: resets values of all its existing fields
+    function addReactant(){
+        let temp = storeCoefficientsAndFormulas(reactantCoefficients, reactantFormulas);
+        reactantContainer.innerHTML += "<br><input type=\"number\" name=\"reactantCoefficient\" value=\"1\" min=\"1\" step=\"1\" style=\"width: 50px\" oninput=\"updatePreview()\"> <input name=\"reactantFormula\"type=\"text\" value=\"H2\"style=\"width: 70px\"oninput=\"updatePreview()\">";
+        writeCoefficientsAndFormulas(reactantCoefficients, reactantFormulas, temp);
+    }
+
+    // called when add product function is called
+    // temporarily stores product coefficient / formula information, 
+    // writes a new coefficient and formula field to product container,
+    // then writes old product coefficient / formula information
+
+    // NOTE: storing / rewriting required as updating container innerHTML
+    // NOTE: resets values of all its existing fields
+    function addProduct(){
+        let temp = storeCoefficientsAndFormulas(productCoefficients, productFormulas);
+        productContainer.innerHTML += "<br><input type=\"number\" name=\"productCoefficient\" value=\"1\" min=\"1\" step=\"1\" style=\"width: 50px\" oninput=\"updatePreview()\"> <input name=\"productFormula\"type=\"text\" value=\"H2\"style=\"width: 70px\"oninput=\"updatePreview()\">"
+        writeCoefficientsAndFormulas(productCoefficients, productFormulas, temp);
+    }
+
+    /**
+     * Copies coefficient and formula together into array, creates array of these pairs
+     * coefficientArray - the array containing the coefficient values
+     * formulaArray - the array containing the formula values
+     * returns - an array whose kth element is in the form [coefficientArray[k], formulaArray[k]]
+    **/
+     function storeCoefficientsAndFormulas(coefficientArray, formulaArray){
+        let result = [];
+        for(let i = 0; i < coefficientArray.length; i++){
+            result.push([coefficientArray[i].value, formulaArray[i].value]);
+        }
+        return result;
+    }
+
+    /**
+     * Writes coefficient and formula information into their respective arrays
+     * coefficientArray - the array that will contain coefficient values
+     * formulaArray - the array that will contain formula values
+     * values - the array (formatted by the function storeCoefficientsAndFormulas)
+     * whose values will be written into coefficientArray and formulaArray
+     * 
+    */
+    function writeCoefficientsAndFormulas(coefficientArray, formulaArray, values){
+        for(let i = 0; i < values.length; i++){
+            coefficientArray[i].value = values[i][0];
+            formulaArray[i].value = values[i][1];
+        }
+    }
+
+    // combines all relevant reactant and product information into a formatted string
+    // that is displayed on the webpage to show the form the equation takes
+    function updatePreview(){
+        let equationPreview = document.getElementById("equationPreview");
+        let response = reactantCoefficients.length > 0 ? (reactantCoefficients[0].value > 1 ? reactantCoefficients[0].value : "") + reactantFormulas[0].value : "";
+
+        for(let i = 1; i < reactantCoefficients.length; i++){
+            response += " + " + (reactantCoefficients[i].value > 1 ? reactantCoefficients[i].value : "") + reactantFormulas[i].value;
+        }
+        response += " → ";
+
+        response += productCoefficients.length > 0 ? (productCoefficients[0].value > 1 ? productCoefficients[0].value : "") + productFormulas[0].value : "";
+        for(let i = 1; i < productCoefficients.length; i++){
+            response += " + " + (productCoefficients[i].value > 1 ? productCoefficients[i].value : "") + productFormulas[i].value;
+        }
+        equationPreview.innerHTML = "Equation Preview: <br>" + response;
+    }
+
+    // builds and attempts to submit equation information to DB
+    function submitEquation(){
+        let reactants = storeCoefficientsAndFormulas(reactantCoefficients, reactantFormulas);
+        let products = storeCoefficientsAndFormulas(productCoefficients, productFormulas);
+        let equation = {
+            reactants: reactants, 
+            products: products
+        };
+        console.log(equation);
+        postData('submit-equation-information', equation).then(function(data){
+            console.log(data);
+        });
+    }
+
+
+</script>
+</body>
+</html>
