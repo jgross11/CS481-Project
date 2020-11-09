@@ -136,8 +136,13 @@
         }
 
     }
+
+    function  chemlist(){
+        
+    }
     function LoadFunc(){
         var options = "";
+        options += "<option selected disabled hidden style='display: none' value=''></option>";
         options += "<option value='false'>Chem</option>";
         options += "<option value='true'>Equip</option>";
         document.getElementById("ChemOrEquip1").innerHTML = options;
@@ -145,6 +150,7 @@
         let Func = JSON.parse(sessionStorage.getItem("Expfunc"));
 
         var funopt ="";
+        funopt += "<option selected disabled hidden style='display: none' value=''></option>";
         for(i = 0; i < Func.length  ; i++){
             funopt += "<option value='"+Func[i].Function +"'>"+ Func[i].Function +"</option>";
         }
@@ -152,6 +158,7 @@
 
 
         var options2 = "";
+        options2 += "<option selected disabled hidden style='display: none' value=''></option>";
         options2 += "<option value='false'>Chem</option>";
         options2 += "<option value='true'>Equip</option>";
         document.getElementById("ChemOrEquip2").innerHTML = options2;
@@ -165,7 +172,8 @@
         for(i = 0; i < listequip.length  ; i++){
             var count = listequip[i].amount;
             for(j = 0; j < count  ; j ++) {
-                act += "<option value="+i+j+" >" + listequip[i].Equipment + "</option>";
+                var val = i + j;
+                act += "<option value="+val +" >" + listequip[i].Equipment + "</option>";
             }
         }
         document.getElementById("insert1").innerHTML = act;
@@ -179,7 +187,8 @@
         for(i = 0; i < listequip.length  ; i++){
             var count = listequip[i].amount;
             for(j = 0; j < count  ; j ++) {
-                rec += "<option value="+i+j +">" + listequip[i].Equipment + "</option>";
+                var val = i + j;
+                rec += "<option value="+val +">" + listequip[i].Equipment + "</option>";
             }        }
         document.getElementById("insert2").innerHTML = rec;
 
@@ -202,8 +211,9 @@
         stepcount++;
         var send = {stepcount,act,opti1,rec,opti2,func};
         liststeps.push(send);
+        // sendsteps.push(makeTestInstructionJSON(stepcount,act,opti1,rec,opti2,func));
         document.getElementById("Steps").innerHTML = JSON.stringify(liststeps);
-        sendsteps.push(makeTestInstructionJSON(stepcount,act,opti1,rec,opti2,func));
+
     }
 
     function AddChem(Chem){
@@ -215,9 +225,19 @@
         if (mass == null || mass == "" || concentration == null || concentration == "") {
         } else {
             listchem.push(send);
+            listchem.sort(function(a, b) {
+                return parseFloat(a.concentration) - parseFloat(b.concentration);
+            });
+            listchem.sort(function(a, b) {
+                return parseFloat(a.mass) - parseFloat(b.mass);
+            });
+            listchem.sort(function(a, b) {
+                return parseFloat(a.ID) - parseFloat(b.ID);
+            });
             document.getElementById("CHLIST").innerHTML = JSON.stringify(listchem);
+           // sendchem.push(makeTestChemicalJSON(idToChemical(ID),mass,concentration));
             LoadFunc();
-            sendchem.push(makeTestChemicalJSON(Chemical,mass,concentration));
+
 
         }
     }
@@ -229,13 +249,19 @@
         if (amount == null || amount == "") {
         } else {
             listequip.push(send);
+            listequip.sort(function(a, b) {
+                return parseFloat(a.ID) - parseFloat(b.ID);
+            });
             document.getElementById("EQLIST").innerHTML = JSON.stringify(listequip);
+          //  sendequip.push(makeTestEquipmentJSON(idToEquipment(ID),amount));
             LoadFunc();
-            sendequip.push(makeTestEquipmentJSON(Equipment,amount));
+
 
         }
     }
     function CreateExp(){
+        let user = JSON.parse(sessionStorage.getItem("user"));
+
         let exp = {};
         var title = prompt("Enter a Title.","")
         exp[EXP_JSON_TITLE] = title;
@@ -245,6 +271,17 @@
         exp[EXP_JSON_CHEMICALS] = sortArrayByKey(sendchem, [EXP_JSON_CHEM_ID, EXP_JSON_CHEM_MASS, EXP_JSON_CHEM_CONCENTRATION], true);
         exp[EXP_JSON_INSTRUCTIONS] = sortArrayByKey(sendsteps, EXP_JSON_INS_STEP_NUM, false);;
 
+        console.log("exp JSON: ");
+        console.log(exp);
+        // TODO CHECK IF USER EXISTS, NOTIFY THAT SIGNUP MUST HAPPEN BEFORE EXP CAN BE SAVED
+        let userAndExperiment = {
+            user: user,
+            experiment: exp
+        };
+        postData("save-new-simulation", userAndExperiment).then(function(response){
+            console.log("received following response upon submitting experiment: ");
+            console.log(response);
+        });
     }
 
         // Close the dropdown if the user clicks outside of it
