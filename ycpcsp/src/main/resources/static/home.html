@@ -103,8 +103,8 @@
 </div>
 
 <div class="dropdown">
-    <button class="dropbtn">Login</button>
-    <div class="dropdown-content">
+    <button id="dropbtn" class="dropbtn">Login</button>
+    <div id= "dropdown-content" class="dropdown-content">
         <form id="login-form" name="login-form" action="/login-submit" method="post">
         <label for="email">Email:</label><br>
             <input type="text" id="email" name="email"><br>
@@ -117,20 +117,20 @@
         </form>
     </div>
 </div>
-<div class="boxed">
+
+<div id="boxed" class="boxed">
     <div id="RecentBox">
    <ul id="RecentExperiments">
    </ul>
-    </div>
+</div>
 
-    <div id="PlaylistBox">
-        <form id="myForm">
-            <select id="selectNumber">
-                <option>Choose a number</option>
-            </select>
-        </form>
-
-    </div>>
+<div id="PlaylistBox">
+    <form id="myForm">
+        <select id="selectNumber">
+            <option>Choose a number</option>
+        </select>
+    </form>
+  </div>
 </div>
 
 
@@ -161,9 +161,6 @@
 <br><br><br>
 <input value="New Simulation" type="button" id="newSimulationButton" name="newSimulationButton" onclick="loadSimulation(-1)"><br>
 <input value="Existing Simulation" type="button" id="loadSimulationButton" name="loadSimulationButton" onclick="loadSimulation(21)"><br>
-
-
-
 </body>
 
 <script>
@@ -185,21 +182,22 @@
         console.log(x);
     }
 
+    var user = JSON.parse(sessionStorage.getItem("user"));
+
     checkForLogin();
 
     function checkForLogin(){
         // attempt to get user information from session
-        var user = JSON.parse(sessionStorage.getItem("user"));
+
         console.log("HELLO");
         console.log(user);
         // logged in
         if(user != null){
-            document.write("<input value=\"Log out\" type=\"button\" id=\"logoutButton\" name=\"logoutButton\" onclick=\"logout()\"><br>");
-            document.write("Logged in as: " + user.lastName + ", " + user.firstName);
+            writeUserLoggedInHTML();
         }
         // not logged in
         else{
-            document.write("Not currently signed in");
+            writeUserNotLoggedInHTML();
         }
     }
 
@@ -253,6 +251,49 @@
     function loadSimulation(simulationID){
         sessionStorage.setItem("simulationToLoad", simulationID);
         window.location.href = "/simulation";
+    }
+
+    function writeUserNotLoggedInHTML(){
+
+    }
+
+    function writeUserLoggedInHTML(){
+        var boxDiv = document.getElementById("boxed");
+        var testExperimentOne = {
+            title: "Iodine clock",
+            id: 4
+        };
+        var testExperimentTwo = {
+            title: "Soluable Trimethylane",
+            id: 17
+        };
+        var testExperimentThree = {
+            title: "You guessed it: HCl!",
+            id: 101
+        };
+        var testExperimentFour = {
+            title: "Color",
+            id: 21
+        };
+
+        user.experiments = [testExperimentOne, testExperimentTwo, testExperimentThree, testExperimentFour];
+        boxDiv.innerHTML = "<h3> Your experiments </h3><br>"
+        for(var i = 0; i < user.experiments.length; i++){
+            var experiment = user.experiments[i];
+            var experimentInListDiv = "<div id=\"userExperiment\" style=\"text-align: center; width: 200px; height: 50px; border: 1px solid black\" onclick=\"loadSimulation("+experiment.id+")\">"+
+                                        experiment.title + "<br>" +
+                                        experiment.id + "<br><\div>";
+            boxDiv.innerHTML += experimentInListDiv;
+        }
+
+        var dropButtonDiv = document.getElementById("dropbtn");
+        dropButtonDiv.innerHTML = "Welcome, " + user.fullName;
+        var dropDownContents = document.getElementById("dropdown-content");
+        dropDownContents.innerHTML = "<button onclick=\"profile()\">My Profile</button><br><br><button onclick=\"logout()\">Log out</button>";
+    }
+
+    function profile(){
+        window.location.href = "/profile";
     }
 
 </script>
