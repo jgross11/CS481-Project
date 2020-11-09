@@ -90,10 +90,10 @@
 <p id="EQLIST"></p>
 
 
-<select id="ChemOrEquip1"></select>
+<select onchange="list1();" id="ChemOrEquip1"></select>
 <select id="insert1"></select>
 <select id="Function"></select>
-<select id="ChemOrEquip2"></select>
+<select onchange="list2();" id="ChemOrEquip2"></select>
 <select id="insert2"></select>
 <p id="Steps"></p>
 
@@ -137,8 +137,48 @@
 
     }
 
-    function  chemlist(){
-        
+    function  list1(){
+
+        if(document.getElementById("ChemOrEquip1").value !== 'true') {
+            var act = "";
+            for (i = 0; i < listchem.length; i++) {
+                act += "<option value=" + i + " >" + listchem[i].Chemical + "</option>";
+            }
+        }else {
+            var act = "";
+            act += "<option value='null' > Using Scale</option>";
+            for (i = 0; i < listequip.length; i++) {
+                var count = listequip[i].amount;
+                for (j = 0; j < count; j++) {
+                    var val = i + j;
+                    act += "<option value=" + val + " >" + listequip[i].Equipment + "</option>";
+                }
+            }
+        }
+
+        document.getElementById("insert1").innerHTML = act;
+    }
+    function  list2(){
+
+        if(document.getElementById("ChemOrEquip2").value !== 'true') {
+            var rec = "";
+            for (i = 0; i < listchem.length; i++) {
+                rec += "<option value=" + i + " >" + listchem[i].Chemical + "</option>";
+            }
+        }else {
+            var rec = "";
+            rec += "<option value='null' >Using Scale</option>";
+
+            for (i = 0; i < listequip.length; i++) {
+                var count = listequip[i].amount;
+                for (j = 0; j < count; j++) {
+                    var val = i + j;
+                    rec += "<option value=" + val + " >" + listequip[i].Equipment + "</option>";
+                }
+            }
+        }
+
+        document.getElementById("insert2").innerHTML = rec;
     }
     function LoadFunc(){
         var options = "";
@@ -162,37 +202,6 @@
         options2 += "<option value='false'>Chem</option>";
         options2 += "<option value='true'>Equip</option>";
         document.getElementById("ChemOrEquip2").innerHTML = options2;
-
-
-
-        var act ="";
-        for(i = 0; i < listchem.length  ; i++){
-            act += "<option value="+i+" >"+ listchem[i].Chemical+"</option>";
-        }
-        for(i = 0; i < listequip.length  ; i++){
-            var count = listequip[i].amount;
-            for(j = 0; j < count  ; j ++) {
-                var val = i + j;
-                act += "<option value="+val +" >" + listequip[i].Equipment + "</option>";
-            }
-        }
-        document.getElementById("insert1").innerHTML = act;
-
-
-
-        var rec ="";
-        for(i = 0; i < listchem.length  ; i++){
-            rec += "<option value="+i+">" + listchem[i].Chemical+"</option>";
-        }
-        for(i = 0; i < listequip.length  ; i++){
-            var count = listequip[i].amount;
-            for(j = 0; j < count  ; j ++) {
-                var val = i + j;
-                rec += "<option value="+val +">" + listequip[i].Equipment + "</option>";
-            }        }
-        document.getElementById("insert2").innerHTML = rec;
-
-
 
     }
     var stepcount = -1;
