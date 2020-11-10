@@ -271,6 +271,7 @@ function getTestJSON(){
     chems.push(makeTestChemicalJSON(ID_CHEM_TEST_BLACK, 10, 1));
     chems.push(makeTestChemicalJSON(ELEMENT_SODIUM_ATOMIC_NUM, 10, 1));
     chems.push(makeTestChemicalJSON(ELEMENT_CHLORINE_ATOMIC_NUM, 10, 1));
+    chems.push(makeTestChemicalJSON(COMPOUND_CHLORINE_GAS_ID, 10, 1));
     chems.push(makeTestChemicalJSON(COMPOUND_TABLE_SALT_ID, 10, 1));
     chems.push(makeTestChemicalJSON(COMPOUND_WATER_ID, 10, 1));
     chems.push(makeTestChemicalJSON(COMPOUND_HYDROGEN_GAS_ID, 10, 1));

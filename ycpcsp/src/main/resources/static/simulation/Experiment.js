@@ -226,26 +226,8 @@ class ExperimentController2D{
             if(act.canPlace() && !pEqs.includes(act)) adds.push(act);
             if(rec !== null && rec !== undefined && rec.canPlace() && !pEqs.includes(rec)) adds.push(rec);
             var success = true;
-            // TODO Move this loop to its own function
-            for(var i = 0; i < adds.length; i++){
-                let index = eqs.indexOf(adds[i]);
-                // If there is no valid index, do nothing
-                if(index < 0){
-                    success = false;
-                    break;
-                }
-
-                // Otherwise, place the object at the center of the screen
-                let eq = eqs[index];
-                let pos = this.camera.pos;
-                eq.setCenter(
-                    pos[0] + EXP_BOUNDS[2] * (0.2 + 0.3 * Math.random()),
-                    pos[1] + EXP_BOUNDS[3] * (0.2 + 0.3 * Math.random())
-                );
-                if(!this.placeEquipment(index)){
-                    success = false;
-                    break;
-                }
+            for(var i = 0; i < adds.length && success; i++){
+                success = this.placeEquipmentOrganized(adds[i]);
             }
             if(!success) return;
 
@@ -318,6 +300,32 @@ class ExperimentController2D{
             return true;
         }
         return false;
+    }
+
+    /**
+    Place a piece of equipment into this Controller's Experiment into an organized place
+    add: The EquipmentController2D to add, should exist in the equipment list of this Controller's Experiment
+    returns: true if the equipment could be placed, false otherwise
+    */
+    placeEquipmentOrganized(add){
+        let eqs = this.experiment.equipment;
+        let index = eqs.indexOf(add);
+        // If there is no valid index, do nothing
+        if(index < 0) return false;
+
+        // Attempt to place the equipment;
+        let success = this.placeEquipment(index)
+        // If the equipment could not be placed, return false
+        if(!success) return false;
+
+        // If it was placed, move the object to the center of the screen
+        let eq = eqs[index];
+        let pos = this.camera.pos;
+        eq.setCenter(
+            pos[0] + EXP_BOUNDS[2] * (0.2 + 0.3 * Math.random()),
+            pos[1] + EXP_BOUNDS[3] * (0.2 + 0.3 * Math.random())
+        );
+        return success;
     }
 
     /**
@@ -567,17 +575,17 @@ class ExperimentController2D{
         if(box === null) return;
         let chemControl = box.obj;
         if(chemControl === null) return;
-        var mass;
+        var volume;
         switch(massIndex){
-            case KEY_EXP_ADD_CHEM_1: mass = 0.1; break;
-            case KEY_EXP_ADD_CHEM_5: mass = 1; break;
-            case KEY_EXP_ADD_CHEM_10: mass = 5; break;
-            case KEY_EXP_ADD_CHEM_20: mass = 10; break;
-            case KEY_EXP_ADD_CHEM_25: mass = 50; break;
-            default: mass = null; break;
+            case KEY_EXP_ADD_CHEM_1: volume = 0.1; break;
+            case KEY_EXP_ADD_CHEM_5: volume = 1; break;
+            case KEY_EXP_ADD_CHEM_10: volume = 5; break;
+            case KEY_EXP_ADD_CHEM_20: volume = 10; break;
+            case KEY_EXP_ADD_CHEM_25: volume = 50; break;
+            default: volume = null; break;
         }
-        if(mass === null) return;
-        chemControl.chemical.setMass(mass * (1 + (Math.random() - 0.5) * 2 * 0.05));
+        if(volume === null) return;
+        chemControl.chemical.setVolume(volume * (1 + (Math.random() - 0.5) * 2 * 0.05));
         this.selectedEquipFunction(ID_FUNC_CONTAINER_ADD_TO, chemControl);
     }
 
@@ -709,6 +717,7 @@ class ExperimentController2D{
         expG.pop();
 
         // Draw the title and creator
+        // TODO make test cases
         g.fill(color(0, 0, 0));
         g.noStroke();
         g.textSize(24);
@@ -733,7 +742,7 @@ class ExperimentController2D{
         g.text("Press ESC to unselect selected Equipment", x, y += 20);
         g.text("Press 1 - 9 to perform actions on selected actor and receiver", x, y += 20);
         g.text("Also hold alt and press 1 - 9 to perform actions on only selected actor", x, y += 20);
-        g.text("Press 1, 2, 3, 4, 5 to add .1, 1, 5, 10, or 50 units to selected container", x, y += 20);
+        g.text("Press 1, 2, 3, 4, 5 to add .1, 1, 5, 10, or 50 milliliters to selected container", x, y += 20);
         g.text("\tChemicals added have 0% to 5% error", x, y += 20);
         g.text("Press I to run the next instruction", x, y += 20);
         g.text("Press R to reset the simulation", x, y += 20);

@@ -281,8 +281,8 @@ class ContainerController2D extends EquipmentController2D{
         if(this.hasResidue()) return true;
         let eq = this.equipment;
         let cont = eq.contents;
-        var mass = eq.getTotalContentsVolume() + ((chem === null) ? 0 : chem.getVolume());
-        return mass <= eq.capacity;
+        var volume = eq.getTotalContentsVolume() + ((chem === null) ? 0 : chem.getVolume());
+        return volume <= eq.capacity;
     }
 
     /**

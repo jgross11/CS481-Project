@@ -1,22 +1,35 @@
 var beaker1;
 var beaker2;
+var beakerControl1;
+var beakerControl2;
 var ins;
 var controller;
+var chemControl1;
+var chemControl2;
 var chem1;
 var chem2;
 
+var count = 0;
+
 QUnit.module("InstructionController2D", {
+    before: function(){
+        initTestChemProperties();
+    },
     beforeEach: function(){
-        beaker1 = new BeakerController2D(new Beaker(ID_EQUIP_BEAKER_150mL));
-        beaker1.equipment.setResidue(0);
-        beaker1.equipment.setCapacity(100);
-        beaker2 = new BeakerController2D(new Beaker(ID_EQUIP_BEAKER_150mL));
-        beaker2.equipment.setResidue(0);
-        beaker2.equipment.setCapacity(100);
-        ins = new Instruction(beaker1, beaker2, beaker1.pourInto);
+        beaker1 = new Beaker(ID_EQUIP_BEAKER_150mL);
+        beakerControl1 = new BeakerController2D(beaker1);
+        beaker1.setResidue(0);
+        beaker1.setCapacity(10000);
+        beaker2 = new Beaker(ID_EQUIP_BEAKER_150mL);
+        beakerControl2 = new BeakerController2D(beaker2);
+        beaker2.setResidue(0);
+        beaker2.setCapacity(10000);
+        ins = new Instruction(beakerControl1, beakerControl2, beakerControl1.pourInto);
         controller = new InstructionController2D(ins);
-        chem1 = idToChemical(ID_CHEM_TEST_BLUE, 6.0, 1).chemical;
-        chem2 = idToChemical(ID_CHEM_TEST_BLACK, 4.0, 1).chemical;
+        chemControl1 = idToChemical(ID_CHEM_TEST_BLUE, 6.0, 1);
+        chemControl2 = idToChemical(ID_CHEM_TEST_BLACK, 4.0, 1);
+        chem1 = chemControl1.chemical;
+        chem2 = chemControl2.chemical;
     }
 });
 
@@ -33,19 +46,25 @@ QUnit.test('setInstruction:', function(assert){
 });
 
 QUnit.test('activate:', function(assert){
-    beaker1.equipment.setContents(chem1);
-    beaker2.equipment.setContents(chem2);
+    beakerControl1.emptyOut();
+    beakerControl2.emptyOut();
+    chem1.setMass(6.0);
+    chem2.setMass(4.0);
+    beaker1.setContents(chemControl1.copyChem());
+    beaker2.setContents(chemControl2.copyChem());
 
     controller.activate();
-    assert.deepEqual(beaker1.equipment.contents, [], "Instruction should empty out beaker1");
-    assert.equal(beaker2.equipment.getTotalContentsMass(), 10, "Instruction should have left 10 mass in beaker2");
+    assert.true(beaker1.isEmpty(), "Instruction should empty out beaker1");
+    assert.equal(beaker2.getTotalContentsMass(), 10, "Instruction should have left 10 grams in beaker2");
 
     ins.setReceiver(null);
-    chem1 = new Chemical(6.0, "equ", 20.0, [10, 20, 40]);
-    chem2 = new Chemical(4.0, "equ", 20.0, [10, 10, 10]);
-    beaker1.equipment.setContents(chem1);
-    beaker2.equipment.setContents(chem2);
+    beakerControl1.emptyOut();
+    beakerControl2.emptyOut();
+    chem1.setMass(6.0);
+    chem2.setMass(4.0);
+    beaker1.setContents(chemControl1.copyChem());
+    beaker2.setContents(chemControl2.copyChem());
     controller.activate();
-    assert.equal(beaker1.equipment.getTotalContentsMass(), 6, "Instruction should do nothing to beaker 1 using null receiver");
-    assert.equal(beaker2.equipment.getTotalContentsMass(), 4, "Instruction should do nothing to beaker 2 using null receiver");
+    assert.equal(beaker1.getTotalContentsMass(), 6, "Instruction should do nothing to beaker 1 using null receiver");
+    assert.equal(beaker2.getTotalContentsMass(), 4, "Instruction should do nothing to beaker 2 using null receiver");
 });

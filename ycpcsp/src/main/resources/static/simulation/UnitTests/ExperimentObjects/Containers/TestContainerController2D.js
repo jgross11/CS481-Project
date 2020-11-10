@@ -13,6 +13,9 @@ var chemControl1;
 var chemControl2;
 
 QUnit.module("ContainerController2D", {
+    before: function(){
+        initTestChemProperties();
+    },
     beforeEach: function(){
         container = new Container([0, 0], [0, 0], 0, 8, 0, null);
         controller = new ContainerController2D(container);
@@ -28,10 +31,10 @@ QUnit.module("ContainerController2D", {
         beakerControl1 = new BeakerController2D(beaker1);
         beakerControl2 = new BeakerController2D(beaker2);
 
-        chem1 = idToChemical(ID_CHEM_TEST_RED, 30, 1).chemical;
-        chem2 = idToChemical(ID_CHEM_TEST_BLUE, 20, 1).chemical;
-        chem3 = idToChemical(ID_CHEM_TEST_RED, 70, 1).chemical;
-        chem4 = idToChemical(ID_CHEM_TEST_BLUE, 50, 1).chemical;
+        chem1 = idToChemical(COMPOUND_WATER_ID, 30, 1).chemical;
+        chem2 = idToChemical(COMPOUND_WATER_ID, 20, 1).chemical;
+        chem3 = idToChemical(COMPOUND_WATER_ID, 70, 1).chemical;
+        chem4 = idToChemical(COMPOUND_WATER_ID, 50, 1).chemical;
         chemControl1 = new ChemicalController2D(chem1);
         chemControl2 = new ChemicalController2D(chem2);
     }
@@ -129,7 +132,7 @@ QUnit.test('pourInto:', function(assert){
     beaker2.setContents(chem4);
     beaker1.setResidue(0);
     assert.true(beakerControl1.pourInto(beakerControl2), "Pouring into a valid controller should succeed");
-    assert.equal(beakerControl2.equipment.getTotalContentsMass(), 100, "Container poured into should be full with mass 50");
+    assert.equal(beakerControl2.equipment.getTotalContentsMass(), 100, "Container poured into should be full with mass 100");
     assert.equal(beakerControl1.equipment.getTotalContentsMass(), 20, "Container poured out should have 20 mass");
 
     chem1.setMass(5);

@@ -7,19 +7,31 @@ var control2;
 var control3;
 var control4;
 
+var hydrogenGas;
+var oxygenGas;
+var hydrogenGasControl;
+var oxygenGasControl;
+
+var DELTA = 0.001;
+
 QUnit.module("ChemicalController2D", {
     before(){
         initTestChemProperties();
     },
     beforeEach: function(){
-        chem1 = idToChemical(ID_CHEM_TEST_BLUE, 6.0, 1).chemical;
-        chem2 = idToChemical(ID_CHEM_TEST_BLACK, 4.0, 1).chemical;
-        chem3 = idToChemical(ID_CHEM_TEST_BLACK, 10.0, 1).chemical;
-        chem4 = idToChemical(ID_CHEM_TEST_BLACK, 9.0, 1).chemical;
-        control1 = new ChemicalController2D(chem1);
-        control2 = new ChemicalController2D(chem2);
-        control3 = new ChemicalController2D(chem3);
-        control4 = new ChemicalController2D(chem4);
+        control1 = idToChemical(ID_CHEM_TEST_BLUE, 6.0, 1);
+        control2 = idToChemical(ID_CHEM_TEST_BLACK, 4.0, 1);
+        control3 = idToChemical(ID_CHEM_TEST_BLACK, 10.0, 1);
+        control4 = idToChemical(ID_CHEM_TEST_BLACK, 9.0, 1);
+        chem1 = control1.chemical;
+        chem2 = control2.chemical;
+        chem3 = control3.chemical;
+        chem4 = control4.chemical;
+
+        hydrogenGasControl = idToChemical(COMPOUND_HYDROGEN_GAS_ID, 5, 1);
+        oxygenGasControl = idToChemical(COMPOUND_OXYGEN_GAS_ID, 5, 1);
+        hydrogenGas = hydrogenGasControl.chemical;
+        oxygenGas = oxygenGasControl.chemical;
     }
 });
 
@@ -58,8 +70,14 @@ QUnit.test('getFuncDescriptions:', function(assert){
     assert.equal(desc.length, 0, "Chemicals should have no function descriptions");
 });
 
-QUnit.todo('calculateMoles:', function(assert){
-    assert.true(false);
+QUnit.test('calculateMoles:', function(assert){
+    var m = oxygenGasControl.calculateMoles();
+    assert.true(Math.abs(m - 0.156259766) < DELTA, "Number of moles be 0.156259766, was " + m);
+});
+
+QUnit.test('calculateMass:', function(assert){
+    var m = oxygenGasControl.calculateMass(3);
+    assert.true(Math.abs(m - 95.99400) < DELTA, "Number of moles be 95.99400, was " + m);
 });
 
 QUnit.todo('calculateMatterState:', function(assert){
@@ -83,7 +101,7 @@ QUnit.test('combine:', function(assert){
     assert.equal(chem2.mass, 4, "After combining, original mass should still be the same");
 
     control3.setChemical(chem3);
-    let chemList = [chem1, chem4];
+    var chemList = [chem1, chem4];
     result = control3.combine(chemList);
     beaker.setContents(result);
     assert.equal(result.length, 2, "Testing that combining common chemicals combines them, not stores them as two separate chemicals.");
@@ -91,6 +109,14 @@ QUnit.test('combine:', function(assert){
     assert.equal(chem1.mass, 6, "After combining, original mass should still be the same");
     assert.equal(chem3.mass, 10, "After combining, original mass should still be the same");
     assert.equal(chem4.mass, 9, "After combining, original mass should still be the same");
+
+    control1.setChemical(hydrogenGas);
+    chemList = [chem1, oxygenGas];
+    result = control1.combine(chemList);
+    assert.equal(result.length, 3, "After combining, should have the newly formed water, leftover hydrogen, and test blue chem.");
+    assert.equal(result[0].getID(), COMPOUND_WATER_ID, "First chemical should be water, most dense");
+    assert.equal(result[1].getID(), ID_CHEM_TEST_BLUE, "Second chemical should be test blue, middle density");
+    assert.equal(result[2].getID(), COMPOUND_HYDROGEN_GAS_ID, "Last chemical should be hydrogen, most dense");
 });
 
 QUnit.test('split:', function(assert){

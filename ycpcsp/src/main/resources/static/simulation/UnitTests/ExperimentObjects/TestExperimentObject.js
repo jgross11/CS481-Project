@@ -24,6 +24,15 @@ QUnit.test('setMass:', function(assert){
     assert.equal(obj.mass, 0.0, "mass should be 0.0");
 });
 
+QUnit.test('getMass:', function(assert){
+    assert.equal(obj.getMass(), 5.0, "Checking mass from getter is correct");
+});
+
+QUnit.test('addMass:', function(assert){
+    obj.addMass(2);
+    assert.equal(obj.getMass(), 7.0, "Checking after adding mass, mass is correct");
+});
+
 QUnit.test('getID:', function(assert){
     assert.throws(obj.getID, "Generic ExperimentObject objects should throw error on getID");
 });
