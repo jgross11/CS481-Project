@@ -53,6 +53,10 @@
 
 
 <script src="simulation/ObjectIDs.js"></script>
+<script src="simulation/DataLoader.js"></script>
+<script src="simulation/Util/Util.js"></script>
+
+
 
 <script src="simulation/ExperimentObjects/ExperimentObject.js"></script>
 <script src="simulation/ExperimentObjects/Equipment.js"></script>
@@ -99,7 +103,7 @@
 
 
 <button onclick="AddStep()">Add Step</button>
-<button onclick="CreateExp()">Create</button>
+<button onclick="sendExp()">Create</button>
 
 </body>
 <script>
@@ -146,7 +150,6 @@
             }
         }else {
             var act = "";
-            act += "<option value='null' > Using Scale</option>";
             for (i = 0; i < listequip.length; i++) {
                 var count = listequip[i].amount;
                 for (j = 0; j < count; j++) {
@@ -192,7 +195,7 @@
         var funopt ="";
         funopt += "<option selected disabled hidden style='display: none' value=''></option>";
         for(i = 0; i < Func.length  ; i++){
-            funopt += "<option value='"+Func[i].Function +"'>"+ Func[i].Function +"</option>";
+            funopt += "<option value='"+Func[i].ID +"'>"+ Func[i].Function +"</option>";
         }
         document.getElementById("Function").innerHTML = funopt;
 
@@ -220,7 +223,7 @@
         stepcount++;
         var send = {stepcount,act,opti1,rec,opti2,func};
         liststeps.push(send);
-        // sendsteps.push(makeTestInstructionJSON(stepcount,act,opti1,rec,opti2,func));
+        sendsteps.push(makeTestInstructionJSON(stepcount,act,opti1,rec,opti2,func));
         document.getElementById("Steps").innerHTML = JSON.stringify(liststeps);
 
     }
@@ -230,7 +233,7 @@
         var concentration = prompt("Enter concentration.","")
         var Chemical = Chem.name;
         var ID = Chem.id;
-        var send = {Chemical, ID ,mass, concentration };
+        var send = {Chemical, idToChemical ,mass, concentration };
         if (mass == null || mass == "" || concentration == null || concentration == "") {
         } else {
             listchem.push(send);
@@ -243,8 +246,8 @@
             listchem.sort(function(a, b) {
                 return parseFloat(a.ID) - parseFloat(b.ID);
             });
+            sendchem.push(makeTestChemicalJSON(ID,mass,concentration));
             document.getElementById("CHLIST").innerHTML = JSON.stringify(listchem);
-           // sendchem.push(makeTestChemicalJSON(idToChemical(ID),mass,concentration));
             LoadFunc();
 
 
@@ -261,36 +264,48 @@
             listequip.sort(function(a, b) {
                 return parseFloat(a.ID) - parseFloat(b.ID);
             });
+            sendequip.push(makeTestEquipmentJSON( ID ,amount));
             document.getElementById("EQLIST").innerHTML = JSON.stringify(listequip);
-          //  sendequip.push(makeTestEquipmentJSON(idToEquipment(ID),amount));
             LoadFunc();
 
 
         }
     }
-    function CreateExp(){
+
+    function creatExp(){
         let user = JSON.parse(sessionStorage.getItem("user"));
 
         let exp = {};
-        var title = prompt("Enter a Title.","")
-        exp[EXP_JSON_TITLE] = title;
-        exp[EXP_JSON_CREATOR] = user.name;
+        exp[EXP_JSON_TITLE] = prompt("Enter a Title.", "");
+        exp[EXP_JSON_CREATOR] = user.firstName;
 
         exp[EXP_JSON_EQUIPMENT] = sortArrayByKey(sendequip, EXP_JSON_EQUIP_OBJ_ID, false);
         exp[EXP_JSON_CHEMICALS] = sortArrayByKey(sendchem, [EXP_JSON_CHEM_ID, EXP_JSON_CHEM_MASS, EXP_JSON_CHEM_CONCENTRATION], true);
-        exp[EXP_JSON_INSTRUCTIONS] = sortArrayByKey(sendsteps, EXP_JSON_INS_STEP_NUM, false);;
+        exp[EXP_JSON_INSTRUCTIONS] = sortArrayByKey(sendsteps, EXP_JSON_INS_STEP_NUM, false);
 
+        return exp;
+    }
+
+    function sendExp(){
+
+        let newexp = creatExp();
         console.log("exp JSON: ");
-        console.log(exp);
+        console.log(newexp);
+        let user = JSON.parse(sessionStorage.getItem("user"));
+
         // TODO CHECK IF USER EXISTS, NOTIFY THAT SIGNUP MUST HAPPEN BEFORE EXP CAN BE SAVED
         let userAndExperiment = {
             user: user,
-            experiment: exp
+            experiment: newexp
         };
         postData("save-new-simulation", userAndExperiment).then(function(response){
             console.log("received following response upon submitting experiment: ");
             console.log(response);
         });
+
+
+
+
     }
 
         // Close the dropdown if the user clicks outside of it
