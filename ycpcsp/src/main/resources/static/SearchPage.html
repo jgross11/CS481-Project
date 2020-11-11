@@ -4,23 +4,19 @@
 <head>
    Search Page
 </head>
-<form id="search" name="SearchBar" action="/search-submit" method="post">
+<form id="search" name="SearchBar"  method="post">
     <input type="text" id ="input" placeholder="Search...">
     <input value="Search" type="button" id="searchFunction" name="searchFunctionButton" onclick="submitSearchFunction()">
 </form>
 
 <body>
-    <div id="SearchBar" style="display:none">
-        <p id="title"></p>
-        <p id="name"></p>
-        <button id="button" class="button" onclick="loadExperiment()">Load Experiment</button>
+
+    <div id="SearchBar">
     </div>
 </body>
 
 
 <script>
-    var identify = {};
-
     function submitSearchFunction(){
             var experimentName = document.getElementById("input").value;
             var experiment = {
@@ -30,27 +26,25 @@
                 console.log(data);
                 var mutable = data;
                 var i;
-                identify = mutable[0].id;
-                var text = "";
+                document.getElementById("SearchBar").innerHTML = "";
                 for(i = 0; i <mutable.length; i++){
-                    //text += mutable[i].title + ", " + mutable[i].creatorName + "<br>";
-                    document.getElementById("title").innerHTML = mutable[0].title;
-                    document.getElementById("name").innerHTML = mutable[0].creatorName;
+                    var newDiv = document.createElement("div");
+                    newDiv.className = "result";
+                    var text = document.createTextNode(mutable[i].title + " ");
+                    newDiv.appendChild(text);
+                    var text2 = document.createTextNode(mutable[i].creatorName);
+                    newDiv.appendChild(text2);
+                    document.getElementById("SearchBar").appendChild(newDiv);
                 }
                 //document.getElementById("text").innerHTML = text;
             });
-            var x = document.getElementById("SearchBar");
-            x.style.display = "block";
     }
 
-    function loadSimulation(simulationID){
-        sessionStorage.setItem("simulationToLoad", simulationID);
-        window.location.href = "/simulation";
-    }
 
-    function loadExperiment(){
-        loadSimulation(identify);
-    }
+
+    //text += mutable[i].title + ", " + mutable[i].creatorName + "<br>";
+    //document.getElementById("title").innerHTML = mutable[0].title;
+    //document.getElementById("name").innerHTML = mutable[0].creatorName;
 
 </script>
 </html>

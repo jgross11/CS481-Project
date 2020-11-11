@@ -24,7 +24,7 @@ fun SearchExperiment(searchCriteria: SearchFormData) : MutableList<SearchObject>
         //Connection for the database to get it connected and then execute the query to insert the values into the database
         val conn = DriverManager.getConnection(url, connectionProps)
         //Experiment Search Query
-        val query = "Select ExperimentsID, title, firstName, lastName from Database.Experiments join Database.Users on Database.Experiments.creatorID = Database.Users.UserID where title like ? or firstName like ? or lastName like ?"
+        val query = "Select Distinct ExperimentsID, title, firstName, lastName from Database.Experiments join Database.Users on Database.Experiments.creatorID = Database.Users.UserID where title like ? or firstName like ? or lastName like ?"
         val ps = conn.prepareStatement(query)
         ps.setString(1, "%$searchCriteria%")
         ps.setString(2, "%$searchCriteria%")
