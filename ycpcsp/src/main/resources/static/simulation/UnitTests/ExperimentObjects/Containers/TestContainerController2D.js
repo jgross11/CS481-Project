@@ -206,7 +206,7 @@ QUnit.test('pourOut:', function(assert){
     beaker1.setContents([chemControl1.copyChem(), chemControl2.copyChem()]);
     assert.deepEqual(beaker1.contents, [chem1, chem2], "Should correctly set contents to the two given chemicals");
 
-    assert.deepEqual(beakerControl1.pourOut(), [chem1, chem2], "Should get two chemicals after pouring them out");
+    assert.deepEqual(beakerControl1.pourOut(), [chem2, chem1], "Should get two chemicals after pouring them out");
     assert.true(beaker1.isEmpty(), "Beaker should be left with no contents")
 });
 
@@ -226,7 +226,6 @@ QUnit.test('addTo:', function(assert){
 });
 
 QUnit.test('removeOverflow:', function(assert){
-    // TODO
     beaker1.setCapacity(50);
     var c
 
