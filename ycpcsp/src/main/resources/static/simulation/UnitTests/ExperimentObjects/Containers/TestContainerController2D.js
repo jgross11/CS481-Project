@@ -9,8 +9,11 @@ var chem1;
 var chem2;
 var chem3;
 var chem4;
+var chem5;
 var chemControl1;
 var chemControl2;
+
+var DELTA = 0.001;
 
 QUnit.module("ContainerController2D", {
     before: function(){
@@ -35,6 +38,7 @@ QUnit.module("ContainerController2D", {
         chem2 = idToChemical(COMPOUND_WATER_ID, 20, 1).chemical;
         chem3 = idToChemical(COMPOUND_WATER_ID, 70, 1).chemical;
         chem4 = idToChemical(COMPOUND_WATER_ID, 50, 1).chemical;
+        chem5 = idToChemical(COMPOUND_TABLE_SALT_ID, 50, 1).chemical;
         chemControl1 = new ChemicalController2D(chem1);
         chemControl2 = new ChemicalController2D(chem2);
     }
@@ -219,6 +223,43 @@ QUnit.test('addTo:', function(assert){
     assert.false(beakerControl1.addTo(null), "Should fail to add a null parameter");
 
     assert.false(beakerControl1.addTo(chem1), "Should fail to add a non chemical controller parameter");
+});
+
+QUnit.test('removeOverflow:', function(assert){
+    // TODO
+    beaker1.setCapacity(50);
+    var c
+
+    chem1.setVolume(100);
+    beaker1.contents = [chem1];
+    c = beaker1.getTotalContentsVolume();
+    assert.true(Math.abs(c - 100) < DELTA, "Volume in beaker should be 100, was " + c);
+
+    beakerControl1.removeOverflow();
+    c = beaker1.getTotalContentsVolume();
+    assert.true(Math.abs(c - 50) < DELTA, "After removing overflow, volume in beaker should be 50, was " + c);
+
+    chem1.setVolume(20);
+    chem5.setVolume(40);
+    beaker1.contents = [chem1, chem5];
+    c = beaker1.getTotalContentsVolume();
+    assert.true(Math.abs(c - 60) < DELTA, "Volume in beaker should be 60, was " + c);
+
+    beakerControl1.removeOverflow();
+    c = beaker1.getTotalContentsVolume();
+    assert.true(Math.abs(c - 50) < DELTA,
+        "After removing overflow of some chemical with a second one still remaining, volume in beaker should be 50, was " + c);
+
+    chem1.setVolume(40);
+    chem5.setVolume(50);
+    beaker1.contents = [chem1, chem5];
+    c = beaker1.getTotalContentsVolume();
+    assert.true(Math.abs(c - 90) < DELTA, "Volume in beaker should be 80, was " + c);
+
+    beakerControl1.removeOverflow();
+    c = beaker1.getTotalContentsVolume();
+    assert.true(Math.abs(c - 50) < DELTA,
+        "After removing all overflow of one chemical and some of a second, volume in beaker should be 50, was " + c);
 });
 
 QUnit.test('emptyOut:', function(assert){

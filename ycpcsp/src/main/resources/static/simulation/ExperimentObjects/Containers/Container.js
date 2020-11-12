@@ -238,16 +238,21 @@ class ContainerController2D extends EquipmentController2D{
     /**
     Add a copy of the given Controller's Chemical to this Controller's Container.
     Does nothing if the Chemical cannot be placed in this Controller's Container.
+    If the Chemical overflows the container, the densest chemicals will fall out and be removed
     chemControl: The Controller who's Chemical will be placed in this container
     returns: true if the Controller's Chemical was successfully added, false otherwise
     */
     addTo(chemControl){
+        // Checking that parameters are valid
         if(chemControl === null) return false;
         if(!(chemControl instanceof ChemicalController2D)) return false;
+
+        // Convenience constants
         let chem = chemControl.copyChem();
         let copyControl = new ChemicalController2D(chem);
         let eq = this.equipment;
 
+        // Only add the chemical if this Controller's Container is allowed to hold the Chemical, and has space for it
         if(this.canContain(chem) && this.hasSpace(chem)){
             if(eq.isEmpty()){
                 eq.setContents([chem]);
@@ -256,9 +261,36 @@ class ContainerController2D extends EquipmentController2D{
                 eq.setContents(copyControl.combine(this.equipment.contents));
                 this.checkForMass();
             }
+
+            this.removeOverflow();
+
             return true;
         }
         return false;
+    }
+
+    /**
+    If any Chemicals in this Controller's Container's contents exceeds its capacity, remove Chemicals, beginning with
+        the least dense Chemicals, until there is no more overflow.
+    */
+    removeOverflow(){
+        let eq = this.equipment;
+        var i = eq.contents.length - 1;
+        // Keep looping while contents are overflowing
+        while(eq.getTotalContentsVolume() > eq.capacity && i >= 0){
+            var total = eq.getTotalContentsVolume();
+            var vol = eq.contents[i].getVolume();
+            // If the Chemical completely overflows, remove that Chemical
+            if(total - vol > eq.capacity){
+                eq.contents.splice(eq.contents.length - 1, 1);
+            }
+            // Otherwise, remove the correct amount of the chemical to fit to the max capacity
+            else{
+                eq.contents[i].addVolume(-(total - eq.capacity));
+                return;
+            }
+            i--;
+        }
     }
 
     /**
