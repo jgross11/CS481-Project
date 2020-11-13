@@ -104,35 +104,39 @@ let EQUATION_TABLE_SALT_ID = 2;
 
 
 /**
-Take an integer ID and convert it to a valid piece of Equipment
+Take an integer ID and convert it to a valid piece of Equipment, automatically slightly randomly changing its mass.
 id: The integer id
 returns: The Equipment, or null if an invalid ID is given
 */
 function idToEquipment(id){
+    var eq;
     switch(id){
         // All Beaker sizes
         case ID_EQUIP_BEAKER_50mL:
         case ID_EQUIP_BEAKER_150mL:
         case ID_EQUIP_BEAKER_250mL:
-        case ID_EQUIP_BEAKER_600mL: return new BeakerController2D(new Beaker(id));
+        case ID_EQUIP_BEAKER_600mL: eq = new BeakerController2D(new Beaker(id)); break;
 
         case ID_EQUIP_GRADUATED_25mL:
         case ID_EQUIP_GRADUATED_50mL:
         case ID_EQUIP_GRADUATED_100mL:
-        case ID_EQUIP_GRADUATED_1000mL: return new GraduatedCylinderController2D(new GraduatedCylinder(id));
+        case ID_EQUIP_GRADUATED_1000mL: eq = new GraduatedCylinderController2D(new GraduatedCylinder(id)); break;
 
         case ID_EQUIP_FLASK_25mL:
         case ID_EQUIP_FLASK_50mL:
         case ID_EQUIP_FLASK_125mL:
-        case ID_EQUIP_FLASK_1000mL: return new ErlenmeyerFlaskController2D(new ErlenmeyerFlask(id));
+        case ID_EQUIP_FLASK_1000mL: eq = new ErlenmeyerFlaskController2D(new ErlenmeyerFlask(id)); break;
 
-        case ID_EQUIP_WEIGH_BOAT: return new WeighBoatController2D(new WeighBoat());
-        case ID_EQUIP_SCALE: return new ScaleController2D(new Scale());
-        case ID_EQUIP_TRASHCAN: return new TrashcanController2D(new Trashcan());
-        case ID_EQUIP_STIR_ROD: return new StirRodController2D(new StirRod());
+        case ID_EQUIP_WEIGH_BOAT: eq = new WeighBoatController2D(new WeighBoat()); break;
+        case ID_EQUIP_SCALE: eq = new ScaleController2D(new Scale()); break;
+        case ID_EQUIP_TRASHCAN: eq = new TrashcanController2D(new Trashcan()); break;
+        case ID_EQUIP_STIR_ROD: eq = new StirRodController2D(new StirRod()); break;
 
-        default: return null;
+        default: eq = null;
     }
+    eq.equipment.randomizeMass();
+
+    return eq;
 }
 
 /**

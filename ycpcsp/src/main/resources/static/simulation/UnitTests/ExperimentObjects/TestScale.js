@@ -4,7 +4,7 @@ var scalePlaced;
 
 QUnit.module("Scale", {
     beforeEach: function(){
-        beakerControl = idToEquipment(ID_EQUIP_BEAKER_50mL);
+        beakerControl = new BeakerController2D(new Beaker(ID_EQUIP_BEAKER_50mL));
         scale = new Scale(null);
         scalePlaced = new Scale(beakerControl);
     }
@@ -76,8 +76,8 @@ var flaskControl;
 
 QUnit.module("ScaleController2D", {
     beforeEach: function(){
-        beakerControl = idToEquipment(ID_EQUIP_BEAKER_50mL);
-        flaskControl = idToEquipment(ID_EQUIP_FLASK_125mL);
+        beakerControl = new BeakerController2D(new Beaker(ID_EQUIP_BEAKER_50mL));
+        flaskControl = new ErlenmeyerFlaskController2D(new ErlenmeyerFlask(ID_EQUIP_FLASK_125mL));
         scale = new Scale(null);
         scaleControl = new ScaleController2D(scale);
     }

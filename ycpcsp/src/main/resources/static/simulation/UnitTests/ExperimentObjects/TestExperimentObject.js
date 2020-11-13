@@ -15,8 +15,10 @@ QUnit.test('setMass:', function(assert){
     assert.equal(obj.mass, 10.0, "mass should be 10.0");
 
     obj.setMass(-1.0);
-    assert.equal(obj.mass, 10.0, "mass should still be 10.0");
+    assert.equal(obj.mass, 0.0, "mass should clip to 0.0");
 
+    obj.setMass(10.0);
+    assert.equal(obj.mass, 10.0, "mass should be 10.0");
     obj.setMass("a");
     assert.equal(obj.mass, 10.0, "mass should still be 10.0");
 

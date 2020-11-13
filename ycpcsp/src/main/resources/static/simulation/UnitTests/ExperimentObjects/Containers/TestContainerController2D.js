@@ -261,6 +261,24 @@ QUnit.test('removeOverflow:', function(assert){
         "After removing all overflow of one chemical and some of a second, volume in beaker should be 50, was " + c);
 });
 
+QUnit.test('removeVolume:', function(assert){
+    chem4.setVolume(10);
+    beaker1.setContents(chem4);
+    assert.equal(beaker1.getTotalContentsVolume(), 10, "Checking that the container has the volume of the chemical");
+
+    beakerControl1.removeVolume(4);
+    assert.equal(beaker1.getTotalContentsVolume(), 6, "Checking that removing part of one chemical leaves the correct amount behind");
+
+    chem4.setVolume(10);
+    chem5.setVolume(5);
+    beaker1.setContents([chem4, chem5]);
+    assert.equal(beaker1.getTotalContentsVolume(), 15, "Checking that the container has the volume of the chemicals");
+
+    beakerControl1.removeVolume(6);
+    assert.equal(beaker1.getTotalContentsVolume(), 9, "Checking that removing all of one chemical and some of another leaves the correct amount behind");
+    assert.equal(beaker1.contents.length, 1, "Checking that exactly 1 chemical is left")
+});
+
 QUnit.test('emptyOut:', function(assert){
     assert.deepEqual(beakerControl1.emptyOut(), [], "Emptying an empty container should return an empty list");
     assert.true(beaker1.isEmpty(), "Emptying a container should leave it with null contents");

@@ -555,11 +555,12 @@ class ExperimentController2D{
             case KEY_EXP_DISPLAY_CHEMS: this.displayChemicalBoxes(); break;
             case KEY_EXP_DISPLAY_EQUIPS: this.displayEquipmentBoxes(); break;
 
+            case KEY_EXP_ADD_CHEM_0001:
+            case KEY_EXP_ADD_CHEM_001:
+            case KEY_EXP_ADD_CHEM_01:
             case KEY_EXP_ADD_CHEM_1:
-            case KEY_EXP_ADD_CHEM_5:
             case KEY_EXP_ADD_CHEM_10:
-            case KEY_EXP_ADD_CHEM_20:
-            case KEY_EXP_ADD_CHEM_25: this.addChemicalToSelectedBeaker(keyCode); break;
+            case KEY_EXP_ADD_CHEM_100: this.addChemicalToSelectedBeaker(keyCode); break;
             default: break;
         }
     }
@@ -577,16 +578,25 @@ class ExperimentController2D{
         if(chemControl === null) return;
         var volume;
         switch(massIndex){
-            case KEY_EXP_ADD_CHEM_1: volume = 0.1; break;
-            case KEY_EXP_ADD_CHEM_5: volume = 1; break;
-            case KEY_EXP_ADD_CHEM_10: volume = 5; break;
-            case KEY_EXP_ADD_CHEM_20: volume = 10; break;
-            case KEY_EXP_ADD_CHEM_25: volume = 50; break;
+            case KEY_EXP_ADD_CHEM_0001: volume = 0.001; break;
+            case KEY_EXP_ADD_CHEM_001: volume = 0.01; break;
+            case KEY_EXP_ADD_CHEM_01: volume = 0.1; break;
+            case KEY_EXP_ADD_CHEM_1: volume = 1; break;
+            case KEY_EXP_ADD_CHEM_10: volume = 10; break;
+            case KEY_EXP_ADD_CHEM_100: volume = 100; break;
             default: volume = null; break;
         }
         if(volume === null) return;
-        chemControl.chemical.setVolume(volume * (1 + (Math.random() - 0.5) * 2 * 0.05));
-        this.selectedEquipFunction(ID_FUNC_CONTAINER_ADD_TO, chemControl);
+        volume *= (1 + (Math.random() - 0.5) * 2 * 0.05);
+        // Remove an amount from the container if the minus button is held down
+        if(keyIsDown(189)){
+            this.selectedActor.removeVolume(volume);
+        }
+        // Otherwise, add the volume
+        else{
+            chemControl.chemical.setVolume(volume);
+            this.selectedEquipFunction(ID_FUNC_CONTAINER_ADD_TO, chemControl);
+        }
     }
 
     /**
@@ -735,14 +745,15 @@ class ExperimentController2D{
         g.fill(200);
         g.noStroke();
         g.textSize(18);
-        var y = 450;
+        var y = 430;
         let x = 650;
         g.text("Left click equipment to move it", x, y += 20);
         g.text("Right click a equipment to select, blue = actor, green = receiver", x, y += 20);
         g.text("Press ESC to unselect selected Equipment", x, y += 20);
         g.text("Press 1 - 9 to perform actions on selected actor and receiver", x, y += 20);
         g.text("Also hold alt and press 1 - 9 to perform actions on only selected actor", x, y += 20);
-        g.text("Press 1, 2, 3, 4, 5 to add .1, 1, 5, 10, or 50 milliliters to selected container", x, y += 20);
+        g.text("Press 1, 2, 3, 4, 5, 6 to add .001, .01, .1, 1, 10, or 100 ml to selected container", x, y += 20);
+        g.text("\tHold down minus to remove the amount", x, y += 20);
         g.text("\tChemicals added have 0% to 5% error", x, y += 20);
         g.text("Press I to run the next instruction", x, y += 20);
         g.text("Press R to reset the simulation", x, y += 20);

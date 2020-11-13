@@ -309,6 +309,29 @@ class ContainerController2D extends EquipmentController2D{
     }
 
     /**
+    Beginning with the least dense chemicals, remove the given amount of volume
+    volume: The amount to remove, a positive number
+    */
+    removeVolume(volume){
+        let eq = this.equipment;
+        // Continue to loop until the volume is removed, or no more chemicals exist
+        while(volume > 0 && eq.contents.length > 0){
+            let c = eq.contents[eq.contents.length - 1];
+            let cv = c.getVolume();
+            // If the volume of the least dense Chemical is less than the volume remaining to be removed, them remove the entire Chemical.
+            if(cv < volume){
+                volume -= cv;
+                eq.contents.splice(eq.contents.length - 1, 1);
+            }
+            // Otherwise, remove that amount of volume from the Chemical
+            else{
+                c.addVolume(-volume);
+                break;
+            }
+        }
+    }
+
+    /**
     Clear all of the contents of this Controller's Container, leaving no residue
     returns: The contents removed, can be an empty list if the Container is already empty
     */
