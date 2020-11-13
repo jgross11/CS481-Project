@@ -147,12 +147,15 @@ let KEY_EXP_DISPLAY_EQUIPS;
 let KEY_EXP_RESET_SELECTED;
 
 // Keys for adding a set amount of a Chemical to a Container
-let KEY_EXP_ADD_CHEM_0001 = 49;
-let KEY_EXP_ADD_CHEM_001 = 50;
-let KEY_EXP_ADD_CHEM_01 = 51;
-let KEY_EXP_ADD_CHEM_1 = 52;
-let KEY_EXP_ADD_CHEM_10 = 53;
-let KEY_EXP_ADD_CHEM_100 = 54;
+let KEY_EXP_ADD_CHEM_0001 = 49; // key code for '1'
+let KEY_EXP_ADD_CHEM_001 = 50; // key code for '2'
+let KEY_EXP_ADD_CHEM_01 = 51; // key code for '3'
+let KEY_EXP_ADD_CHEM_1 = 52; // key code for '4'
+let KEY_EXP_ADD_CHEM_10 = 53; // key code for '5'
+let KEY_EXP_ADD_CHEM_100 = 54; // key code for '6'
+
+let KEY_EXP_DECREASE_TEMPERATURE = 84; // key code for 'y'
+let KEY_EXP_INCREASE_TEMPERATURE = 89; // key code for 't'
 
 /**
 Set up constants to use for key presses in the Experiment

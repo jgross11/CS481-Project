@@ -24,6 +24,9 @@ class Experiment{
         // The disposers used by this Experiment
         this.disposers = [];
 
+        // The current temperature of the room in Celsius
+        this.roomTemperature = 20;
+
         this.title = title;
         this.creator = creator;
     }
@@ -66,6 +69,14 @@ class Experiment{
     */
     setInstructions(instructions){
         this.instructions = instructions;
+    }
+
+    /**
+    Set the current temperature in the room of the experiment
+    temp: The new temperature in celsius
+    */
+    setTemperature(temp){
+        this.roomTemperature = temp;
     }
 
     /**
@@ -412,6 +423,10 @@ class ExperimentController2D{
         let trashcan = idToEquipment(ID_EQUIP_TRASHCAN);
         trashcan.equipment.setPosition([EXP_BOUNDS_X_OFFSET + 20, EXP_BOUNDS_Y_OFFSET + 20]);
         disposers.push(trashcan);
+
+        // Call to update the state of the room's temperature
+        this.experiment.setTemperature(20);
+        this.changeTemperature(0);
     }
 
     /**
@@ -480,6 +495,18 @@ class ExperimentController2D{
     */
     experimentRenderBounds(){
         return [this.camera.pos[0], this.camera.pos[1], EXP_BOUNDS[2], EXP_BOUNDS[3]];
+    }
+
+    /**
+    Update the status of the temperature in this Controller's Experiment
+    change: The amount to add to the current temperature
+    */
+    changeTemperature(change){
+        let exp = this.experiment;
+        exp.setTemperature(exp.roomTemperature + change);
+        this.placedEquipment.forEach(function(eq){
+            if(eq instanceof ContainerController2D) eq.updateContentsTemperature(this.roomTemperature);
+        }, exp);
     }
 
     /**
@@ -578,6 +605,9 @@ class ExperimentController2D{
             case KEY_EXP_ADD_CHEM_1:
             case KEY_EXP_ADD_CHEM_10:
             case KEY_EXP_ADD_CHEM_100: this.addChemicalToSelectedBeaker(keyCode); break;
+
+            case KEY_EXP_INCREASE_TEMPERATURE: this.changeTemperature(10); break;
+            case KEY_EXP_DECREASE_TEMPERATURE: this.changeTemperature(-10); break;
             default: break;
         }
     }
@@ -702,6 +732,13 @@ class ExperimentController2D{
         let camB = EXP_CAMERA_OUTLINE_BOUNDS;
         expG.rect(camB[0], camB[1], camB[2], camB[3]);
 
+        // Draw the text for the temperature of the Experiment
+        g.fill(0);
+        g.noStroke();
+        g.textSize(20);
+        var s = "Temperature: " + exp.roomTemperature;
+        g.text(s, EXP_BOUNDS[3] , 50);
+
         // Draw the lab table
         // TODO
 
@@ -744,7 +781,6 @@ class ExperimentController2D{
         expG.pop();
 
         // Draw the title and creator
-        // TODO make test cases
         g.fill(color(0, 0, 0));
         g.noStroke();
         g.textSize(24);
@@ -762,7 +798,7 @@ class ExperimentController2D{
         g.fill(200);
         g.noStroke();
         g.textSize(18);
-        var y = 430;
+        var y = 410;
         let x = 650;
         g.text("Left click equipment to move it", x, y += 20);
         g.text("Right click a equipment to select, blue = actor, green = receiver", x, y += 20);
@@ -772,6 +808,7 @@ class ExperimentController2D{
         g.text("Press 1, 2, 3, 4, 5, 6 to add .001, .01, .1, 1, 10, or 100 ml to selected container", x, y += 20);
         g.text("\tHold down minus to remove the amount", x, y += 20);
         g.text("\tChemicals added have 0% to 5% error", x, y += 20);
+        g.text("Press T/Y to decrease/increase the room's temperature", x, y += 20);
         g.text("Press I to run the next instruction", x, y += 20);
         g.text("Press R to reset the simulation", x, y += 20);
         g.text("Press C to view Chemical tab, then click a chemical to select", x, y += 20);

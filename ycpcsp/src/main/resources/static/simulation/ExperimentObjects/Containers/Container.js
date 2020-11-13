@@ -134,6 +134,21 @@ class ContainerController2D extends EquipmentController2D{
     }
 
     /**
+    Based on the given temperature, set the temperature of all Chemicals inside this Controller's Container.
+    Also updates their states of matter.
+    temp: The temperature to set to
+    */
+    updateContentsTemperature(temp){
+        let cont = this.equipment.contents;
+        let chemControl = new ChemicalController2D(null);
+        for(var i = 0; i < cont.length; i++){
+            cont[i].setTemperature(temp);
+            chemControl.setChemical(cont[i]);
+            chemControl.calculateMatterState();
+        }
+    }
+
+    /**
     Get a list of all possible functions which this ContainerController can perform.
     returns: the list of strings
     */

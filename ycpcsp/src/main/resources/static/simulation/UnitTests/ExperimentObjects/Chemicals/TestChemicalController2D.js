@@ -2,10 +2,12 @@ var chem1;
 var chem2;
 var chem3;
 var chem4;
+var chem5;
 var control1;
 var control2;
 var control3;
 var control4;
+var control5;
 
 var hydrogenGas;
 var oxygenGas;
@@ -23,10 +25,12 @@ QUnit.module("ChemicalController2D", {
         control2 = idToChemical(ID_CHEM_TEST_BLACK, 4.0, 1);
         control3 = idToChemical(ID_CHEM_TEST_BLACK, 10.0, 1);
         control4 = idToChemical(ID_CHEM_TEST_BLACK, 9.0, 1);
+        control5 = idToChemical(COMPOUND_WATER_ID, 10.0, 1);
         chem1 = control1.chemical;
         chem2 = control2.chemical;
         chem3 = control3.chemical;
         chem4 = control4.chemical;
+        chem5 = control5.chemical;
 
         hydrogenGasControl = idToChemical(COMPOUND_HYDROGEN_GAS_ID, 5, 1);
         oxygenGasControl = idToChemical(COMPOUND_OXYGEN_GAS_ID, 5, 1);
@@ -80,8 +84,18 @@ QUnit.test('calculateMass:', function(assert){
     assert.true(Math.abs(m - 95.99400) < DELTA, "Number of moles be 95.99400, was " + m);
 });
 
-QUnit.todo('calculateMatterState:', function(assert){
-    assert.true(false);
+QUnit.test('calculateMatterState:', function(assert){
+    chem5.setTemperature(101);
+    control5.calculateMatterState();
+    assert.equal(chem5.matterState, MATTER_STATE_GAS, "Checking that a chemical above boiling point is a gas");
+
+    chem5.setTemperature(50);
+    control5.calculateMatterState();
+    assert.equal(chem5.matterState, MATTER_STATE_LIQUID, "Checking that a chemical below boiling point and above melting point is a liquid");
+
+    chem5.setTemperature(-1);
+    control5.calculateMatterState();
+    assert.equal(chem5.matterState, MATTER_STATE_SOLID, "Checking that a chemical below melting point is a solid");
 });
 
 QUnit.test('combine:', function(assert){

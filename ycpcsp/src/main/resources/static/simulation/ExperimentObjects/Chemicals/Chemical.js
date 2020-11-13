@@ -198,7 +198,12 @@ class ChemicalController2D extends ExperimentObjectController2D{
     The result is stored in the matterState field in the Chemical
     */
     calculateMatterState(){
-        // TODO implement based on melting and boiling point
+        let c = this.chemical;
+        if(c === null) return;
+        let p = c.properties;
+        if(c.temperature > p.getBoilingPoint()) c.setMatterState(MATTER_STATE_GAS);
+        else if(c.temperature > p.getMeltingPoint()) c.setMatterState(MATTER_STATE_LIQUID);
+        else c.setMatterState(MATTER_STATE_SOLID);
     }
 
     /**
@@ -303,7 +308,9 @@ class ChemicalController2D extends ExperimentObjectController2D{
     copyChem(){
         let c = this.chemical
         if(c === null) return null;
-        return new Chemical(c.mass, c.properties, c.temperature, c.concentration);
+        let newC = new Chemical(c.mass, c.properties, c.temperature, c.concentration);
+        newC.setMatterState(c.matterState);
+        return newC;
     }
 
     /**
