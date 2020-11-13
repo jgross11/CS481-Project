@@ -17,6 +17,8 @@
 
 
 <script>
+
+    var identity = {};
     function submitSearchFunction(){
             var experimentName = document.getElementById("input").value;
             var experiment = {
@@ -30,21 +32,39 @@
                 for(i = 0; i <mutable.length; i++){
                     var newDiv = document.createElement("div");
                     newDiv.className = "result";
-                    var text = document.createTextNode(mutable[i].title + " ");
-                    newDiv.appendChild(text);
-                    var text2 = document.createTextNode(mutable[i].creatorName);
-                    newDiv.appendChild(text2);
+
+                    var title = document.createElement("span");
+                    title.innerText = mutable[i].title;
+                    newDiv.appendChild(title);
+
+                    var br = document.createElement("br");
+                    newDiv.appendChild(br);
+
+                    var name = document.createTextNode(mutable[i].creatorName);
+                    newDiv.appendChild(name);
+
+                    var br2 = document.createElement("br");
+                    newDiv.appendChild(br2);
                     document.getElementById("SearchBar").appendChild(newDiv);
+                    var button = document.createElement("text");
+                    identity = mutable[i].id;
+                    button.innerHTML = "<button class='button' onclick='loadSimulation(identity)'> Load Experiment</button>";
+
+                    newDiv.appendChild(button);
+                    var br3 = document.createElement("br");
+                    newDiv.appendChild(br3);
+                    var br4 = document.createElement("br");
+                    newDiv.appendChild(br4);
+
                 }
-                //document.getElementById("text").innerHTML = text;
             });
     }
 
+    function loadSimulation(simulationID){
+        sessionStorage.setItem("simulationToLoad", simulationID);
+        window.location.href = "/simulation";
+    }
 
-
-    //text += mutable[i].title + ", " + mutable[i].creatorName + "<br>";
-    //document.getElementById("title").innerHTML = mutable[0].title;
-    //document.getElementById("name").innerHTML = mutable[0].creatorName;
 
 </script>
 </html>
