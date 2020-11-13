@@ -50,7 +50,12 @@ QUnit.test('setInstructions:', function(assert){
         "Instructions in Experiment should equal the set Instructions.");
 });
 
-QUnit.test('setName:', function(assert){
+QUnit.test('setTemperature:', function(assert){
+    exp.setTemperature(11);
+    assert.equal(exp.roomTemperature, 11, "Checking that temperature is correctly set");
+});
+
+QUnit.test('setTitle:', function(assert){
     assert.equal(exp.title, "The Title", 'Initial title should be "The Title"');
 
     exp.setTitle("New");

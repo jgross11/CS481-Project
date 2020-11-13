@@ -60,6 +60,12 @@ QUnit.test('funcToId:', function(assert){
     assert.equal(controller.funcToId(controller.emptyOut), ID_FUNC_CONTAINER_EMPTY_IN_TRASH, "Should get the ID for emptyOut");
 });
 
+QUnit.test('updateContentsTemperature:', function(assert){
+    beaker1.setContents(chem1);
+    beakerControl1.updateContentsTemperature(17);
+    assert.equal(chem1.temperature, 17, "Checking that chemicals inside containers have updated temperature");
+});
+
 QUnit.test('getFuncDescriptions:', function(assert){
     let desc = controller.getFuncDescriptions();
     assert.equal(desc.length, 3, "Containers should have three function descriptions");

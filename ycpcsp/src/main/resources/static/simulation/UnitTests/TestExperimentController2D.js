@@ -622,6 +622,18 @@ QUnit.test('experimentRenderBounds:', function(assert){
         "Bounds should be based on the camera position and size constants for experiment size");
 });
 
+QUnit.test('changeTemperature:', function(assert){
+    exp.setTemperature(10);
+    beaker1.setContents(chemControl.copyChem());
+    beaker2.setContents(chemControl.copyChem());
+    controller.addEquipment(beakerControl1, true);
+    controller.addEquipment(beakerControl2, true);
+    controller.changeTemperature(2);
+    assert.equal(exp.roomTemperature, 12, "Checking that adding room temperature updates the experiment temperature");
+    assert.equal(beaker1.contents[0].temperature, 12, "Checking that chemicals in the containers of the experiment get updated");
+    assert.equal(beaker2.contents[0].temperature, 12, "Checking that chemicals in the containers of the experiment get updated");
+});
+
 QUnit.todo('mousePress:', function(assert){
     controller.mousePress();
     assert.true(false);
