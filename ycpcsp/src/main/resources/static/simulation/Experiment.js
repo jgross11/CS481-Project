@@ -12,7 +12,10 @@ class Experiment{
         // The list of EquipmentControllers in this Experiment
         this.equipment = [];
 
-        // The list of Chemicals used by this Experiment
+        // The list of all the different kinds of Chemicals which can be used by this Experiment, a list of Chemical objects
+        this.chemTypes = [];
+
+        // The list of Chemical instances used by steps of this Experiment, a list of ChemicalController2D objects
         this.chemicals = [];
 
         // The instructions for running this Experiment
@@ -34,11 +37,25 @@ class Experiment{
     }
 
     /**
-    Set the current list of Chemicals used by this Experiment.
-    equipment: The list of Chemicals to set for this Experiment
+    Set the current list of ChemicalControllers used by this Experiment.
+    Also updates the list of available ChemicalControllers for use in the experiment by the user
+    equipment: The list of ChemicalControllers to set for this Experiment
     */
     setChemicals(chemicals){
+        // Set the chemical list
         this.chemicals = chemicals;
+        this.chemTypes = [];
+
+        // Add all of the unique types of chemicals
+        let chemDict = {};
+        for(var i = 0; i < chemicals.length; i++){
+            let c = chemicals[i];
+            let id = c.chemical.getID();
+            if(chemDict[id] === undefined){
+                chemDict[id] = c;
+                this.chemTypes.push(c);
+            }
+        }
     }
 
     /**
@@ -383,7 +400,7 @@ class ExperimentController2D{
         }
 
         // Place all Chemicals in the Chemical list
-        let chems = this.experiment.chemicals;
+        let chems = this.experiment.chemTypes;
         for(var i = 0; i < chems.length; i++){
             this.chemicalBoxes.add(new ChemicalController2D(chems[i].copyChem()));
         }

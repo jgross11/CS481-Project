@@ -265,6 +265,7 @@ function getTestJSON(){
 
     let chems = [];
     chems.push(makeTestChemicalJSON(ID_CHEM_TEST_RED, 20, 1));
+    chems.push(makeTestChemicalJSON(ID_CHEM_TEST_RED, 20, 1));
     chems.push(makeTestChemicalJSON(ID_CHEM_TEST_BLUE, 20, 1));
     chems.push(makeTestChemicalJSON(ID_CHEM_TEST_WHITE, 50, 1));
     chems.push(makeTestChemicalJSON(ID_CHEM_TEST_GREEN, 10, 1));
