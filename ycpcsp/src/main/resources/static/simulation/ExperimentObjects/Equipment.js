@@ -1,9 +1,3 @@
-/*
-The percentage of Equipment mass which changes based on when the Equipment is created
-    This can make the mass increase or decrease by up to this percentage.
-*/
-let EQUIPMENT_MASS_VARIANCE = 0.1;
-
 /**
 The abstract class representing a generic piece of Equipment in an Experiment
 */
@@ -22,15 +16,6 @@ class Equipment extends ExperimentObject{
         this.size = size
         this.instanceID = nextInstanceID();
         this.sprite = sprite;
-    }
-
-    /**
-    Randomly change the mass of this Equipment based on its actual mass.
-    This is to simulate each piece of equipment having a slightly different mass
-    This should be called when the Equipment is created if the mass should be altered
-    */
-    randomizeMass(){
-        this.setMass(this.mass * (1 + EQUIPMENT_MASS_VARIANCE * 2 * (Math.random() - 0.5)));
     }
 
     /**

@@ -15,12 +15,6 @@ QUnit.test('constructor:', function(assert){
     assert.equal(equip.sprite, null, 'sprite should be null');
 });
 
-QUnit.test('randomizeMass:', function(assert){
-    let oldMass = equip.mass;
-    equip.randomizeMass();
-    assert.notEqual(equip.mass, oldMass, "Checking that randomized mass is different from the original mass");
-});
-
 QUnit.test('setPosition:', function(assert){
     equip.setPosition([12, 13]);
     assert.deepEqual(equip.position, [12, 13], 'position should be [12, 13]');

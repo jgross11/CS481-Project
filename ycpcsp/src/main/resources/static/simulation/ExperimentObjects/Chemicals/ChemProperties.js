@@ -94,6 +94,7 @@ class ChemProperties{
     /**
     Get the temperature at which the chemical melts
     returns: The temperature, in Celsius
+    Always throws an error as a generic ChemProperties object
     */
     getMeltingPoint(){
         return this.chemFromProperties()[CHEMICAL_PROPERTY_MELTING_POINT];
@@ -102,6 +103,7 @@ class ChemProperties{
     /**
     Get the temperature at which the chemical boils
     returns: The temperature, in Celsius
+    Always throws an error as a generic ChemProperties object
     */
     getBoilingPoint(){
         return this.chemFromProperties()[CHEMICAL_PROPERTY_BOILING_POINT];
@@ -110,6 +112,7 @@ class ChemProperties{
     /**
     Get the density of the chemical
     returns: The density
+    Always throws an error as a generic ChemProperties object
     */
     getDensity(){
         return this.chemFromProperties()[CHEMICAL_PROPERTY_DENSITY];
@@ -188,35 +191,22 @@ class CompoundProperties extends ChemProperties{
 
     /**
     Get the symbol used to refer to this CompoundProperties in plain english.
-    When calling this method, always use no parameters.
-    outer: outer is only used for recursive calls.
+    outer: When calling this method, always use no parameters, outer is only used for recursive calls.
         true if this call represents the outer layer of symbols, false otherwise
-    hasNum: hasNum is only used for recursive calls.
-        true if the symbols inside this chemProperties have a subscript
     returns: The symbol
     */
-    getSymbol(outer = true, hasNum = false){
+    getSymbol(outer = true){
         let c = this.getChem();
-
-        let lenOne = c.length === 1;
-        let cNum = c[0].count === 1;
+        let oneChem = c.length === 1;
+        var parenthesis = !oneChem && !outer;
 
         var symbol = "";
-        var extra;
         for(var i = 0; i < c.length; i++){
-            let inside = c[i].chemProp;
-            let isElement = inside instanceof ElementProperties
-            let insideOne = isElement || inside.getChem().length === 1;
             let cnt = c[i].count;
-            let outsideOne = cnt === 1;
-            extra = hasNum && !outer;
-            symbol += (extra ? "(" : "") +
-                      inside.getSymbol(false, !outsideOne) +
-                      (outsideOne ? "" : cnt) +
-                      (extra ? ")" : "");
+            symbol += c[i].chemProp.getSymbol(false) +
+                      ((cnt === 1) ? "" : cnt);
         }
-
-        extra = !lenOne && !outer;
+        let extra = !oneChem && !outer;
         return (extra ? "(" : "") +
                symbol +
                (extra ? ")" : "");
@@ -227,7 +217,8 @@ class CompoundProperties extends ChemProperties{
     returns: The molar mass
     */
     getMolarMass(){
-        var total = 0;
+        var total;
+        total = 0;
         let c = this.getChem();
         for(var i = 0; i < c.length; i++){
             total += c[i].count * c[i].chemProp.getMolarMass();

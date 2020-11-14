@@ -12,10 +12,7 @@ class Experiment{
         // The list of EquipmentControllers in this Experiment
         this.equipment = [];
 
-        // The list of all the different kinds of Chemicals which can be used by this Experiment, a list of Chemical objects
-        this.chemTypes = [];
-
-        // The list of Chemical instances used by steps of this Experiment, a list of ChemicalController2D objects
+        // The list of Chemicals used by this Experiment
         this.chemicals = [];
 
         // The instructions for running this Experiment
@@ -23,9 +20,6 @@ class Experiment{
 
         // The disposers used by this Experiment
         this.disposers = [];
-
-        // The current temperature of the room in Celsius
-        this.roomTemperature = 20;
 
         this.title = title;
         this.creator = creator;
@@ -40,25 +34,11 @@ class Experiment{
     }
 
     /**
-    Set the current list of ChemicalControllers used by this Experiment.
-    Also updates the list of available ChemicalControllers for use in the experiment by the user
-    equipment: The list of ChemicalControllers to set for this Experiment
+    Set the current list of Chemicals used by this Experiment.
+    equipment: The list of Chemicals to set for this Experiment
     */
     setChemicals(chemicals){
-        // Set the chemical list
         this.chemicals = chemicals;
-        this.chemTypes = [];
-
-        // Add all of the unique types of chemicals
-        let chemDict = {};
-        for(var i = 0; i < chemicals.length; i++){
-            let c = chemicals[i];
-            let id = c.chemical.getID();
-            if(chemDict[id] === undefined){
-                chemDict[id] = c;
-                this.chemTypes.push(c);
-            }
-        }
     }
 
     /**
@@ -69,14 +49,6 @@ class Experiment{
     */
     setInstructions(instructions){
         this.instructions = instructions;
-    }
-
-    /**
-    Set the current temperature in the room of the experiment
-    temp: The new temperature in celsius
-    */
-    setTemperature(temp){
-        this.roomTemperature = temp;
     }
 
     /**
@@ -254,8 +226,26 @@ class ExperimentController2D{
             if(act.canPlace() && !pEqs.includes(act)) adds.push(act);
             if(rec !== null && rec !== undefined && rec.canPlace() && !pEqs.includes(rec)) adds.push(rec);
             var success = true;
-            for(var i = 0; i < adds.length && success; i++){
-                success = this.placeEquipmentOrganized(adds[i]);
+            // TODO Move this loop to its own function
+            for(var i = 0; i < adds.length; i++){
+                let index = eqs.indexOf(adds[i]);
+                // If there is no valid index, do nothing
+                if(index < 0){
+                    success = false;
+                    break;
+                }
+
+                // Otherwise, place the object at the center of the screen
+                let eq = eqs[index];
+                let pos = this.camera.pos;
+                eq.setCenter(
+                    pos[0] + EXP_BOUNDS[2] * (0.2 + 0.3 * Math.random()),
+                    pos[1] + EXP_BOUNDS[3] * (0.2 + 0.3 * Math.random())
+                );
+                if(!this.placeEquipment(index)){
+                    success = false;
+                    break;
+                }
             }
             if(!success) return;
 
@@ -331,32 +321,6 @@ class ExperimentController2D{
     }
 
     /**
-    Place a piece of equipment into this Controller's Experiment into an organized place
-    add: The EquipmentController2D to add, should exist in the equipment list of this Controller's Experiment
-    returns: true if the equipment could be placed, false otherwise
-    */
-    placeEquipmentOrganized(add){
-        let eqs = this.experiment.equipment;
-        let index = eqs.indexOf(add);
-        // If there is no valid index, do nothing
-        if(index < 0) return false;
-
-        // Attempt to place the equipment;
-        let success = this.placeEquipment(index)
-        // If the equipment could not be placed, return false
-        if(!success) return false;
-
-        // If it was placed, move the object to the center of the screen
-        let eq = eqs[index];
-        let pos = this.camera.pos;
-        eq.setCenter(
-            pos[0] + EXP_BOUNDS[2] * (0.2 + 0.3 * Math.random()),
-            pos[1] + EXP_BOUNDS[3] * (0.2 + 0.3 * Math.random())
-        );
-        return success;
-    }
-
-    /**
     Remove a piece of equipment from this Controller's Experiment.
     Does nothing if the equipment is not in the array
     equipControl: The EquipmentController to remove
@@ -411,7 +375,7 @@ class ExperimentController2D{
         }
 
         // Place all Chemicals in the Chemical list
-        let chems = this.experiment.chemTypes;
+        let chems = this.experiment.chemicals;
         for(var i = 0; i < chems.length; i++){
             this.chemicalBoxes.add(new ChemicalController2D(chems[i].copyChem()));
         }
@@ -423,10 +387,6 @@ class ExperimentController2D{
         let trashcan = idToEquipment(ID_EQUIP_TRASHCAN);
         trashcan.equipment.setPosition([EXP_BOUNDS_X_OFFSET + 20, EXP_BOUNDS_Y_OFFSET + 20]);
         disposers.push(trashcan);
-
-        // Call to update the state of the room's temperature
-        this.experiment.setTemperature(20);
-        this.changeTemperature(0);
     }
 
     /**
@@ -495,18 +455,6 @@ class ExperimentController2D{
     */
     experimentRenderBounds(){
         return [this.camera.pos[0], this.camera.pos[1], EXP_BOUNDS[2], EXP_BOUNDS[3]];
-    }
-
-    /**
-    Update the status of the temperature in this Controller's Experiment
-    change: The amount to add to the current temperature
-    */
-    changeTemperature(change){
-        let exp = this.experiment;
-        exp.setTemperature(exp.roomTemperature + change);
-        this.placedEquipment.forEach(function(eq){
-            if(eq instanceof ContainerController2D) eq.updateContentsTemperature(this.roomTemperature);
-        }, exp);
     }
 
     /**
@@ -599,15 +547,11 @@ class ExperimentController2D{
             case KEY_EXP_DISPLAY_CHEMS: this.displayChemicalBoxes(); break;
             case KEY_EXP_DISPLAY_EQUIPS: this.displayEquipmentBoxes(); break;
 
-            case KEY_EXP_ADD_CHEM_0001:
-            case KEY_EXP_ADD_CHEM_001:
-            case KEY_EXP_ADD_CHEM_01:
             case KEY_EXP_ADD_CHEM_1:
+            case KEY_EXP_ADD_CHEM_5:
             case KEY_EXP_ADD_CHEM_10:
-            case KEY_EXP_ADD_CHEM_100: this.addChemicalToSelectedBeaker(keyCode); break;
-
-            case KEY_EXP_INCREASE_TEMPERATURE: this.changeTemperature(10); break;
-            case KEY_EXP_DECREASE_TEMPERATURE: this.changeTemperature(-10); break;
+            case KEY_EXP_ADD_CHEM_20:
+            case KEY_EXP_ADD_CHEM_25: this.addChemicalToSelectedBeaker(keyCode); break;
             default: break;
         }
     }
@@ -623,27 +567,18 @@ class ExperimentController2D{
         if(box === null) return;
         let chemControl = box.obj;
         if(chemControl === null) return;
-        var volume;
+        var mass;
         switch(massIndex){
-            case KEY_EXP_ADD_CHEM_0001: volume = 0.001; break;
-            case KEY_EXP_ADD_CHEM_001: volume = 0.01; break;
-            case KEY_EXP_ADD_CHEM_01: volume = 0.1; break;
-            case KEY_EXP_ADD_CHEM_1: volume = 1; break;
-            case KEY_EXP_ADD_CHEM_10: volume = 10; break;
-            case KEY_EXP_ADD_CHEM_100: volume = 100; break;
-            default: volume = null; break;
+            case KEY_EXP_ADD_CHEM_1: mass = 0.1; break;
+            case KEY_EXP_ADD_CHEM_5: mass = 1; break;
+            case KEY_EXP_ADD_CHEM_10: mass = 5; break;
+            case KEY_EXP_ADD_CHEM_20: mass = 10; break;
+            case KEY_EXP_ADD_CHEM_25: mass = 50; break;
+            default: mass = null; break;
         }
-        if(volume === null) return;
-        volume *= (1 + (Math.random() - 0.5) * 2 * 0.05);
-        // Remove an amount from the container if the minus button is held down
-        if(keyIsDown(189)){
-            this.selectedActor.removeVolume(volume);
-        }
-        // Otherwise, add the volume
-        else{
-            chemControl.chemical.setVolume(volume);
-            this.selectedEquipFunction(ID_FUNC_CONTAINER_ADD_TO, chemControl);
-        }
+        if(mass === null) return;
+        chemControl.chemical.setMass(mass * (1 + (Math.random() - 0.5) * 2 * 0.05));
+        this.selectedEquipFunction(ID_FUNC_CONTAINER_ADD_TO, chemControl);
     }
 
     /**
@@ -732,13 +667,6 @@ class ExperimentController2D{
         let camB = EXP_CAMERA_OUTLINE_BOUNDS;
         expG.rect(camB[0], camB[1], camB[2], camB[3]);
 
-        // Draw the text for the temperature of the Experiment
-        g.fill(0);
-        g.noStroke();
-        g.textSize(20);
-        var s = "Temperature: " + exp.roomTemperature;
-        g.text(s, EXP_BOUNDS[3] , 50);
-
         // Draw the lab table
         // TODO
 
@@ -798,17 +726,15 @@ class ExperimentController2D{
         g.fill(200);
         g.noStroke();
         g.textSize(18);
-        var y = 410;
+        var y = 450;
         let x = 650;
         g.text("Left click equipment to move it", x, y += 20);
         g.text("Right click a equipment to select, blue = actor, green = receiver", x, y += 20);
         g.text("Press ESC to unselect selected Equipment", x, y += 20);
         g.text("Press 1 - 9 to perform actions on selected actor and receiver", x, y += 20);
         g.text("Also hold alt and press 1 - 9 to perform actions on only selected actor", x, y += 20);
-        g.text("Press 1, 2, 3, 4, 5, 6 to add .001, .01, .1, 1, 10, or 100 ml to selected container", x, y += 20);
-        g.text("\tHold down minus to remove the amount", x, y += 20);
+        g.text("Press 1, 2, 3, 4, 5 to add .1, 1, 5, 10, or 50 units to selected container", x, y += 20);
         g.text("\tChemicals added have 0% to 5% error", x, y += 20);
-        g.text("Press T/Y to decrease/increase the room's temperature", x, y += 20);
         g.text("Press I to run the next instruction", x, y += 20);
         g.text("Press R to reset the simulation", x, y += 20);
         g.text("Press C to view Chemical tab, then click a chemical to select", x, y += 20);
