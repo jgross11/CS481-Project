@@ -5,8 +5,8 @@ var chem2;
 QUnit.module("Container", {
     beforeEach: function(){
         currentInstanceID = 1;
-        chem1 = new Chemical(1, "eq", 20, [100, 0, 0]);
-        chem2 = new Chemical(5, "eq", 20, [100, 0, 0]);
+        chem1 = new Chemical(1, new ElementProperties(ID_CHEM_TEST_RED), 20, 1);
+        chem2 = new Chemical(5, new ElementProperties(ID_CHEM_TEST_BLUE), 20, 1);
         container = new Container([10, 5], [12, 20], 10.0, 200.0, 0.15);
     }
 });
@@ -40,6 +40,22 @@ QUnit.test('getTotalContentsMass:', function(assert){
 
     container.setContents([chem2]);
     assert.equal(container.getTotalContentsMass(), 5, 'With chemical 2, total mass should be 5');
+});
+
+QUnit.test('getTotalContentsVolume:', function(assert){
+    assert.true(container.isEmpty(), 'Container should initially be empty');
+
+    container.setContents(chem1);
+    let v = container.getTotalContentsVolume();
+    assert.true(Math.abs(v - 1.66666667) < DELTA, "With 1 chemical, total volume should be 1.66666667, was " + v);
+
+    container.setContents([chem1, chem2]);
+    v = container.getTotalContentsVolume();
+    assert.true(Math.abs(v - 8.80952381) < DELTA, "With 2 chemicals, total volume should be 8.80952381, was " + v);
+
+    container.setContents([chem2]);
+    v = container.getTotalContentsVolume();
+    assert.true(Math.abs(v - 7.14285714) < DELTA, "With 1 different chemical, total volume should be 7.14285714, was " + v);
 });
 
 QUnit.test('getTotalMass:', function(assert){

@@ -9,10 +9,16 @@ var chem1;
 var chem2;
 var chem3;
 var chem4;
+var chem5;
 var chemControl1;
 var chemControl2;
 
+var DELTA = 0.001;
+
 QUnit.module("ContainerController2D", {
+    before: function(){
+        initTestChemProperties();
+    },
     beforeEach: function(){
         container = new Container([0, 0], [0, 0], 0, 8, 0, null);
         controller = new ContainerController2D(container);
@@ -28,10 +34,11 @@ QUnit.module("ContainerController2D", {
         beakerControl1 = new BeakerController2D(beaker1);
         beakerControl2 = new BeakerController2D(beaker2);
 
-        chem1 = idToChemical(ID_CHEM_TEST_RED, 30, 1).chemical;
-        chem2 = idToChemical(ID_CHEM_TEST_BLUE, 20, 1).chemical;
-        chem3 = idToChemical(ID_CHEM_TEST_RED, 70, 1).chemical;
-        chem4 = idToChemical(ID_CHEM_TEST_BLUE, 50, 1).chemical;
+        chem1 = idToChemical(COMPOUND_WATER_ID, 30, 1).chemical;
+        chem2 = idToChemical(COMPOUND_WATER_ID, 20, 1).chemical;
+        chem3 = idToChemical(COMPOUND_WATER_ID, 70, 1).chemical;
+        chem4 = idToChemical(COMPOUND_WATER_ID, 50, 1).chemical;
+        chem5 = idToChemical(COMPOUND_TABLE_SALT_ID, 50, 1).chemical;
         chemControl1 = new ChemicalController2D(chem1);
         chemControl2 = new ChemicalController2D(chem2);
     }
@@ -51,6 +58,12 @@ QUnit.test('funcToId:', function(assert){
     assert.equal(controller.funcToId(controller.pourInto), ID_FUNC_CONTAINER_POUR_INTO, "Should get the ID for pourInto");
     assert.equal(controller.funcToId(controller.addTo), ID_FUNC_CONTAINER_ADD_TO, "Should get the ID for addTo");
     assert.equal(controller.funcToId(controller.emptyOut), ID_FUNC_CONTAINER_EMPTY_IN_TRASH, "Should get the ID for emptyOut");
+});
+
+QUnit.test('updateContentsTemperature:', function(assert){
+    beaker1.setContents(chem1);
+    beakerControl1.updateContentsTemperature(17);
+    assert.equal(chem1.temperature, 17, "Checking that chemicals inside containers have updated temperature");
 });
 
 QUnit.test('getFuncDescriptions:', function(assert){
@@ -129,7 +142,7 @@ QUnit.test('pourInto:', function(assert){
     beaker2.setContents(chem4);
     beaker1.setResidue(0);
     assert.true(beakerControl1.pourInto(beakerControl2), "Pouring into a valid controller should succeed");
-    assert.equal(beakerControl2.equipment.getTotalContentsMass(), 100, "Container poured into should be full with mass 50");
+    assert.equal(beakerControl2.equipment.getTotalContentsMass(), 100, "Container poured into should be full with mass 100");
     assert.equal(beakerControl1.equipment.getTotalContentsMass(), 20, "Container poured out should have 20 mass");
 
     chem1.setMass(5);
@@ -199,7 +212,7 @@ QUnit.test('pourOut:', function(assert){
     beaker1.setContents([chemControl1.copyChem(), chemControl2.copyChem()]);
     assert.deepEqual(beaker1.contents, [chem1, chem2], "Should correctly set contents to the two given chemicals");
 
-    assert.deepEqual(beakerControl1.pourOut(), [chem1, chem2], "Should get two chemicals after pouring them out");
+    assert.deepEqual(beakerControl1.pourOut(), [chem2, chem1], "Should get two chemicals after pouring them out");
     assert.true(beaker1.isEmpty(), "Beaker should be left with no contents")
 });
 
@@ -216,6 +229,60 @@ QUnit.test('addTo:', function(assert){
     assert.false(beakerControl1.addTo(null), "Should fail to add a null parameter");
 
     assert.false(beakerControl1.addTo(chem1), "Should fail to add a non chemical controller parameter");
+});
+
+QUnit.test('removeOverflow:', function(assert){
+    beaker1.setCapacity(50);
+    var c
+
+    chem1.setVolume(100);
+    beaker1.contents = [chem1];
+    c = beaker1.getTotalContentsVolume();
+    assert.true(Math.abs(c - 100) < DELTA, "Volume in beaker should be 100, was " + c);
+
+    beakerControl1.removeOverflow();
+    c = beaker1.getTotalContentsVolume();
+    assert.true(Math.abs(c - 50) < DELTA, "After removing overflow, volume in beaker should be 50, was " + c);
+
+    chem1.setVolume(20);
+    chem5.setVolume(40);
+    beaker1.contents = [chem1, chem5];
+    c = beaker1.getTotalContentsVolume();
+    assert.true(Math.abs(c - 60) < DELTA, "Volume in beaker should be 60, was " + c);
+
+    beakerControl1.removeOverflow();
+    c = beaker1.getTotalContentsVolume();
+    assert.true(Math.abs(c - 50) < DELTA,
+        "After removing overflow of some chemical with a second one still remaining, volume in beaker should be 50, was " + c);
+
+    chem1.setVolume(40);
+    chem5.setVolume(50);
+    beaker1.contents = [chem1, chem5];
+    c = beaker1.getTotalContentsVolume();
+    assert.true(Math.abs(c - 90) < DELTA, "Volume in beaker should be 80, was " + c);
+
+    beakerControl1.removeOverflow();
+    c = beaker1.getTotalContentsVolume();
+    assert.true(Math.abs(c - 50) < DELTA,
+        "After removing all overflow of one chemical and some of a second, volume in beaker should be 50, was " + c);
+});
+
+QUnit.test('removeVolume:', function(assert){
+    chem4.setVolume(10);
+    beaker1.setContents(chem4);
+    assert.equal(beaker1.getTotalContentsVolume(), 10, "Checking that the container has the volume of the chemical");
+
+    beakerControl1.removeVolume(4);
+    assert.equal(beaker1.getTotalContentsVolume(), 6, "Checking that removing part of one chemical leaves the correct amount behind");
+
+    chem4.setVolume(10);
+    chem5.setVolume(5);
+    beaker1.setContents([chem4, chem5]);
+    assert.equal(beaker1.getTotalContentsVolume(), 15, "Checking that the container has the volume of the chemicals");
+
+    beakerControl1.removeVolume(6);
+    assert.equal(beaker1.getTotalContentsVolume(), 9, "Checking that removing all of one chemical and some of another leaves the correct amount behind");
+    assert.equal(beaker1.contents.length, 1, "Checking that exactly 1 chemical is left")
 });
 
 QUnit.test('emptyOut:', function(assert){

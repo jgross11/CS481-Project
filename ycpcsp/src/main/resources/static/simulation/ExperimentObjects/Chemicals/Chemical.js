@@ -79,6 +79,16 @@ class Chemical extends ExperimentObject{
     }
 
     /**
+    Set the current matter state of this Chemical using the constants.
+    Use MATTER_STATE_SOLID for a solid state
+    Use MATTER_STATE_LIQUID for a liquid state
+    Use MATTER_STATE_GAS for a gaseous state
+    */
+    setMatterState(state){
+        this.matterState = state;
+    }
+
+    /**
     Set the concentration of this Chemical
     concentration: A floating point value, the concentration, in the range [0, 1]
         If not in that range, it will be placed in the range
@@ -188,7 +198,12 @@ class ChemicalController2D extends ExperimentObjectController2D{
     The result is stored in the matterState field in the Chemical
     */
     calculateMatterState(){
-        // TODO implement based on melting and boiling point
+        let c = this.chemical;
+        if(c === null) return;
+        let p = c.properties;
+        if(c.temperature > p.getBoilingPoint()) c.setMatterState(MATTER_STATE_GAS);
+        else if(c.temperature > p.getMeltingPoint()) c.setMatterState(MATTER_STATE_LIQUID);
+        else c.setMatterState(MATTER_STATE_SOLID);
     }
 
     /**
@@ -197,8 +212,8 @@ class ChemicalController2D extends ExperimentObjectController2D{
     This method does not change this Controller's Chemical.
     This method will combine all common elements in the given list, i.e. if the list has two instances of chemicalA,
         they wil both be combined into one instance of chemicalA, with the combined mass of both instances of chemicalA.
-    Currently combines common Chemicals, but does not perform chemical equation interactions
-    Also ensures that the chemicals are sorted by density.
+    Any chemicals which react as a formula, will do so after this method call.
+    Also ensures that the chemicals are sorted by density, least dense Chemicals at the end.
     chems: The Chemicals to combine
     returns: The list of Chemicals, or null if they could not be combined
     */
@@ -233,7 +248,6 @@ class ChemicalController2D extends ExperimentObjectController2D{
         }
 
         // Create a dictionary of chem list
-        // TODO put this whole dictionary to array and back in another method
         let cDict = [];
         for(var i = 0; i < chems.length; i++){
             let c = chems[i];
@@ -254,21 +268,18 @@ class ChemicalController2D extends ExperimentObjectController2D{
             chems.push(obj);
         }, chems);
 
-        // Sort the chemicals by their densities, smallest at the end
         /*
         TODO improve this by inserting new chemicals based on their density, rather than sorting each time,
             also move it to above the combining
             This is so they can be inserted by density as they are added back to chem list
         */
-
+        // Sort the chemicals by their densities, smallest at the end
         chems.sort(function(a, b){
             let ad = a.properties.getDensity();
             let bd = b.properties.getDensity();
             if(ad === bd) return 0;
             return (ad > bd) ? -1 : 1;
         });
-
-        // TODO account for chemicals overflowing in a container
 
         return chems;
     }
@@ -297,7 +308,9 @@ class ChemicalController2D extends ExperimentObjectController2D{
     copyChem(){
         let c = this.chemical
         if(c === null) return null;
-        return new Chemical(c.mass, c.properties, c.temperature, c.concentration);
+        let newC = new Chemical(c.mass, c.properties, c.temperature, c.concentration);
+        newC.setMatterState(c.matterState);
+        return newC;
     }
 
     /**
