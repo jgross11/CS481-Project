@@ -1,6 +1,5 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
-import edu.ycpcsp.ycpcsp.Models.User
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.*
@@ -24,7 +23,6 @@ fun PlaylistSearch(userId: Int) : ArrayList<String> {
         //Connection for the database to get it connected and then execute the query to insert the values into the database
         val conn = DriverManager.getConnection(url, connectionProps)
         //Experiment Search Query
-        println(userId)
         val query = "Select * from Database.Playlist where user_ID = \"$userId\"; "
         val ps = conn.prepareStatement(query)
         val rs = ps.executeQuery()
@@ -44,7 +42,9 @@ fun PlaylistSearch(userId: Int) : ArrayList<String> {
 
 
         for (x in 1..rs.fetchSize) {
-           if(!RecentExperiments.contains(rs.getString("Playlist_Name"))){
+            contains = RecentExperiments.contains(rs.getString("Playlist_Name"))
+
+           if(!contains){
                RecentExperiments.add(rs.getString("Playlist_Name"))
            }
 
@@ -65,38 +65,3 @@ fun PlaylistSearch(userId: Int) : ArrayList<String> {
     return arrayListOf()
 }
 
-fun PlaylistSearchTwo(userId: Int): String {
-    val connection = getDBConnection()
-
-    try {
-        if(connection != null) {
-            val preparedSt = connection.prepareStatement("SELECT * FROM Database.Playlist;")
-            preparedSt.setInt(1, userId)
-            val rs = preparedSt.executeQuery()
-
-            try {
-                return if (rs.first()) {
-                    println("the return if gave me somethin")
-                    rs.getString("Playlist_Name")
-
-                } else {
-                    println("the else gave me somethin")
-                    rs.getString("Playlist_Name")
-
-                }
-            } catch (ex: SQLException) {
-                println("Error the query returned with a null result set. The query must have been entered incorrectly")
-                ex.printStackTrace()
-            }
-            return rs.getString("Playlist_Name")
-        }
-
-    } catch (ex: SQLException) {
-        // handle any errors
-        ex.printStackTrace()
-    } catch (ex: Exception) {
-        // handle any errors
-        ex.printStackTrace()
-    }
-    return "didnt make it"
-}
