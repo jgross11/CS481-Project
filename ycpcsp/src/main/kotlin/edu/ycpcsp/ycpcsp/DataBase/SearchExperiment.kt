@@ -24,11 +24,9 @@ fun SearchExperiment(searchCriteria: SearchFormData) : MutableList<SearchObject>
         //Connection for the database to get it connected and then execute the query to insert the values into the database
         val conn = DriverManager.getConnection(url, connectionProps)
         //Experiment Search Query
-        val query = "Select Distinct ExperimentsID, title, firstName, lastName from Database.Experiments join Database.Users on Database.Experiments.creatorID = Database.Users.UserID where title like ? or firstName like ? or lastName like ?"
+        val query = "Select title, firstName, lastName from Database.Experiments join Database.Users on Database.Experiments.creatorID = Database.Users.UserID where title like ?"
         val ps = conn.prepareStatement(query)
         ps.setString(1, "%$searchCriteria%")
-        ps.setString(2, "%$searchCriteria%")
-        ps.setString(3, "%$searchCriteria%")
         val rs = ps.executeQuery()
 
         //make string list to store the names in
@@ -43,10 +41,9 @@ fun SearchExperiment(searchCriteria: SearchFormData) : MutableList<SearchObject>
         //go to first value and start putting the names of the experiments in the list
         rs.next()
         for (x in 1..rs.fetchSize) {
-            val id = rs.getString("ExperimentsID")
             val title = rs.getString("title")
             val CreatorName = rs.getString("firstName") + " " + rs.getString("lastName")
-            val searchObj = SearchObject(id, title, CreatorName)
+            val searchObj = SearchObject(title, CreatorName)
             ExperimentValues.add(searchObj)
         }
 

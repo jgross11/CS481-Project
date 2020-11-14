@@ -10,13 +10,12 @@ import com.fasterxml.jackson.annotation.JsonTypeName
 @JsonTypeName("chemical")
 
 data class SearchObject(
-        var id : String,
         var title : String,
         var CreatorName : String
 )
 
 {
     override fun toString(): String {
-        return "$id $title $CreatorName"
+        return "$title $CreatorName"
     }
 }
