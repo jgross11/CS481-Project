@@ -85,6 +85,7 @@
 </div>
 <div class="dropdown">
     <button onclick="CFunction()" class="dropbtn">Chemicals</button>
+    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
     <div id="ChemDropdown" class="dropdown-content">
         <p id="Chem"></p>
 
@@ -104,7 +105,48 @@
 
 <button onclick="AddStep()">Add Step</button>
 <button onclick="sendExp()">Create</button>
+<br>
+<button onclick="ShowCreateNewChemical()">Create New Chemical</button>
+</br>
+<form id="CreateNewChemicalForm">
+    <label for="ChemicalName">Chemical Name:</label><br>
+    <input type="text" id="ChemicalName" name="ChemicalName"><br>
 
+    <label for="ChemicalFormula">Chemical Formula:</label><br>
+    <input type="text" id="ChemicalFormula" name="ChemicalFormula"><br>
+
+    <label for="ChemicalMass">Chemical Mass:</label><br>
+    <input type="number" step="0.01" min="0" id="ChemicalMass" name="ChemicalFormula"><br>
+
+    <label for="ChemicalDensity">Chemical Density:</label><br>
+    <input type="number" step="0.01" min="0" id="ChemicalDensity" name="ChemicalDensity"><br>
+
+    <label for="ChemicalWaterSoluable">Chemical WaterSoluable:</label><br>
+    <input type="checkbox" id="ChemicalWaterSoluable" name="ChemicalDensity"><br>
+
+    <label for="ChemicalPhaseChangeSolid">Chemical Phase Change Solid:</label><br>
+    <input type="number" step="0.01" min="0" id="ChemicalPhaseChangeSolid" name="ChemicalPhaseChangeSolid"><br>
+
+    <label for="ChemicalPhaseChangeLiquid">Chemical Phase Change Liquid:</label><br>
+    <input type="number" step="0.01" min="0" id="ChemicalPhaseChangeLiquid" name="ChemicalPhaseChangeLiquid"><br>
+
+    <input value="Create" type="button" id="CreateNewChemicalSubmit" name="CreateNewChemicalSubmit" onclick="CreateNewChemicalSubmithe()">
+    <label for="MoreCreateNewChemicalSubmit" type="button" id=""> </label>
+    <input value="MoreInfo" type="button" id="MoreCreateNewChemicalSubmit" name="CreateNewChemicalSubmit" onclick="MoreCreateNewChemicalShow()">
+    <form id="MoreChemicalInformationForm">
+        <br>
+    <label for="ChemicalColorSolid">Chemical Color Component Solid:</label><br>
+    <input type="number"  min="0" max="255" id="ChemicalColorSolid" name="ChemicalFormula"><br>
+
+    <label for="ChemicalColorLiquid">Chemical Color Component Liquid:</label><br>
+    <input type="number"  min="0" max="255" id="ChemicalColorLiquid" name="ChemicalFormula"><br>
+
+    <label for="ChemicalColorGas">Chemical Color Component Gas:</label><br>
+    <input type="number"  min="0" max="255" id="ChemicalColorGas" name="ChemicalFormula"><br>
+    </form>
+
+
+</form>
 </body>
 <script>
     let user = JSON.parse(sessionStorage.getItem("user"));
@@ -118,6 +160,59 @@
     LoadEquip();
     LoadChem();
     LoadFunc();
+    var ShowNewChemicalForm = false;
+    var ShowMoreChemicalForm = false;
+    // Method that will take the new chemical inputs and put them into the required post information
+    function CreateNewChemicalSubmithe(){
+        var ChemicalName = getAndTrimById("ChemicalName");
+        var ChemicalFormula = getAndTrimById("ChemicalFormula");
+        var ChemicalMass = getAndTrimById("ChemicalMass");
+        var ChemicalDensity = document.getElementById("ChemicalDensity");
+        var ChemicalWaterSoluable = document.getElementById("ChemicalWaterSoluable");
+        var ChemicalPhaseChangeSolid = getAndTrimById("ChemicalPhaseChangeSolid");
+        var ChemicalPhaseChangeLiquid = document.getElementById("ChemicalPhaseChangeLiquid");
+        var ChemicalColorSoild = document.getElementById("ChemicalColorSolid");
+        var ChemicalColorGas = document.getElementById("ChemicalColorGas");
+        var ChemicalColorLiquid = document.getElementById("ChemicalColorLiquid");
+        var formdata = {
+            ChemicalName: ChemicalName.value,
+            ChemicalFormula:ChemicalFormula.value,
+            ChemicalMass: ChemicalMass.value,
+            ChemicalDensity:ChemicalDensity.value,
+            ChemicalWaterSoluable:true,
+            ChemicalPhaseChangeSolid:ChemicalPhaseChangeSolid.value,
+            ChemicalPhaseChangeLiquid:ChemicalPhaseChangeLiquid.value,
+            ChemicalGasColor:  ChemicalColorGas.value,
+            ChemicalSolidColor: ChemicalColorSoild.value,
+            ChemicalLiquidColor: ChemicalColorLiquid.value
+
+        }
+        console.log(formdata);
+        postData('Creation-Of-New-Chemical', formdata).then(function(data){
+
+        });
+    }
+
+    function MoreCreateNewChemicalShow(){
+        ShowMoreChemicalForm = !ShowMoreChemicalForm;
+
+        if(ShowNewChemicalForm === true)
+            document.getElementById("MoreChemicalInformationForm").style.display="none";
+        else
+            document.getElementById("MoreChemicalInformationForm").style.display="block";
+
+    }
+
+    //Function to show the create new chemical form
+    function ShowCreateNewChemical(){
+            ShowNewChemicalForm = !ShowNewChemicalForm;
+
+            if(ShowNewChemicalForm === true)
+                document.getElementById("CreateNewChemicalForm").style.display="none";
+            else
+                document.getElementById("CreateNewChemicalForm").style.display="block";
+
+    }
     /* When the user clicks on the button,
     toggle between hiding and showing the dropdown content */
     function CFunction() {
