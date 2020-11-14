@@ -314,7 +314,7 @@ QUnit.test('nextInstruction:', function(assert){
     controller.addEquipment(beakerControl2, true);
     let eqs = exp.equipment;
     let instructions = [];
-    for(var i = 0; i < 2; i++) instructions.push(new InstructionController2D(new Instruction(eqs[0], eqs[1], eqs[0].pourInto)));
+    for(var i = 0; i < 4; i++) instructions.push(new InstructionController2D(new Instruction(eqs[0], eqs[1], eqs[0].pourInto)));
     instructions.push(new InstructionController2D(new Instruction(eqs[0], chemControl, eqs[0].addTo)));
 
     exp.setInstructions(instructions);
@@ -323,18 +323,38 @@ QUnit.test('nextInstruction:', function(assert){
     controller.nextInstruction();
     assert.equal(controller.instructionCounter, 1, "Instruction should be on 1");
 
+    controller.unPlaceEquipment(beakerControl1);
+    controller.unPlaceEquipment(beakerControl2);
     beaker1.setContents(chemControl.copyChem());
     beaker2.setContents(chemControl.copyChem());
     controller.nextInstruction();
     assert.equal(controller.instructionCounter, 2, "Instruction should be on 2");
 
+    controller.placeEquipment(beakerControl1);
+    controller.unPlaceEquipment(beakerControl2);
     beaker1.setContents(chemControl.copyChem());
     beaker2.setContents(chemControl.copyChem());
     controller.nextInstruction();
-    assert.equal(controller.instructionCounter, 3, "Instruction should be on 3, ending the instruction list");
+    assert.equal(controller.instructionCounter, 3, "Instruction should be on 3");
 
+    controller.unPlaceEquipment(beakerControl1);
+    controller.placeEquipment(beakerControl2);
+    beaker1.setContents(chemControl.copyChem());
+    beaker2.setContents(chemControl.copyChem());
     controller.nextInstruction();
-    assert.equal(controller.instructionCounter, 3, "Instruction should not have changed from 3");
+    assert.equal(controller.instructionCounter, 4, "Instruction should be on 4");
+
+    controller.placeEquipment(beakerControl1);
+    controller.placeEquipment(beakerControl2);
+    beaker1.setContents(chemControl.copyChem());
+    beaker2.setContents(chemControl.copyChem());
+    controller.nextInstruction();
+    assert.equal(controller.instructionCounter, 5, "Instruction should be on 5, ending the instruction list");
+
+    beaker1.setContents(chemControl.copyChem());
+    beaker2.setContents(chemControl.copyChem());
+    controller.nextInstruction();
+    assert.equal(controller.instructionCounter, 5, "Instruction should not have changed from 3");
 
     controller.reset();
     assert.equal(controller.instructionCounter, 0, "Instruction should be on 0 after reset");
@@ -440,6 +460,17 @@ QUnit.test('placeEquipment:', function(assert){
     controller.placeEquipment(0);
     assert.true(controller.placedEquipment.includes(beakerControl1), "Controller placed Equipment list should have the added beaker.");
     assert.equal(controller.placedEquipment.length, 1, "Controller placed Equipment list should have only one beaker.");
+});
+
+QUnit.test('placeEquipmentOrganized:', function(assert){
+    controller.addEquipment(beakerControl1);
+    var pos = beaker1.position;
+    var success = controller.placeEquipmentOrganized(beakerControl1);
+    assert.true(success, "Checking successfully placed beaker controller");
+    assert.notDeepEqual(beaker1.position, pos, "Checking beaker is in a new position");
+
+    var success = controller.placeEquipmentOrganized(beaker1);
+    assert.false(success, "Checking beaker cannot be placed");
 });
 
 QUnit.test('removeEquipment:', function(assert){
@@ -589,6 +620,18 @@ QUnit.test('experimentRenderBounds:', function(assert){
     controller.camera.setPos([20, 30]);
     assert.deepEqual(controller.experimentRenderBounds(), [20, 30, EXP_BOUNDS[2], EXP_BOUNDS[3]],
         "Bounds should be based on the camera position and size constants for experiment size");
+});
+
+QUnit.test('changeTemperature:', function(assert){
+    exp.setTemperature(10);
+    beaker1.setContents(chemControl.copyChem());
+    beaker2.setContents(chemControl.copyChem());
+    controller.addEquipment(beakerControl1, true);
+    controller.addEquipment(beakerControl2, true);
+    controller.changeTemperature(2);
+    assert.equal(exp.roomTemperature, 12, "Checking that adding room temperature updates the experiment temperature");
+    assert.equal(beaker1.contents[0].temperature, 12, "Checking that chemicals in the containers of the experiment get updated");
+    assert.equal(beaker2.contents[0].temperature, 12, "Checking that chemicals in the containers of the experiment get updated");
 });
 
 QUnit.todo('mousePress:', function(assert){

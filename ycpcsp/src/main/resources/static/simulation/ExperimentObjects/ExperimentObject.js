@@ -5,7 +5,7 @@ class ExperimentObject{
 
     /**
     Create a new ExperimentObject with the given mass and name.
-    mass: A floating point value, the mass, in grams, of this object. TODO should mass be in grams?
+    mass: A floating point value, the mass, in grams, of this object.
     */
     constructor(mass){
         this.mass = mass;
@@ -16,7 +16,8 @@ class ExperimentObject{
     mass: The new mass, a positive floating point value
     */
     setMass(mass){
-        if(isFloat(mass) && mass >= 0) this.mass = mass;
+        if(!isFloat(mass)) return;
+        this.mass = (mass < 0) ? 0 : mass;
     }
 
     /**

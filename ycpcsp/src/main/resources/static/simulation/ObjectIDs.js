@@ -95,6 +95,7 @@ let COMPOUND_WATER_ID = 10001;
 let COMPOUND_GLUCOSE_ID = 10002;
 let COMPOUND_TABLE_SALT_ID = 10003;
 let COMPOUND_OXYGEN_GAS_ID = 10004;
+let COMPOUND_CHLORINE_GAS_ID = 10005;
 
 
 // Equations
@@ -103,35 +104,39 @@ let EQUATION_TABLE_SALT_ID = 2;
 
 
 /**
-Take an integer ID and convert it to a valid piece of Equipment
+Take an integer ID and convert it to a valid piece of Equipment, automatically slightly randomly changing its mass.
 id: The integer id
 returns: The Equipment, or null if an invalid ID is given
 */
 function idToEquipment(id){
+    var eq;
     switch(id){
         // All Beaker sizes
         case ID_EQUIP_BEAKER_50mL:
         case ID_EQUIP_BEAKER_150mL:
         case ID_EQUIP_BEAKER_250mL:
-        case ID_EQUIP_BEAKER_600mL: return new BeakerController2D(new Beaker(id));
+        case ID_EQUIP_BEAKER_600mL: eq = new BeakerController2D(new Beaker(id)); break;
 
         case ID_EQUIP_GRADUATED_25mL:
         case ID_EQUIP_GRADUATED_50mL:
         case ID_EQUIP_GRADUATED_100mL:
-        case ID_EQUIP_GRADUATED_1000mL: return new GraduatedCylinderController2D(new GraduatedCylinder(id));
+        case ID_EQUIP_GRADUATED_1000mL: eq = new GraduatedCylinderController2D(new GraduatedCylinder(id)); break;
 
         case ID_EQUIP_FLASK_25mL:
         case ID_EQUIP_FLASK_50mL:
         case ID_EQUIP_FLASK_125mL:
-        case ID_EQUIP_FLASK_1000mL: return new ErlenmeyerFlaskController2D(new ErlenmeyerFlask(id));
+        case ID_EQUIP_FLASK_1000mL: eq = new ErlenmeyerFlaskController2D(new ErlenmeyerFlask(id)); break;
 
-        case ID_EQUIP_WEIGH_BOAT: return new WeighBoatController2D(new WeighBoat());
-        case ID_EQUIP_SCALE: return new ScaleController2D(new Scale());
-        case ID_EQUIP_TRASHCAN: return new TrashcanController2D(new Trashcan());
-        case ID_EQUIP_STIR_ROD: return new StirRodController2D(new StirRod());
+        case ID_EQUIP_WEIGH_BOAT: eq = new WeighBoatController2D(new WeighBoat()); break;
+        case ID_EQUIP_SCALE: eq = new ScaleController2D(new Scale()); break;
+        case ID_EQUIP_TRASHCAN: eq = new TrashcanController2D(new Trashcan()); break;
+        case ID_EQUIP_STIR_ROD: eq = new StirRodController2D(new StirRod()); break;
 
-        default: return null;
+        default: eq = null;
     }
+    eq.equipment.randomizeMass();
+
+    return eq;
 }
 
 /**
@@ -164,6 +169,7 @@ function idToChemical(id, mass, concentration){
         case COMPOUND_WATER_ID:
         case COMPOUND_GLUCOSE_ID:
         case COMPOUND_OXYGEN_GAS_ID:
+        case COMPOUND_CHLORINE_GAS_ID:
         case COMPOUND_TABLE_SALT_ID: properties = new CompoundProperties(id); break;
         default: return null;
     }
@@ -216,7 +222,7 @@ function initTestChemProperties(){
         ID_CHEM_TEST_RED, 9, 100, 0, 0.6, true);
     makeElement("Blu", "Blue", "Fake",
         [0, 0, 255, 255], [0, 0, 255, 200], [0, 0, 255, 180],
-        ID_CHEM_TEST_BLUE, 9, 100, 0, 0.7. false);
+        ID_CHEM_TEST_BLUE, 9, 100, 0, 0.7, false);
     makeElement("Wuu", "White", "Fake",
         [255, 255, 255, 255], [255, 255, 255, 200], [255, 255, 255, 180],
         ID_CHEM_TEST_WHITE, 9, 100, 0, 0.8, false);
@@ -265,6 +271,12 @@ function initTestChemProperties(){
         [220, 220, 220, 255], [220, 220, 220, 200], [220, 220, 220, 180],
         -218, -183, 1.43, true);
 
+    makeCompound(COMPOUND_CHLORINE_GAS_ID, [
+            new CompoundComponent(new ElementProperties(ELEMENT_CHLORINE_ATOMIC_NUM), 2)
+        ], "Chlorine Gas", "Nature",
+        [255, 220, 220, 255], [255, 220, 220, 200], [255, 220, 220, 180],
+        -101, -35, 3.21, true);
+
 
     // These equations are for testing, and are not necessarily accurate to reality
     makeEquation(EQUATION_WATER_ID, [
@@ -275,10 +287,10 @@ function initTestChemProperties(){
         ]);
 
     makeEquation(EQUATION_TABLE_SALT_ID, [
-        new EquationComponent(1, new ElementProperties(ELEMENT_CHLORINE_ATOMIC_NUM)),
-        new EquationComponent(1, new ElementProperties(ELEMENT_SODIUM_ATOMIC_NUM))
+        new EquationComponent(1, new CompoundProperties(COMPOUND_CHLORINE_GAS_ID)),
+        new EquationComponent(2, new ElementProperties(ELEMENT_SODIUM_ATOMIC_NUM))
         ], [
-        new EquationComponent(1, new CompoundProperties(COMPOUND_TABLE_SALT_ID))
+        new EquationComponent(2, new CompoundProperties(COMPOUND_TABLE_SALT_ID))
         ]);
 }
 

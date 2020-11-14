@@ -41,16 +41,16 @@ class ChemEquation{
     moles: A list of floating point values, the amount of moles of each reactant in the order they are in the equation
     returns: A list of two lists, all values are in moles.
         The first list contains the excess reactant of each reactant, formatted the same as moles.
-            If there was no excess reactant for one of these values, the list value will be zero
+            If there was no excess reactant for any of these values, the list value will be zero
         The second list contains the products, formatted the same as moles
     */
     calculateProducts(moles){
-        // TODO put these sections of code into separate methods
         let reacts = this.getReactants();
         let prods = this.getProducts();
 
         var lowest = -1;
         var excessReacts = [];
+        var usedReacts = [];
         // Find the amount of the first product which each reactant will produce
         for(var i = 0; i < reacts.length; i++){
             // Convert the given number of moles to the amount of the first product
@@ -70,9 +70,14 @@ class ChemEquation{
         // Set the limiting reactant to have an excess of 0
         excessReacts[lowest] = 0;
 
+        // Find the amount of each reactant which is used
+        for(var i = 0; i < reacts.length; i++){
+            usedReacts.push(moles[i] - excessReacts[i]);
+        }
+
         // Now use the perfect ratio list to produce the correct reactant moles
         // All product ratios will be the same at this point
-        let ratio = moles[0] / reacts[0].coefficient;
+        let ratio = usedReacts[0] / reacts[0].coefficient;
 
         // Apply that ratio to all products to get the final mole counts
         let prodMoles = [];
@@ -87,12 +92,11 @@ class ChemEquation{
     /**
     Take a sparse list of Chemicals and attempt to apply this equation to the sparse list of chemicals.
     If all of the reactants exist in the given list, then equation will run, otherwise nothing will happen
-    cDict: The sparse list of Chemicals to apply the equation.
+    cDict: The sparse list of Chemicals to apply the equation. This will be the same object as the one given.
         Indexes should be the ID of the chemical, the value should be the chemical itself.
         Should be treated like a dictionary where the keys are indexes of the sparse list
     */
     processChemList(cDict){
-        // TODO put these sections of code into separate methods
         let reacts = this.getReactants();
 
         // ids is a list of all the ids of the reactants used in the equation, in the order of the equation
@@ -110,7 +114,7 @@ class ChemEquation{
         // Do nothing if the reactants are not found
         if(!foundReactants) return;
 
-        // Get the mass of each chemical used in the reaction
+        // Get the moles of each chemical used in the reaction
         let reactMoles = [];
         let chemControl = new ChemicalController2D(null);
         for(var i = 0; i < ids.length; i++){
@@ -147,9 +151,9 @@ class ChemEquation{
                 cDict[id] = idToChemical(id, 0, 1).chemical;
                 c = cDict[id];
             }
-            // Now determine the number of moles for that product
+            // Now determine the mass for that product
             chemControl.setChemical(c);
-            c.setMass(c.mass + chemControl.calculateMass(prodMoles[p]));
+            c.addMass(chemControl.calculateMass(prodMoles[p]));
         }
 
         return cDict;
