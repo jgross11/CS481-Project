@@ -1,13 +1,15 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
 import edu.ycpcsp.ycpcsp.Models.ChemicalEquation
+import edu.ycpcsp.ycpcsp.Models.EquationComponent
 import java.sql.SQLException
 
 // equation DB indices
 const val equationIDIndex = 1
-const val equationReactantIndex = 2
-const val equationProductIndex = 3
-const val equationCreatorIndex = 4
+const val equationCreatorIndex = 2
+const val isReactantIndex = 5
+const val coefficientIndex = 6
+const val chemicalInformationIndex = 7
 
 /**
  *  Searches the database for an equation whose ID matches that provided
@@ -18,11 +20,25 @@ fun getEquationById(id : Int) : ChemicalEquation?{
     var connection = getDBConnection()
     if(connection != null){
         return try{
-            val preparedStatement = connection.prepareStatement("SELECT * FROM Database.Equations_Information WHERE EquationInformationID = ?;")
+            val preparedStatement = connection.prepareStatement("SELECT * FROM Database.Equations_Information JOIN Database.Equation_Components ON EquationInformationID = EquationID and Equations_Information.EquationInformationID = ?;")
             preparedStatement.setInt(1, id)
             val rs = preparedStatement.executeQuery()
             return if(rs.first()){
-                ChemicalEquation(rs.getInt(equationIDIndex), rs.getString(equationReactantIndex), rs.getString(equationProductIndex), rs.getInt(equationCreatorIndex))
+                var equation = ChemicalEquation(rs.getInt(equationIDIndex), rs.getInt(equationCreatorIndex))
+                var reactants = ArrayList<EquationComponent>()
+                var products = ArrayList<EquationComponent>()
+
+                do{
+                    if(rs.getBoolean(isReactantIndex)){
+                        reactants.add(EquationComponent(rs.getInt(coefficientIndex), rs.getInt(chemicalInformationIndex)))
+                    } else{
+                        products.add(EquationComponent(rs.getInt(coefficientIndex), rs.getInt(chemicalInformationIndex)))
+                    }
+                }
+                while(rs.next())
+                equation.reactants = reactants.toTypedArray()
+                equation.products = products.toTypedArray()
+                equation
             } else{
                 null
             }
