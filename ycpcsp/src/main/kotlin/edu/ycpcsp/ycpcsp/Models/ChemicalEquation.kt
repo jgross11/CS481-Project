@@ -4,20 +4,22 @@ package edu.ycpcsp.ycpcsp.Models
  * This class contains all relevant information for a chemical equation.
  *
  * equationID - the ID of this equation in the DB
- * reactantString - a string containing the reactant side of the equation ex. Na + Cl
- * productString - a string containing the product side of the equation ex. NaCl
+ * reactants - an array of EquationComponents representing the reactants in this equation
+ * products - an array of EquationComponents representing the products in this equation
  * creatorID - the ID of this equations' creator in the DB
  */
 
-class ChemicalEquation (var equationID : Int, var reactantString : String, var productString : String, var creatorID : Int){
+class ChemicalEquation (var equationID : Int, var creatorID : Int){
 
+    var reactants = Array(0){EquationComponent()}
+    var products = Array(0){EquationComponent()}
     // null constructor
-    constructor() : this(-1, "", "", -1){
+    constructor() : this(-1, -1){
 
     }
 
     // used when compound is first created on FE and given to BE (before ID exists in DB)
-    constructor(reactantString: String, productString: String, creatorID: Int) : this(-1, reactantString, productString, creatorID){
+    constructor(creatorID: Int) : this(-1, creatorID){
 
     }
 
