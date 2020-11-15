@@ -3,7 +3,10 @@ package edu.ycpcsp.ycpcsp.WebControllers
 
 import edu.ycpcsp.ycpcsp.DataBase.CreateExperiment
 import edu.ycpcsp.ycpcsp.DataBase.LoadExperiment
+import edu.ycpcsp.ycpcsp.DataBase.insertCompound
+import edu.ycpcsp.ycpcsp.Models.Compound
 import edu.ycpcsp.ycpcsp.Models.Experiment
+import edu.ycpcsp.ycpcsp.PostDataClasses.CreationNewChemicalFormData
 import edu.ycpcsp.ycpcsp.PostDataClasses.UserAndExperiment
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
@@ -56,5 +59,27 @@ class CreationController {
         // TODO ATTEMPT TO OVERWRITE EXISTING DB INFO
         // result = updateExperiment(exp)
         return result
+    }
+    // this post mapping will take the chemical information of a newly created chemical from the creation page and insert into the database
+    // the returning of this post mapping should be a list of chemicals that will be added to Austins list
+    @PostMapping(path = ["/Creation-Of-New-Chemical"], consumes = ["application/json"], produces = ["application/json"])
+    @ResponseBody
+    fun createNewChemical(@RequestBody chemical : CreationNewChemicalFormData) : Boolean{
+        println("yay the think is making it here you heard");
+        var newChemical = Compound();
+        newChemical.solidTemp = chemical.ChemicalPhaseChangeSolid;
+        newChemical.name =  chemical.ChemicalName;
+        newChemical.mass = chemical.ChemicalMass;
+        newChemical.isWaterSoluable = chemical.ChemicalWaterSoluable;
+        newChemical.gasTemp = chemical.ChemicalPhaseChangeLiquid;
+        newChemical.formula = chemical.ChemicalFormula;
+        newChemical.density =  chemical.ChemicalDensity;
+        newChemical.colors.gasColor =chemical.ChemicalGasColor;
+        newChemical.colors.liquidColor = chemical.ChemicalLiquidColor;
+        newChemical.colors.solidColor =chemical.ChemicalSolidColor;
+
+        println(newChemical);
+        return insertCompound(newChemical);
+
     }
 }
