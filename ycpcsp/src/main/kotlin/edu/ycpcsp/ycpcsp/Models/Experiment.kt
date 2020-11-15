@@ -35,6 +35,17 @@ data class Experiment(
 
     override fun toString(): String {
         var result = "$title, made by\n"
+        result += "equipment:\n"
+        for(equip in equipment){
+            result += equip.toString()
+            result += "\n"
+        }
+        result += "chemical:\n"
+        for(chem in chemicals){
+            result += chem.toString()
+            result += "\n"
+        }
+        result += "steps:\n"
         for(step in steps){
             result += "$step"
         }
