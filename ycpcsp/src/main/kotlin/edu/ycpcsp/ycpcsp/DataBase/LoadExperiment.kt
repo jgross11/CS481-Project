@@ -46,8 +46,8 @@ fun LoadExperiment(id: String) : Experiment {
             for (x in 1..rs2.fetchSize) {
                 val object_ID = rs2.getInt("object_ID")
                 val amount = rs2.getInt("amount")
-
                 experiment.equipment[x - 1] = (EquipmentObject(object_ID, amount))
+                rs2.next()
             }
 
             //Chemical query
@@ -91,7 +91,6 @@ fun LoadExperiment(id: String) : Experiment {
                 experiment.steps[x - 1] = Step(step_number, actor_index, actor_ID, receiver_index, receiver_ID, function_ID)
                 rs4.next()
             }
-
 
 
             return experiment
