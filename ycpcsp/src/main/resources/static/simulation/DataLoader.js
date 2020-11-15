@@ -3,6 +3,8 @@ let SESSION_EXPERIMENT_NAME = "experimentData";
 // Constants for the fields of JSON for Experiment parsing to JSON
 let EXP_JSON_TITLE = "title";
 let EXP_JSON_CREATOR = "creatorName";
+let EXP_JSON_CHEM_PROPERTIES = "chemProperties";
+let EXP_JSON_EQUATIONS = "equations";
 let EXP_JSON_EQUIPMENT = "equipment";
 let EXP_JSON_EQUIP_OBJ_ID = "objectID";
 let EXP_JSON_EQUIP_AMOUNT = "amount";
@@ -82,6 +84,14 @@ function parseExperiment(rawData){
     // Create the base Experiment with the title and creator
     let exp = new Experiment(rawData[EXP_JSON_TITLE], rawData[EXP_JSON_CREATOR]);
 
+    // Parse chem properties
+    let properties = rawData[EXP_JSON_CHEM_PROPERTIES];
+    if(properties !== undefined) parseChemProperties(properties);
+
+    // Parse equations
+    let equations = rawData[EXP_JSON_EQUATIONS];
+    if(equations !== undefined) parseEquations(equations);
+
     // Set the Equipment in the Experiment from the raw data
     exp.setEquipment(parseEquipment(rawData[EXP_JSON_EQUIPMENT]));
 
@@ -93,6 +103,62 @@ function parseExperiment(rawData){
 
     // Return the parsed object
     return exp;
+}
+
+/**
+Parse out the ChemProperties from the given json list of ChemProperties
+Place them all in CHEMICAL_PROPERTIES
+rawProperties: The list of properties
+*/
+function parseChemProperties(rawProperties){
+    for(var i = 0; i < rawProperties.length; i++){
+        let p = rawProperties[i];
+        makeChemical(
+            i[CHEMICAL_PROPERTY_SYMBOL],
+            i[CHEMICAL_PROPERTY_NAME],
+            i[CHEMICAL_PROPERTY_CREATOR],
+            i[CHEMICAL_PROPERTY_COLOR_SOLID],
+            i[CHEMICAL_PROPERTY_COLOR_LIQUID],
+            i[CHEMICAL_PROPERTY_COLOR_GAS],
+            i[CHEMICAL_PROPERTY_ID],
+            i[CHEMICAL_PROPERTY_MOLAR_MASS],
+            i[CHEMICAL_PROPERTY_MELTING_POINT],
+            i[CHEMICAL_PROPERTY_BOILING_POINT],
+            i[CHEMICAL_PROPERTY_DENSITY],
+            i[CHEMICAL_PROPERTY_WATER_SOLUBLE],
+        );
+    }
+}
+
+/**
+Parse out the Equations from the given json list of Equations
+Place them all in EQUATION_PROPERTIES
+rawEquations: The list of equations
+*/
+function parseEquations(rawEquations){
+    for(var i = 0; i < rawEquations.length; i++){
+        let eq = rawEquations[i];
+        let reacts = parseEquationComponents(eq[EQUATION_PROPERTY_REACTANTS]);
+        let prods = parseEquationComponents(eq[EQUATION_PROPERTY_PRODUCTS]);
+        makeEquation(eq[EQUATION_PROPERTY_ID], reacts, prodS);
+    }
+}
+
+/**
+Parse out a list of components for reactants or products
+rawComponents: The list of components
+returns: The parsed list of EquationComponent objects
+*/
+function parseEquationComponents(rawComponents){
+    let comps = [];
+    for(var i = 0; i < rawComponents.length; i++){
+        let c = rawComponents[i];
+        comps.push(new EquationComponent(
+            c[EQUATION_COMPONENT_PROPERTY_COEFFICIENT],
+            C[EQUATION_COMPONENT_PROPERTY_ID]
+        ));
+    }
+    return comps;
 }
 
 /**
