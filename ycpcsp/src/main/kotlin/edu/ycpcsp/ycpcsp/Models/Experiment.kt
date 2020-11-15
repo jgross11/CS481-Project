@@ -13,6 +13,8 @@ data class Experiment(
     var equipment : Array<EquipmentObject> = arrayOf<EquipmentObject>()
     var chemicals : Array<ChemicalObject> = arrayOf<ChemicalObject>()
     var steps : Array<Step> = arrayOf<Step>()
+    var chemicalInformations : Array<ChemicalInformation> = arrayOf<ChemicalInformation>()
+    var equations : Array<ChemicalEquation> = arrayOf<ChemicalEquation>()
 
     fun addStep(step : Step, index : Int){
         steps[index] = step
@@ -32,6 +34,12 @@ data class Experiment(
     fun setStepListSize(size : Int){
         steps = Array(size){Step(-1, -1, false, -1, false, -1)}
     }
+    fun setChemicalInformationsListSize(size : Int){
+        chemicalInformations = Array(size){ChemicalInformation()}
+    }
+    fun setEquationListSize(size : Int){
+        equations = Array(size){ ChemicalEquation() }
+    }
 
     override fun toString(): String {
         var result = "$title, made by\n"
@@ -48,6 +56,14 @@ data class Experiment(
         result += "steps:\n"
         for(step in steps){
             result += "$step"
+        }
+        result += "chemical informations:\n"
+        for(ci in chemicalInformations){
+            result += "${ci.toString()}\n"
+        }
+        result += "equations:\n"
+        for(eq in equations){
+            result += "${eq.toString()}\n"
         }
         return result
     }
