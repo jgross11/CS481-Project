@@ -85,11 +85,11 @@ function parseExperiment(rawData){
     let exp = new Experiment(rawData[EXP_JSON_TITLE], rawData[EXP_JSON_CREATOR]);
 
     // Parse chem properties
-    let properties = rawData[EXP_JSON_CHEM_PROPERTIES];
+    let properties = rawData[EXP_JSON_CHEM_PROPERTIES]; // TODO Should always be defined, update this when database is updated
     if(properties !== undefined) parseChemProperties(properties);
 
     // Parse equations
-    let equations = rawData[EXP_JSON_EQUATIONS];
+    let equations = rawData[EXP_JSON_EQUATIONS]; // TODO Should always be defined, update this when database is updated
     if(equations !== undefined) parseEquations(equations);
 
     // Set the Equipment in the Experiment from the raw data
