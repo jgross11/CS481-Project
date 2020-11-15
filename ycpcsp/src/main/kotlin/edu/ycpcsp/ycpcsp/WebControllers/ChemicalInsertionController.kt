@@ -1,7 +1,10 @@
 package edu.ycpcsp.ycpcsp.WebControllers
 
+import edu.ycpcsp.ycpcsp.DataBase.getAllChemicalInformation
+import edu.ycpcsp.ycpcsp.DataBase.getAllEquationInformation
 import edu.ycpcsp.ycpcsp.DataBase.getCompoundInformationByName
 import edu.ycpcsp.ycpcsp.DataBase.insertCompound
+import edu.ycpcsp.ycpcsp.Models.ChemicalEquationResult
 import edu.ycpcsp.ycpcsp.Models.ChemicalInformation
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
@@ -20,6 +23,14 @@ class ChemicalInsertionController {
     fun sendHomePage(): String{
         println("Sending user to chemical insertion page...")
         return "ChemicalInsertion.html"
+    }
+
+    // returns all chemical information in DB, raw
+    @PostMapping(path = ["/load-all-chemicals"], consumes = ["application/json"], produces = ["application/json"])
+    @ResponseBody
+    fun loadAllChemicalInformation() : Array<ChemicalInformation>?{
+        println("Sending all equation information")
+        return getAllChemicalInformation()
     }
 
     // given information about a chemical, attempt to insert the information into the DB
