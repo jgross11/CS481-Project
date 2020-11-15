@@ -20,6 +20,7 @@ let ID_EQUIP_FLASK_125mL = 13;
 let ID_EQUIP_FLASK_1000mL = 14;
 let ID_EQUIP_WEIGH_BOAT = 15;
 let ID_EQUIP_STIR_ROD = 16;
+let ID_EQUIP_EYE_DROPPER = 17;
 
 var EquipID = [
     { Equip: 'BEAKER_50mL', ID:1},
@@ -37,7 +38,8 @@ var EquipID = [
     { Equip: 'FLASK_100mL',ID:13 },
     { Equip: 'FLASK_1000mL',ID:14 },
     { Equip: 'WEIGH_BOAT',ID:15 },
-    { Equip: 'STIR_ROD',ID:16 }
+    { Equip: 'STIR_ROD',ID:16 },
+    { Equip: 'EYE_DROPPER',ID:17 }
 ];
 
 sessionStorage.setItem("EquipID", JSON.stringify(EquipID));
@@ -131,6 +133,7 @@ function idToEquipment(id){
         case ID_EQUIP_SCALE: eq = new ScaleController2D(new Scale()); break;
         case ID_EQUIP_TRASHCAN: eq = new TrashcanController2D(new Trashcan()); break;
         case ID_EQUIP_STIR_ROD: eq = new StirRodController2D(new StirRod()); break;
+        case ID_EQUIP_EYE_DROPPER: eq = new EyeDropperController2D(new EyeDropper()); break;
 
         default: eq = null;
     }

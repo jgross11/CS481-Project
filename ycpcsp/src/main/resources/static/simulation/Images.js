@@ -6,6 +6,7 @@ var SPRITE_WEIGH_BOAT;
 var SPRITE_TRASH_CAN;
 var SPRITE_SCALE;
 var SPRITE_STIR_ROD;
+var SPRITE_EYE_DROPPER;
 
 /**
 Load in all images for all equipment
@@ -19,4 +20,5 @@ function loadImages(){
     SPRITE_TRASH_CAN = loadImage('./simulation/assets/trashcan.png');
     SPRITE_SCALE = loadImage('./simulation/assets/Scale.png');
     SPRITE_STIR_ROD = loadImage('./simulation/assets/stirRod.png');
+    SPRITE_EYE_DROPPER = loadImage('./simulation/assets/eyeDropper.png');
 }

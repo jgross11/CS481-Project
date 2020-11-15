@@ -113,6 +113,16 @@ let WEIGH_BOAT_CHEM_HEIGHT = 3;
 // The vertices used to render the shape of the weigh boat's chemicals
 let WEIGH_BOAT_VERTICES = [[0, 1], [1, 1], [0.5, 0]];
 
+
+// X offset for rendering the eye dropper contents, percentage based on width of dropper
+let EYE_DROPPER_X_OFFSET = 0.25;
+// Y offset for rendering the eye dropper contents, percentage based on height of dropper
+let EYE_DROPPER_Y_OFFSET = 0.26;
+// The percentage of a eye dropper's width which is used to render chemicals
+let EYE_DROPPER_WIDTH_OFFSET = 0.5;
+// The percentage of a eye dropper's height which is used to render chemicals
+let EYE_DROPPER_HEIGHT_OFFSET = 0.63;
+
 // The color of the text on scales
 let SCALE_TEXT_COLOR = 0;
 // The size of the text displayed on scales
