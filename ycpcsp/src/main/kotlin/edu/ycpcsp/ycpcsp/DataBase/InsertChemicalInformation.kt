@@ -12,7 +12,7 @@ fun insertCompound(comp : ChemicalInformation) : Boolean{
     var connection = getDBConnection()
     if(connection != null){
         return try{
-            var preparedStatement = connection.prepareStatement("INSERT INTO Database.Chemical_Information (Chemical_Formula, Chemical_Name, Chemical_Mass, Chemical_Density, Chemical_Water_Soluble, Chemical_Phase_Change_Solid, Chemical_Phase_Change_Gas) VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)
+            var preparedStatement = connection.prepareStatement("INSERT INTO Database.Chemical_Information (Chemical_Formula, Chemical_Name, Chemical_Mass, Chemical_Density, Chemical_Water_Soluble, Chemical_Phase_Change_Solid, Chemical_Phase_Change_Gas, ChemicalCreatorID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)
             preparedStatement.setString(1, comp.formula)
             preparedStatement.setString(2, comp.name)
             preparedStatement.setDouble(3, comp.mass)
@@ -20,6 +20,8 @@ fun insertCompound(comp : ChemicalInformation) : Boolean{
             preparedStatement.setBoolean(5, comp.isWaterSoluable)
             preparedStatement.setDouble(6, comp.solidTemp)
             preparedStatement.setDouble(7, comp.gasTemp)
+            // TODO: get userID and insert here
+            preparedStatement.setInt(8, -1)
             preparedStatement.executeUpdate()
             var rs = preparedStatement.generatedKeys
 
