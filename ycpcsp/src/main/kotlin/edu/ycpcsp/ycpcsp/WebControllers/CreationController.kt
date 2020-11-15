@@ -4,7 +4,7 @@ package edu.ycpcsp.ycpcsp.WebControllers
 import edu.ycpcsp.ycpcsp.DataBase.CreateExperiment
 import edu.ycpcsp.ycpcsp.DataBase.LoadExperiment
 import edu.ycpcsp.ycpcsp.DataBase.insertCompound
-import edu.ycpcsp.ycpcsp.Models.Compound
+import edu.ycpcsp.ycpcsp.Models.ChemicalInformation
 import edu.ycpcsp.ycpcsp.Models.Experiment
 import edu.ycpcsp.ycpcsp.PostDataClasses.CreationNewChemicalFormData
 import edu.ycpcsp.ycpcsp.PostDataClasses.UserAndExperiment
@@ -66,7 +66,7 @@ class CreationController {
     @ResponseBody
     fun createNewChemical(@RequestBody chemical : CreationNewChemicalFormData) : Boolean{
         println("yay the think is making it here you heard");
-        var newChemical = Compound();
+        var newChemical = ChemicalInformation();
         newChemical.solidTemp = chemical.ChemicalPhaseChangeSolid;
         newChemical.name =  chemical.ChemicalName;
         newChemical.mass = chemical.ChemicalMass;

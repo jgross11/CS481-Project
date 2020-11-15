@@ -2,9 +2,7 @@ package edu.ycpcsp.ycpcsp.WebControllers
 
 import edu.ycpcsp.ycpcsp.DataBase.getCompoundInformationByName
 import edu.ycpcsp.ycpcsp.DataBase.insertCompound
-import edu.ycpcsp.ycpcsp.Models.Compound
-import edu.ycpcsp.ycpcsp.Models.User
-import edu.ycpcsp.ycpcsp.PostDataClasses.LoginFormData
+import edu.ycpcsp.ycpcsp.Models.ChemicalInformation
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -28,7 +26,7 @@ class ChemicalInsertionController {
     // return true if information is added, false otherwise.
     @PostMapping(path = ["/submit-chemical-information"], consumes = ["application/json"], produces = ["application/json"])
     @ResponseBody
-    fun submitNewChemical(@RequestBody chemical : Compound) : Boolean {
+    fun submitNewChemical(@RequestBody chemical : ChemicalInformation) : Boolean {
         println("received following chemical information")
         println(chemical.toString())
         return if(getCompoundInformationByName(chemical.name) != null){

@@ -1,6 +1,6 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
-import edu.ycpcsp.ycpcsp.Models.Compound
+import edu.ycpcsp.ycpcsp.Models.ChemicalInformation
 import java.sql.SQLException
 import java.sql.Statement
 
@@ -8,7 +8,7 @@ fun insertElement(){
 
 }
 
-fun insertCompound(comp : Compound) : Boolean{
+fun insertCompound(comp : ChemicalInformation) : Boolean{
     var connection = getDBConnection()
     if(connection != null){
         return try{
