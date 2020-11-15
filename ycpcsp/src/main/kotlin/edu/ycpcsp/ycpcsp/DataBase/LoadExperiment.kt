@@ -9,20 +9,30 @@ import java.sql.SQLException
 import java.util.*
 
 
+/**
+ *  This function loads all of the necessary components to load and interact with an experiment on the front end.
+ *  Components loaded include:
+ *  Experiment properties - name, creator and experimentID
+ *  A list containing all equipment
+ *  A list containing all chemical instances (amounts, concentrations)
+ *  A list containing all step information
+ *  A list containing all chemical information for chemical instances (molar mass, formula, etc.) - TODO WIP
+ *  A list containing all chemical equation information (reactant / product formulas and coefficients) - TODO WIP
+ *  @param id: the id of the experiment to load
+ *  @return: the constructed Experiment object
+ */
 fun LoadExperiment(id: String) : Experiment {
     val connection = getDBConnection()
     if(connection != null) {
         try {
 
-            //Experiment Query
+            //Experiment object
             var experiment = Experiment()
 
-            //User query
-            //These queries dont' have
+            //Creator name query
             var preparedSt = connection.prepareStatement("Select Distinct title, firstName, lastName from Database.Experiments join Database.Users on Database.Experiments.creatorID = Database.Users.UserID where ExperimentsID = ? ")
             preparedSt.setString(1, id)
             val rs = preparedSt.executeQuery()
-
             rs.fetchSize = 2
             rs.next()
             val title = rs.getString("title")
@@ -50,7 +60,7 @@ fun LoadExperiment(id: String) : Experiment {
                 rs2.next()
             }
 
-            //Chemical query
+            //Chemical instance query
             preparedSt = connection.prepareStatement("Select type_id, mass, concentration from Database.Chemicals join Database.Experiments on Database.Experiments.ExperimentsID = Database.Chemicals.experiment_ID where experiment_ID = ? ")
             preparedSt.setString(1, id)
 
@@ -68,6 +78,9 @@ fun LoadExperiment(id: String) : Experiment {
                 experiment.chemicals[x - 1] = ChemicalObject(type_id, quantity, concentration)
                 rs3.next()
             }
+
+            // TODO: insert chemical information query
+            // TODO: insert equation information query (not necessarily in that order)
 
 
             //Step Query
