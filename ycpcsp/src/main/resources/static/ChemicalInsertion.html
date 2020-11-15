@@ -6,79 +6,89 @@
 </head>
 <body>
     <script src="helperFunctions.js"></script>
-    <label for="chemicalNameBox">Enter chemical name</label><br>
-    <div id="chemicalNameBox-error"></div><br>
-    <input type="text" id="chemicalNameBox" placeholder="Ex. Water"><br><br>
+    <div id="chemicalContainer">
+        <div id="insertChemicalFormContainer">
+            <label for="chemicalNameBox">Enter chemical name</label><br>
+            <div id="chemicalNameBox-error"></div><br>
+            <input type="text" id="chemicalNameBox" placeholder="Ex. Water"><br><br>
 
-    <label for="chemicalFormulaBox">Enter chemical formula</label><br>
-    <div id="chemicalFormulaBox-error"></div><br>
-    <input type="text" id="chemicalFormulaBox" placeholder="Ex. H2O"><br><br>
+            <label for="chemicalFormulaBox">Enter chemical formula</label><br>
+            <div id="chemicalFormulaBox-error"></div><br>
+            <input type="text" id="chemicalFormulaBox" placeholder="Ex. H2O"><br><br>
 
-    <label for="chemicalMassBox">Enter chemical mass (g/mol)</label><br>
-    <div id="chemicalMassBox-error"></div><br>
-    <input type="number" id="chemicalMassBox" placeholder="Ex. 18.01528"><br><br>
+            <label for="chemicalMassBox">Enter chemical mass (g/mol)</label><br>
+            <div id="chemicalMassBox-error"></div><br>
+            <input type="number" id="chemicalMassBox" placeholder="Ex. 18.01528"><br><br>
 
-    <label for="chemicalDensityBox">Enter chemical density (g/mL)</label><br>
-    <div id="chemicalDensityBox-error"></div><br>
-    <input type="number" id="chemicalDensityBox" placeholder="Ex. 1.0"><br><br>
+            <label for="chemicalDensityBox">Enter chemical density (g/mL)</label><br>
+            <div id="chemicalDensityBox-error"></div><br>
+            <input type="number" id="chemicalDensityBox" placeholder="Ex. 1.0"><br><br>
 
-    Is your chemical water soluble?<br>
-    <div id="solubility-error"></div><br>
-    <input type="radio" id="waterSoluble" name="solubility" value="1">
-    <label for="waterSoluble">Water soluble</label><br>
+            Is your chemical water soluble?<br>
+            <div id="solubility-error"></div><br>
+            <input type="radio" id="waterSoluble" name="solubility" value="1">
+            <label for="waterSoluble">Water soluble</label><br>
 
-    <input type="radio" id="notWaterSoluble" name="solubility" value="0">
-    <label for="notWaterSoluble">Not water soluble</label><br><br>
+            <input type="radio" id="notWaterSoluble" name="solubility" value="0">
+            <label for="notWaterSoluble">Not water soluble</label><br><br>
 
-    <label for="chemicalMeltingPoint">Enter melting point temp (deg C)</label><br>
-    <div id="chemicalMeltingPoint-error"></div><br>
-    <input type="text" id="chemicalMeltingPoint" placeholder="Ex. 0.0"><br><br>
+            <label for="chemicalMeltingPoint">Enter melting point temp (deg C)</label><br>
+            <div id="chemicalMeltingPoint-error"></div><br>
+            <input type="text" id="chemicalMeltingPoint" placeholder="Ex. 0.0"><br><br>
 
-    <label for="chemicalBoilingPoint">Enter boiling point temp (deg C)</label><br>
-    <div id="chemicalBoilingPoint-error"></div><br>
-    <input type="number" id="chemicalBoilingPoint" placeholder="Ex. 100.0"><br><br>
+            <label for="chemicalBoilingPoint">Enter boiling point temp (deg C)</label><br>
+            <div id="chemicalBoilingPoint-error"></div><br>
+            <input type="number" id="chemicalBoilingPoint" placeholder="Ex. 100.0"><br><br>
 
-    <div id="gasColorPreviewContainer">
-        Gas Color Preview: <br>
-        <div style="width: 50px; height: 50px"id="gasColorPreview">
+            <div id="gasColorPreviewContainer">
+                Gas Color Preview: <br>
+                <div style="width: 50px; height: 50px"id="gasColorPreview"></div>
+            </div>
+            <label for="gasColor">Select the color of your element as a gas:</label><br>
+            <input type="color" id="gasColor" name="gasColor" value="#000000" oninput="updateColor(1)"><br>
+            <label for="gasColorAlpha">Select the alpha channel of your element as a gas:</label><br>
+            <input type="range" min="0" max="255" value="255" class="slider" id="gasColorAlpha" oninput="updateColor(1)"><br><br>
 
+
+            <div id="liquidColorPreviewContainer">
+                Liquid Color Preview: <br>
+                <div style="width: 50px; height: 50px"id="liquidColorPreview"></div>
+            </div>
+            <label for="liquidColor">Select the color of your element as a liquid:</label><br>
+            <input type="color" id="liquidColor" name="liquidColor" value="#000000" oninput="updateColor(2)"><br><br>
+            <label for="liquidColorAlpha">Select the alpha channel of your element as a liquid:</label><br>
+            <input type="range" min="0" max="255" value="255" class="slider" id="liquidColorAlpha" oninput="updateColor(2)"><br><br>
+
+
+            <div id="solidColorPreviewContainer">
+                Solid Color Preview: <br>
+                <div style="width: 50px; height: 50px"id="solidColorPreview"></div>
+            </div>
+            <label for="solidColor">Select the color of your element as a solid:</label><br>
+            <input type="color" id="solidColor" name="solidColor" value="#000000" oninput="updateColor(3)"><br>
+            <label for="solidColorAlpha">Select the alpha channel of your element as a solid:</label><br>
+            <input type="range" min="0" max="255" value="255" class="slider" id="solidColorAlpha" oninput="updateColor(3)"><br><br>
+
+            <div id="chemicalSubmissionError"></div>
+            <input type="button" id="submitButton" value="Submit" onclick="submitChemical()">
+        </div>
+        <br> <br>
+        <div id="chemicalSearchContainer">
+            <label for="chemicalSeachBar">Search for chemical</label><br>
+            <input type="text" placeholder="Search for chemical" name="chemicalSeachBar" id="chemicalSeachBar" oninput="searchChemical(this.value)"><br><br>
+            <div id="chemicalSearchResultContainer">
+
+            </div>
         </div>
     </div>
-    <label for="gasColor">Select the color of your element as a gas:</label><br>
-    <input type="color" id="gasColor" name="gasColor" value="#000000" oninput="updateColor(1)"><br>
-    <label for="gasColorAlpha">Select the alpha channel of your element as a gas:</label><br>
-    <input type="range" min="0" max="255" value="255" class="slider" id="gasColorAlpha" oninput="updateColor(1)"><br><br>
-
-
-    <div id="liquidColorPreviewContainer">
-        Liquid Color Preview: <br>
-        <div style="width: 50px; height: 50px"id="liquidColorPreview">
-
-        </div>
-    </div>
-    <label for="liquidColor">Select the color of your element as a liquid:</label><br>
-    <input type="color" id="liquidColor" name="liquidColor" value="#000000" oninput="updateColor(2)"><br><br>
-    <label for="liquidColorAlpha">Select the alpha channel of your element as a liquid:</label><br>
-    <input type="range" min="0" max="255" value="255" class="slider" id="liquidColorAlpha" oninput="updateColor(2)"><br><br>
-
-
-    <div id="solidColorPreviewContainer">
-        Solid Color Preview: <br>
-        <div style="width: 50px; height: 50px"id="solidColorPreview">
-
-        </div>
-    </div>
-
-    <label for="solidColor">Select the color of your element as a solid:</label><br>
-    <input type="color" id="solidColor" name="solidColor" value="#000000" oninput="updateColor(3)"><br>
-    <label for="solidColorAlpha">Select the alpha channel of your element as a solid:</label><br>
-    <input type="range" min="0" max="255" value="255" class="slider" id="solidColorAlpha" oninput="updateColor(3)"><br><br>
-
-    <input type="button" id="submitButton" value="Submit" onclick="submitChemical()">
 </body>
 
 <script>
-
+    let chemicalSearchResultContainer = document.getElementById("chemicalSearchResultContainer");
+    let allChemicalsList = {};
+    let submissionErrorDiv = document.getElementById("chemicalSubmissionError");
+    loadChemicalsInDB();
+    
     function updateColor(index){
         let color = 0;
         switch(index){
@@ -95,6 +105,40 @@
                 document.getElementById("solidColorPreview").style.backgroundColor = color;
             break;
         };
+    }
+
+    function addChemical(chemicalID){
+        console.log("please add chemicalID=" + chemicalID + " to equation now");
+    }
+
+    function searchChemical(searchValue){
+        let searchResults = []
+        let searchResultSize = 0;
+        for(let i = 0; i < allChemicalsList.length; i++){
+            if(allChemicalsList[i]['formula'].includes(searchValue)){
+                searchResults[searchResultSize++] = allChemicalsList[i];
+            }
+        }
+        displayChemicalResults(searchResults);
+    }
+
+    function loadChemicalsInDB(){
+        let x = {};
+
+        postData('load-all-chemicals', x).then(function(data){
+            console.log(data);
+            allChemicalsList = data;
+            console.log(allChemicalsList);
+            displayChemicalResults(allChemicalsList);
+        });
+    }
+
+    function displayChemicalResults(list){
+        chemicalSearchResultContainer.innerHTML = "";
+        for(let i = 0; i < list.length; i++){
+            chemicalSearchResultContainer.innerHTML += '<div style="border: 1px solid black" id="chemicalSearchResult" onclick="addChemical('+list[i]["chemicalInformationID"]+')">'+
+                                                        list[i]["name"]+" | "+list[i]["formula"]+" | molecular mass="+list[i]["mass"]+" | density="+list[i]["density"]+" | gas @ "+list[i]["gasTemp"]+'°C'+" | solid @ "+list[i]["solidTemp"]+'°C</div>'
+        }
     }
 
     function submitChemical(){
@@ -141,11 +185,16 @@
             };
             console.log("chemical information");
             console.log(chemical);
+            submissionErrorDiv.innerHTML = "";
             postData('submit-chemical-information', chemical).then(function(data){
                 if(data){
-                    document.write("submission successful");
+                    // since new chemical now in DB, repull chemicals to load new chemical into list
+                    // TODO there is absolutely no need to load every chemical again, this could just query for the 
+                    // TODO newly added chemical, but, alas, time...
+                    submissionErrorDiv.innerHTML = "Submission successful";
+                    loadChemicalsInDB();
                 } else{
-                    document.write("submission failed");
+                    submissionErrorDiv.innerHTML = "Submission failed";
                 }
             });
         } else{
