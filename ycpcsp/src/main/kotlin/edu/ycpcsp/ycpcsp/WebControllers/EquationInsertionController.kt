@@ -2,6 +2,7 @@ package edu.ycpcsp.ycpcsp.WebControllers
 
 import edu.ycpcsp.ycpcsp.DataBase.getCompoundInformationByName
 import edu.ycpcsp.ycpcsp.DataBase.insertCompound
+import edu.ycpcsp.ycpcsp.DataBase.insertEquation
 import edu.ycpcsp.ycpcsp.Models.Compound
 import edu.ycpcsp.ycpcsp.Models.User
 import edu.ycpcsp.ycpcsp.PostDataClasses.EquationFormData
@@ -32,6 +33,11 @@ class EquationInsertionController {
     fun submitNewChemical(@RequestBody equation : EquationFormData) : Boolean {
         println("received following chemical information")
         println(equation.toString())
-        return true
+        return if(insertEquation(equation)){
+            println("equation successfully inserted")
+            true
+        } else{
+            false
+        }
     }
 }
