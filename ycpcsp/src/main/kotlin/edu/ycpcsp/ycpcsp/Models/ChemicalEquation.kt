@@ -24,7 +24,14 @@ class ChemicalEquation (var equationID : Int, var creatorID : Int){
     }
 
     override fun toString() : String{
-        return "$reactantString -> $productString, created by $creatorID with ID $equationID"
+        var result = "Created by: $creatorID with ID $equationID\n"
+        for(i in reactants.indices){
+            result += "reactant: ${reactants[i].coefficient} of ID ${reactants[i].chemicalID}\n"
+        }
+        for(i in reactants.indices){
+            result += "product: ${products[i].coefficient} of ID ${products[i].chemicalID}\n"
+        }
+        return result
     }
 
 }
