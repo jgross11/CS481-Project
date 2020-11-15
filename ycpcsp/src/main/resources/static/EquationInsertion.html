@@ -6,25 +6,35 @@
 </head>
 <body>
     <script src="helperFunctions.js"></script>
-    <div id="insertFormContainer">
-        <div id="equationPreview"></div><br>
-        <div id="equationError"></div><br>
+    <div id="equationContainer">
+        <div id="insertFormContainer">
+            <div id="equationPreview"></div><br>
+            <div id="equationError"></div><br>
 
-        <input type="button" value="Add Reactant" onclick="addReactant(); updatePreview()"> 
-        <input type="button" value="Add Product" onclick="addProduct(); updatePreview()">
-        <input type="button" value="Submit Equation" onclick="submitEquation()"><br> 
-        <div id="reactantContainer">
-            Reactants <br>
-            <input type="number" name="reactantCoefficient"
-             value="1" min="1" step="1" style="width: 50px"
-             oninput="updatePreview()"> <input name="reactantFormula"type="text" value="H2" style="width: 70px"oninput="updatePreview()" required>
+            <input type="button" value="Add Reactant" onclick="addReactant(); updatePreview()"> 
+            <input type="button" value="Add Product" onclick="addProduct(); updatePreview()">
+            <input type="button" value="Submit Equation" onclick="submitEquation()"><br> 
+            <div id="reactantContainer">
+                Reactants <br>
+                <input type="number" name="reactantCoefficient"
+                value="1" min="1" step="1" style="width: 50px"
+                oninput="updatePreview()"> <input name="reactantFormula"type="text" value="H2" style="width: 70px"oninput="updatePreview()" required>
+            </div>
+            <br>
+            <div id="productContainer">
+                Products <br>
+                <input type="number" name="productCoefficient"
+                value="1" min="1" step="1" style="width: 50px"
+                oninput="updatePreview()"> <input name="productFormula"type="text" value="H2" style="width: 70px"oninput="updatePreview()">
+            </div>
         </div>
-        <br>
-        <div id="productContainer">
-            Products <br>
-            <input type="number" name="productCoefficient"
-             value="1" min="1" step="1" style="width: 50px"
-             oninput="updatePreview()"> <input name="productFormula"type="text" value="H2" style="width: 70px"oninput="updatePreview()">
+        <br> <br>
+        <div id="equationSearchContainer">
+            <label for="equationSeachBar">Search for equation</label><br>
+            <input type="text" placeholder="Search for equation" name="equationSeachBar" id="equationSeachBar" oninput="search(this.value)"><br><br>
+            <div id="searchResultContainer">
+
+            </div>
         </div>
     </div>
 
@@ -36,41 +46,81 @@
     let reactantFormulas = document.getElementsByName("reactantFormula");
     let productCoefficients = document.getElementsByName("productCoefficient");
     let productFormulas = document.getElementsByName("productFormula");
+    let searchResultContainer = document.getElementById("searchResultContainer");
+    let allEquationList = {};
 
+    loadEquationsInDB();
     updatePreview();
 
-    // called when add reactant function is called
-    // temporarily stores reactant coefficient / formula information, 
-    // writes a new coefficient and formula field to reactant container,
-    // then writes old reactant coefficient / formula information
+    function loadEquationsInDB(){
+        let x = {};
 
-    // NOTE: storing / rewriting required as updating container innerHTML
-    // NOTE: resets values of all its existing fields
+        postData('load-all-equations', x).then(function(data){
+            console.log(data);
+            allEquationList = data;
+            console.log(allEquationList);
+            displayResults(allEquationList);
+        });
+    }
+
+    function search(searchValue){
+        let searchResults = []
+        let searchResultSize = 0;
+        for(let i = 0; i < allEquationList.length; i++){
+            if(allEquationList[i]['string'].includes(searchValue)){
+                searchResults[searchResultSize++] = allEquationList[i];
+            }
+        }
+        displayResults(searchResults);
+    }
+
+    function displayResults(list){
+        searchResultContainer.innerHTML = "";
+        for(let i = 0; i < list.length; i++){
+            searchResultContainer.innerHTML += '<div style="border: 1px solid black" id="searchResult" onclick="addEquation('+list[i]["equationID"]+')">'+list[i]["string"]+'</div>'
+        }
+    }
+
+    function addEquation(equationID){
+        console.log("please add equationID=" + equationID + " to equation now");
+    }
+
+    /*
+    called when add reactant function is called
+    temporarily stores reactant coefficient / formula information, 
+    writes a new coefficient and formula field to reactant container,
+    then writes old reactant coefficient / formula information
+
+    NOTE: storing / rewriting required as updating container innerHTML
+    NOTE: resets values of all its existing fields
+    */
     function addReactant(){
         let temp = storeCoefficientsAndFormulas(reactantCoefficients, reactantFormulas);
         reactantContainer.innerHTML += "<br><input type=\"number\" name=\"reactantCoefficient\" value=\"1\" min=\"1\" step=\"1\" style=\"width: 50px\" oninput=\"updatePreview()\"> <input name=\"reactantFormula\"type=\"text\" value=\"H2\"style=\"width: 70px\"oninput=\"updatePreview()\">";
         writeCoefficientsAndFormulas(reactantCoefficients, reactantFormulas, temp);
     }
 
-    // called when add product function is called
-    // temporarily stores product coefficient / formula information, 
-    // writes a new coefficient and formula field to product container,
-    // then writes old product coefficient / formula information
+    /* 
+    called when add product function is called
+    temporarily stores product coefficient / formula information, 
+    writes a new coefficient and formula field to product container,
+    then writes old product coefficient / formula information
 
-    // NOTE: storing / rewriting required as updating container innerHTML
-    // NOTE: resets values of all its existing fields
+    NOTE: storing / rewriting required as updating container innerHTML
+    NOTE: resets values of all its existing fields
+    */
     function addProduct(){
         let temp = storeCoefficientsAndFormulas(productCoefficients, productFormulas);
         productContainer.innerHTML += "<br><input type=\"number\" name=\"productCoefficient\" value=\"1\" min=\"1\" step=\"1\" style=\"width: 50px\" oninput=\"updatePreview()\"> <input name=\"productFormula\"type=\"text\" value=\"H2\"style=\"width: 70px\"oninput=\"updatePreview()\">"
         writeCoefficientsAndFormulas(productCoefficients, productFormulas, temp);
     }
 
-    /**
+    /*
      * Copies coefficient and formula together into array, creates array of these pairs
      * coefficientArray - the array containing the coefficient values
      * formulaArray - the array containing the formula values
      * returns - an array whose kth element is in the form [coefficientArray[k], formulaArray[k]]
-    **/
+    */
      function storeCoefficientsAndFormulas(coefficientArray, formulaArray){
         let result = [];
         for(let i = 0; i < coefficientArray.length; i++){
@@ -79,7 +129,7 @@
         return result;
     }
 
-    /**
+    /*
      * Writes coefficient and formula information into their respective arrays
      * coefficientArray - the array that will contain coefficient values
      * formulaArray - the array that will contain formula values
@@ -182,6 +232,15 @@
         postData('submit-equation-information', equation).then(function(data){
             if(data == true){
                 errorDiv.innerHTML = "Submission succesful!";
+                
+                // since new equation now in DB, repull equations to load new equation into list
+                // TODO there is absolutely no need to load every equation again, this could just query for the 
+                // TODO newly added equation, but, alas, time...
+                let x = {};
+                postData('load-all-equations', x).then(function(data){
+                    allEquationList = data;
+                    displayResults(allEquationList);
+                });
             } else{
                 errorDiv.innerHTML = "Submission failed! Please ensure every product and reactant in your equation is in our system.";
             }
