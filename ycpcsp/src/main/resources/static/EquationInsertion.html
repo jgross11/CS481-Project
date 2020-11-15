@@ -7,10 +7,9 @@
 <body>
     <script src="helperFunctions.js"></script>
     <div id="insertFormContainer">
-        <div id="equationPreview">
-            
-        </div>
-        <br>
+        <div id="equationPreview"></div><br>
+        <div id="equationError"></div><br>
+
         <input type="button" value="Add Reactant" onclick="addReactant(); updatePreview()"> 
         <input type="button" value="Add Product" onclick="addProduct(); updatePreview()">
         <input type="button" value="Submit Equation" onclick="submitEquation()"><br> 
@@ -115,6 +114,64 @@
 
     // builds and attempts to submit equation information to DB
     function submitEquation(){
+
+        // check if given information is valid
+        // reactant coefficients 
+        let errorDiv = document.getElementById("equationError");
+        errorDiv.innerHTML = "";
+        for(let i = 0; i < reactantCoefficients.length; i++){
+            let coefficientValue = parseInt(reactantCoefficients[i].value);
+            console.log("value: " + coefficientValue);
+            if(isNaN(coefficientValue)){
+                errorDiv.innerHTML += "Please ensure all reactant coefficients are numbers.<br>";
+                break;
+            }
+        }
+
+        // reactant formula
+        for(let i = 0; i < reactantFormulas.length; i++){
+            let formulaValue = reactantFormulas[i].value;
+            console.log("fvalue: " + formulaValue);
+            if(formulaValue.length > 0){
+                let firstChar = formulaValue.charAt(0);
+                if(firstChar == '(' || firstChar.toUpperCase() != firstChar.toLowerCase()){
+                    continue;
+                }
+            }
+            errorDiv.innerHTML += "Please ensure all reactant formulas are valid.<br>";
+            break;
+        }
+
+        // product coefficients
+        for(let i = 0; i < productCoefficients.length; i++){
+            let coefficientValue = parseInt(productCoefficients[i].value);
+            console.log("value: " + coefficientValue);
+            if(isNaN(coefficientValue)){
+                errorDiv.innerHTML += "Please ensure all product coefficients are numbers.<br>";
+                break;
+            }
+        }
+
+        // product formula
+        for(let i = 0; i < productFormulas.length; i++){
+            let formulaValue = productFormulas[i].value;
+            console.log("fvalue: " + formulaValue);
+            if(formulaValue.length > 0){
+                let firstChar = formulaValue.charAt(0);
+                if(firstChar == '(' || firstChar.toUpperCase() != firstChar.toLowerCase()){
+                    continue;
+                }
+            }
+            errorDiv.innerHTML += "Please ensure all product formulas are valid.<br>";
+            break;
+        }
+
+        // at least one error occurred, invalid submission
+        if(errorDiv.innerHTML != ""){
+            return;
+        }
+
+
         let reactants = storeCoefficientsAndFormulas(reactantCoefficients, reactantFormulas);
         let products = storeCoefficientsAndFormulas(productCoefficients, productFormulas);
         let equation = {
@@ -123,7 +180,11 @@
         };
         console.log(equation);
         postData('submit-equation-information', equation).then(function(data){
-            console.log(data);
+            if(data == true){
+                errorDiv.innerHTML = "Submission succesful!";
+            } else{
+                errorDiv.innerHTML = "Submission failed! Please ensure every product and reactant in your equation is in our system.";
+            }
         });
     }
 
