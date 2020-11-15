@@ -24,14 +24,14 @@ fun insertCompound(comp : ChemicalInformation) : Boolean{
             var rs = preparedStatement.generatedKeys
 
             if(rs.next()){
-                comp.compoundID = rs.getInt(1)
+                comp.chemicalInformationID = rs.getInt(1)
             }
 
             preparedStatement = connection.prepareStatement("INSERT INTO Database.ChemistryGraphics (GasInteger, LiquidInteger, SolidInteger, ChemicalID) VALUES (?, ?, ?, ?);")
             preparedStatement.setInt(1, comp.colors.gasColor)
             preparedStatement.setInt(2, comp.colors.liquidColor)
             preparedStatement.setInt(3, comp.colors.solidColor)
-            preparedStatement.setInt(4, comp.compoundID)
+            preparedStatement.setInt(4, comp.chemicalInformationID)
             preparedStatement.executeUpdate()
 
 

@@ -3,7 +3,7 @@ package edu.ycpcsp.ycpcsp.WebControllers
 import edu.ycpcsp.ycpcsp.DataBase.getCompoundInformationByName
 import edu.ycpcsp.ycpcsp.DataBase.insertCompound
 import edu.ycpcsp.ycpcsp.DataBase.insertEquation
-import edu.ycpcsp.ycpcsp.Models.Compound
+import edu.ycpcsp.ycpcsp.Models.ChemicalInformation
 import edu.ycpcsp.ycpcsp.Models.User
 import edu.ycpcsp.ycpcsp.PostDataClasses.EquationFormData
 import edu.ycpcsp.ycpcsp.PostDataClasses.LoginFormData

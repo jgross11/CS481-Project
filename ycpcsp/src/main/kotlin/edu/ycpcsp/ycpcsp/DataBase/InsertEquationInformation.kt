@@ -1,7 +1,7 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
 import edu.ycpcsp.ycpcsp.Models.ChemicalEquation
-import edu.ycpcsp.ycpcsp.Models.Compound
+import edu.ycpcsp.ycpcsp.Models.ChemicalInformation
 import edu.ycpcsp.ycpcsp.PostDataClasses.EquationFormData
 import java.lang.NullPointerException
 import java.sql.SQLException
@@ -19,12 +19,12 @@ fun insertEquation(equation : EquationFormData) : Boolean{
             // create array that holds relevant reactant information
             // TODO the entire information is not necessary, can rewrite with new query
             // TODO to just find the chemical informationID.
-            val reactantsInformation = Array(equation.reactants.size){Compound()}
+            val reactantsInformation = Array(equation.reactants.size){ChemicalInformation()}
 
             // create array that holds relevant product information
             // TODO the entire information is not necessary, can rewrite with new query
             // TODO to just find the chemical informationID.
-            val productsInformation = Array(equation.products.size){Compound()}
+            val productsInformation = Array(equation.products.size){ChemicalInformation()}
 
             // populate reactants information array
             for (i in equation.reactants.indices){
@@ -49,7 +49,7 @@ fun insertEquation(equation : EquationFormData) : Boolean{
                     preparedStatement.setInt(1, equationID)
                     preparedStatement.setBoolean(2, true)
                     preparedStatement.setInt(3, equation.reactants[i][0].toInt())
-                    preparedStatement.setInt(4, reactantsInformation[i].compoundID)
+                    preparedStatement.setInt(4, reactantsInformation[i].chemicalInformationID)
                     preparedStatement.executeUpdate()
                 }
                 // insert the relevant information for each product
@@ -58,7 +58,7 @@ fun insertEquation(equation : EquationFormData) : Boolean{
                     preparedStatement.setInt(1, equationID)
                     preparedStatement.setBoolean(2, false)
                     preparedStatement.setInt(3, equation.products[i][0].toInt())
-                    preparedStatement.setInt(4, productsInformation[i].compoundID)
+                    preparedStatement.setInt(4, productsInformation[i].chemicalInformationID)
                     preparedStatement.executeUpdate()
                 }
                 return true
