@@ -18,7 +18,7 @@ fun getEquationById(id : Int) : ChemicalEquation?{
     var connection = getDBConnection()
     if(connection != null){
         return try{
-            val preparedStatement = connection.prepareStatement("SELECT * FROM Database.Equations_Information WHERE idEquations_Information = ?;")
+            val preparedStatement = connection.prepareStatement("SELECT * FROM Database.Equations_Information WHERE EquationInformationID = ?;")
             preparedStatement.setInt(1, id)
             val rs = preparedStatement.executeQuery()
             return if(rs.first()){
