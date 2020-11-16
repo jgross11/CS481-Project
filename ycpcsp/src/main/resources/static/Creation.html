@@ -22,84 +22,181 @@
     
 <body>
     <a href="/" class="button">Home</a><br>
-    <label for="experimentNameBox">Experiment name: </label><br>
-    <input type="text" placeholder="Enter the experiment name" id="experimentNameBox"><br>
-    
-    <label for="experimentCreatorBox">Experiment creator: </label><br>
-    <input type="text" placeholder="Experiment Creator" id="experimentCreatorBox" disabled><br><br>
-
-    <label for="ListContainers">Select a component to add: </label><br>
-    <div id="ListContainers">
-        <div id="equipmentContainer">
-            <div class="header" onclick="toggleList(0)">Equipment</div>
-            <div class="list" id="equipmentList">
-                
-            </div>
-        </div>
+    <div id="creationPageForm">
+        <label for="experimentNameBox">Experiment name: </label><br>
+        <input type="text" placeholder="Enter the experiment name" id="experimentNameBox"><br>
         
-        <div id="chemicalContainer">
-            <div class="header" onclick="toggleList(1)">Chemical</div>
-            <div class="list" id="chemicalList">
+        <label for="experimentCreatorBox">Experiment creator: </label><br>
+        <input type="text" placeholder="Experiment Creator" id="experimentCreatorBox" disabled><br><br>
 
+        <label for="ListContainers">Select a component to add: </label><br>
+        <div id="ListContainers">
+            <div id="equipmentContainer">
+                <div class="header" onclick="toggleList(0)">Equipment</div>
+                <div class="list" id="equipmentList">
+                    
+                </div>
             </div>
-        </div>
-        
-        <div id="equationContainer">
-            <div class="header" onclick="toggleVisibility(document.getElementById('subheaderContainer'))">Equation</div>
-            <div class="list" id="subheaderContainer">
-                <div class="subheader" id="equationSearch" onclick="toggleVisibility(document.getElementById('searchSubheaderContainer'))">Equation Search</div>
-                    <div class="list" id="searchSubheaderContainer">
-                        <div id="equationList">
-                            <label for="equationSeachBar">Search for equation</label><br>
-                            <input type="text" placeholder="Search for equation" name="equationSeachBar" id="equationSeachBar" oninput="searchEquation(this.value)"><br><br>
-                            <div id="equationSearchResultContainer">
-                
-                            </div>
+            
+            <div id="chemicalContainer">
+                <div class="header" onclick="toggleVisibility(document.getElementById('chemicalSubHeaderContainer'))">Chemical</div>
+                <div class="list" id="chemicalSubHeaderContainer">
+                    <div class="subheader" id="chemicalSearch" onclick="toggleVisibility(document.getElementById('chemicalSearchContainer'))">Chemical Search</div>
+                    <div class="list"id="chemicalSearchContainer">
+                        <label for="chemicalSeachBar">Search for chemical</label><br>
+                        <input type="text" placeholder="Search for chemical" name="chemicalSeachBar" id="chemicalSeachBar" oninput="searchChemical(this.value)"><br><br>
+                        <div id="chemicalSearchResultContainer">
+            
                         </div>
                     </div>
-                <div class="subheader" id="equationAdd" onclick="toggleVisibility(document.getElementById('insertEquationFormContainer')); initEquationCreation()">Add Equation </div>
-                <div class="list" id="insertEquationFormContainer">
-                    <div id="equationPreview"></div><br>
-                    <div id="equationError"></div><br>
-        
-                    <input type="button" value="Add Reactant" onclick="addReactant(); updatePreview()"> 
-                    <input type="button" value="Add Product" onclick="addProduct(); updatePreview()">
-                    <input type="button" value="Submit Equation" onclick="submitEquation()"><br> 
-                    <div id="reactantContainer">
-                        Reactants <br>
-                        <input type="number" name="reactantCoefficient"
-                        value="1" min="1" step="1" style="width: 50px"
-                        oninput="updatePreview()"> <input name="reactantFormula"type="text" value="H2" style="width: 70px"oninput="updatePreview()" required>
-                    </div>
-                    <br>
-                    <div id="productContainer">
-                        Products <br>
-                        <input type="number" name="productCoefficient"
-                        value="1" min="1" step="1" style="width: 50px"
-                        oninput="updatePreview()"> <input name="productFormula"type="text" value="H2" style="width: 70px"oninput="updatePreview()">
+                    <div class="subheader" id="chemicalAdd" onclick="toggleVisibility(document.getElementById('insertChemicalFormContainer')); initChemicalCreation()">Add Chemical</div>
+                    <div class="list" id="insertChemicalFormContainer">
+                        <label for="chemicalNameBox">Enter chemical name</label><br>
+                        <div id="chemicalNameBox-error"></div><br>
+                        <input type="text" id="chemicalNameBox" placeholder="Ex. Water"><br><br>
+            
+                        <label for="chemicalFormulaBox">Enter chemical formula</label><br>
+                        <div id="chemicalFormulaBox-error"></div><br>
+                        <input type="text" id="chemicalFormulaBox" placeholder="Ex. H2O"><br><br>
+            
+                        <label for="chemicalMassBox">Enter chemical mass (g/mol)</label><br>
+                        <div id="chemicalMassBox-error"></div><br>
+                        <input type="number" id="chemicalMassBox" placeholder="Ex. 18.01528"><br><br>
+            
+                        <label for="chemicalDensityBox">Enter chemical density (g/mL)</label><br>
+                        <div id="chemicalDensityBox-error"></div><br>
+                        <input type="number" id="chemicalDensityBox" placeholder="Ex. 1.0"><br><br>
+            
+                        Is your chemical water soluble?<br>
+                        <div id="solubility-error"></div><br>
+                        <input type="radio" id="waterSoluble" name="solubility" value="1">
+                        <label for="waterSoluble">Water soluble</label><br>
+            
+                        <input type="radio" id="notWaterSoluble" name="solubility" value="0">
+                        <label for="notWaterSoluble">Not water soluble</label><br><br>
+            
+                        <label for="chemicalMeltingPoint">Enter melting point temp (deg C)</label><br>
+                        <div id="chemicalMeltingPoint-error"></div><br>
+                        <input type="text" id="chemicalMeltingPoint" placeholder="Ex. 0.0"><br><br>
+            
+                        <label for="chemicalBoilingPoint">Enter boiling point temp (deg C)</label><br>
+                        <div id="chemicalBoilingPoint-error"></div><br>
+                        <input type="number" id="chemicalBoilingPoint" placeholder="Ex. 100.0"><br><br>
+            
+                        <div id="gasColorPreviewContainer">
+                            Gas Color Preview: <br>
+                            <div style="width: 50px; height: 50px"id="gasColorPreview"></div>
+                        </div>
+                        <label for="gasColor">Select the color of your element as a gas:</label><br>
+                        <input type="color" id="gasColor" name="gasColor" value="#000000" oninput="updateColor(1)"><br>
+                        <label for="gasColorAlpha">Select the alpha channel of your element as a gas:</label><br>
+                        <input type="range" min="0" max="255" value="255" class="slider" id="gasColorAlpha" oninput="updateColor(1)"><br><br>
+            
+            
+                        <div id="liquidColorPreviewContainer">
+                            Liquid Color Preview: <br>
+                            <div style="width: 50px; height: 50px"id="liquidColorPreview"></div>
+                        </div>
+                        <label for="liquidColor">Select the color of your element as a liquid:</label><br>
+                        <input type="color" id="liquidColor" name="liquidColor" value="#000000" oninput="updateColor(2)"><br><br>
+                        <label for="liquidColorAlpha">Select the alpha channel of your element as a liquid:</label><br>
+                        <input type="range" min="0" max="255" value="255" class="slider" id="liquidColorAlpha" oninput="updateColor(2)"><br><br>
+            
+            
+                        <div id="solidColorPreviewContainer">
+                            Solid Color Preview: <br>
+                            <div style="width: 50px; height: 50px"id="solidColorPreview"></div>
+                        </div>
+                        <label for="solidColor">Select the color of your element as a solid:</label><br>
+                        <input type="color" id="solidColor" name="solidColor" value="#000000" oninput="updateColor(3)"><br>
+                        <label for="solidColorAlpha">Select the alpha channel of your element as a solid:</label><br>
+                        <input type="range" min="0" max="255" value="255" class="slider" id="solidColorAlpha" oninput="updateColor(3)"><br><br>
+            
+                        <div id="chemicalSubmissionError"></div>
+                        <input type="button" id="submitButton" value="Submit" onclick="submitChemical()">
                     </div>
                 </div>
             </div>
             
+            <div id="equationContainer">
+                <div class="header" onclick="toggleVisibility(document.getElementById('subheaderContainer'))">Equation</div>
+                <div class="list" id="subheaderContainer">
+                    <div class="subheader" id="equationSearch" onclick="toggleVisibility(document.getElementById('searchSubheaderContainer'))">Equation Search</div>
+                        <div class="list" id="searchSubheaderContainer">
+                            <div id="equationList">
+                                <label for="equationSeachBar">Search for equation</label><br>
+                                <input type="text" placeholder="Search for equation" name="equationSeachBar" id="equationSeachBar" oninput="searchEquation(this.value)"><br><br>
+                                <div id="equationSearchResultContainer">
+                    
+                                </div>
+                            </div>
+                        </div>
+                    <div class="subheader" id="equationAdd" onclick="toggleVisibility(document.getElementById('insertEquationFormContainer')); initEquationCreation()">Add Equation </div>
+                    <div class="list" id="insertEquationFormContainer">
+                        <div id="equationPreview"></div><br>
+                        <div id="equationError"></div><br>
             
+                        <input type="button" value="Add Reactant" onclick="addReactant(); updatePreview()"> 
+                        <input type="button" value="Add Product" onclick="addProduct(); updatePreview()">
+                        <input type="button" value="Submit Equation" onclick="submitEquation()"><br> 
+                        <div id="reactantContainer">
+                            Reactants <br>
+                            <input type="number" name="reactantCoefficient"
+                            value="1" min="1" step="1" style="width: 50px"
+                            oninput="updatePreview()"> <input name="reactantFormula"type="text" value="H2" style="width: 70px"oninput="updatePreview()" required>
+                        </div>
+                        <br>
+                        <div id="productContainer">
+                            Products <br>
+                            <input type="number" name="productCoefficient"
+                            value="1" min="1" step="1" style="width: 50px"
+                            oninput="updatePreview()"> <input name="productFormula"type="text" value="H2" style="width: 70px"oninput="updatePreview()">
+                        </div>
+                    </div>
+                </div>
+                
+                
+            </div>
         </div>
     </div>
 
     <script src="./helperFunctions.js"></script>
     <script src="./equationFormHandler.js"></script>
+    <script src="./chemicalFormHandler.js"></script>
 </body>
 
-<script reference="generic script name.js">
+<script reference="form-tying-together-script.js">
+    // only allow components to be created if user is logged in and has verified their account
     let user = JSON.parse(sessionStorage.getItem("user"));
     let listDivList = document.getElementsByClassName("list");
-    if(user == null){
-        console.log("not logged in!");
-    } else{
+    if(user != null && !user.isQuarantined){
+        console.log("user is not quarantined");
         document.getElementById("experimentCreatorBox").value = user.fullName;
+    } else{
+        if(user == null){
+            console.log("not logged in!");
+        } else{
+            console.log("quarantine user!");
+        }
+        // UNCOMMENT WHEN NOT EDITING THIS WEBPAGE
+        //writePermissionNotice();
+    }
+
+    function writePermissionNotice(){
+        document.getElementById("creationPageForm").innerHTML = "You must be <a href='/'> logged in</a>" +
+        " and have verified your account via email in order to create an experiment. <br>If you don't have an account, <a href='/signup'>sign up.</a>";
     }
 
     function toggleVisibility(div){
         div.style.display = div.style.display == "inline" ? "none" : "inline";
+    }
+
+    function addChemical(chemicalID){
+        console.log("please add chemicalID=" + chemicalID + " to equation now");
+    }
+
+    function addEquation(equationID){
+        console.log("please add equationID=" + equationID + " to equation now");
     }
 </script>
 </html>
