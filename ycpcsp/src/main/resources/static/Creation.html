@@ -4,417 +4,102 @@
     <meta charset="UTF-8">
     <title>Creation</title>
 </head>
-<style>
-    .dropbtn {
-        background-color: #3498DB;
-        color: white;
-        padding: 16px;
-        font-size: 16px;
-        border: none;
-        cursor: pointer;
-    }
-
-    .dropbtn:hover, .dropbtn:focus {
-        background-color: #2980B9;
-    }
-
-    .dropdown {
-        position: relative;
-        display: inline-block;
-    }
-
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: #f1f1f1;
-        min-width: 160px;
-        overflow: auto;
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-        z-index: 1;
-    }
-
-    .dropdown-content a {
-        color: #000000;
-        padding: 12px 16px;
-        text-decoration: none;
-        display: block;
-    }
-
-    .dropdown a:hover {background-color: #ddd;}
-
-    .show {display: block;}
-</style>
+    <style>
+        .list{
+            height: 10%; 
+            overflow: auto;
+            display: none;
+        }
+        .header{
+            font-weight: bolder;
+            font-size: 25px;
+        }
+        .subheader{
+            font-weight: bold;
+            font-size: 20px;
+        }
+    </style>
+    
 <body>
-<div>
-    <a href="/" class="button">Home</a>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/p5@1.1.9/lib/p5.js"></script>
-<script src="./helperFunctions.js"></script>
+    <a href="/" class="button">Home</a><br>
+    <label for="experimentNameBox">Experiment name: </label><br>
+    <input type="text" placeholder="Enter the experiment name" id="experimentNameBox"><br>
+    
+    <label for="experimentCreatorBox">Experiment creator: </label><br>
+    <input type="text" placeholder="Experiment Creator" id="experimentCreatorBox" disabled><br><br>
 
+    <label for="ListContainers">Select a component to add: </label><br>
+    <div id="ListContainers">
+        <div id="equipmentContainer">
+            <div class="header" onclick="toggleList(0)">Equipment</div>
+            <div class="list" id="equipmentList">
+                
+            </div>
+        </div>
+        
+        <div id="chemicalContainer">
+            <div class="header" onclick="toggleList(1)">Chemical</div>
+            <div class="list" id="chemicalList">
 
-<script src="simulation/ObjectIDs.js"></script>
-<script src="simulation/DataLoader.js"></script>
-<script src="simulation/Util/Util.js"></script>
-
-
-
-<script src="simulation/ExperimentObjects/ExperimentObject.js"></script>
-<script src="simulation/ExperimentObjects/Equipment.js"></script>
-<script src="simulation/ExperimentObjects/Chemical.js"></script>
-<script src="simulation/ExperimentObjects/ChemProperties.js"></script>
-<script src="simulation/ExperimentObjects/Scale.js"></script>
-<script src="simulation/ExperimentObjects/StirRod.js"></script>
-
-<script src="simulation/ExperimentObjects/Containers/Container.js"></script>
-<script src="simulation/ExperimentObjects/Containers/Beaker.js"></script>
-<script src="simulation/ExperimentObjects/Containers/ErlenmeyerFlask.js"></script>
-<script src="simulation/ExperimentObjects/Containers/GraduatedCylinder.js"></script>
-<script src="simulation/ExperimentObjects/Containers/WeighBoat.js"></script>
-
-<script src="simulation/ExperimentObjects/Disposers/Disposer.js"></script>
-<script src="simulation/ExperimentObjects/Disposers/Trashcan.js"></script>
-
-
-<div class="dropdown">
-    <button onclick="EFunction()" class="dropbtn">Equipment</button>
-    <div id="equipDropdown" class="dropdown-content">
-        <p id="Equip"></p>
-
-
+            </div>
+        </div>
+        
+        <div id="equationContainer">
+            <div class="header" onclick="toggleVisibility(document.getElementById('subheaderContainer'))">Equation</div>
+            <div class="list" id="subheaderContainer">
+                <div class="subheader" id="equationSearch" onclick="toggleVisibility(document.getElementById('searchSubheaderContainer'))">Equation Search</div>
+                    <div class="list" id="searchSubheaderContainer">
+                        <div id="equationList">
+                            <label for="equationSeachBar">Search for equation</label><br>
+                            <input type="text" placeholder="Search for equation" name="equationSeachBar" id="equationSeachBar" oninput="searchEquation(this.value)"><br><br>
+                            <div id="equationSearchResultContainer">
+                
+                            </div>
+                        </div>
+                    </div>
+                <div class="subheader" id="equationAdd" onclick="toggleVisibility(document.getElementById('insertEquationFormContainer')); initEquationCreation()">Add Equation </div>
+                <div class="list" id="insertEquationFormContainer">
+                    <div id="equationPreview"></div><br>
+                    <div id="equationError"></div><br>
+        
+                    <input type="button" value="Add Reactant" onclick="addReactant(); updatePreview()"> 
+                    <input type="button" value="Add Product" onclick="addProduct(); updatePreview()">
+                    <input type="button" value="Submit Equation" onclick="submitEquation()"><br> 
+                    <div id="reactantContainer">
+                        Reactants <br>
+                        <input type="number" name="reactantCoefficient"
+                        value="1" min="1" step="1" style="width: 50px"
+                        oninput="updatePreview()"> <input name="reactantFormula"type="text" value="H2" style="width: 70px"oninput="updatePreview()" required>
+                    </div>
+                    <br>
+                    <div id="productContainer">
+                        Products <br>
+                        <input type="number" name="productCoefficient"
+                        value="1" min="1" step="1" style="width: 50px"
+                        oninput="updatePreview()"> <input name="productFormula"type="text" value="H2" style="width: 70px"oninput="updatePreview()">
+                    </div>
+                </div>
+            </div>
+            
+            
+        </div>
     </div>
-</div>
-<div class="dropdown">
-    <button onclick="CFunction()" class="dropbtn">Chemicals</button>
-    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
-    <div id="ChemDropdown" class="dropdown-content">
-        <p id="Chem"></p>
 
-    </div>
-</div>
-<p id="CHLIST"></p>
-<p id="EQLIST"></p>
-
-
-<select onchange="list1();" id="ChemOrEquip1"></select>
-<select id="insert1"></select>
-<select id="Function"></select>
-<select onchange="list2();" id="ChemOrEquip2"></select>
-<select id="insert2"></select>
-<p id="Steps"></p>
-
-
-<button onclick="AddStep()">Add Step</button>
-<button onclick="sendExp()">Create</button>
-<br>
-<button onclick="ShowCreateNewChemical()">Create New Chemical</button>
-</br>
-<form id="CreateNewChemicalForm">
-    <label for="ChemicalName">Chemical Name:</label><br>
-    <input type="text" id="ChemicalName" name="ChemicalName"><br>
-
-    <label for="ChemicalFormula">Chemical Formula:</label><br>
-    <input type="text" id="ChemicalFormula" name="ChemicalFormula"><br>
-
-    <label for="ChemicalMass">Chemical Mass:</label><br>
-    <input type="number" step="0.01" min="0" id="ChemicalMass" name="ChemicalFormula"><br>
-
-    <label for="ChemicalDensity">Chemical Density:</label><br>
-    <input type="number" step="0.01" min="0" id="ChemicalDensity" name="ChemicalDensity"><br>
-
-    <label for="ChemicalWaterSoluable">Chemical WaterSoluable:</label><br>
-    <input type="checkbox" id="ChemicalWaterSoluable" name="ChemicalDensity"><br>
-
-    <label for="ChemicalPhaseChangeSolid">Chemical Phase Change Solid:</label><br>
-    <input type="number" step="0.01" min="0" id="ChemicalPhaseChangeSolid" name="ChemicalPhaseChangeSolid"><br>
-
-    <label for="ChemicalPhaseChangeLiquid">Chemical Phase Change Liquid:</label><br>
-    <input type="number" step="0.01" min="0" id="ChemicalPhaseChangeLiquid" name="ChemicalPhaseChangeLiquid"><br>
-
-    <input value="Create" type="button" id="CreateNewChemicalSubmit" name="CreateNewChemicalSubmit" onclick="CreateNewChemicalSubmithe()">
-    <label for="MoreCreateNewChemicalSubmit" type="button" id=""> </label>
-    <input value="MoreInfo" type="button" id="MoreCreateNewChemicalSubmit" name="CreateNewChemicalSubmit" onclick="MoreCreateNewChemicalShow()">
-    <form id="MoreChemicalInformationForm">
-        <br>
-    <label for="ChemicalColorSolid">Chemical Color Component Solid:</label><br>
-    <input type="number"  min="0" max="255" id="ChemicalColorSolid" name="ChemicalFormula"><br>
-
-    <label for="ChemicalColorLiquid">Chemical Color Component Liquid:</label><br>
-    <input type="number"  min="0" max="255" id="ChemicalColorLiquid" name="ChemicalFormula"><br>
-
-    <label for="ChemicalColorGas">Chemical Color Component Gas:</label><br>
-    <input type="number"  min="0" max="255" id="ChemicalColorGas" name="ChemicalFormula"><br>
-    </form>
-
-
-</form>
+    <script src="./helperFunctions.js"></script>
+    <script src="./equationFormHandler.js"></script>
 </body>
-<script>
+
+<script reference="generic script name.js">
     let user = JSON.parse(sessionStorage.getItem("user"));
-
-    var listchem = [];
-    let sendchem = [];
-    var listequip = [];
-    let sendequip = [];
-    var liststeps = [];
-    let sendsteps = [];
-    LoadEquip();
-    LoadChem();
-    LoadFunc();
-    var ShowNewChemicalForm = false;
-    var ShowMoreChemicalForm = false;
-    // Method that will take the new chemical inputs and put them into the required post information
-    function CreateNewChemicalSubmithe(){
-        var ChemicalName = getAndTrimById("ChemicalName");
-        var ChemicalFormula = getAndTrimById("ChemicalFormula");
-        var ChemicalMass = getAndTrimById("ChemicalMass");
-        var ChemicalDensity = document.getElementById("ChemicalDensity");
-        var ChemicalWaterSoluable = document.getElementById("ChemicalWaterSoluable");
-        var ChemicalPhaseChangeSolid = getAndTrimById("ChemicalPhaseChangeSolid");
-        var ChemicalPhaseChangeLiquid = document.getElementById("ChemicalPhaseChangeLiquid");
-        var ChemicalColorSoild = document.getElementById("ChemicalColorSolid");
-        var ChemicalColorGas = document.getElementById("ChemicalColorGas");
-        var ChemicalColorLiquid = document.getElementById("ChemicalColorLiquid");
-        var formdata = {
-            ChemicalName: ChemicalName.value,
-            ChemicalFormula:ChemicalFormula.value,
-            ChemicalMass: ChemicalMass.value,
-            ChemicalDensity:ChemicalDensity.value,
-            ChemicalWaterSoluable:true,
-            ChemicalPhaseChangeSolid:ChemicalPhaseChangeSolid.value,
-            ChemicalPhaseChangeLiquid:ChemicalPhaseChangeLiquid.value,
-            ChemicalGasColor:  ChemicalColorGas.value,
-            ChemicalSolidColor: ChemicalColorSoild.value,
-            ChemicalLiquidColor: ChemicalColorLiquid.value
-
-        }
-        console.log(formdata);
-        postData('Creation-Of-New-Chemical', formdata).then(function(data){
-
-        });
+    let listDivList = document.getElementsByClassName("list");
+    if(user == null){
+        console.log("not logged in!");
+    } else{
+        document.getElementById("experimentCreatorBox").value = user.fullName;
     }
 
-    function MoreCreateNewChemicalShow(){
-        ShowMoreChemicalForm = !ShowMoreChemicalForm;
-
-        if(ShowNewChemicalForm === true)
-            document.getElementById("MoreChemicalInformationForm").style.display="none";
-        else
-            document.getElementById("MoreChemicalInformationForm").style.display="block";
-
-    }
-
-    //Function to show the create new chemical form
-    function ShowCreateNewChemical(){
-            ShowNewChemicalForm = !ShowNewChemicalForm;
-
-            if(ShowNewChemicalForm === true)
-                document.getElementById("CreateNewChemicalForm").style.display="none";
-            else
-                document.getElementById("CreateNewChemicalForm").style.display="block";
-
-    }
-    /* When the user clicks on the button,
-    toggle between hiding and showing the dropdown content */
-    function CFunction() {
-        document.getElementById("ChemDropdown").classList.toggle("show");
-    }
-    function EFunction() {
-        document.getElementById("equipDropdown").classList.toggle("show");
-    }
-   function LoadEquip(){
-       let EquipID = JSON.parse(sessionStorage.getItem("EquipID"));
-       for (i = 0; i < EquipID.length  ; i++) {
-            document.getElementById("Equip").innerHTML += "<button onclick=AddEquip(this) ID='"+EquipID[i].ID+"' name="+EquipID[i].Equip +">" + EquipID[i].Equip+ "</button>";
-       }
-
-   }
-    function LoadChem(){
-        let ChemID = JSON.parse(sessionStorage.getItem("ChemID"));
-        for (i = 0; i < ChemID.length  ; i++) {
-            document.getElementById("Chem").innerHTML += "<button onclick=AddChem(this) ID='"+ChemID[i].ID+"' name="+ChemID[i].Chem +">" + ChemID[i].Chem+ "</button>";
-        }
-
-    }
-
-    function  list1(){
-
-        if(document.getElementById("ChemOrEquip1").value !== 'true') {
-            var act = "";
-            for (i = 0; i < listchem.length; i++) {
-                act += "<option value=" + i + " >" + listchem[i].Chemical + "</option>";
-            }
-        }else {
-            var act = "";
-            for (i = 0; i < listequip.length; i++) {
-                var count = listequip[i].amount;
-                for (j = 0; j < count; j++) {
-                    var val = i + j;
-                    act += "<option value=" + val + " >" + listequip[i].Equipment + "</option>";
-                }
-            }
-        }
-
-        document.getElementById("insert1").innerHTML = act;
-    }
-    function  list2(){
-
-        if(document.getElementById("ChemOrEquip2").value !== 'true') {
-            var rec = "";
-            for (i = 0; i < listchem.length; i++) {
-                rec += "<option value=" + i + " >" + listchem[i].Chemical + "</option>";
-            }
-        }else {
-            var rec = "";
-            rec += "<option value='null' >Using Scale</option>";
-
-            for (i = 0; i < listequip.length; i++) {
-                var count = listequip[i].amount;
-                for (j = 0; j < count; j++) {
-                    var val = i + j;
-                    rec += "<option value=" + val + " >" + listequip[i].Equipment + "</option>";
-                }
-            }
-        }
-
-        document.getElementById("insert2").innerHTML = rec;
-    }
-    function LoadFunc(){
-        var options = "";
-        options += "<option selected disabled hidden style='display: none' value=''></option>";
-        options += "<option value='false'>Chem</option>";
-        options += "<option value='true'>Equip</option>";
-        document.getElementById("ChemOrEquip1").innerHTML = options;
-
-        let Func = JSON.parse(sessionStorage.getItem("Expfunc"));
-
-        var funopt ="";
-        funopt += "<option selected disabled hidden style='display: none' value=''></option>";
-        for(i = 0; i < Func.length  ; i++){
-            funopt += "<option value='"+Func[i].ID +"'>"+ Func[i].Function +"</option>";
-        }
-        document.getElementById("Function").innerHTML = funopt;
-
-
-        var options2 = "";
-        options2 += "<option selected disabled hidden style='display: none' value=''></option>";
-        options2 += "<option value='false'>Chem</option>";
-        options2 += "<option value='true'>Equip</option>";
-        document.getElementById("ChemOrEquip2").innerHTML = options2;
-
-    }
-    var stepcount = -1;
-    function AddStep(){
-
-        var op1 = document.getElementById("ChemOrEquip1");
-        var opti1 = op1.value;
-        var a = document.getElementById("insert1");
-        var act = a.value;
-        var f = document.getElementById("Function");
-        var func = f.value;
-        var op2 = document.getElementById("ChemOrEquip2");
-        var opti2 = op2.value;
-        var r = document.getElementById("insert2");
-        var rec = r.value;
-        stepcount++;
-        var send = {stepcount,act,opti1,rec,opti2,func};
-        liststeps.push(send);
-        sendsteps.push(makeTestInstructionJSON(stepcount,act,opti1,rec,opti2,func));
-        document.getElementById("Steps").innerHTML = JSON.stringify(liststeps);
-
-    }
-
-    function AddChem(Chem){
-        var mass = prompt("Enter mass in g.","")
-        var concentration = prompt("Enter concentration.","")
-        var Chemical = Chem.name;
-        var ID = Chem.id;
-        var send = {Chemical, idToChemical ,mass, concentration };
-        if (mass == null || mass == "" || concentration == null || concentration == "") {
-        } else {
-            listchem.push(send);
-            listchem.sort(function(a, b) {
-                return parseFloat(a.concentration) - parseFloat(b.concentration);
-            });
-            listchem.sort(function(a, b) {
-                return parseFloat(a.mass) - parseFloat(b.mass);
-            });
-            listchem.sort(function(a, b) {
-                return parseFloat(a.ID) - parseFloat(b.ID);
-            });
-            sendchem.push(makeTestChemicalJSON(ID,mass,concentration));
-            document.getElementById("CHLIST").innerHTML = JSON.stringify(listchem);
-            LoadFunc();
-
-
-        }
-    }
-    function AddEquip(Equip){
-        var amount = prompt("Enter amount.","")
-        var Equipment = Equip.name;
-        var ID = Equip.id;
-        var send = {Equipment, ID ,amount };
-        if (amount == null || amount == "") {
-        } else {
-            listequip.push(send);
-            listequip.sort(function(a, b) {
-                return parseFloat(a.ID) - parseFloat(b.ID);
-            });
-            sendequip.push(makeTestEquipmentJSON( ID ,amount));
-            document.getElementById("EQLIST").innerHTML = JSON.stringify(listequip);
-            LoadFunc();
-
-
-        }
-    }
-
-    function creatExp(){
-        let user = JSON.parse(sessionStorage.getItem("user"));
-
-        let exp = {};
-        exp[EXP_JSON_TITLE] = prompt("Enter a Title.", "");
-        exp[EXP_JSON_CREATOR] = user.firstName;
-
-        exp[EXP_JSON_EQUIPMENT] = sortArrayByKey(sendequip, EXP_JSON_EQUIP_OBJ_ID, false);
-        exp[EXP_JSON_CHEMICALS] = sortArrayByKey(sendchem, [EXP_JSON_CHEM_ID, EXP_JSON_CHEM_MASS, EXP_JSON_CHEM_CONCENTRATION], true);
-        exp[EXP_JSON_INSTRUCTIONS] = sortArrayByKey(sendsteps, EXP_JSON_INS_STEP_NUM, false);
-
-        return exp;
-    }
-
-    function sendExp(){
-
-        let newexp = creatExp();
-        console.log("exp JSON: ");
-        console.log(newexp);
-        let user = JSON.parse(sessionStorage.getItem("user"));
-
-        // TODO CHECK IF USER EXISTS, NOTIFY THAT SIGNUP MUST HAPPEN BEFORE EXP CAN BE SAVED
-        let userAndExperiment = {
-            user: user,
-            experiment: newexp
-        };
-        postData("save-new-simulation", userAndExperiment).then(function(response){
-            console.log("received following response upon submitting experiment: ");
-            console.log(response);
-        });
-
-
-
-
-    }
-
-        // Close the dropdown if the user clicks outside of it
-    window.onclick = function(event) {
-        if (!event.target.matches('.dropbtn')) {
-            var dropdowns = document.getElementsByClassName("dropdown-content");
-            var i;
-            for (i = 0; i < dropdowns.length; i++) {
-                var openDropdown = dropdowns[i];
-                if (openDropdown.classList.contains('show')) {
-                    openDropdown.classList.remove('show');
-                }
-            }
-        }
+    function toggleVisibility(div){
+        div.style.display = div.style.display == "inline" ? "none" : "inline";
     }
 </script>
 </html>
