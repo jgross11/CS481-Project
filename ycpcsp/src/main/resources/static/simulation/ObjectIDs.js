@@ -21,6 +21,8 @@ let ID_EQUIP_FLASK_1000mL = 14;
 let ID_EQUIP_WEIGH_BOAT = 15;
 let ID_EQUIP_STIR_ROD = 16;
 let ID_EQUIP_EYE_DROPPER = 17;
+let ID_EQUIP_REFRACTOMETER = 18;
+let ID_EQUIP_REFRACTOMETER_LENS = 19;
 
 var EquipID = [
     { Equip: 'BEAKER_50mL', ID:1},
@@ -134,6 +136,8 @@ function idToEquipment(id){
         case ID_EQUIP_TRASHCAN: eq = new TrashcanController2D(new Trashcan()); break;
         case ID_EQUIP_STIR_ROD: eq = new StirRodController2D(new StirRod()); break;
         case ID_EQUIP_EYE_DROPPER: eq = new EyeDropperController2D(new EyeDropper()); break;
+        case ID_EQUIP_REFRACTOMETER: eq = new RefractometerController2D(new Refractometer()); break;
+        case ID_EQUIP_REFRACTOMETER_LENS: eq = new RefractometerLensController2D(new RefractometerLens()); break;
 
         default: eq = null;
     }

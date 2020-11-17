@@ -122,34 +122,3 @@ class ChemProperties{
         return this.chemFromProperties()[CHEMICAL_PROPERTY_WATER_SOLUBLE];
     }
 }
-
-/**
-A class tracking a ChemProperty and a count associated with it for use in CompoundProperties objects
-*/
-class CompoundComponent{
-    /**
-    Create a new CompoundComponent
-    chemProp: The ChemProperties object to use for this CompoundComponent
-    count: The number of chemProp which exist in this CompoundComponent
-    */
-    constructor(chemProp, count){
-        this.chemProp = chemProp;
-        this.count = count;
-    }
-
-    /**
-    Set the specific ChemProperties of this CompoundComponent
-    chemProp: The new ChemProperties
-    */
-    setChemProp(chemProp){
-        this.chemProp = chemProp;
-    }
-
-    /**
-    Set the count of the ChemProperties of this CompoundComponent
-    count: The new count
-    */
-    setCount(count){
-        this.count = count;
-    }
-}

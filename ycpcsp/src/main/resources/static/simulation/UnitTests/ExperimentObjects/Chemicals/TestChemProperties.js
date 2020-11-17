@@ -132,32 +132,3 @@ QUnit.test('getWaterSolubility:', function(assert){
     assert.equal(chemFake.getWaterSolubility(), undefined,
         "Checking no water solubility status is found for invalid chemical");
 });
-
-
-var compoundComp;
-
-QUnit.module("CompoundComponent", {
-    before: function(){
-        initTestChemProperties();
-        elementHydrogen = new ChemProperties(ELEMENT_HYDROGEN_ATOMIC_NUM);
-        elementHelium = new ChemProperties(ELEMENT_HELIUM_ATOMIC_NUM);
-    },
-    beforeEach: function(){
-        compoundComp = new CompoundComponent(elementHydrogen, 3);
-    }
-});
-
-QUnit.test('constructor:', function(assert){
-    assert.deepEqual(compoundComp.chemProp, elementHydrogen, "Checking chemProp initialization");
-    assert.deepEqual(compoundComp.count, 3, "Checking count initialization");
-});
-
-QUnit.test('setChemProp:', function(assert){
-    compoundComp.setChemProp(elementHelium);
-    assert.deepEqual(compoundComp.chemProp, elementHelium, "Checking ChemProperties is set correctly");
-});
-
-QUnit.test('setCount:', function(assert){
-    compoundComp.setCount(2);
-    assert.equal(compoundComp.count, 2, "Checking count is correctly set");
-});

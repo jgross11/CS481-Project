@@ -314,20 +314,16 @@ function getTestJSON(){
     let equips = [];
     equips.push(makeTestEquipmentJSON(ID_EQUIP_SCALE, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_BEAKER_50mL, 1));
-    equips.push(makeTestEquipmentJSON(ID_EQUIP_BEAKER_150mL, 1));
-    equips.push(makeTestEquipmentJSON(ID_EQUIP_BEAKER_250mL, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_BEAKER_600mL, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_GRADUATED_25mL, 1));
-    equips.push(makeTestEquipmentJSON(ID_EQUIP_GRADUATED_50mL, 1));
-    equips.push(makeTestEquipmentJSON(ID_EQUIP_GRADUATED_100mL, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_GRADUATED_1000mL, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_FLASK_25mL, 1));
-    equips.push(makeTestEquipmentJSON(ID_EQUIP_FLASK_50mL, 1));
-    equips.push(makeTestEquipmentJSON(ID_EQUIP_FLASK_125mL, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_FLASK_1000mL, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_WEIGH_BOAT, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_STIR_ROD, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_EYE_DROPPER, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_REFRACTOMETER, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_REFRACTOMETER_LENS, 1));
     exp[EXP_JSON_EQUIPMENT] = sortArrayByKey(equips, EXP_JSON_EQUIP_OBJ_ID, false);
 
     let chems = [];
