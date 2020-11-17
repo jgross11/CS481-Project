@@ -40,13 +40,15 @@ class Refractometer extends Equipment{
     /**
     Set the position of the lens of this Refractometer to be relative to it.
     Does nothing if there is no lens
+    returns: true if the position was updated, false otherwise
     */
     updateLensPosition(){
         let lensC = this.lensControl;
-        if(lensC === null) return;
+        if(lensC === null) return false;
         let lens = lensC.equipment;
-        if(lens === null) return;
+        if(lens === null) return false;
         lens.setPosition([this.position[0], this.position[1] + (this.size[1] - lensC.height()) * 0.5]);
+        return true;
     }
 
 }
@@ -113,6 +115,8 @@ class RefractometerController2D extends EquipmentController2D{
     lensControl: The RefractometerLensController to set, or null to remove it
     */
     setLens(lensControl){
+        if(!(lensControl instanceof RefractometerLensController2D)) return;
+
         let eq = this.equipment;
         eq.setLens(lensControl);
         eq.updateLensPosition();
@@ -124,7 +128,10 @@ class RefractometerController2D extends EquipmentController2D{
     removeLens(){
         let eq = this.equipment;
         let lens = this.equipment.lensControl;
+        // Properly remove the lens
         this.setLens(null);
+
+        // Position the lens off of the refractometer, if one was removed
         if(lens !== null){
             lens.equipment.setPosition([this.x() - lens.width() - 10, this.y()], EXP_CAMERA_OUTLINE_BOUNDS);
         }
@@ -138,8 +145,6 @@ class RefractometerController2D extends EquipmentController2D{
         // Draw the base Refractometer sprite
         super.draw(graphics);
 
-        // TODO render constants
-
         // Draw the density
         let lensC = this.equipment.lensControl;
         if(lensC === null) return;
@@ -147,10 +152,12 @@ class RefractometerController2D extends EquipmentController2D{
         if(lens === null) return;
         let conts = lens.contents[0];
         if(conts !== undefined && conts !== null){
-            graphics.textSize(15);
-            graphics.fill(255);
+            graphics.textSize(REFRACTOMETER_TEXT_SIZE);
+            graphics.fill(REFRACTOMETER_TEXT_COLOR);
             graphics.noStroke();
-            graphics.text(conts.properties.getDensity(), this.x() + this.width() * 0.5, this.y() + this.height() - 10);
+            graphics.text(conts.properties.getDensity(),
+                this.x() + this.width() * REFRACTOMETER_TEXT_X_OFFSET,
+                this.y() + this.height() * REFRACTOMETER_TEXT_Y_OFFSET);
         }
     }
 

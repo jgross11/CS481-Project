@@ -31,13 +31,13 @@ class RefractometerLensController2D extends ContainerController2D{
 
     /**
     Determine if this Controller's lens can contain the given Chemical.
-    The lenses can only hold liquids
+    The lenses can only hold liquids and solids
     chemical: The Chemical to test if it can be contained
     returns: true if the Chemical can be contained, false otherwise
     */
     canContain(chemical){
-        // If the chemical is not a liquid, return false
-        if(chemical.matterState !== MATTER_STATE_LIQUID) return false;
+        // If the chemical is not a liquid or solid, return false
+        if(!(chemical.matterState === MATTER_STATE_LIQUID || chemical.matterState === MATTER_STATE_SOLID)) return false;
 
         // Check to see the chemical is the same as the one in the lens, or if it is empty
         return this.placeSameChemical(chemical);
@@ -52,9 +52,8 @@ class RefractometerLensController2D extends ContainerController2D{
         super.draw(graphics);
 
         // Draw the chemicals
-        // TODO render constants
-        this.drawContentsRect(graphics, 0.3, 0.1,
-            0.6, 0.8);
+        this.drawContentsRect(graphics, REFRACTOMETER_LENS_X_OFFSET, REFRACTOMETER_LENS_Y_OFFSET,
+            REFRACTOMETER_LENS_WIDTH_OFFSET, REFRACTOMETER_LENS_HEIGHT_OFFSET);
     }
 
 }

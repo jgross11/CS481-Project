@@ -136,6 +136,24 @@ let SCALE_ZEROED_TEXT_X_OFFSET = 0.1;
 // The percentage of a scale's height where the text on the scale is rendered
 let SCALE_MASS_TEXT_Y_OFFSET = 0.7;
 
+// The size of the text displaying the density for a refractometer
+let REFRACTOMETER_TEXT_SIZE = 15;
+// The color of the text displaying the density for a refractometer
+let REFRACTOMETER_TEXT_COLOR = 255;
+// The percentage of the width which is used as offset for rendering the refractometer text
+let REFRACTOMETER_TEXT_X_OFFSET = 0.5;
+// The percentage of the height which is used as offset for rendering the refractometer text
+let REFRACTOMETER_TEXT_Y_OFFSET = 0.66;
+
+// The percentage of the width of a refractometer lens added to the x position for rendering its contents
+let REFRACTOMETER_LENS_X_OFFSET = 0.3;
+// The percentage of the height of a refractometer lens added to the y position for rendering its contents
+let REFRACTOMETER_LENS_Y_OFFSET = 0.1;
+// The percentage of the width of a refractometer lens which the contents can take up
+let REFRACTOMETER_LENS_WIDTH_OFFSET = 0.6;
+// The percentage of the height of a refractometer lens which the contents can take up
+let REFRACTOMETER_LENS_HEIGHT_OFFSET = 0.8;
+
 
 // Constants used for key inputs for Experiment
 
