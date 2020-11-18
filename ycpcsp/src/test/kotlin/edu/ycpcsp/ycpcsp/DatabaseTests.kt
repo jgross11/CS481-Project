@@ -131,6 +131,39 @@ class DatabaseTests {
         }
     }
     @Test
+    fun testCreateAdminUser(){
+        val adminUser = SignupFormData("aaa", "aaa", "aaa", "aaa", "aaa", 1, "answ", 2, "answw", 3, "answww")
+
+        assertTrue(CreateAdminUser(adminUser) != -1)
+        if(CreateAdminUser(adminUser) != -1){
+            println("Create Admin User worked")
+        } else{
+            println("Error: Create Admin User did not work")
+        }
+
+    }
+    @Test
+    fun testLoadAdminUser(){
+        val adminUser2 = LoadAdminUser("aaa")
+        assertTrue(adminUser2.firstName.compareTo("Aaa") == 0)
+        if(adminUser2.firstName.compareTo("Aaa") == 0){println("Load Admin User Worked")} else{
+            println("Load Admin User did not work")
+        }
+    }
+    @Test
+    fun testDeleteAdminUser(){
+        val adminUser2 = LoadAdminUser("aaa")
+        val testDelete = DeleteAdminUser(adminUser2)
+        assertTrue(testDelete)
+
+        if(testDelete){
+            println("Delete Admin User works")
+        } else{
+            println("Delete Admin User does not work")
+        }
+    }
+    
+    @Test
     fun testFindMyExperiments(){
         val userID = LoadUser("jgross11@ycp.edu")
         val testExperiment = Experiment("Color", "Josh Gross", 1)
