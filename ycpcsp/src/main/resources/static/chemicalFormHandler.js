@@ -40,10 +40,6 @@ function updateColor(index){
     };
 }
 
-function addChemical(chemicalID){
-    console.log("please add chemicalID=" + chemicalID + " to equation now");
-}
-
 function searchChemical(searchValue){
     let searchResults = []
     let searchResultSize = 0;
@@ -67,7 +63,7 @@ function loadChemicalsInDB(){
 function displayChemicalResults(list){
     chemicalSearchResultContainer.innerHTML = "";
     for(let i = 0; i < list.length; i++){
-        chemicalSearchResultContainer.innerHTML += '<div style="border: 1px solid black" id="chemicalSearchResult" onclick="addChemical('+list[i]["chemicalInformationID"]+')">'+
+        chemicalSearchResultContainer.innerHTML += '<div style="border: 1px solid black" id="chemicalSearchResult" onclick="addChemical('+i+')">'+
                                                     list[i]["name"]+" | "+list[i]["formula"]+" | molecular mass="+list[i]["mass"]+" | density="+list[i]["density"]+" | gas @ "+list[i]["gasTemp"]+'°C'+" | solid @ "+list[i]["solidTemp"]+'°C</div>'
     }
 }
