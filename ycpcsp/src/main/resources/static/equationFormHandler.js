@@ -15,9 +15,9 @@ let equationSearchResultContainer = null;
 let allEquationList = {};
 
 
-initSearch();
+initEquationSearch();
 
-function initSearch(){
+function initEquationSearch(){
     equationSearchResultContainer = document.getElementById("equationSearchResultContainer");
     loadEquationsInDB();
 }
@@ -55,13 +55,11 @@ function searchEquation(searchValue){
 function displayEquationResults(list){
     equationSearchResultContainer.innerHTML = "";
     for(let i = 0; i < list.length; i++){
-        equationSearchResultContainer.innerHTML += '<div style="border: 1px solid black" id="equationSearchResult" onclick="addEquation('+list[i]["equationID"]+')">'+list[i]["string"]+'</div>'
+        equationSearchResultContainer.innerHTML += '<div style="border: 1px solid black" id="equationSearchResult" onclick="addEquation('+i+')">'+list[i]["string"]+'</div>'
     }
 }
 
-function addEquation(equationID){
-    console.log("please add equationID=" + equationID + " to equation now");
-}
+
 
 /*
 called when add reactant function is called
