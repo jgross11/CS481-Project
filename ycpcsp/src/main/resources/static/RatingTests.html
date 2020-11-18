@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>tests</title>
+</head>
+<body>
+
+</body>
+<script>
+    function displayChemicalResults(list){
+        chemicalSearchResultContainer.innerHTML = "";
+        for(let i = 0; i < list.length; i++){
+            chemicalSearchResultContainer.innerHTML += '<div style="border: 1px solid black" id="chemicalSearchResult" onclick="addChemical('+list[i]["chemicalInformationID"]+')">'+
+                list[i]["name"]+" | "+list[i]["formula"]+" | molecular mass="+list[i]["mass"]+" | density="+list[i]["density"]+" | gas @ "+list[i]["gasTemp"]+'°C'+" | solid @ "+list[i]["solidTemp"]+'°C+" | rating @ "+list[i]["Rating"]+"</div>'
+        }
+    }
+
+</script>
+</html>
