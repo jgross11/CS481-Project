@@ -20,6 +20,9 @@ let ID_EQUIP_FLASK_125mL = 13;
 let ID_EQUIP_FLASK_1000mL = 14;
 let ID_EQUIP_WEIGH_BOAT = 15;
 let ID_EQUIP_STIR_ROD = 16;
+let ID_EQUIP_EYE_DROPPER = 17;
+let ID_EQUIP_REFRACTOMETER = 18;
+let ID_EQUIP_REFRACTOMETER_LENS = 19;
 
 var EquipID = [
     { Equip: 'BEAKER_50mL', ID:1},
@@ -37,7 +40,8 @@ var EquipID = [
     { Equip: 'FLASK_100mL',ID:13 },
     { Equip: 'FLASK_1000mL',ID:14 },
     { Equip: 'WEIGH_BOAT',ID:15 },
-    { Equip: 'STIR_ROD',ID:16 }
+    { Equip: 'STIR_ROD',ID:16 },
+    { Equip: 'EYE_DROPPER',ID:17 }
 ];
 
 sessionStorage.setItem("EquipID", JSON.stringify(EquipID));
@@ -131,6 +135,9 @@ function idToEquipment(id){
         case ID_EQUIP_SCALE: eq = new ScaleController2D(new Scale()); break;
         case ID_EQUIP_TRASHCAN: eq = new TrashcanController2D(new Trashcan()); break;
         case ID_EQUIP_STIR_ROD: eq = new StirRodController2D(new StirRod()); break;
+        case ID_EQUIP_EYE_DROPPER: eq = new EyeDropperController2D(new EyeDropper()); break;
+        case ID_EQUIP_REFRACTOMETER: eq = new RefractometerController2D(new Refractometer()); break;
+        case ID_EQUIP_REFRACTOMETER_LENS: eq = new RefractometerLensController2D(new RefractometerLens()); break;
 
         default: eq = null;
     }
@@ -147,41 +154,17 @@ concentration: The concentration of the Chemical
 returns: The ChemicalController2D, or null if an invalid ID is given
 */
 function idToChemical(id, mass, concentration){
-    var properties;
-    switch(id){
-        // Real elements
-        case ELEMENT_HYDROGEN_ATOMIC_NUM:
-        case ELEMENT_HELIUM_ATOMIC_NUM:
-        case ELEMENT_LITHIUM_ATOMIC_NUM:
-        case ELEMENT_CARBON_ATOMIC_NUM:
-        case ELEMENT_OXYGEN_ATOMIC_NUM:
-        case ELEMENT_SODIUM_ATOMIC_NUM:
-        case ELEMENT_CHLORINE_ATOMIC_NUM:
-        // Test elements
-        case ID_CHEM_TEST_RED:
-        case ID_CHEM_TEST_BLUE:
-        case ID_CHEM_TEST_WHITE:
-        case ID_CHEM_TEST_GREEN:
-        case ID_CHEM_TEST_BLACK: properties = new ElementProperties(id); break;
-
-        // Compounds
-        case COMPOUND_HYDROGEN_GAS_ID:
-        case COMPOUND_WATER_ID:
-        case COMPOUND_GLUCOSE_ID:
-        case COMPOUND_OXYGEN_GAS_ID:
-        case COMPOUND_CHLORINE_GAS_ID:
-        case COMPOUND_TABLE_SALT_ID: properties = new CompoundProperties(id); break;
-        default: return null;
-    }
+    if(id === null) return null;
+    var properties = new ChemProperties(id);
     let chem = new Chemical(mass, properties, 20.0, concentration);
     return new ChemicalController2D(chem);
 }
 
 // A directory holding all chemical properties currently available
-let CHEMICAL_PROPERTIES = [];
+var CHEMICAL_PROPERTIES = [];
 
 // A directory holding all equation data currently available
-let EQUATION_PROPERTIES = [];
+var EQUATION_PROPERTIES = [];
 
 /**
 Initialize the test database with some default elements, compounds, and equations
@@ -195,41 +178,41 @@ function initTestChemProperties(){
             https://www.lenntech.com/periodic-chart-elements/melting-point.htm
             https://www.lenntech.com/periodic-chart-elements/boiling-point.htm
     */
-    makeElement("H", "Hydrogen", "Nature",
+    makeChemical("H", "Hydrogen", "Nature",
         [255, 255, 200, 255], [255, 255, 200, 200], [255, 255, 200, 255, 180],
         ELEMENT_HYDROGEN_ATOMIC_NUM, 1.008, -259, -253, 0.09, true);
-    makeElement("He", "Helium", "Nature",
+    makeChemical("He", "Helium", "Nature",
         [255, 255, 150, 255], [255, 255, 150, 200], [255, 255, 150, 180],
         ELEMENT_HELIUM_ATOMIC_NUM, 4.003, -272, -269, 0.18, false);
-    makeElement("Li", "Lithium", "Nature",
+    makeChemical("Li", "Lithium", "Nature",
         [200, 200, 255, 255], [200, 200, 255, 200], [200, 200, 255, 180],
         ELEMENT_LITHIUM_ATOMIC_NUM, 6.941, 180, 1347, 0.53, true);
-    makeElement("C", "Carbon", "Nature",
+    makeChemical("C", "Carbon", "Nature",
         [200, 70, 70, 255], [200, 70, 70, 200], [200, 70, 70, 180],
         ELEMENT_CARBON_ATOMIC_NUM, 12.011, 3500, 4827, 2.26, false);
-    makeElement("O", "Oxygen", "Nature",
+    makeChemical("O", "Oxygen", "Nature",
         [220, 220, 220, 255], [220, 220, 220, 200], [220, 220, 220, 180],
         ELEMENT_OXYGEN_ATOMIC_NUM, 15.999, -218, -183, 1.43, true);
-    makeElement("Na", "Sodium", "Nature",
+    makeChemical("Na", "Sodium", "Nature",
         [220, 255, 220, 255], [220, 255, 220, 200], [220, 255, 220, 180],
         ELEMENT_SODIUM_ATOMIC_NUM, 22.990, 98, 883, 0.97, true);
-    makeElement("Cl", "Chlorine", "Nature",
+    makeChemical("Cl", "Chlorine", "Nature",
         [255, 220, 220, 255], [255, 220, 220, 200], [255, 220, 220, 180],
         ELEMENT_CHLORINE_ATOMIC_NUM, 35.453, -101, -35, 3.21, true);
 
-    makeElement("Ruu", "Red", "Fake",
+    makeChemical("Ruu", "Red", "Fake",
         [255, 0, 0, 255], [255, 0, 0, 200], [255, 0, 0, 180],
         ID_CHEM_TEST_RED, 9, 100, 0, 0.6, true);
-    makeElement("Blu", "Blue", "Fake",
+    makeChemical("Blu", "Blue", "Fake",
         [0, 0, 255, 255], [0, 0, 255, 200], [0, 0, 255, 180],
         ID_CHEM_TEST_BLUE, 9, 100, 0, 0.7, false);
-    makeElement("Wuu", "White", "Fake",
+    makeChemical("Wuu", "White", "Fake",
         [255, 255, 255, 255], [255, 255, 255, 200], [255, 255, 255, 180],
         ID_CHEM_TEST_WHITE, 9, 100, 0, 0.8, false);
-    makeElement("Guu", "Green", "Fake",
+    makeChemical("Guu", "Green", "Fake",
         [0, 255, 0, 255], [0, 255, 0, 200], [0, 255, 0, 180],
         ID_CHEM_TEST_GREEN, 9, 100, 0, 0.9, true);
-    makeElement("Buu", "Black", "Fake",
+    makeChemical("Buu", "Black", "Fake",
         [0, 0, 0, 255], [0, 0, 0, 200], [0, 0, 0, 180],
         ID_CHEM_TEST_BLACK, 9, 100, 0, 1.1, true);
 
@@ -237,60 +220,44 @@ function initTestChemProperties(){
     // Also need verification for all melting point, boiling point, and density values for compounds
     // All values are from miscellaneous sources, mostly here as placeholders
 
-    makeCompound(COMPOUND_HYDROGEN_GAS_ID, [
-            new CompoundComponent(new ElementProperties(ELEMENT_HYDROGEN_ATOMIC_NUM), 2)
-        ], "Hydrogen Gas", "Nature",
+    makeChemical("H2", "Hydrogen Gas", "Nature",
         [255, 255, 200, 255], [255, 255, 200, 200], [255, 255, 200, 180],
-        -259, -253, 0.09, true);
+        COMPOUND_HYDROGEN_GAS_ID, 2.016, -259, -253, 0.09, true);
 
-    makeCompound(COMPOUND_WATER_ID, [
-            new CompoundComponent(new CompoundProperties(COMPOUND_HYDROGEN_GAS_ID), 1),
-            new CompoundComponent(new ElementProperties(ELEMENT_OXYGEN_ATOMIC_NUM), 1)
-        ], "Water", "Nature",
+    makeChemical("H2O", "Water", "Nature",
         [100, 100, 255, 255], [100, 100, 255, 200], [100, 100, 255, 180],
-        0, 100, 1, true);
+        COMPOUND_WATER_ID, 18.0153, 0, 100, 1, true);
 
-    makeCompound(COMPOUND_GLUCOSE_ID, [
-            new CompoundComponent(new ElementProperties(ELEMENT_CARBON_ATOMIC_NUM), 6),
-            new CompoundComponent(new ElementProperties(ELEMENT_HYDROGEN_ATOMIC_NUM), 12),
-            new CompoundComponent(new ElementProperties(ELEMENT_OXYGEN_ATOMIC_NUM), 6)
-        ], "Glucose", "Nature",
+    makeChemical("C6H12O6", "Glucose", "Nature",
         [100, 255, 255, 255], [100, 255, 255, 200], [100, 255, 255, 180],
-        146, 146, 1.56, true);
+        COMPOUND_GLUCOSE_ID, 180.156, 146, 146, 1.56, true);
 
-    makeCompound(COMPOUND_TABLE_SALT_ID, [
-        new CompoundComponent(new ElementProperties(ELEMENT_SODIUM_ATOMIC_NUM), 1),
-        new CompoundComponent(new ElementProperties(ELEMENT_CHLORINE_ATOMIC_NUM), 1)
-        ], "Table Salt", "Nature",
+    makeChemical("NaCl", "Table Salt", "Nature",
         [240, 240, 240, 255], [240, 240, 240, 200], [240, 240, 240, 180],
-        801, 1465, 2.16, true);
+        COMPOUND_TABLE_SALT_ID, 58.44, 801, 1465, 2.16, true);
 
-    makeCompound(COMPOUND_OXYGEN_GAS_ID, [
-            new CompoundComponent(new ElementProperties(ELEMENT_OXYGEN_ATOMIC_NUM), 2)
-        ], "Oxygen Gas", "Nature",
+    makeChemical("O2", "Oxygen Gas", "Nature",
         [220, 220, 220, 255], [220, 220, 220, 200], [220, 220, 220, 180],
-        -218, -183, 1.43, true);
+        COMPOUND_OXYGEN_GAS_ID, 31.99800, -218, -183, 1.43, true);
 
-    makeCompound(COMPOUND_CHLORINE_GAS_ID, [
-            new CompoundComponent(new ElementProperties(ELEMENT_CHLORINE_ATOMIC_NUM), 2)
-        ], "Chlorine Gas", "Nature",
+    makeChemical("Cl2", "Chlorine Gas", "Nature",
         [255, 220, 220, 255], [255, 220, 220, 200], [255, 220, 220, 180],
-        -101, -35, 3.21, true);
+        COMPOUND_CHLORINE_GAS_ID, 70.906, -101, -35, 3.21, true);
 
 
     // These equations are for testing, and are not necessarily accurate to reality
     makeEquation(EQUATION_WATER_ID, [
-        new EquationComponent(2, new CompoundProperties(COMPOUND_HYDROGEN_GAS_ID)),
-        new EquationComponent(1, new CompoundProperties(COMPOUND_OXYGEN_GAS_ID))
+        new EquationComponent(2, new ChemProperties(COMPOUND_HYDROGEN_GAS_ID)),
+        new EquationComponent(1, new ChemProperties(COMPOUND_OXYGEN_GAS_ID))
         ], [
-        new EquationComponent(2, new CompoundProperties(COMPOUND_WATER_ID))
+        new EquationComponent(2, new ChemProperties(COMPOUND_WATER_ID))
         ]);
 
     makeEquation(EQUATION_TABLE_SALT_ID, [
-        new EquationComponent(1, new CompoundProperties(COMPOUND_CHLORINE_GAS_ID)),
-        new EquationComponent(2, new ElementProperties(ELEMENT_SODIUM_ATOMIC_NUM))
+        new EquationComponent(1, new ChemProperties(COMPOUND_CHLORINE_GAS_ID)),
+        new EquationComponent(2, new ChemProperties(ELEMENT_SODIUM_ATOMIC_NUM))
         ], [
-        new EquationComponent(2, new CompoundProperties(COMPOUND_TABLE_SALT_ID))
+        new EquationComponent(2, new ChemProperties(COMPOUND_TABLE_SALT_ID))
         ]);
 }
 
@@ -302,8 +269,7 @@ let CHEMICAL_PROPERTY_CREATOR = "creator";
 let CHEMICAL_PROPERTY_COLOR_SOLID = "colorSolid";
 let CHEMICAL_PROPERTY_COLOR_LIQUID = "colorLiquid";
 let CHEMICAL_PROPERTY_COLOR_GAS = "colorGas";
-let CHEMICAL_PROPERTY_ATOMIC_NUMBER = "atomicNumber";
-let CHEMICAL_PROPERTY_CHEMS = "chems";
+let CHEMICAL_PROPERTY_ID = "id";
 let CHEMICAL_PROPERTY_MOLAR_MASS = "molarMass";
 let CHEMICAL_PROPERTY_MELTING_POINT = "meltingPoint";
 let CHEMICAL_PROPERTY_BOILING_POINT = "boilingPoint";
@@ -312,73 +278,43 @@ let CHEMICAL_PROPERTY_WATER_SOLUBLE = "waterSoluble";
 
 let EQUATION_PROPERTY_REACTANTS = "reactants";
 let EQUATION_PROPERTY_PRODUCTS = "products";
+let EQUATION_PROPERTY_ID = "id";
+
+let EQUATION_COMPONENT_PROPERTY_COEFFICIENT = "coefficient";
+let EQUATION_COMPONENT_PROPERTY_ID = "coefficient";
 
 /**
-Add a new element to the CHEMICAL_PROPERTIES list
-symbol: The symbol used to display the element
-name: The name of the element
-creator: The user who made the element
-colorSolid: The color which will be used to display the element as a solid [red, green, blue, alpha], alpha is optional
-colorLiquid: The color which will be used to display the element as a liquid [red, green, blue, alpha], alpha is optional
-colorGas: The color which will be used to display the element as a gas [red, green, blue, alpha], alpha is optional
-atomicNumber: The atomic number of the element
-molarMass: The molar mass of the element
-meltingPoint: The temperature, in celsius, at which this element melts
-boilingPoint: The temperature, in celsius, at which this element boils
-density: The density, in g/cm^3 for solids, and g/L (or kg/m^3 for gases), of the element
-waterSoluble: true if the element is soluble in water, false otherwise
+Add a new chemical to the CHEMICAL_PROPERTIES list
+symbol: The symbol used to display the chemical
+name: The name of the chemical
+creator: The user who made the chemical
+colorSolid: The color which will be used to display the chemical as a solid [red, green, blue, alpha], alpha is optional
+colorLiquid: The color which will be used to display the chemical as a liquid [red, green, blue, alpha], alpha is optional
+colorGas: The color which will be used to display the chemical as a gas [red, green, blue, alpha], alpha is optional
+id: The id of the chemical
+molarMass: The molar mass of the chemical
+meltingPoint: The temperature, in celsius, at which this chemical melts
+boilingPoint: The temperature, in celsius, at which this chemical boils
+density: The density, in g/cm^3 for solids, and g/L (or kg/m^3 for gases), of the chemical
+waterSoluble: true if the chemical is soluble in water, false otherwise
 */
-function makeElement(symbol, name, creator,
+function makeChemical(symbol, name, creator,
         colorSolid, colorLiquid, colorGas,
-        atomicNumber, molarMass, meltingPoint, boilingPoint, density, waterSoluble){
+        id, molarMass, meltingPoint, boilingPoint, density, waterSoluble){
 
-    CHEMICAL_PROPERTIES[atomicNumber] = {};
-    let p = CHEMICAL_PROPERTIES[atomicNumber];
+    CHEMICAL_PROPERTIES[id] = {};
+    let p = CHEMICAL_PROPERTIES[id];
     p[CHEMICAL_PROPERTY_SYMBOL] = symbol;
     p[CHEMICAL_PROPERTY_NAME] = name;
     p[CHEMICAL_PROPERTY_CREATOR] = creator;
     p[CHEMICAL_PROPERTY_COLOR_SOLID] = colorSolid;
     p[CHEMICAL_PROPERTY_COLOR_LIQUID] = colorLiquid;
     p[CHEMICAL_PROPERTY_COLOR_GAS] = colorGas;
-    p[CHEMICAL_PROPERTY_ATOMIC_NUMBER] = atomicNumber;
     p[CHEMICAL_PROPERTY_MOLAR_MASS] = molarMass;
     p[CHEMICAL_PROPERTY_MELTING_POINT] = meltingPoint;
     p[CHEMICAL_PROPERTY_BOILING_POINT] = boilingPoint;
     p[CHEMICAL_PROPERTY_DENSITY] = density;
     p[CHEMICAL_PROPERTY_WATER_SOLUBLE] = waterSoluble;
-}
-
-
-/**
-Add a new compound to the CHEMICAL_PROPERTIES list
-id: The integer used to identify the compound, must not correspond to an atomic number
-chems: A list of all the ChemProperties objects which make up the compound
-name: The name of the compound
-creator: The user who made the compound
-colorSolid: The color which will be used to display the compound as a solid [red, green, blue, alpha], alpha is optional
-colorLiquid: The color which will be used to display the compound as a liquid [red, green, blue, alpha], alpha is optional
-colorGas: The color which will be used to display the compound as a gas [red, green, blue, alpha], alpha is optional
-meltingPoint: The temperature, in celsius, at which this compound melts
-boilingPoint: The temperature, in celsius, at which this compound boils
-density: The density, in g/cm^3 for solids, and g/L (or kg/m^3 for gases), of the compound
-waterSoluble: true if the compound is soluble in water, false otherwise
-*/
-function makeCompound(id, chems, name, creator,
-        colorSolid, colorLiquid, colorGas,
-        meltingPoint, boilingPoint, density, waterSoluble){
-
-    CHEMICAL_PROPERTIES[id] = {};
-    let c = CHEMICAL_PROPERTIES[id];
-    c[CHEMICAL_PROPERTY_CHEMS] = chems;
-    c[CHEMICAL_PROPERTY_NAME] = name;
-    c[CHEMICAL_PROPERTY_CREATOR] = creator;
-    c[CHEMICAL_PROPERTY_COLOR_SOLID] = colorSolid;
-    c[CHEMICAL_PROPERTY_COLOR_LIQUID] = colorLiquid;
-    c[CHEMICAL_PROPERTY_COLOR_GAS] = colorGas;
-    c[CHEMICAL_PROPERTY_MELTING_POINT] = meltingPoint;
-    c[CHEMICAL_PROPERTY_BOILING_POINT] = boilingPoint;
-    c[CHEMICAL_PROPERTY_DENSITY] = density;
-    c[CHEMICAL_PROPERTY_WATER_SOLUBLE] = waterSoluble;
 }
 
 /**

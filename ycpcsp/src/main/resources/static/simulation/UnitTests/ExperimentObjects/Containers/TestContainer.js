@@ -5,8 +5,8 @@ var chem2;
 QUnit.module("Container", {
     beforeEach: function(){
         currentInstanceID = 1;
-        chem1 = new Chemical(1, new ElementProperties(ID_CHEM_TEST_RED), 20, 1);
-        chem2 = new Chemical(5, new ElementProperties(ID_CHEM_TEST_BLUE), 20, 1);
+        chem1 = new Chemical(1, new ChemProperties(ID_CHEM_TEST_RED), 20, 1);
+        chem2 = new Chemical(5, new ChemProperties(ID_CHEM_TEST_BLUE), 20, 1);
         container = new Container([10, 5], [12, 20], 10.0, 200.0, 0.15);
     }
 });

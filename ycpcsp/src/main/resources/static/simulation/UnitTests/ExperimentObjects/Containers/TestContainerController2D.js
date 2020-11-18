@@ -355,6 +355,15 @@ QUnit.test('canContain:', function(assert){
     assert.throws(controller.canContain, "A generic ContainerController2D object should throw an error on canContain");
 });
 
+QUnit.test('placeSameChemical:', function(assert){
+    beakerControl1.emptyOut();
+    assert.true(beakerControl1.placeSameChemical(chem1), "Checking that an empty container can hold a new chemical without it being a new chemical");
+
+    beaker1.setContents(chem1);
+    assert.true(beakerControl1.placeSameChemical(chem2), "Checking that a container with one chemical can hold a new chemical of the same kind");
+    assert.false(beakerControl1.placeSameChemical(chem5), "Checking that a container with one chemical cannot hold a new chemical of a different kind without holding more than one kind of chemical");
+});
+
 QUnit.test('reset:', function(assert){
     controller.equipment.setContents(chem1);
     assert.deepEqual(controller.equipment.contents, [chem1], "Before resetting, controller's container should have the set Chemical.");

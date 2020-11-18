@@ -103,8 +103,8 @@ var elementHydrogen;
 QUnit.module("EquationComponent", {
     before: function(){
         initTestChemProperties();
-        elementHydrogen = new ElementProperties(ELEMENT_HYDROGEN_ATOMIC_NUM);
-        elementHelium = new ElementProperties(ELEMENT_HELIUM_ATOMIC_NUM);
+        elementHydrogen = new ChemProperties(ELEMENT_HYDROGEN_ATOMIC_NUM);
+        elementHelium = new ChemProperties(ELEMENT_HELIUM_ATOMIC_NUM);
     },
     beforeEach: function(){
         eqComp = new EquationComponent(2, elementHydrogen);

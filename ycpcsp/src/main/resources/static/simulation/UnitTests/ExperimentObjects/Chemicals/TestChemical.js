@@ -9,9 +9,9 @@ QUnit.module("Chemical", {
         initTestChemProperties();
     },
     beforeEach: function(){
-        properties = new ElementProperties(ELEMENT_HYDROGEN_ATOMIC_NUM);
+        properties = new ChemProperties(ELEMENT_HYDROGEN_ATOMIC_NUM);
         chem = new Chemical(5.0, properties, 10.0, 0.5);
-        fakeChem = new Chemical(5.0, new ElementProperties(null), 20.0, 0.5);
+        fakeChem = new Chemical(5.0, new ChemProperties(null), 20.0, 0.5);
     }
 });
 
@@ -42,7 +42,7 @@ QUnit.test('addVolume:', function(assert){
 QUnit.test('setProperties:', function(assert){
     assert.equal(chem.properties, properties, "Initial properties should be for hydrogen");
 
-    let p = new ElementProperties(ELEMENT_HELIUM_ATOMIC_NUM);
+    let p = new ChemProperties(ELEMENT_HELIUM_ATOMIC_NUM);
     chem.setProperties(p);
     assert.equal(chem.properties, p, "New properties should be for helium");
 });
@@ -101,7 +101,7 @@ QUnit.test('getID:', function(assert){
 
     assert.equal(chem.getID(), 1, "Hydrogen should have ID 1");
 
-    let p = new ElementProperties(ELEMENT_HELIUM_ATOMIC_NUM);
+    let p = new ChemProperties(ELEMENT_HELIUM_ATOMIC_NUM);
     chem.setProperties(p);
     assert.equal(chem.getID(), 2, "Helium should have ID 2");
 });

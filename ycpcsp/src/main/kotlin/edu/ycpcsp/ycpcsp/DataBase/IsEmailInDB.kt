@@ -1,10 +1,6 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
-import edu.ycpcsp.ycpcsp.Models.Compound
-import edu.ycpcsp.ycpcsp.Models.User
-import java.sql.DriverManager
 import java.sql.SQLException
-import java.util.*
 
 fun IsEmailInDB(email : String) : Boolean{
     var connection = getDBConnection()

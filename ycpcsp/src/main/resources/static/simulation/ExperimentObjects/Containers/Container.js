@@ -380,7 +380,7 @@ class ContainerController2D extends EquipmentController2D{
     /**
     Determine how much of the contents of this Controller's Container can be put into the given Controller's Container.
     contControl: the Controller to check
-    returns: The volume in milliters which can be put into the given Controller's Container, or null if this Controller's Container is empty
+    returns: The volume in milliliters which can be put into the given Controller's Container, or null if this Controller's Container is empty
     */
     maxPourAmount(contControl){
         let eq = this.equipment;
@@ -400,6 +400,16 @@ class ContainerController2D extends EquipmentController2D{
     */
     canContain(chemical){
         throw new Error("All ContainerController2D objects must implement canContain(chemical)");
+    }
+
+    /**
+    Determine if the given Chemical can be placed in this container without changing the overall contents.
+    chemical: The chemical to test
+    returns: true if this container is empty, or contains exactly one chemical which is the smae type as the given chemical
+    */
+    placeSameChemical(chemical){
+        let eq = this.equipment;
+        return eq.isEmpty() || eq.contents[0].properties.getID() === chemical.properties.getID();
     }
 
     /**

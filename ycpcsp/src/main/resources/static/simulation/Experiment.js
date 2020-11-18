@@ -642,6 +642,7 @@ class ExperimentController2D{
         // Otherwise, add the volume
         else{
             chemControl.chemical.setVolume(volume);
+            chemControl.calculateMatterState();
             this.selectedEquipFunction(ID_FUNC_CONTAINER_ADD_TO, chemControl);
         }
     }

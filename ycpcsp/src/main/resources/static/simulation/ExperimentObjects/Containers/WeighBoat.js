@@ -38,11 +38,13 @@ class WeighBoatController2D extends ContainerController2D{
     chemical: The Chemical to test if it can be contained
     */
     canContain(chemical){
-        // TODO weigh boats should only be able to weigh solids
+        let eq = this.equipment;
 
-        // Check to see that the weigh boat is either empty,
-        //  or the chemical to be added is also the same chemical already in the weigh boat
-        return this.equipment.isEmpty() || this.equipment.contents[0].properties.getID() === chemical.properties.getID();
+        // If chemical is not a solid, it cannot be added
+        if(chemical.matterState !== MATTER_STATE_SOLID) return false;
+
+        // Check to see the chemical is the same as the one in the WeighBoat, or if it is empty
+        return this.placeSameChemical(chemical);
     }
 
     /**

@@ -28,7 +28,7 @@ class SimulationController {
     fun getSimulationData(@RequestBody id : Int) : Experiment{
         var exp = Experiment()
         println(id)
-        exp = LoadExperiment("$id");
+        exp = LoadExperiment("$id")
         return exp
     }
 
