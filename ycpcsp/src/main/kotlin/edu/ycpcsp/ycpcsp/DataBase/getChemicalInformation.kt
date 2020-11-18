@@ -16,6 +16,7 @@ const val CompoundSolubleIndex = 6
 const val CompoundSolidIndex = 7
 const val CompoundGasIndex = 8
 const val creatorIDIndex = 9
+const val RatingIndex = 10;
 
 fun getCompoundInformationByName(name : String) : ChemicalInformation?{
     var connection = getDBConnection()
