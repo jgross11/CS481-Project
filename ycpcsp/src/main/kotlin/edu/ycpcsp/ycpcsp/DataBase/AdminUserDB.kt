@@ -48,9 +48,9 @@ fun CreateAdminUser(signupFormData: SignupFormData): Int {
 }
 
 /**
- *  Given a quarantine user's quID, attempts to fetch all quarantine user information
- *  userID: the quID of the desired user
- *  return: a populated User object if the quID is exists, a null User otherwise
+ *  Given a admin user's auID, attempts to fetch all admin user information
+ *  userID: the auID of the admin user
+ *  return: a populated User object if the auID is exists, a null User otherwise
  */
 fun loadAdminUserByID(userID : String) : User{
     var connection = getDBConnection()

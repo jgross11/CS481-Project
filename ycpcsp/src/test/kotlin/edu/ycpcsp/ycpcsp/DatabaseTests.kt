@@ -162,7 +162,7 @@ class DatabaseTests {
             println("Delete Admin User does not work")
         }
     }
-    
+
     @Test
     fun testFindMyExperiments(){
         val userID = LoadUser("jgross11@ycp.edu")
