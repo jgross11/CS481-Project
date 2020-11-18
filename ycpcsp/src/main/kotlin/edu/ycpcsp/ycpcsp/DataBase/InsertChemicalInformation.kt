@@ -12,6 +12,7 @@ fun insertCompound(comp : ChemicalInformation) : Boolean{
     var connection = getDBConnection()
     if(connection != null){
         return try{
+
             var preparedStatement = connection.prepareStatement("INSERT INTO Database.Chemical_Information (Chemical_Formula, Chemical_Name, Chemical_Mass, Chemical_Density, Chemical_Water_Soluble, Chemical_Phase_Change_Solid, Chemical_Phase_Change_Gas,Chemical_Rating) VALUES (?, ?, ?, ?, ?, ?, ?,?)", Statement.RETURN_GENERATED_KEYS)
             preparedStatement.setString(1, comp.formula)
             preparedStatement.setString(2, comp.name)
