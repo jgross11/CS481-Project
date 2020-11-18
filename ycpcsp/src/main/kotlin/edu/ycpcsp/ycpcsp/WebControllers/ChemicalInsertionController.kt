@@ -29,7 +29,7 @@ class ChemicalInsertionController {
     @PostMapping(path = ["/load-all-chemicals"], consumes = ["application/json"], produces = ["application/json"])
     @ResponseBody
     fun loadAllChemicalInformation() : Array<ChemicalInformation>?{
-        println("Sending all equation information")
+        println("Sending all chemical information")
         return getAllChemicalInformation()
     }
 
