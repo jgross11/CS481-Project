@@ -32,8 +32,8 @@
         <label for="ListContainers">Select a component to add: </label><br>
         <div id="ListContainers">
             <div id="equipmentContainer">
-                <div class="header" onclick="toggleList(0)">Equipment</div>
-                <div class="list" id="equipmentList">
+                <div class="header" onclick="toggleVisibility(document.getElementById('equipmentListContainer'))">Equipment</div>
+                <div class="list" id="equipmentListContainer">
                     
                 </div>
             </div>
@@ -166,37 +166,150 @@
 </body>
 
 <script reference="form-tying-together-script.js">
-    // only allow components to be created if user is logged in and has verified their account
-    let user = JSON.parse(sessionStorage.getItem("user"));
-    let listDivList = document.getElementsByClassName("list");
-    if(user != null && !user.isQuarantined){
-        console.log("user is not quarantined");
-        document.getElementById("experimentCreatorBox").value = user.fullName;
-    } else{
-        if(user == null){
-            console.log("not logged in!");
+
+    // contains all usable equipment information
+    var equipmentList = [
+        { Equip: 'BEAKER_50mL', equipmentID:1, name: "Beaker (50mL)"},
+        { Equip: 'BEAKER_150mL',equipmentID:2, name: "Beaker (10mL)"},
+        { Equip: 'BEAKER_250mL',equipmentID:3, name: "Beaker (20mL)"},
+        { Equip: 'BEAKER_600mL',equipmentID:4, name: "Beaker (600mL)"},
+        { Equip: 'SCALE',equipmentID:5, name: "Scale"},
+        { Equip: 'TRASHCAN',equipmentID:6, name: "Trashcan"},
+        { Equip: 'GRADUATED_25mL',equipmentID:7, name: "Graduated Cylinder (25mL)" },
+        { Equip: 'GRADUATED_50mL',equipmentID:8, name: "Graduated Cylinder (50mL)" },
+        { Equip: 'GRADUATED_100mL',equipmentID:9, name: "Graduated Cylinder (100mL)" },
+        { Equip: 'GRADUATED_1000mL',equipmentID:10, name: "Graduated Cylinder (1000mL)" },
+        { Equip: 'FLASK_25mL',equipmentID:11, name: "Erlenmeyer Flask (25mL)" },
+        { Equip: 'FLASK_50mL',equipmentID:12, name: "Erlenmeyer Flask (50mL)" },
+        { Equip: 'FLASK_100mL',equipmentID:13, name: "Erlenmeyer Flask (100mL)" },
+        { Equip: 'FLASK_1000mL',equipmentID:14, name: "Erlenmeyer Flask (1000mL)" },
+        { Equip: 'WEIGH_BOAT',equipmentID:15, name: "Weigh Boat" },
+        { Equip: 'STIR_ROD',equipmentID:16, name: "Stir Rod" }
+    ];
+
+    // experiment chem list
+    let chems = [];
+
+    // experiment equipment list
+    let equipments = [];
+    
+    // experiment chem info list
+    let chemInfos = [];
+    
+    // experiment equation list
+    let equations = [];
+    
+    // experiment step list
+    let steps = [];
+    
+    initCreation();
+
+    
+    
+    // Calls all relevant functions necessary to load all components of the create experiment page
+    function initCreation(){
+        
+        // only allow components to be created if user is logged in and has verified their account
+        let user = JSON.parse(sessionStorage.getItem("user"));
+        let listDivList = document.getElementsByClassName("list");
+        
+        if(user != null && !user.isQuarantined){
+            console.log("user is not quarantined");
+            document.getElementById("experimentCreatorBox").value = user.fullName;
         } else{
-            console.log("quarantine user!");
+            if(user == null){
+                console.log("not logged in!");
+            } else{
+                console.log("quarantine user!");
+            }
+            // UNCOMMENT WHEN NOT EDITING THIS WEBPAGE
+            //writePermissionNotice();
         }
-        // UNCOMMENT WHEN NOT EDITING THIS WEBPAGE
-        //writePermissionNotice();
+
+        // move the following three functions into above logic when not editing this webpage
+
+        // fetch and display chemicals from DB
+        initChemicalSearch();
+
+        // fetch and display equations from DB
+        initEquationSearch();
+
+        // display equipments from DB
+        loadEquipment();
     }
 
+    // Creates webpage list of all addable equipment
+    function loadEquipment(){
+        let equipmentListDiv = document.getElementById("equipmentListContainer");
+        for(let i = 0; i < equipmentList.length; i++){
+            let equipment = equipmentList[i];
+            equipmentListDiv.innerHTML += "<div id='equipmentPiece' onclick='addEquipment("+i+")'>"+equipment.name+"</div>"
+        }
+    }
+
+    // Overwrites creationg page HTML to notify user they must log in / verify 
+    // their account before they're able to create an experiment
     function writePermissionNotice(){
         document.getElementById("creationPageForm").innerHTML = "You must be <a href='/'> logged in</a>" +
         " and have verified your account via email in order to create an experiment. <br>If you don't have an account, <a href='/signup'>sign up.</a>";
     }
 
+    // menu toggle animation
     function toggleVisibility(div){
         div.style.display = div.style.display == "inline" ? "none" : "inline";
     }
 
-    function addChemical(chemicalID){
-        console.log("please add chemicalID=" + chemicalID + " to equation now");
+    // Add chemicals 
+    function addChemical(chemicalIndex){
+        // allChemicalsList found in chemicalFormHandler.js
+        // contains all chemical information in DB
+        let chemicalToAdd = allChemicalsList[chemicalIndex];
+        let chemID = chemicalToAdd.chemicalInformationID;
+
+        // ensure chem isn't already in experiment
+        for(let i = 0; i < chems.length; i++){
+            if(chems[i].chemID === chemID){
+                console.log("chem already in list");
+                return;
+            }
+        }
+        
+        chemInfos.push(chemID);
+        let chemName = chemicalToAdd.name;
+        let mass = 1;
+        let concentration =1;
+        chems.push({chemName, chemID, mass, concentration});
+        console.log(chems);
     }
 
-    function addEquation(equationID){
-        console.log("please add equationID=" + equationID + " to equation now");
+    function addEquipment(equipmentIndex){
+        let equipment = equipmentList[equipmentIndex];
+        console.log(equipment);
+        let equipmentID = equipment.equipmentID;
+        if(equipments[equipmentID] != null){
+            equipments[equipmentID].quantity++;
+        } else{
+            equipments[equipmentID] = {equipmentID: equipmentID, quantity: 1};
+        }
+        console.log(equipments);
+    }
+
+    function addEquation(equationIndex){
+        // allEquationList found in equationFormHandler.js
+        // contains all equation informatino in DB
+        let equationToAdd = allEquationList[equationIndex];
+        let equationID = equationToAdd.equationID;
+
+        // ensure ID isn't already in experiment
+        for(let i = 0; i < equations.length; i++){
+            if(equations[i].equationID === equationID){
+                console.log("equation already in list");
+                return;
+            }
+        }
+        equations.push(equationToAdd);
+        console.log(equations);
+
     }
 </script>
 </html>
