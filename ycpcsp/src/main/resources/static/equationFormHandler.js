@@ -14,9 +14,6 @@ let productFormulas = null;
 let equationSearchResultContainer = null;
 let allEquationList = {};
 
-
-initEquationSearch();
-
 function initEquationSearch(){
     equationSearchResultContainer = document.getElementById("equationSearchResultContainer");
     loadEquationsInDB();

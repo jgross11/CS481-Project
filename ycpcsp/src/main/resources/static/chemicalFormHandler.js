@@ -7,7 +7,6 @@
 let chemicalSearchResultContainer = null;
 let allChemicalsList = {};
 let submissionErrorDiv = null;
-initChemicalSearch();
 
 
 function initChemicalSearch(){
