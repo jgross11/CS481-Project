@@ -167,32 +167,30 @@
         </div>
     </div>
 
+    <!-- error setting, data verification functionality-->
     <script src="./helperFunctions.js"></script>
+
+    <!-- contains all logic for searching, adding, submitting equations-->
     <script src="./equationFormHandler.js"></script>
+
+    <!-- contains all logic for searching, adding, submitting chemicals-->
     <script src="./chemicalFormHandler.js"></script>
+
+    <!-- all experiments that are created will need these scripts 
+        for valid step / valid experiment checking -->
+    <script src="./simulation/objectIDs.js"></script>
+    <script src="./simulation/Experiment.js"></script>
+    <script src="./simulation/Instruction.js"></script>
+    <script src="./simulation/ExperimentObjects/ExperimentObject.js"></script>
+    <script src="./simulation/ExperimentObjects/Equipment.js"></script>
+    <script src="./simulation/ExperimentObjects/Containers/Container.js"></script>
+    <script src="./simulation/ExperimentObjects/Disposers/Disposer.js"></script>
+    
 </body>
 
 <script reference="form-tying-together-script.js">
 
     // contains all usable equipment information
-    var allEquipmentList = [
-        { Equip: 'BEAKER_50mL', equipmentID:1, name: "Beaker (50mL)"},
-        { Equip: 'BEAKER_150mL',equipmentID:2, name: "Beaker (150mL)"},
-        { Equip: 'BEAKER_250mL',equipmentID:3, name: "Beaker (250mL)"},
-        { Equip: 'BEAKER_600mL',equipmentID:4, name: "Beaker (600mL)"},
-        { Equip: 'SCALE',equipmentID:5, name: "Scale"},
-        { Equip: 'TRASHCAN',equipmentID:6, name: "Trashcan"},
-        { Equip: 'GRADUATED_25mL',equipmentID:7, name: "Graduated Cylinder (25mL)" },
-        { Equip: 'GRADUATED_50mL',equipmentID:8, name: "Graduated Cylinder (50mL)" },
-        { Equip: 'GRADUATED_100mL',equipmentID:9, name: "Graduated Cylinder (100mL)" },
-        { Equip: 'GRADUATED_1000mL',equipmentID:10, name: "Graduated Cylinder (1000mL)" },
-        { Equip: 'FLASK_25mL',equipmentID:11, name: "Erlenmeyer Flask (25mL)" },
-        { Equip: 'FLASK_50mL',equipmentID:12, name: "Erlenmeyer Flask (50mL)" },
-        { Equip: 'FLASK_100mL',equipmentID:13, name: "Erlenmeyer Flask (100mL)" },
-        { Equip: 'FLASK_1000mL',equipmentID:14, name: "Erlenmeyer Flask (1000mL)" },
-        { Equip: 'WEIGH_BOAT',equipmentID:15, name: "Weigh Boat" },
-        { Equip: 'STIR_ROD',equipmentID:16, name: "Stir Rod" }
-    ];
 
     // experiment lists
     let chems = [];
@@ -209,6 +207,11 @@
     let equipmentDiv = null;
     let equationDiv = null;
     let stepDiv = null;
+
+    // contains status of equipment scripts
+    // false - appropriate script(s) not loaded
+    // true - appropriate script(s) loaded
+    let equipmentScriptStatus = null;
     
     initCreation();
 
@@ -251,15 +254,21 @@
         equipmentDiv = document.getElementById("experimentEquipmentContainer");
         stepDiv = document.getElementById("experimentStepContainer");
         equationsDiv = document.getElementById("experimentEquationContainer");
+
+        // initialize all equipment script statuses to false - not loaded
+        // TODO: blame Zaq (probably) for array indices having to start at 1
+        // to map to equipmentIDs - I don't make the rules
+        equipmentScriptStatus = Array(allEquipmentList.length+1);
+        for(let i = 1; i < equipmentScriptStatus.length; i++){
+            equipmentScriptStatus[i] = false;
+        }
     }
 
     // updates contents of the "equipment in experiment" list div
     function updateExperimentEquipmentList(){
         equipmentDiv.innerHTML = "Equipment in experiment: <br>";
-        console.log(equipments);
         for(let i = 0; i < equipments.length; i++){
             let equip = equipments[i];
-            console.log(equip);
             if(equip != null){
                 equipmentDiv.innerHTML += "<div id='experimentEquipmentComponent'>"+allEquipmentList[i].name+": "+equip.quantity+"</div>";
             }
@@ -279,13 +288,95 @@
     // either add that piece of equipment to the experiment equipment list
     // or increment the current quantity within the list, and update the display
     function addEquipment(equipmentIndex){
+
         let equipment = allEquipmentList[equipmentIndex];
         if(equipments[equipmentIndex] != null){
             equipments[equipmentIndex].quantity++;
         } else{
             equipments[equipmentIndex] = {equipmentID: equipment.equipmentID, quantity: 1};
         }
+        loadEquipmentScript(equipment.equipmentID);
         updateExperimentEquipmentList();
+    }
+
+    function loadEquipmentScript(equipmentIndex){
+        let scriptURL = null;
+        switch(equipmentIndex){
+            case ID_EQUIP_BEAKER_50mL:
+            case ID_EQUIP_BEAKER_150mL:
+            case ID_EQUIP_BEAKER_250mL:
+            case ID_EQUIP_BEAKER_600mL:
+                // if any beaker was already added to the experiment, then no need to reimport the script
+                if(equipmentScriptStatus[ID_EQUIP_BEAKER_50mL]){
+                    return;
+                }
+                scriptURL = "./simulation/ExperimentObjects/Containers/Beaker.js";
+                equipmentScriptStatus[ID_EQUIP_BEAKER_50mL] = true;
+                equipmentScriptStatus[ID_EQUIP_BEAKER_150mL] = true;
+                equipmentScriptStatus[ID_EQUIP_BEAKER_250mL] = true;
+                equipmentScriptStatus[ID_EQUIP_BEAKER_600mL] = true;
+            break;
+            case ID_EQUIP_SCALE:
+                if(equipmentScriptStatus[ID_EQUIP_SCALE]){
+                    return;
+                }
+                scriptURL = "./simulation/ExperimentObjects/Scale.js";
+                equipmentScriptStatus[ID_EQUIP_SCALE] = true;
+            break;
+            case ID_EQUIP_TRASHCAN:
+                if(equipmentScriptStatus[ID_EQUIP_TRASHCAN]){
+                    return;
+                }
+                scriptURL = "./simulation/ExperimentObjects/Disposers/Trashcan.js";
+                equipmentScriptStatus[ID_EQUIP_TRASHCAN] = true;
+            break;
+            case ID_EQUIP_GRADUATED_25mL:
+            case ID_EQUIP_GRADUATED_50mL:
+            case ID_EQUIP_GRADUATED_100mL:
+            case ID_EQUIP_GRADUATED_1000mL:
+                // if any graduated cylinder was already added to the experiment, then no need to reimport the script
+                if(equipmentScriptStatus[ID_EQUIP_GRADUATED_25mL]){
+                    return;
+                }
+                scriptURL = "./simulation/ExperimentObjects/Containers/GraduatedCylinder.js";
+                equipmentScriptStatus[ID_EQUIP_GRADUATED_25mL] = true;
+                equipmentScriptStatus[ID_EQUIP_GRADUATED_50mL] = true;
+                equipmentScriptStatus[ID_EQUIP_GRADUATED_100mL] = true;
+                equipmentScriptStatus[ID_EQUIP_GRADUATED_1000mL] = true;
+            break;
+            case ID_EQUIP_FLASK_25mL:
+            case ID_EQUIP_FLASK_50mL:
+            case ID_EQUIP_FLASK_125mL:
+            case ID_EQUIP_FLASK_1000mL:
+                // if any erlenmeyer was already added to the experiment, then no need to reimport the script
+                if(equipmentScriptStatus[ID_EQUIP_FLASK_25mL]){
+                    return;
+                }
+                scriptURL = "./simulation/ExperimentObjects/Containers/ErlenmeyerFlask.js";
+                equipmentScriptStatus[ID_EQUIP_FLASK_25mL] = true;
+                equipmentScriptStatus[ID_EQUIP_FLASK_50mL] = true;
+                equipmentScriptStatus[ID_EQUIP_FLASK_125mL] = true;
+                equipmentScriptStatus[ID_EQUIP_FLASK_1000mL] = true;
+            break;
+            case ID_EQUIP_WEIGH_BOAT:
+                if(equipmentScriptStatus[ID_EQUIP_WEIGH_BOAT]){
+                    return;
+                }
+                scriptURL = "./simulation/ExperimentObjects/Containers/WeighBoat.js";
+                equipmentScriptStatus[ID_EQUIP_WEIGH_BOAT] = true;
+            break;
+            case ID_EQUIP_STIR_ROD:
+                if(equipmentScriptStatus[ID_EQUIP_STIR_ROD]){
+                    return;
+                }
+                scriptURL = "./simulation/ExperimentObjects/StirRod.js";
+                equipmentScriptStatus[ID_EQUIP_STIR_ROD] = true;
+            break;
+        }
+        let equipmentScript = document.createElement("script");
+        equipmentScript.setAttribute("async", "false");
+        equipmentScript.setAttribute("src", scriptURL);
+        document.body.appendChild(equipmentScript);
     }
 
     // given the index within allChemicalsList of a chemical,
@@ -317,10 +408,8 @@
     // updates contents of the "chemicals in experiment" list div
     function updateExperimentChemicalList(){
         chemicalDiv.innerHTML = "Chemicals in experiment: <br>";
-        console.log(chemDisplay);
         for(let i = 0; i < chemDisplay.length; i++){
             let chem = chemDisplay[i];
-            console.log(chem);
             chemicalDiv.innerHTML += "<div id='experimentChemicalComponent'>"+chem.name+": "+chem.formula+"</div>";
         }
     }
