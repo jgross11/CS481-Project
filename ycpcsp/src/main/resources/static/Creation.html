@@ -29,6 +29,13 @@
         <label for="experimentCreatorBox">Experiment creator: </label><br>
         <input type="text" placeholder="Experiment Creator" id="experimentCreatorBox" disabled><br><br>
 
+        <div id="experimentComponentListContainer">
+            <div id="experimentEquipmentContainer"></div><br>
+            <div id="experimentChemicalContainer"></div><br>
+            <div id="experimentEquationContainer"></div><br>
+            <div id="experimentStepContainer"></div><br>
+        </div>
+
         <label for="ListContainers">Select a component to add: </label><br>
         <div id="ListContainers">
             <div id="equipmentContainer">
@@ -168,10 +175,10 @@
 <script reference="form-tying-together-script.js">
 
     // contains all usable equipment information
-    var equipmentList = [
+    var allEquipmentList = [
         { Equip: 'BEAKER_50mL', equipmentID:1, name: "Beaker (50mL)"},
-        { Equip: 'BEAKER_150mL',equipmentID:2, name: "Beaker (10mL)"},
-        { Equip: 'BEAKER_250mL',equipmentID:3, name: "Beaker (20mL)"},
+        { Equip: 'BEAKER_150mL',equipmentID:2, name: "Beaker (150mL)"},
+        { Equip: 'BEAKER_250mL',equipmentID:3, name: "Beaker (250mL)"},
         { Equip: 'BEAKER_600mL',equipmentID:4, name: "Beaker (600mL)"},
         { Equip: 'SCALE',equipmentID:5, name: "Scale"},
         { Equip: 'TRASHCAN',equipmentID:6, name: "Trashcan"},
@@ -187,20 +194,21 @@
         { Equip: 'STIR_ROD',equipmentID:16, name: "Stir Rod" }
     ];
 
-    // experiment chem list
+    // experiment lists
     let chems = [];
-
-    // experiment equipment list
     let equipments = [];
-    
-    // experiment chem info list
     let chemInfos = [];
-    
-    // experiment equation list
     let equations = [];
-    
-    // experiment step list
     let steps = [];
+
+    // contains chemicals that have been displayed, not necessarily used yet
+    let chemDisplay = [];
+
+    // experiment list divs
+    let chemicalDiv = null;
+    let equipmentDiv = null;
+    let equationDiv = null;
+    let stepDiv = null;
     
     initCreation();
 
@@ -223,7 +231,8 @@
                 console.log("quarantine user!");
             }
             // UNCOMMENT WHEN NOT EDITING THIS WEBPAGE
-            //writePermissionNotice();
+            // writePermissionNotice();
+            // return;
         }
 
         // move the following three functions into above logic when not editing this webpage
@@ -236,30 +245,52 @@
 
         // display equipments from DB
         loadEquipment();
+
+        // get references for list divs
+        chemicalDiv = document.getElementById("experimentChemicalContainer");
+        equipmentDiv = document.getElementById("experimentEquipmentContainer");
+        stepDiv = document.getElementById("experimentStepContainer");
+        equationsDiv = document.getElementById("experimentEquationContainer");
+    }
+
+    // updates contents of the "equipment in experiment" list div
+    function updateExperimentEquipmentList(){
+        equipmentDiv.innerHTML = "Equipment in experiment: <br>";
+        console.log(equipments);
+        for(let i = 0; i < equipments.length; i++){
+            let equip = equipments[i];
+            console.log(equip);
+            if(equip != null){
+                equipmentDiv.innerHTML += "<div id='experimentEquipmentComponent'>"+allEquipmentList[i].name+": "+equip.quantity+"</div>";
+            }
+        }
     }
 
     // Creates webpage list of all addable equipment
     function loadEquipment(){
         let equipmentListDiv = document.getElementById("equipmentListContainer");
-        for(let i = 0; i < equipmentList.length; i++){
-            let equipment = equipmentList[i];
-            equipmentListDiv.innerHTML += "<div id='equipmentPiece' onclick='addEquipment("+i+")'>"+equipment.name+"</div>"
+        for(let i = 0; i < allEquipmentList.length; i++){
+            let equipment = allEquipmentList[i];
+            equipmentListDiv.innerHTML += "<div id='equipmentPiece' onclick='addEquipment("+i+")'>"+equipment.name+"</div>";
         }
     }
 
-    // Overwrites creationg page HTML to notify user they must log in / verify 
-    // their account before they're able to create an experiment
-    function writePermissionNotice(){
-        document.getElementById("creationPageForm").innerHTML = "You must be <a href='/'> logged in</a>" +
-        " and have verified your account via email in order to create an experiment. <br>If you don't have an account, <a href='/signup'>sign up.</a>";
+    // given the index within allEquipmentsList of a piece of equipment,
+    // either add that piece of equipment to the experiment equipment list
+    // or increment the current quantity within the list, and update the display
+    function addEquipment(equipmentIndex){
+        let equipment = allEquipmentList[equipmentIndex];
+        if(equipments[equipmentIndex] != null){
+            equipments[equipmentIndex].quantity++;
+        } else{
+            equipments[equipmentIndex] = {equipmentID: equipment.equipmentID, quantity: 1};
+        }
+        updateExperimentEquipmentList();
     }
 
-    // menu toggle animation
-    function toggleVisibility(div){
-        div.style.display = div.style.display == "inline" ? "none" : "inline";
-    }
-
-    // Add chemicals 
+    // given the index within allChemicalsList of a chemical,
+    // add it to the experiment chemical list if not already in list
+    // and then update list display 
     function addChemical(chemicalIndex){
         // allChemicalsList found in chemicalFormHandler.js
         // contains all chemical information in DB
@@ -278,20 +309,20 @@
         let chemName = chemicalToAdd.name;
         let mass = 1;
         let concentration =1;
+        chemDisplay.push({name: chemName, formula: chemicalToAdd.formula});
         chems.push({chemName, chemID, mass, concentration});
-        console.log(chems);
+        updateExperimentChemicalList();
     }
 
-    function addEquipment(equipmentIndex){
-        let equipment = equipmentList[equipmentIndex];
-        console.log(equipment);
-        let equipmentID = equipment.equipmentID;
-        if(equipments[equipmentID] != null){
-            equipments[equipmentID].quantity++;
-        } else{
-            equipments[equipmentID] = {equipmentID: equipmentID, quantity: 1};
+    // updates contents of the "chemicals in experiment" list div
+    function updateExperimentChemicalList(){
+        chemicalDiv.innerHTML = "Chemicals in experiment: <br>";
+        console.log(chemDisplay);
+        for(let i = 0; i < chemDisplay.length; i++){
+            let chem = chemDisplay[i];
+            console.log(chem);
+            chemicalDiv.innerHTML += "<div id='experimentChemicalComponent'>"+chem.name+": "+chem.formula+"</div>";
         }
-        console.log(equipments);
     }
 
     function addEquation(equationIndex){
@@ -308,8 +339,18 @@
             }
         }
         equations.push(equationToAdd);
-        console.log(equations);
+    }
 
+    // Overwrites creation page HTML to notify user they must log in / verify 
+    // their account before they're able to create an experiment
+    function writePermissionNotice(){
+        document.getElementById("creationPageForm").innerHTML = "You must be <a href='/'> logged in</a>" +
+        " and have verified your account via email in order to create an experiment. <br>If you don't have an account, <a href='/signup'>sign up.</a>";
+    }
+
+    // menu toggle animation
+    function toggleVisibility(div){
+        div.style.display = div.style.display == "inline" ? "none" : "inline";
     }
 </script>
 </html>
