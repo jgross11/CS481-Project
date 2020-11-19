@@ -44,7 +44,7 @@ function searchChemical(searchValue){
     let searchResults = []
     let searchResultSize = 0;
     for(let i = 0; i < allChemicalsList.length; i++){
-        if(allChemicalsList[i]['formula'].includes(searchValue)){
+        if(allChemicalsList[i]['formula'].includes(searchValue) || allChemicalsList[i]['name'].toLowerCase().includes(searchValue.toLowerCase())){
             searchResults[searchResultSize++] = allChemicalsList[i];
         }
     }
