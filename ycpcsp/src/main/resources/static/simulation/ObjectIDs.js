@@ -21,26 +21,27 @@ let ID_EQUIP_FLASK_1000mL = 14;
 let ID_EQUIP_WEIGH_BOAT = 15;
 let ID_EQUIP_STIR_ROD = 16;
 
-var EquipID = [
-    { Equip: 'BEAKER_50mL', ID:1},
-    { Equip: 'BEAKER_150mL',ID:2},
-    { Equip: 'BEAKER_250mL',ID:3},
-    { Equip: 'BEAKER_600mL',ID:4},
-    { Equip: 'SCALE',ID:5},
-    { Equip: 'TRASHCAN',ID:6},
-    { Equip: 'GRADUATED_25mL',ID:7 },
-    { Equip: 'GRADUATED_50mL',ID:8 },
-    { Equip: 'GRADUATED_100mL',ID:9 },
-    { Equip: 'GRADUATED_1000mL',ID:10 },
-    { Equip: 'FLASK_25mL',ID:11 },
-    { Equip: 'FLASK_50mL',ID:12 },
-    { Equip: 'FLASK_100mL',ID:13 },
-    { Equip: 'FLASK_1000mL',ID:14 },
-    { Equip: 'WEIGH_BOAT',ID:15 },
-    { Equip: 'STIR_ROD',ID:16 }
+// contains all usable equipment information
+var allEquipmentList = [
+    { Equip: 'BEAKER_50mL',     equipmentID:ID_EQUIP_BEAKER_50mL,       name: "Beaker (50mL)"},
+    { Equip: 'BEAKER_150mL',    equipmentID:ID_EQUIP_BEAKER_150mL,      name: "Beaker (150mL)"},
+    { Equip: 'BEAKER_250mL',    equipmentID:ID_EQUIP_BEAKER_250mL,      name: "Beaker (250mL)"},
+    { Equip: 'BEAKER_600mL',    equipmentID:ID_EQUIP_BEAKER_600mL,      name: "Beaker (600mL)"},
+    { Equip: 'SCALE',           equipmentID:ID_EQUIP_SCALE,             name: "Scale"},
+    { Equip: 'TRASHCAN',        equipmentID:ID_EQUIP_TRASHCAN,          name: "Trashcan"},
+    { Equip: 'GRADUATED_25mL',  equipmentID:ID_EQUIP_GRADUATED_25mL,    name: "Graduated Cylinder (25mL)" },
+    { Equip: 'GRADUATED_50mL',  equipmentID:ID_EQUIP_GRADUATED_50mL,    name: "Graduated Cylinder (50mL)" },
+    { Equip: 'GRADUATED_100mL', equipmentID:ID_EQUIP_GRADUATED_100mL,   name: "Graduated Cylinder (100mL)" },
+    { Equip: 'GRADUATED_1000mL',equipmentID:ID_EQUIP_GRADUATED_1000mL,  name: "Graduated Cylinder (1000mL)" },
+    { Equip: 'FLASK_25mL',      equipmentID:ID_EQUIP_FLASK_25mL,        name: "Erlenmeyer Flask (25mL)" },
+    { Equip: 'FLASK_50mL',      equipmentID:ID_EQUIP_FLASK_50mL,        name: "Erlenmeyer Flask (50mL)" },
+    { Equip: 'FLASK_125mL',     equipmentID:ID_EQUIP_FLASK_125mL,       name: "Erlenmeyer Flask (125mL)" },
+    { Equip: 'FLASK_1000mL',    equipmentID:ID_EQUIP_FLASK_1000mL,      name: "Erlenmeyer Flask (1000mL)" },
+    { Equip: 'WEIGH_BOAT',      equipmentID:ID_EQUIP_WEIGH_BOAT,        name: "Weigh Boat" },
+    { Equip: 'STIR_ROD',        equipmentID:ID_EQUIP_STIR_ROD,          name: "Stir Rod" }
 ];
 
-sessionStorage.setItem("EquipID", JSON.stringify(EquipID));
+// sessionStorage.setItem("EquipID", JSON.stringify(EquipID));
 
 // Constants for indexing chemicals
 
