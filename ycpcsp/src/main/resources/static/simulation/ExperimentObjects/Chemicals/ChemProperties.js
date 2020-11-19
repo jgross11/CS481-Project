@@ -1,7 +1,6 @@
 /**
-An abstract class used to track properties of Chemicals using a tree structure.
+An class used to track properties of Chemicals using a tree structure.
 Do not directly access or assign fields from this object, use getters and setters.
-If no getter or setter exists, do not attempt to access or assign the field
 */
 class ChemProperties{
 

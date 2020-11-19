@@ -38,7 +38,7 @@ class Container extends Equipment{
     getTotalContentsMass(){
         var total = 0;
         for(var i = 0; i < this.contents.length; i++){
-            total += this.contents[i].mass;
+            total += this.contents[i].getMass();
         }
         return total;
     }
@@ -59,7 +59,7 @@ class Container extends Equipment{
     Get the mass of this Container combined with all chemicals in the container
     */
     getTotalMass(){
-        return this.mass + this.getTotalContentsMass();
+        return this.getMass() + this.getTotalContentsMass();
     }
 
     /**
@@ -179,7 +179,7 @@ class ContainerController2D extends EquipmentController2D{
         // Remove all contents with zero mass
         var removed = false;
         for(var i = 0; i < cont.length; i++){
-            if(cont[i].mass === 0){
+            if(cont[i].getMass() === 0){
                 cont.splice(i, 1);
                 i--;
                 removed = true;
@@ -269,7 +269,7 @@ class ContainerController2D extends EquipmentController2D{
         if(!(chemControl instanceof ChemicalController2D)) return false;
 
         // Convenience constants
-        let chem = chemControl.copyChem();
+        let chem = chemControl.chemical.copyChem();
         let copyControl = new ChemicalController2D(chem);
         let eq = this.equipment;
 
@@ -288,6 +288,39 @@ class ContainerController2D extends EquipmentController2D{
             return true;
         }
         return false;
+    }
+
+    /**
+    If any of the Chemicals in this Controller's Container's contents can be combined to a solution, do so
+    returns: true if a solution was made, false otherwise
+    */
+    checkForSolutions(){
+        // Find all water soluble chemicals, less than one exists, return false
+        let cs = [];
+        let conts = this.equipment.contents;
+        let indexes = [];
+        for(var i = 0; i < conts.length; i++){
+            if(conts[i].getWaterSolubility()){
+                cs.push(conts[i]);
+                indexes.push(i);
+            }
+        }
+        if(cs.length < 2) return false;
+
+        // If they are, create a solution from the contents, using the least dense Chemical as the solute
+        //  The least dense chemical is assumed to be at the end of the list
+        let solute = cs[cs.length - 1];
+        cs.splice(cs.length - 1, 1);
+        let solution = new ChemicalSolution(solute, cs);
+
+        // Remove all Chemicals used for the solution from the
+        for(var i = cs.length - 1; i >= 0; i--){
+            conts.splice(i, 1);
+        }
+
+        // Add the solution
+        conts.push(solute);
+        return true;
     }
 
     /**
@@ -313,7 +346,7 @@ class ContainerController2D extends EquipmentController2D{
                 var removeAmount = total - eq.capacity;
                 eq.contents[i].addVolume(-removeAmount);
                 var chemControl = new ChemicalController2D(eq.contents[i]);
-                var removedChem = chemControl.copyChem();
+                var removedChem = chemControl.chemical.copyChem();
                 removedChem.setVolume(removeAmount);
                 removed.push(removedChem);
                 break;
@@ -409,7 +442,7 @@ class ContainerController2D extends EquipmentController2D{
     */
     placeSameChemical(chemical){
         let eq = this.equipment;
-        return eq.isEmpty() || eq.contents[0].properties.getID() === chemical.properties.getID();
+        return eq.isEmpty() || eq.contents[0].getID() === chemical.getID();
     }
 
     /**

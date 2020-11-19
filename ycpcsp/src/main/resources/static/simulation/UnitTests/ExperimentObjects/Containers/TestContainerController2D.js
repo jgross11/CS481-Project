@@ -75,7 +75,7 @@ QUnit.test('hasResidue:', function(assert){
     beaker1.setResidue(0.1);
     assert.false(beakerControl1.hasResidue(), "Should have no residue by default");
 
-    beaker1.setContents(chemControl1.copyChem());
+    beaker1.setContents(chemControl1.chemical.copyChem());
     assert.false(beakerControl1.hasResidue(), "Should have no residue after adding chemical");
 
     beakerControl1.pourOut();
@@ -93,7 +93,7 @@ QUnit.test('checkForMass:', function(assert){
 
     chem1.setMass(1);
     chem2.setMass(1);
-    beaker1.setContents([chemControl1.copyChem(), chemControl2.copyChem()]);
+    beaker1.setContents([chemControl1.chemical.copyChem(), chemControl2.chemical.copyChem()]);
     assert.deepEqual(beaker1.contents, [chem1, chem2], "Contents should be the two chemicals");
 
     beaker1.contents[0].setMass(0);
@@ -173,7 +173,7 @@ QUnit.test('pourInto:', function(assert){
 QUnit.test('pourOut:', function(assert){
     beaker1.setResidue(0.1);
     chem1.setMass(1);
-    var chemCopy = chemControl1.copyChem();
+    var chemCopy = chemControl1.chemical.copyChem();
 
     beaker1.setContents(null);
     assert.deepEqual(beakerControl1.pourOut(), [], "Beaker should pour nothing when it has no contents");
@@ -184,32 +184,32 @@ QUnit.test('pourOut:', function(assert){
     assert.deepEqual(beakerControl1.pourOut(), [], "Beaker should pour nothing when it only has residue");
 
     chem1.setMass(1);
-    chemCopy = chemControl1.copyChem();
+    chemCopy = chemControl1.chemical.copyChem();
     beaker1.setContents(chemCopy);
     beaker1.setResidue(0);
     assert.deepEqual(beakerControl1.pourOut(), [chem1], "Chemical poured out, no params, should be equal to original contents");
     assert.true(beaker1.isEmpty(), "Container should have no chemical remaining");
 
     chem1.setMass(1);
-    chemCopy = chemControl1.copyChem();
+    chemCopy = chemControl1.chemical.copyChem();
     beaker1.setContents(chem1);
     assert.deepEqual(beakerControl1.pourOut(-1), [chemCopy], "Chemical poured out, negative param, should be equal to original contents");
     assert.true(beaker1.isEmpty(), "Container should have no chemical remaining");
 
     chem1.setMass(1);
-    chemCopy = chemControl1.copyChem();
+    chemCopy = chemControl1.chemical.copyChem();
     beaker1.setContents(chemCopy);
     assert.deepEqual(beakerControl1.pourOut(2), [chem1], "Chemical poured out, higher than real contents param, should be equal to original contents");
     assert.true(beaker1.isEmpty(), "Container should have no chemical remaining");
 
     chem1.setMass(1);
-    chemCopy = chemControl1.copyChem();
+    chemCopy = chemControl1.chemical.copyChem();
     chemCopy.setMass(0.6)
     beaker1.setContents(chem1);
     assert.deepEqual(beakerControl1.pourOut(0.6), [chemCopy], "Chemical poured out, part of contents param, should be equal to new contents");
     assert.equal(beaker1.contents[0].mass, 0.4, "Container should have 0.4 mass remaining");
 
-    beaker1.setContents([chemControl1.copyChem(), chemControl2.copyChem()]);
+    beaker1.setContents([chemControl1.chemical.copyChem(), chemControl2.chemical.copyChem()]);
     assert.deepEqual(beaker1.contents, [chem1, chem2], "Should correctly set contents to the two given chemicals");
 
     assert.deepEqual(beakerControl1.pourOut(), [chem2, chem1], "Should get two chemicals after pouring them out");

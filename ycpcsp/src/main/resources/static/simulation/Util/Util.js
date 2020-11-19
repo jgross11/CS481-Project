@@ -40,3 +40,38 @@ function arraySortCompare(a, b, key){
     if(x < y) return -1;
     return (x > y) ? 1 : 0;
 }
+
+/**
+Get a color between 2 colors based on their relative weights, the higher the weight,
+    the closer to that color the final color will be.
+Both colors must be a list of values, and each must be the same length
+c1: The first color
+w1: The weight of the first color, must be positive and nonzero
+c2: The second color
+w2: The weight of the second color, must be positive and nonzero
+returns: The combined color
+*/
+function colorRatio(c1, w1, c2, w2){
+    let c = [];
+    let w = w1 + w2;
+    for(var i = 0; i < c1.length; i++){
+        c.push((c1[i] * w1 + c2[i] * w2) / w);
+    }
+    return c;
+}
+
+/**
+Combine a list of colors together via ratios, see colorRatio for more details.
+cs: The colors
+ws: The weight, indexes correspond to the color indexes
+returns: The combined color
+*/
+function colorRatioMultiple(cs, ws){
+    var c = cs[0];
+    var w = ws[0];
+    for(var i = 1; i < cs.length; i++){
+        c = colorRatio(c, w, cs[i], ws[i]);
+        w += ws[i];
+    }
+    return c;
+}
