@@ -41,7 +41,7 @@ class WeighBoatController2D extends ContainerController2D{
         let eq = this.equipment;
 
         // If chemical is not a solid, it cannot be added
-        if(chemical.matterState !== MATTER_STATE_SOLID) return false;
+        if(chemical.getMatterState() !== MATTER_STATE_SOLID) return false;
 
         // Check to see the chemical is the same as the one in the WeighBoat, or if it is empty
         return this.placeSameChemical(chemical);

@@ -81,6 +81,14 @@ class Chemical extends ExperimentObject{
     }
 
     /**
+    Get the current state of matter of this Chemical
+    returns: The state, based on the defined constants in this file
+    */
+    getMatterState(){
+        return this.matterState;
+    }
+
+    /**
     Set the current matter state of this Chemical using the constants.
     Use MATTER_STATE_SOLID for a solid state
     Use MATTER_STATE_LIQUID for a liquid state

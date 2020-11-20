@@ -37,7 +37,7 @@ Initialize the experiment and controller objects from the session data
 */
 function initExperiment(data){
     if(LOAD_EXPERIMENT_FROM_SERVER) mainExperiment = parseExperiment(data);
-    else mainExperiment = parseExperiment(getLab3aJSON());
+    else mainExperiment = parseExperiment(getTestJSON());
     mainExpController = new ExperimentController2D(mainExperiment, true);
 }
 

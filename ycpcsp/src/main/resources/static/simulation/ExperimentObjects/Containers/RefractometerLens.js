@@ -37,7 +37,7 @@ class RefractometerLensController2D extends ContainerController2D{
     */
     canContain(chemical){
         // If the chemical is not a liquid or solid, return false
-        if(!(chemical.matterState === MATTER_STATE_LIQUID || chemical.matterState === MATTER_STATE_SOLID)) return false;
+        if(!(chemical.getMatterState() === MATTER_STATE_LIQUID || chemical.matterState === MATTER_STATE_SOLID)) return false;
 
         // Check to see the chemical is the same as the one in the lens, or if it is empty
         return this.placeSameChemical(chemical);

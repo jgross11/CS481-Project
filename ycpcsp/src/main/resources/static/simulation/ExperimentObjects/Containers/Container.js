@@ -295,7 +295,13 @@ class ContainerController2D extends EquipmentController2D{
     returns: true if a solution was made, false otherwise
     */
     checkForSolutions(){
-        // Find all water soluble chemicals, less than one exists, return false
+        // TODO
+        // If any of the Chemicals in the Container can go into one of the existing ChemicalSolutions, combine them in there
+
+        // Go through each chemical and find solutions, placing them in a separate list, and the chemicals in a separate list
+        // For each solution, go through each chemical and see if any of those chemicals exist in the solution, if they do, add them
+
+        // Find all water soluble Chemicals, if less than one exists, return false
         let cs = [];
         let conts = this.equipment.contents;
         let indexes = [];
@@ -320,7 +326,6 @@ class ContainerController2D extends EquipmentController2D{
 
         // Add the solution
         conts.push(solution);
-        console.log(this.equipment.contents); // TODO
         return true;
     }
 

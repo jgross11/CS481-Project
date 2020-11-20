@@ -30,6 +30,14 @@ class ChemicalSolution extends Chemical{
     }
 
     /**
+    Get the current state of matter of this ChemicalSolution
+    returns: The state, based on the defined constants in Chemicals.js
+    */
+    getMatterState(){
+        return this.solute.matterState;
+    }
+
+    /**
     Get the mass of this Solution in grams
     return: The mass
     */
@@ -157,15 +165,21 @@ class ChemicalSolution extends Chemical{
     returns: The color, or null if the ChemicalSolution has invalid solutes or solvents
     */
     getColorWeightCombine(stateType){
+        // Ensuring infinite recursion doesn't happen if non chemicals are parts of the solution
         if(!(this.solute instanceof Chemical)) return null;
+
+        // Begin the lists with the solute
         var cs = [this.solute.getTexture(stateType)];
-        if(cs === null) return null;
         let ws = [this.solute.getVolume()];
+
+        // Create a list of all the textures and volumes for relative weights
         for(var i = 0; i < this.solvents.length; i++){
+            // Ensuring infinite recursion doesn't happen if non chemicals are parts of the solution
             if(!(this.solvents[i] instanceof Chemical)) return null;
             cs.push(this.solvents[i].getTexture(stateType));
             ws.push(this.solvents[i].getVolume());
         }
+        // Combine all the colors together
         return colorRatioMultiple(cs, ws);
     }
 
@@ -227,7 +241,7 @@ class ChemicalSolution extends Chemical{
         let s = [];
         let solvs = this.solvents;
         for(var i = 0; i < solvs.length; i++){
-            if(!(s instanceof ChemicalSolution)) s.push(solvs.copyChem());
+            if(!(solvs[i] instanceof ChemicalSolution)) s.push(solvs[i].copyChem());
         }
         return new ChemicalSolution(this.solute.copyChem(), s);
     }
