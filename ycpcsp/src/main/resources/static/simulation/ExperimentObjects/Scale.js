@@ -194,7 +194,9 @@ class ScaleController2D extends EquipmentController2D{
     */
     zeroOut(){
         let eq = this.equipment;
-        eq.setZeroOut(eq.objectToBeWeighed.equipment.getTotalMass());
+        let obj = eq.objectToBeWeighed;
+        if(obj === null) return;
+        eq.setZeroOut(obj.equipment.getTotalMass());
     }
 
     /**

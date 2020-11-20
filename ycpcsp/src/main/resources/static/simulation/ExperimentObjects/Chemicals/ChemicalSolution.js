@@ -34,7 +34,7 @@ class ChemicalSolution extends Chemical{
     return: The mass
     */
     getMass(){
-        var m = this.solute.getMass()();
+        var m = this.solute.getMass();
         let solvs = this.solvents;
         for(var i = 0; i < solvs.length; i++){
             m += solvs[i].getMass();
@@ -131,7 +131,7 @@ class ChemicalSolution extends Chemical{
     returns: The color
     */
     getSolidColor(){
-        return this.getColorWeightCombine(this.solute.getSolidColor);
+        return this.getColorWeightCombine(MATTER_STATE_SOLID);
     }
 
     /*
@@ -139,7 +139,7 @@ class ChemicalSolution extends Chemical{
     returns: The color
     */
     getLiquidColor(){
-        return this.getColorWeightCombine(this.solute.getLiquidColor);
+        return this.getColorWeightCombine(MATTER_STATE_LIQUID);
     }
 
     /*
@@ -147,22 +147,24 @@ class ChemicalSolution extends Chemical{
     returns: The color
     */
     getGasColor(){
-        return this.getColorWeightCombine(this.solute.getGasColor);
+        return this.getColorWeightCombine(MATTER_STATE_GAS);
     }
 
     /**
     Helper method for getting solid, liquid, and gas colors.
     Combines colors based on the colors obtained from a function
-    func: The function to use for getting the color
+    stateType: The state for the color, use the matter state constants defined in Chemical.js
+    returns: The color, or null if the ChemicalSolution has invalid solutes or solvents
     */
-    getColorWeightCombine(func){
-        // TODO needs testing, unsure if this works as is
-        // TODO probably shouldn't use mass for ratios, what should be used instead?
-        let cs = [this.solute.func()];
-        let ws = [this.solute.getMass()];
+    getColorWeightCombine(stateType){
+        if(!(this.solute instanceof Chemical)) return null;
+        var cs = [this.solute.getTexture(stateType)];
+        if(cs === null) return null;
+        let ws = [this.solute.getVolume()];
         for(var i = 0; i < this.solvents.length; i++){
-            cs.push(this.solvents[i].func());
-            cs.push(this.solvents[i].getMass());
+            if(!(this.solvents[i] instanceof Chemical)) return null;
+            cs.push(this.solvents[i].getTexture(stateType));
+            ws.push(this.solvents[i].getVolume());
         }
         return colorRatioMultiple(cs, ws);
     }

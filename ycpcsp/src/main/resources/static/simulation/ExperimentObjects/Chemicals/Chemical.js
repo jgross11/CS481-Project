@@ -67,10 +67,12 @@ class Chemical extends ExperimentObject{
 
     /**
     Get the texture to use for rendering this Chemical
+    state: The state for the texture, or null to use this Chemical's current state, default null
     return: A list of 3 or 4 values [red, green, blue, alpha], alpha is option representing the color of this Chemical
     */
-    getTexture(){
-        switch(this.matterState){
+    getTexture(state = null){
+        if(state === null) state = this.matterState;
+        switch(state){
             case MATTER_STATE_SOLID: return this.getSolidColor();
             case MATTER_STATE_LIQUID: return this.getLiquidColor();
             case MATTER_STATE_GAS: return this.getGasColor();

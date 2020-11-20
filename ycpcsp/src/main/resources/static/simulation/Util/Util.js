@@ -52,7 +52,7 @@ w2: The weight of the second color, must be positive and nonzero
 returns: The combined color
 */
 function colorRatio(c1, w1, c2, w2){
-    let c = [];
+    var c = [];
     let w = w1 + w2;
     for(var i = 0; i < c1.length; i++){
         c.push((c1[i] * w1 + c2[i] * w2) / w);

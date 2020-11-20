@@ -310,16 +310,17 @@ class ContainerController2D extends EquipmentController2D{
         // If they are, create a solution from the contents, using the least dense Chemical as the solute
         //  The least dense chemical is assumed to be at the end of the list
         let solute = cs[cs.length - 1];
-        cs.splice(cs.length - 1, 1);
-        let solution = new ChemicalSolution(solute, cs);
 
         // Remove all Chemicals used for the solution from the
         for(var i = cs.length - 1; i >= 0; i--){
             conts.splice(i, 1);
         }
+        cs.splice(cs.length - 1, 1);
+        let solution = new ChemicalSolution(solute, cs);
 
         // Add the solution
-        conts.push(solute);
+        conts.push(solution);
+        console.log(this.equipment.contents); // TODO
         return true;
     }
 
