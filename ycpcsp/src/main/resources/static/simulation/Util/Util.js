@@ -41,6 +41,28 @@ function arraySortCompare(a, b, key){
     return (x > y) ? 1 : 0;
 }
 
+
+/**
+Convert an integer into a color value where each of the bits of the integer represent the 4 different color channels
+value: The integer, first 8 bits are red, next 8 bits are green, next 8 bits are blue, last 8 bits are alpha
+returns: The color, a list of 4 values, each in the range of [0-255]
+*/
+function getColorListObjectFromInt(value){
+    return [
+        value >> 24,
+        value >> 16 & 0xFF,
+        value >> 8 & 0xFF,
+        value & 0xFF
+    ];
+}
+
+/**
+Convert a color, a list of 4 elements, to a single integer
+*/
+function getColorInt(color){
+    return (color[0] << 24) | (color[1] << 16) | (color[2] << 8) | color[3];
+}
+
 /**
 Get a color between 2 colors based on their relative weights, the higher the weight,
     the closer to that color the final color will be.
