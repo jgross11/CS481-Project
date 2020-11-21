@@ -51,6 +51,23 @@ class ChemicalSolution extends Chemical{
     }
 
     /**
+    Set the mass of this ChemicalSolution, maintaining the relative ratios of solvents and solutes
+    mass: The new mass, a positive floating point value
+    */
+    setMass(mass){
+         // TODO set the mass of each solute and solvent individually?
+        let ratio = this.mass / mass;
+
+        this.solute.setMass(this.solute.getMass() * ratio);
+
+        let solvs = this.solvents;
+        for(var i = 0; i < solvs.length; i++){
+            solvs[i].setMass(solvs[i].getMass() * ratio);
+        }
+        super.setMass();
+    }
+
+    /**
     Get the volume of this Solution in milliliters
     return: The volume
     */

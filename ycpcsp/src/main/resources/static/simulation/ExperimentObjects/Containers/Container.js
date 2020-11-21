@@ -202,6 +202,15 @@ class ContainerController2D extends EquipmentController2D{
         if(this.equipment !== null && contControl !== null){
             // Get the Chemicals which will be poured out of this Controller's Container
             let chems = this.pourOut(this.maxPourAmount(contControl));
+            if(contControl instanceof EyeDropperController2D){
+                //console.log(chems); // TODO
+                //console.log(this.maxPourAmount(contControl)); // TODO
+                //console.log(contControl.maxPourAmount(this)); // TODO
+                //console.log(contControl.equipment.getTotalContentsVolume()); // TODO
+                //console.log(contControl.equipment.capacity); // TODO
+                //console.log(chems[0].getVolume()); // TODO
+                //console.log(chems[0].getMass()); // TODO
+            }
             for(var i = 0; i < chems.length && contControl.hasSpace(chems[i]); i++){
                 contControl.addTo(new ChemicalController2D(chems[i]));
             }
