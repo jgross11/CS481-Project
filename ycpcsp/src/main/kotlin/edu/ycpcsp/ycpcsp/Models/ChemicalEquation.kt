@@ -28,7 +28,7 @@ class ChemicalEquation (var equationID : Int, var creatorID : Int){
         for(i in reactants.indices){
             result += "reactant: ${reactants[i].coefficient} of ID ${reactants[i].chemicalID}\n"
         }
-        for(i in reactants.indices){
+        for(i in products.indices){
             result += "product: ${products[i].coefficient} of ID ${products[i].chemicalID}\n"
         }
         return result
