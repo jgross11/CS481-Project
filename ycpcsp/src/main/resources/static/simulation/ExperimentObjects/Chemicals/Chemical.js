@@ -405,15 +405,8 @@ class ChemicalController2D extends ExperimentObjectController2D{
         let c = this.chemical
         if(percent < 0 || percent > 1 || c === null) return null;
         var chem = c.copyChem();
-        //console.log("start split"); // TODO
-        //console.log(percent); // TODO
-        //console.log(chem.getVolume()); // TODO
         chem.setMass(chem.getMass() * (1 - percent));
-        //console.log(chem.getVolume()); // TODO
-        //console.log(c.getVolume()); // TODO
         c.setMass(c.getMass() * percent);
-        //console.log(c.getVolume()); // TODO
-        //console.log("end split"); // TODO
         return chem;
     }
 

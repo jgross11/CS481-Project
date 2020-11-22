@@ -55,8 +55,10 @@ class ChemicalSolution extends Chemical{
     mass: The new mass, a positive floating point value
     */
     setMass(mass){
-         // TODO set the mass of each solute and solvent individually?
-        let ratio = this.mass / mass;
+        // TODO set the mass of each solute and solvent individually?
+        let oldMass = this.getMass();
+        if(oldMass <= 0) return;
+        let ratio = mass / oldMass;
 
         this.solute.setMass(this.solute.getMass() * ratio);
 
@@ -64,7 +66,7 @@ class ChemicalSolution extends Chemical{
         for(var i = 0; i < solvs.length; i++){
             solvs[i].setMass(solvs[i].getMass() * ratio);
         }
-        super.setMass();
+        super.setMass(mass);
     }
 
     /**
@@ -85,7 +87,9 @@ class ChemicalSolution extends Chemical{
     volume: The volume in milliliters
     */
     setVolume(volume){
-        let ratio = this.getVolume() / volume;
+        let oldVolume = this.getVolume();
+        if(oldVolume <= 0) return;
+        let ratio = volume / oldVolume;
 
         this.solute.setVolume(this.solute.getVolume() * ratio);
 

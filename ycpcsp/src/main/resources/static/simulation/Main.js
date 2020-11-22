@@ -26,7 +26,7 @@ function setup(){
     loadImages();
 
     // Set up chemical properties test database
-    //initTestChemProperties();
+    initTestChemProperties();
 
     // Grab data from session storage
     loadSessionData();

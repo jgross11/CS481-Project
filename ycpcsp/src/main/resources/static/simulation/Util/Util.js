@@ -58,6 +58,8 @@ function getColorListObjectFromInt(value){
 
 /**
 Convert a color, a list of 4 elements, to a single integer
+color: The color to convert
+return: The integer representing the color
 */
 function getColorInt(color){
     return (color[0] << 24) | (color[1] << 16) | (color[2] << 8) | color[3];

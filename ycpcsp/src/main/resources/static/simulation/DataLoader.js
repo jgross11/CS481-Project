@@ -313,6 +313,7 @@ function getTestJSON(){
 
     let equips = [];
     equips.push(makeTestEquipmentJSON(ID_EQUIP_BEAKER_50mL, 3));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_BEAKER_600mL, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_SCALE, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_GRADUATED_25mL, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_GRADUATED_1000mL, 1));
@@ -334,8 +335,8 @@ function getTestJSON(){
     //chems.push(makeTestChemicalJSON(ID_CHEM_TEST_BLACK, 10, 1));
     //chems.push(makeTestChemicalJSON(ELEMENT_SODIUM_ATOMIC_NUM, 10, 1));
     //chems.push(makeTestChemicalJSON(ELEMENT_CHLORINE_ATOMIC_NUM, 10, 1));
-    //chems.push(makeTestChemicalJSON(COMPOUND_CHLORINE_GAS_ID, 10, 1));
-    //chems.push(makeTestChemicalJSON(COMPOUND_TABLE_SALT_ID, 10, 1));
+    chems.push(makeTestChemicalJSON(COMPOUND_CHLORINE_GAS_ID, 10, 1));
+    chems.push(makeTestChemicalJSON(COMPOUND_TABLE_SALT_ID, 10, 1));
     chems.push(makeTestChemicalJSON(COMPOUND_WATER_ID, 10, 1));
     chems.push(makeTestChemicalJSON(COMPOUND_HYDROGEN_GAS_ID, 1.8, 1));
     //chems.push(makeTestChemicalJSON(ELEMENT_OXYGEN_ATOMIC_NUM, 10, 1));
