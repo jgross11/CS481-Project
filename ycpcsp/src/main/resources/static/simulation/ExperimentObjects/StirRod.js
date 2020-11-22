@@ -77,7 +77,7 @@ class StirRodController2D extends EquipmentController2D{
     stir(contControl){
         // StirRods can only stir Containers
         if(!(contControl instanceof ContainerController2D)) return false;
-        return true;
+        return contControl.checkForSolutions();
     }
 
 }

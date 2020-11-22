@@ -105,3 +105,8 @@ QUnit.test('getID:', function(assert){
     chem.setProperties(p);
     assert.equal(chem.getID(), 2, "Helium should have ID 2");
 });
+
+QUnit.test('copyChem:', function(assert){
+    var copied = chem.copyChem();
+    assert.deepEqual(chem, copied, "Copied chemical should be identical to original chemical");
+});

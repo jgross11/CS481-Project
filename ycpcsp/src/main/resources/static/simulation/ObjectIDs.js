@@ -20,6 +20,10 @@ let ID_EQUIP_FLASK_125mL = 13;
 let ID_EQUIP_FLASK_1000mL = 14;
 let ID_EQUIP_WEIGH_BOAT = 15;
 let ID_EQUIP_STIR_ROD = 16;
+let ID_EQUIP_EYE_DROPPER = 17;
+let ID_EQUIP_REFRACTOMETER = 18;
+let ID_EQUIP_REFRACTOMETER_LENS = 19;
+
 
 // contains all usable equipment information
 var allEquipmentList = [
@@ -39,7 +43,7 @@ var allEquipmentList = [
     { Equip: 'FLASK_1000mL',    equipmentID:ID_EQUIP_FLASK_1000mL,      name: "Erlenmeyer Flask (1000mL)" },
     { Equip: 'WEIGH_BOAT',      equipmentID:ID_EQUIP_WEIGH_BOAT,        name: "Weigh Boat" },
     { Equip: 'STIR_ROD',        equipmentID:ID_EQUIP_STIR_ROD,          name: "Stir Rod" }
-];
+
 
 // sessionStorage.setItem("EquipID", JSON.stringify(EquipID));
 
@@ -132,6 +136,9 @@ function idToEquipment(id){
         case ID_EQUIP_SCALE: eq = new ScaleController2D(new Scale()); break;
         case ID_EQUIP_TRASHCAN: eq = new TrashcanController2D(new Trashcan()); break;
         case ID_EQUIP_STIR_ROD: eq = new StirRodController2D(new StirRod()); break;
+        case ID_EQUIP_EYE_DROPPER: eq = new EyeDropperController2D(new EyeDropper()); break;
+        case ID_EQUIP_REFRACTOMETER: eq = new RefractometerController2D(new Refractometer()); break;
+        case ID_EQUIP_REFRACTOMETER_LENS: eq = new RefractometerLensController2D(new RefractometerLens()); break;
 
         default: eq = null;
     }
@@ -275,7 +282,7 @@ let EQUATION_PROPERTY_PRODUCTS = "products";
 let EQUATION_PROPERTY_ID = "id";
 
 let EQUATION_COMPONENT_PROPERTY_COEFFICIENT = "coefficient";
-let EQUATION_COMPONENT_PROPERTY_ID = "coefficient";
+let EQUATION_COMPONENT_PROPERTY_ID = "id";
 
 /**
 Add a new chemical to the CHEMICAL_PROPERTIES list

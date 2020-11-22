@@ -5,7 +5,7 @@ var beakerControl;
 QUnit.module("StirRod", {
     beforeEach: function(){
         stirRod = new StirRod();
-        beakerControl = idToEquipment(ID_EQUIP_BEAKER_50mL);
+        beakerControl = idToEquipment(ID_EQUIP_BEAKER_600mL);
     }
 });
 
@@ -21,6 +21,9 @@ QUnit.test('getID:', function(assert){
 });
 
 QUnit.module("StirRodController2D", {
+    before: function(){
+        initTestChemProperties();
+    },
     beforeEach: function(){
         stirRod = new StirRod();
         control = new StirRodController2D(stirRod);
@@ -51,6 +54,8 @@ QUnit.test('reset:', function(assert){
 });
 
 QUnit.test('stir:', function(assert){
-    assert.true(control.stir(beakerControl), "Stir rod should successfully stir a beaker controller");
+    beakerControl.addTo(idToChemical(COMPOUND_WATER_ID, 10, 1));
+    beakerControl.addTo(idToChemical(COMPOUND_TABLE_SALT_ID, 10, 1));
+    assert.true(control.stir(beakerControl), "Stir rod should successfully stir a beaker controller with water and salt");
     assert.false(control.stir(beakerControl.equipment), "Stir rod should be unable to stir a beaker, not controller");
 });

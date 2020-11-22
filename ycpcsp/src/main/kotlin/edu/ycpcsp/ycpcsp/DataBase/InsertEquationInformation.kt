@@ -1,7 +1,6 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
-import edu.ycpcsp.ycpcsp.Models.ChemicalEquation
-import edu.ycpcsp.ycpcsp.Models.ChemicalInformation
+import edu.ycpcsp.ycpcsp.Models.ChemicalProperties
 import edu.ycpcsp.ycpcsp.PostDataClasses.EquationFormData
 import java.lang.NullPointerException
 import java.sql.SQLException
@@ -19,12 +18,12 @@ fun insertEquation(equation : EquationFormData) : Boolean{
             // create array that holds relevant reactant information
             // TODO the entire information is not necessary, can rewrite with new query
             // TODO to just find the chemical informationID.
-            val reactantsInformation = Array(equation.reactants.size){ChemicalInformation()}
+            val reactantsInformation = Array(equation.reactants.size){ChemicalProperties()}
 
             // create array that holds relevant product information
             // TODO the entire information is not necessary, can rewrite with new query
             // TODO to just find the chemical informationID.
-            val productsInformation = Array(equation.products.size){ChemicalInformation()}
+            val productsInformation = Array(equation.products.size){ChemicalProperties()}
 
             // populate reactants information array
             for (i in equation.reactants.indices){
