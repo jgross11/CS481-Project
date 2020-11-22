@@ -11,7 +11,7 @@ class ChemicalSolution extends Chemical{
         super(0);
         this.solute = solute;
         this.solvents = solvents;
-        super.setMass(this.calculateMass());
+        this.setCalculatedMass();
     }
 
     /**
@@ -60,11 +60,17 @@ class ChemicalSolution extends Chemical{
     }
 
     /**
+    Determine the mass of this Solution in grams, based on its solutes and solvents, and set the mass field
+    */
+    setCalculatedMass(){
+        super.setMass(this.calculateMass());
+    }
+
+    /**
     Set the mass of this ChemicalSolution, maintaining the relative ratios of solvents and solutes
     mass: The new mass, a positive floating point value
     */
     setMass(mass){
-        // TODO set the mass of each solute and solvent individually?
         let oldMass = this.getMass();
         if(oldMass <= 0) return;
         let ratio = mass / oldMass;
@@ -231,6 +237,23 @@ class ChemicalSolution extends Chemical{
     */
     getWaterSolubility(){
         return false;
+    }
+
+    /**
+    Get the solute or a solvent of this ChemicalSolution which matches the given Chemical
+    chem: The chemical to test
+    returns: The Chemical if one of the chemicals match, null otherwise. Always returns null if chem is a ChemicalSolution
+    */
+    containingChem(chem){
+        if(chem instanceof ChemicalSolution) return null;
+        let id = chem.getID();
+        if(id === this.solute.getID()) return this.solute;
+
+        let solvs = this.solvents;
+        for(var i = 0; i < solvs.length; i++){
+            if(id === solvs[i].getID()) return solvs[i];
+        }
+        return null;
     }
 
     /**

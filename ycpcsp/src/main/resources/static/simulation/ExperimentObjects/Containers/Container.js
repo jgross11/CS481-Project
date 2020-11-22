@@ -295,15 +295,43 @@ class ContainerController2D extends EquipmentController2D{
     returns: true if a solution was made, false otherwise
     */
     checkForSolutions(){
-        // TODO
+        let conts = this.equipment.contents;
         // If any of the Chemicals in the Container can go into one of the existing ChemicalSolutions, combine them in there
 
         // Go through each chemical and find solutions, placing them in a separate list, and the chemicals in a separate list
-        // For each solution, go through each chemical and see if any of those chemicals exist in the solution, if they do, add them
+        let solutions = [];
+        let chems = [];
+        let cIndexes = [];
+        for(var i = 0; i < conts.length; i++){
+            if(conts[i] instanceof ChemicalSolution) solutions.push(conts[i]);
+            // If it is a normal chemical, save its index for removal
+            else{
+                chems.push(conts[i]);
+                cIndexes.push(i);
+            }
+        }
+
+        // For each solution, go through each chemical and see if any of those chemicals exist in the solution, if they do, combine the common chemicals
+        let chemControl = new ChemicalController2D(null);
+        for(var s = 0; s < solutions.length; s++){
+            // Iterate through chems backwards so that the highest indexes are removed first
+            for(var c = chems.length - 1; c >= 0; c--){
+                let chem = solutions[s].containingChem(chems[c]);
+                // If a chemical was found, combine the chemicals and remove the chemical from the Container
+                if(chem !== null){
+                    chemControl.setChemical(chems[c]);
+                    let combined = chemControl.combine([chem])[0];
+                    chem.setMass(combined.getMass());
+                    conts.splice(cIndexes[c], 1);
+                }
+            }
+            // Update the mass of the solution
+            solutions[s].setCalculatedMass();
+        }
+
 
         // Find all water soluble Chemicals, if less than one exists, return false
         let cs = [];
-        let conts = this.equipment.contents;
         let indexes = [];
         for(var i = 0; i < conts.length; i++){
             if(conts[i].getWaterSolubility()){
