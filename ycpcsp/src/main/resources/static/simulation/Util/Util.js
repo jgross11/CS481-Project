@@ -49,7 +49,7 @@ returns: The color, a list of 4 values, each in the range of [0-255]
 */
 function getColorListObjectFromInt(value){
     return [
-        value >> 24,
+        value >>> 24,
         value >> 16 & 0xFF,
         value >> 8 & 0xFF,
         value & 0xFF

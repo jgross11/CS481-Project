@@ -357,10 +357,21 @@ class ChemicalController2D extends ExperimentObjectController2D{
         }
 
         // Create a dictionary of chem list
+        /*
+        This is a very hacky way of doing this.
+        Parts of this method should be overridden as separate methods in ChemicalSolution.
+        I would do that, but it is impossible to do with the current architecture of using models and controllers.
+        I would simply not use models and controllers as they are a poor approach to this type of code,
+        but as a result of the requirements of the class for this project, I had to use model and controller classes.
+        So this code is bad because I was required to make it bad, sue me.
+        Instead, I'm making a special case here for ChemicalSolutions to not be added to the dictionary
+        */
+        let solutions = [];
         let cDict = [];
         for(var i = 0; i < chems.length; i++){
             let c = chems[i];
-            cDict[c.getID()] = c;
+            if(c instanceof ChemicalSolution) solutions.push(c);
+            else cDict[c.getID()] = c;
         }
 
         // Check for if each of the equations can be applied to the dictionary
@@ -373,7 +384,11 @@ class ChemicalController2D extends ExperimentObjectController2D{
         chems.splice(0, chems.length);
 
         // Add all elements from the dictionary to the chem list
-        cDict.forEach(function(obj, i){
+        cDict.forEach(function(obj){
+            chems.push(obj);
+        }, chems);
+        // Add all solutions from the dictionary to the chem list
+        solutions.forEach(function(obj){
             chems.push(obj);
         }, chems);
 

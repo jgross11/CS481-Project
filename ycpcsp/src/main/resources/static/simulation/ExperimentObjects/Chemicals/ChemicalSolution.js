@@ -11,6 +11,15 @@ class ChemicalSolution extends Chemical{
         super(0);
         this.solute = solute;
         this.solvents = solvents;
+        super.setMass(this.calculateMass());
+    }
+
+    /**
+    Get the ID representing this Solution type
+    returns: The id, solutions do not have integer ids, so the symbol is returned
+    */
+    getID(){
+        return this.getSymbol();
     }
 
     /**
@@ -38,10 +47,10 @@ class ChemicalSolution extends Chemical{
     }
 
     /**
-    Get the mass of this Solution in grams
+    Determine the mass of this Solution in grams, based on its solutes and solvents
     return: The mass
     */
-    getMass(){
+    calculateMass(){
         var m = this.solute.getMass();
         let solvs = this.solvents;
         for(var i = 0; i < solvs.length; i++){
@@ -67,36 +76,6 @@ class ChemicalSolution extends Chemical{
             solvs[i].setMass(solvs[i].getMass() * ratio);
         }
         super.setMass(mass);
-    }
-
-    /**
-    Get the volume of this Solution in milliliters
-    return: The volume
-    */
-    getVolume(){
-        var v = this.solute.getVolume();
-        let solvs = this.solvents;
-        for(var i = 0; i < solvs.length; i++){
-            v += solvs[i].getVolume();
-        }
-        return v;
-    }
-
-    /**
-    Set the current volume of this Solution
-    volume: The volume in milliliters
-    */
-    setVolume(volume){
-        let oldVolume = this.getVolume();
-        if(oldVolume <= 0) return;
-        let ratio = volume / oldVolume;
-
-        this.solute.setVolume(this.solute.getVolume() * ratio);
-
-        let solvs = this.solvents;
-        for(var i = 0; i < solvs.length; i++){
-            solvs[i].setVolume(solvs[i].getVolume() * ratio);
-        }
     }
 
     /**
