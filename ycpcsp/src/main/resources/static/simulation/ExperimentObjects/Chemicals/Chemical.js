@@ -292,7 +292,7 @@ class ChemicalController2D extends ExperimentObjectController2D{
     returns: A floating point value, the number of moles
     */
     calculateMoles(){
-        return this.chemical.mass / this.chemical.getMolarMass();
+        return this.chemical.getMass() / this.chemical.getMolarMass();
     }
 
     /**

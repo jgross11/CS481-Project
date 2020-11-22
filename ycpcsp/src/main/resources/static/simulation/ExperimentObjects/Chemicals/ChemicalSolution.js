@@ -194,8 +194,22 @@ class ChemicalSolution extends Chemical{
     returns: The molar mass
     */
     getMolarMass(){
-        // TODO determine molar mass of a solution?
-        return 1;
+        // If the solute is a ChemicalSolution, it is invalid, return -1
+        if(this.solute instanceof ChemicalSolution) return -1;
+
+        // Find the total number of moles
+        let chemControl = new ChemicalController2D(this.solute);
+        var total = chemControl.calculateMoles();
+        let solvs = this.solvents;
+        for(var i = 0; i < solvs.length; i++){
+            // If any solvents are ChemicalSolutions, they are invalid, return -1
+            if(solvs[i] instanceof ChemicalSolution) return -1;
+            chemControl.setChemical(solvs[i]);
+            total += chemControl.calculateMoles();
+        }
+
+        // Divide the mass by the number of moles
+        return this.getMass() / total;
     }
 
     /**
