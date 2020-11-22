@@ -397,14 +397,16 @@ class ContainerController2D extends EquipmentController2D{
     }
 
     /**
-    Determine if this Controller's Container can hold more of a new Chemical
+    Determine if this Controller's Container can hold more of a new Chemical.
+    This does allow for some amount of rounding error beyond a certain precision,
+    i.e. if capacity is 1, and the volume of chem is 1.00000000005, then this method will return true
     chem: The new Chemical to add
     returns: true if the Chemical is within the remaining capacity of the Container, false otherwise
     */
     hasSpace(chem){
         let eq = this.equipment;
         var volume = eq.getTotalContentsVolume() + ((chem === null) ? 0 : chem.getVolume());
-        return volume <= eq.capacity;
+        return volume <= eq.capacity + 0.0000000001;
     }
 
     /**

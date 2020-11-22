@@ -46,6 +46,11 @@ function arraySortCompare(a, b, key){
 Convert an integer into a color value where each of the bits of the integer represent the 4 different color channels
 value: The integer, first 8 bits are red, next 8 bits are green, next 8 bits are blue, last 8 bits are alpha
 returns: The color, a list of 4 values, each in the range of [0-255]
+
+Fun story, the way this stores 4 values, each ranging from [0-255] in one integer is via bit shifting.
+Because js is so much fun, it basically breaks if you try to use bit shifting on the bit keeping track of the negative sign.
+So, to get around this, we have >>> for the red value, which works because it works, because js.
+This was not a fun story to experience.
 */
 function getColorListObjectFromInt(value){
     return [
