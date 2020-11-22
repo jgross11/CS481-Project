@@ -1,6 +1,6 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
-import edu.ycpcsp.ycpcsp.Models.ChemicalInformation
+import edu.ycpcsp.ycpcsp.Models.ChemicalProperties
 import java.sql.SQLException
 
 // element DB indices
@@ -17,7 +17,7 @@ const val CompoundSolidIndex = 7
 const val CompoundGasIndex = 8
 const val creatorIDIndex = 9
 
-fun getCompoundInformationByName(name : String) : ChemicalInformation?{
+fun getCompoundInformationByName(name : String) : ChemicalProperties?{
     var connection = getDBConnection()
     if(connection != null){
         return try{
@@ -25,7 +25,7 @@ fun getCompoundInformationByName(name : String) : ChemicalInformation?{
             preparedStatement.setString(1, name)
             var rs = preparedStatement.executeQuery()
             return if(rs.first()){
-                var comp = ChemicalInformation(rs.getInt(CompoundIDIndex), rs.getString(CompoundFormulaIndex), rs.getString(CompoundNameIndex), rs.getDouble(CompoundMassIndex), rs.getDouble(CompoundDensityIndex),
+                var comp = ChemicalProperties(rs.getInt(CompoundIDIndex), rs.getString(CompoundFormulaIndex), rs.getString(CompoundNameIndex), rs.getDouble(CompoundMassIndex), rs.getDouble(CompoundDensityIndex),
                         rs.getBoolean(CompoundSolubleIndex), rs.getDouble(CompoundSolidIndex), rs.getDouble(CompoundGasIndex), rs.getInt(creatorIDIndex))
                 preparedStatement = connection.prepareStatement("SELECT * FROM Database.ChemistryGraphics WHERE ChemicalID = ?;")
                 preparedStatement.setInt(1, comp.chemicalInformationID)
@@ -50,7 +50,7 @@ fun getCompoundInformationByName(name : String) : ChemicalInformation?{
     return null
 }
 
-fun getCompoundInformationByFormula(formula : String) : ChemicalInformation?{
+fun getCompoundInformationByFormula(formula : String) : ChemicalProperties?{
     var connection = getDBConnection()
     if(connection != null){
         return try{
@@ -58,7 +58,7 @@ fun getCompoundInformationByFormula(formula : String) : ChemicalInformation?{
             preparedStatement.setString(1, formula)
             var rs = preparedStatement.executeQuery()
             return if(rs.first()){
-                var comp = ChemicalInformation(rs.getInt(CompoundIDIndex), rs.getString(CompoundFormulaIndex), rs.getString(CompoundNameIndex), rs.getDouble(CompoundMassIndex), rs.getDouble(CompoundDensityIndex),
+                var comp = ChemicalProperties(rs.getInt(CompoundIDIndex), rs.getString(CompoundFormulaIndex), rs.getString(CompoundNameIndex), rs.getDouble(CompoundMassIndex), rs.getDouble(CompoundDensityIndex),
                         rs.getBoolean(CompoundSolubleIndex), rs.getDouble(CompoundSolidIndex), rs.getDouble(CompoundGasIndex), rs.getInt(creatorIDIndex))
                 preparedStatement = connection.prepareStatement("SELECT * FROM Database.ChemistryGraphics WHERE ChemicalID = ?;")
                 preparedStatement.setInt(1, comp.chemicalInformationID)
@@ -83,7 +83,7 @@ fun getCompoundInformationByFormula(formula : String) : ChemicalInformation?{
     return null
 }
 
-fun getCompoundInformationByID(id : Int) : ChemicalInformation?{
+fun getCompoundInformationByID(id : Int) : ChemicalProperties?{
 
     var connection = getDBConnection()
     if(connection != null){
@@ -92,7 +92,7 @@ fun getCompoundInformationByID(id : Int) : ChemicalInformation?{
             preparedStatement.setInt(1, id)
             var rs = preparedStatement.executeQuery()
             return if(rs.first()){
-                var comp = ChemicalInformation(rs.getInt(CompoundIDIndex), rs.getString(CompoundFormulaIndex), rs.getString(CompoundNameIndex), rs.getDouble(CompoundMassIndex), rs.getDouble(CompoundDensityIndex),
+                var comp = ChemicalProperties(rs.getInt(CompoundIDIndex), rs.getString(CompoundFormulaIndex), rs.getString(CompoundNameIndex), rs.getDouble(CompoundMassIndex), rs.getDouble(CompoundDensityIndex),
                         rs.getBoolean(CompoundSolubleIndex), rs.getDouble(CompoundSolidIndex), rs.getDouble(CompoundGasIndex), rs.getInt(creatorIDIndex))
                 preparedStatement = connection.prepareStatement("SELECT * FROM Database.ChemistryGraphics WHERE ChemicalID = ?;")
                 preparedStatement.setInt(1, comp.chemicalInformationID)

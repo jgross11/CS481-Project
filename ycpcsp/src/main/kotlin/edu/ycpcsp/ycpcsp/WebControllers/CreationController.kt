@@ -4,7 +4,7 @@ package edu.ycpcsp.ycpcsp.WebControllers
 import edu.ycpcsp.ycpcsp.DataBase.CreateExperiment
 import edu.ycpcsp.ycpcsp.DataBase.LoadExperiment
 import edu.ycpcsp.ycpcsp.DataBase.insertCompound
-import edu.ycpcsp.ycpcsp.Models.ChemicalInformation
+import edu.ycpcsp.ycpcsp.Models.ChemicalProperties
 import edu.ycpcsp.ycpcsp.Models.Experiment
 import edu.ycpcsp.ycpcsp.PostDataClasses.CreationNewChemicalFormData
 import edu.ycpcsp.ycpcsp.PostDataClasses.UserAndExperiment
@@ -37,7 +37,7 @@ class CreationController {
     @ResponseBody
     fun submitNewSimulation(@RequestBody userAndExp : UserAndExperiment) : Boolean{
         var result = true
-        println("User ${userAndExp.user.getFullName()} wants to submit following experiment data to DB:")
+        println("User ${userAndExp.user?.getFullName()} wants to submit following experiment data to DB:")
         println(userAndExp.experiment)
         // FOR TESTING PURPOSES ONLY
         var copyAlreadyInDB = LoadExperiment("21")
@@ -66,12 +66,12 @@ class CreationController {
     @ResponseBody
     fun createNewChemical(@RequestBody chemical : CreationNewChemicalFormData) : Boolean{
         println("yay the think is making it here you heard");
-        var newChemical = ChemicalInformation();
-        newChemical.solidTemp = chemical.ChemicalPhaseChangeSolid;
+        var newChemical = ChemicalProperties();
+        newChemical.meltingPoint = chemical.ChemicalPhaseChangeSolid;
         newChemical.name =  chemical.ChemicalName;
-        newChemical.mass = chemical.ChemicalMass;
+        newChemical.molarMass = chemical.ChemicalMass;
         newChemical.isWaterSoluable = chemical.ChemicalWaterSoluable;
-        newChemical.gasTemp = chemical.ChemicalPhaseChangeLiquid;
+        newChemical.boilingPoint = chemical.ChemicalPhaseChangeLiquid;
         newChemical.formula = chemical.ChemicalFormula;
         newChemical.density =  chemical.ChemicalDensity;
         newChemical.colors.gasColor =chemical.ChemicalGasColor;
