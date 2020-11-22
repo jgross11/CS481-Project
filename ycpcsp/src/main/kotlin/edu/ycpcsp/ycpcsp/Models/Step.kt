@@ -14,6 +14,8 @@ data class Step( var stepNumber : Int,
                 )
 {
     override fun toString() : String{
-        return "\nStep $stepNumber\n$actorIndex\nacts on\n$receiverIndex\n"
+        val actorString = if (actorID) "Equipment" else "Chemical"
+        val receiverString = if (receiverID) "Equipment" else "Chemical"
+        return "\nStep $stepNumber\n$actorString $actorIndex\nacts on\n$receiverString $receiverIndex\nWith functionID $functionID\n"
     }
 }

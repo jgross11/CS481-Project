@@ -83,7 +83,7 @@ class EyeDropperController2D extends ContainerController2D{
     */
     drop(contControl){
         // Get one drop from the EyeDropper with some randomness
-        let chems = this.pourOut(0.04 + 0.02 * Math.random());
+        let chems = this.pourOut(EYE_DROPPER_DROP_SIZE + EYE_DROPPER_DROP_SIZE_RANDOM * Math.random());
 
         // If no chemicals could be obtained, return false
         if(chems.length === 0) return false;
@@ -100,7 +100,7 @@ class EyeDropperController2D extends ContainerController2D{
     */
     canContain(chemical){
         // If the chemical is not a liquid, return false
-        if(chemical.matterState !== MATTER_STATE_LIQUID) return false;
+        if(chemical.getMatterState() !== MATTER_STATE_LIQUID) return false;
 
         // Check to see the chemical is the same as the one in the EyeDropper, or if it is empty
         return this.placeSameChemical(chemical);

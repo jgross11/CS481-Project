@@ -30,7 +30,7 @@ class Chemical extends ExperimentObject{
     return: The volume
     */
     getVolume(){
-        return this.getMass() / this.properties.getDensity();
+        return this.getMass() / this.getDensity();
     }
 
     /**
@@ -38,7 +38,7 @@ class Chemical extends ExperimentObject{
     volume: The volume in milliliters
     */
     setVolume(volume){
-        this.setMass(volume * this.properties.getDensity());
+        this.setMass(volume * this.getDensity());
     }
 
     /**
@@ -67,15 +67,25 @@ class Chemical extends ExperimentObject{
 
     /**
     Get the texture to use for rendering this Chemical
+    state: The state for the texture, or null to use this Chemical's current state, default null
     return: A list of 3 or 4 values [red, green, blue, alpha], alpha is option representing the color of this Chemical
     */
-    getTexture(){
-        switch(this.matterState){
-            case MATTER_STATE_SOLID: return this.properties.getSolidColor();
-            case MATTER_STATE_LIQUID: return this.properties.getLiquidColor();
-            case MATTER_STATE_GAS: return this.properties.getGasColor();
+    getTexture(state = null){
+        if(state === null) state = this.matterState;
+        switch(state){
+            case MATTER_STATE_SOLID: return this.getSolidColor();
+            case MATTER_STATE_LIQUID: return this.getLiquidColor();
+            case MATTER_STATE_GAS: return this.getGasColor();
             default: return null;
         }
+    }
+
+    /**
+    Get the current state of matter of this Chemical
+    returns: The state, based on the defined constants in this file
+    */
+    getMatterState(){
+        return this.matterState;
     }
 
     /**
@@ -101,10 +111,110 @@ class Chemical extends ExperimentObject{
 
     /**
     Get the ID representing this Chemical type
+    returns: The id
     */
     getID(){
         return this.properties.getID();
     }
+
+    /**
+    Get the creator property of this Chemical
+    return: The creator
+    */
+    getCreator(){
+        return this.properties.getCreator();
+    }
+
+    /**
+    Get the name property of this Chemical
+    returns: The name
+    */
+    getName(){
+        return this.properties.getName();
+    }
+
+    /**
+    Get the symbol property of this Chemical
+    returns: The symbol
+    */
+    getSymbol(){
+        return this.properties.getSymbol();
+    }
+
+    /*
+    Get the solid color property of this Chemical
+    returns: The color
+    */
+    getSolidColor(){
+        return this.properties.getSolidColor();
+    }
+
+    /*
+    Get the liquid color property of this Chemical
+    returns: The color
+    */
+    getLiquidColor(){
+        return this.properties.getLiquidColor();
+    }
+
+    /*
+    Get the gas color property of this Chemical
+    returns: The color
+    */
+    getGasColor(){
+        return this.properties.getGasColor();
+    }
+
+    /**
+    Get the molar mass of this Chemical
+    returns: The molar mass
+    */
+    getMolarMass(){
+        return this.properties.getMolarMass();
+    }
+
+    /**
+    Get the melting point property of this Chemical
+    returns: The temperature, in Celsius
+    */
+    getMeltingPoint(){
+        return this.properties.getMeltingPoint();
+    }
+
+    /**
+    Get the boiling point property of this Chemical
+    returns: The temperature, in Celsius
+    */
+    getBoilingPoint(){
+        return this.properties.getBoilingPoint();
+    }
+
+    /**
+    Get the density property of this Chemical
+    returns: The density
+    */
+    getDensity(){
+        return this.properties.getDensity();
+    }
+
+    /**
+    Get the water solubility property of this Chemical
+    return: The water solubility
+    */
+    getWaterSolubility(){
+        return this.properties.getWaterSolubility();
+    }
+
+    /**
+    Make an exact copy of this Chemical
+    returns: The Chemical copy
+    */
+    copyChem(){
+        var newC = new Chemical(this.getMass(), this.properties, this.temperature, this.concentration);
+        newC.setMatterState(this.matterState);
+        return newC;
+    }
+
 }
 
 
@@ -182,7 +292,7 @@ class ChemicalController2D extends ExperimentObjectController2D{
     returns: A floating point value, the number of moles
     */
     calculateMoles(){
-        return this.chemical.mass / this.chemical.properties.getMolarMass();
+        return this.chemical.getMass() / this.chemical.getMolarMass();
     }
 
     /**
@@ -190,7 +300,7 @@ class ChemicalController2D extends ExperimentObjectController2D{
     returns: A floating point value, the mass in grams
     */
     calculateMass(moles){
-        return moles * this.chemical.properties.getMolarMass();
+        return moles * this.chemical.getMolarMass();
     }
 
     /**
@@ -200,9 +310,8 @@ class ChemicalController2D extends ExperimentObjectController2D{
     calculateMatterState(){
         let c = this.chemical;
         if(c === null) return;
-        let p = c.properties;
-        if(c.temperature > p.getBoilingPoint()) c.setMatterState(MATTER_STATE_GAS);
-        else if(c.temperature > p.getMeltingPoint()) c.setMatterState(MATTER_STATE_LIQUID);
+        if(c.temperature > c.getBoilingPoint()) c.setMatterState(MATTER_STATE_GAS);
+        else if(c.temperature > c.getMeltingPoint()) c.setMatterState(MATTER_STATE_LIQUID);
         else c.setMatterState(MATTER_STATE_SOLID);
     }
 
@@ -220,7 +329,7 @@ class ChemicalController2D extends ExperimentObjectController2D{
     combine(chems){
         // Checking to make sure parameters exist
         if(!Array.isArray(chems) || chems === null) return null;
-        if(this.chemical !== null) chems.push(this.copyChem());
+        if(this.chemical !== null) chems.push(this.chemical.copyChem());
         if(chems.length < 1) return chems;
 
         // Go through each Chemical in the list and see if any chemicals can be combined from having the same ID
@@ -234,24 +343,35 @@ class ChemicalController2D extends ExperimentObjectController2D{
             // If the current chemical has not yet been indexed, add it to the index dictionary
             if(indexed === undefined){
                 control.setChemical(c);
-                let newC = control.copyChem();
+                let newC = control.chemical.copyChem();
                 indexes[cID] = newC;
                 chems[i] = newC;
             }
             // If the chemical exists, combine their masses and remove the common instance from the list
             else{
                 // TODO handle concentration values
-                indexed.setMass(indexed.mass + c.mass);
+                indexed.setMass(indexed.getMass() + c.getMass());
                 chems.splice(i, 1);
                 i--;
             }
         }
 
         // Create a dictionary of chem list
+        /*
+        This is a very hacky way of doing this.
+        Parts of this method should be overridden as separate methods in ChemicalSolution.
+        I would do that, but it is impossible to do with the current architecture of using models and controllers.
+        I would simply not use models and controllers as they are a poor approach to this type of code,
+        but as a result of the requirements of the class for this project, I had to use model and controller classes.
+        So this code is bad because I was required to make it bad, sue me.
+        Instead, I'm making a special case here for ChemicalSolutions to not be added to the dictionary
+        */
+        let solutions = [];
         let cDict = [];
         for(var i = 0; i < chems.length; i++){
             let c = chems[i];
-            cDict[c.getID()] = c;
+            if(c instanceof ChemicalSolution) solutions.push(c);
+            else cDict[c.getID()] = c;
         }
 
         // Check for if each of the equations can be applied to the dictionary
@@ -264,7 +384,11 @@ class ChemicalController2D extends ExperimentObjectController2D{
         chems.splice(0, chems.length);
 
         // Add all elements from the dictionary to the chem list
-        cDict.forEach(function(obj, i){
+        cDict.forEach(function(obj){
+            chems.push(obj);
+        }, chems);
+        // Add all solutions from the dictionary to the chem list
+        solutions.forEach(function(obj){
             chems.push(obj);
         }, chems);
 
@@ -275,8 +399,8 @@ class ChemicalController2D extends ExperimentObjectController2D{
         */
         // Sort the chemicals by their densities, smallest at the end
         chems.sort(function(a, b){
-            let ad = a.properties.getDensity();
-            let bd = b.properties.getDensity();
+            let ad = a.getDensity();
+            let bd = b.getDensity();
             if(ad === bd) return 0;
             return (ad > bd) ? -1 : 1;
         });
@@ -295,22 +419,10 @@ class ChemicalController2D extends ExperimentObjectController2D{
     split(percent){
         let c = this.chemical
         if(percent < 0 || percent > 1 || c === null) return null;
-        var chem = this.copyChem();
-        chem.setMass(chem.mass * (1 - percent));
-        c.setMass(c.mass * percent);
+        var chem = c.copyChem();
+        chem.setMass(chem.getMass() * (1 - percent));
+        c.setMass(c.getMass() * percent);
         return chem;
-    }
-
-    /**
-    Make an exact copy of this Controller's Chemical
-    returns: The Chemical copy
-    */
-    copyChem(){
-        let c = this.chemical
-        if(c === null) return null;
-        let newC = new Chemical(c.mass, c.properties, c.temperature, c.concentration);
-        newC.setMatterState(c.matterState);
-        return newC;
     }
 
     /**

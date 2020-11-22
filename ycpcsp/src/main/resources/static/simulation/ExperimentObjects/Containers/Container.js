@@ -38,7 +38,7 @@ class Container extends Equipment{
     getTotalContentsMass(){
         var total = 0;
         for(var i = 0; i < this.contents.length; i++){
-            total += this.contents[i].mass;
+            total += this.contents[i].getMass();
         }
         return total;
     }
@@ -59,7 +59,7 @@ class Container extends Equipment{
     Get the mass of this Container combined with all chemicals in the container
     */
     getTotalMass(){
-        return this.mass + this.getTotalContentsMass();
+        return this.getMass() + this.getTotalContentsMass();
     }
 
     /**
@@ -179,7 +179,7 @@ class ContainerController2D extends EquipmentController2D{
         // Remove all contents with zero mass
         var removed = false;
         for(var i = 0; i < cont.length; i++){
-            if(cont[i].mass === 0){
+            if(cont[i].getMass() === 0){
                 cont.splice(i, 1);
                 i--;
                 removed = true;
@@ -269,7 +269,7 @@ class ContainerController2D extends EquipmentController2D{
         if(!(chemControl instanceof ChemicalController2D)) return false;
 
         // Convenience constants
-        let chem = chemControl.copyChem();
+        let chem = chemControl.chemical.copyChem();
         let copyControl = new ChemicalController2D(chem);
         let eq = this.equipment;
 
@@ -288,6 +288,73 @@ class ContainerController2D extends EquipmentController2D{
             return true;
         }
         return false;
+    }
+
+    /**
+    If any of the Chemicals in this Controller's Container's contents can be combined to a solution, do so
+    returns: true if a solution was made, false otherwise
+    */
+    checkForSolutions(){
+        let conts = this.equipment.contents;
+        // If any of the Chemicals in the Container can go into one of the existing ChemicalSolutions, combine them in there
+
+        // Go through each chemical and find solutions, placing them in a separate list, and the chemicals in a separate list
+        let solutions = [];
+        let chems = [];
+        let cIndexes = [];
+        for(var i = 0; i < conts.length; i++){
+            if(conts[i] instanceof ChemicalSolution) solutions.push(conts[i]);
+            // If it is a normal chemical, save its index for removal
+            else{
+                chems.push(conts[i]);
+                cIndexes.push(i);
+            }
+        }
+
+        // For each solution, go through each chemical and see if any of those chemicals exist in the solution, if they do, combine the common chemicals
+        let chemControl = new ChemicalController2D(null);
+        for(var s = 0; s < solutions.length; s++){
+            // Iterate through chems backwards so that the highest indexes are removed first
+            for(var c = chems.length - 1; c >= 0; c--){
+                let chem = solutions[s].containingChem(chems[c]);
+                // If a chemical was found, combine the chemicals and remove the chemical from the Container
+                if(chem !== null){
+                    chemControl.setChemical(chems[c]);
+                    let combined = chemControl.combine([chem])[0];
+                    chem.setMass(combined.getMass());
+                    conts.splice(cIndexes[c], 1);
+                }
+            }
+            // Update the mass of the solution
+            solutions[s].setCalculatedMass();
+        }
+
+
+        // Find all water soluble Chemicals, if less than one exists, return false
+        let cs = [];
+        let indexes = [];
+        for(var i = 0; i < conts.length; i++){
+            if(conts[i].getWaterSolubility()){
+                cs.push(conts[i]);
+                indexes.push(i);
+            }
+        }
+        if(cs.length < 2) return false;
+
+        // If they are, create a solution from the contents, using the least dense Chemical as the solute
+        //  The least dense chemical is assumed to be at the end of the list
+        let solute = cs[cs.length - 1];
+
+        // Remove all Chemicals used for the solution from the
+        for(var i = cs.length - 1; i >= 0; i--){
+            conts.splice(i, 1);
+        }
+        cs.splice(cs.length - 1, 1);
+        let solution = new ChemicalSolution(solute, cs);
+
+        // Add the solution
+        conts.push(solution);
+        return true;
     }
 
     /**
@@ -313,7 +380,7 @@ class ContainerController2D extends EquipmentController2D{
                 var removeAmount = total - eq.capacity;
                 eq.contents[i].addVolume(-removeAmount);
                 var chemControl = new ChemicalController2D(eq.contents[i]);
-                var removedChem = chemControl.copyChem();
+                var removedChem = chemControl.chemical.copyChem();
                 removedChem.setVolume(removeAmount);
                 removed.push(removedChem);
                 break;
@@ -358,14 +425,16 @@ class ContainerController2D extends EquipmentController2D{
     }
 
     /**
-    Determine if this Controller's Container can hold more of a new Chemical
+    Determine if this Controller's Container can hold more of a new Chemical.
+    This does allow for some amount of rounding error beyond a certain precision,
+    i.e. if capacity is 1, and the volume of chem is 1.00000000005, then this method will return true
     chem: The new Chemical to add
     returns: true if the Chemical is within the remaining capacity of the Container, false otherwise
     */
     hasSpace(chem){
         let eq = this.equipment;
         var volume = eq.getTotalContentsVolume() + ((chem === null) ? 0 : chem.getVolume());
-        return volume <= eq.capacity;
+        return volume <= eq.capacity + 0.0000000001;
     }
 
     /**
@@ -409,7 +478,7 @@ class ContainerController2D extends EquipmentController2D{
     */
     placeSameChemical(chemical){
         let eq = this.equipment;
-        return eq.isEmpty() || eq.contents[0].properties.getID() === chemical.properties.getID();
+        return eq.isEmpty() || eq.contents[0].getID() === chemical.getID();
     }
 
     /**

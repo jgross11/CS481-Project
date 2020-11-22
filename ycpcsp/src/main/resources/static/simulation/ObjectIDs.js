@@ -281,7 +281,7 @@ let EQUATION_PROPERTY_PRODUCTS = "products";
 let EQUATION_PROPERTY_ID = "id";
 
 let EQUATION_COMPONENT_PROPERTY_COEFFICIENT = "coefficient";
-let EQUATION_COMPONENT_PROPERTY_ID = "coefficient";
+let EQUATION_COMPONENT_PROPERTY_ID = "id";
 
 /**
 Add a new chemical to the CHEMICAL_PROPERTIES list

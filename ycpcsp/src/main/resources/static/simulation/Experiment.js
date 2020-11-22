@@ -413,7 +413,7 @@ class ExperimentController2D{
         // Place all Chemicals in the Chemical list
         let chems = this.experiment.chemTypes;
         for(var i = 0; i < chems.length; i++){
-            this.chemicalBoxes.add(new ChemicalController2D(chems[i].copyChem()));
+            this.chemicalBoxes.add(new ChemicalController2D(chems[i].chemical.copyChem()));
         }
         this.displayEquipmentBoxes();
 
@@ -1192,7 +1192,7 @@ class ChemicalBox extends DisplayBox{
         g.strokeWeight(2);
         g.stroke(255)
         g.textSize(20);
-        g.text(this.obj.chemical.properties.getSymbol(), EXP_BOX_SIZE * 0.2, EXP_BOX_SIZE * 0.5);
+        g.text(this.obj.chemical.getSymbol(), EXP_BOX_SIZE * 0.2, EXP_BOX_SIZE * 0.5);
         return this.graphics;
     }
 }

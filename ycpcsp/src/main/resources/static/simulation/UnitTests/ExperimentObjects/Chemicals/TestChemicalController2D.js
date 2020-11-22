@@ -149,11 +149,6 @@ QUnit.test('split:', function(assert){
     assert.equal(control3.split(0.1), null, "Should be unable to split with no chemical");
 });
 
-QUnit.test('copyChem:', function(assert){
-    var copied = control3.copyChem();
-    assert.deepEqual(chem3, copied, "Copied chemical should be identical to original chemical");
-});
-
 QUnit.todo('drawRect:', function(assert){
     assert.true(false);
 });

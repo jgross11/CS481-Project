@@ -50,8 +50,8 @@ QUnit.test('activate:', function(assert){
     beakerControl2.emptyOut();
     chem1.setMass(6.0);
     chem2.setMass(4.0);
-    beaker1.setContents(chemControl1.copyChem());
-    beaker2.setContents(chemControl2.copyChem());
+    beaker1.setContents(chemControl1.chemical.copyChem());
+    beaker2.setContents(chemControl2.chemical.copyChem());
 
     controller.activate();
     assert.true(beaker1.isEmpty(), "Instruction should empty out beaker1");
@@ -62,8 +62,8 @@ QUnit.test('activate:', function(assert){
     beakerControl2.emptyOut();
     chem1.setMass(6.0);
     chem2.setMass(4.0);
-    beaker1.setContents(chemControl1.copyChem());
-    beaker2.setContents(chemControl2.copyChem());
+    beaker1.setContents(chemControl1.chemical.copyChem());
+    beaker2.setContents(chemControl2.chemical.copyChem());
     controller.activate();
     assert.equal(beaker1.getTotalContentsMass(), 6, "Instruction should do nothing to beaker 1 using null receiver");
     assert.equal(beaker2.getTotalContentsMass(), 4, "Instruction should do nothing to beaker 2 using null receiver");
