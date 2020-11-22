@@ -27,7 +27,7 @@ class ChemicalInsertionController {
     // returns all chemical information in DB, raw
     @PostMapping(path = ["/load-all-chemicals"], consumes = ["application/json"], produces = ["application/json"])
     @ResponseBody
-    fun loadAllChemicalInformation() : Array<ChemicalInformation>?{
+    fun loadAllChemicalInformation() : Array<ChemicalProperties>?{
         println("Sending all chemical information")
         return getAllChemicalInformation()
     }

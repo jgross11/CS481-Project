@@ -43,7 +43,7 @@ var allEquipmentList = [
     { Equip: 'FLASK_1000mL',    equipmentID:ID_EQUIP_FLASK_1000mL,      name: "Erlenmeyer Flask (1000mL)" },
     { Equip: 'WEIGH_BOAT',      equipmentID:ID_EQUIP_WEIGH_BOAT,        name: "Weigh Boat" },
     { Equip: 'STIR_ROD',        equipmentID:ID_EQUIP_STIR_ROD,          name: "Stir Rod" }
-
+]
 
 // sessionStorage.setItem("EquipID", JSON.stringify(EquipID));
 
