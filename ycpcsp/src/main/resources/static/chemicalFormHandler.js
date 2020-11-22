@@ -62,8 +62,9 @@ function loadChemicalsInDB(){
 function displayChemicalResults(list){
     chemicalSearchResultContainer.innerHTML = "";
     for(let i = 0; i < list.length; i++){
+        let chem = list[i];
         chemicalSearchResultContainer.innerHTML += '<div style="border: 1px solid black" id="chemicalSearchResult" onclick="addChemical('+i+')">'+
-                                                    list[i]["name"]+" | "+list[i]["formula"]+" | molecular mass="+list[i]["mass"]+" | density="+list[i]["density"]+" | gas @ "+list[i]["gasTemp"]+'°C'+" | solid @ "+list[i]["solidTemp"]+'°C</div>'
+        chem["name"]+" | "+chem["formula"]+" | molecular mass="+chem["molarMass"]+" | density="+chem["density"]+" | gas @ "+chem["boilingPoint"]+'°C'+" | solid @ "+chem["meltingPoint"]+'°C</div>'
     }
 }
 
