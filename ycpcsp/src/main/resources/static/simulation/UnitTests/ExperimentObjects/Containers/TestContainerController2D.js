@@ -10,8 +10,15 @@ var chem2;
 var chem3;
 var chem4;
 var chem5;
+var chem6;
+var chem7;
 var chemControl1;
 var chemControl2;
+var chemControl3;
+var chemControl4;
+var chemControl5;
+var chemControl6;
+var chemControl7;
 
 var DELTA = 0.001;
 
@@ -34,13 +41,20 @@ QUnit.module("ContainerController2D", {
         beakerControl1 = new BeakerController2D(beaker1);
         beakerControl2 = new BeakerController2D(beaker2);
 
-        chem1 = idToChemical(COMPOUND_WATER_ID, 30, 1).chemical;
-        chem2 = idToChemical(COMPOUND_WATER_ID, 20, 1).chemical;
-        chem3 = idToChemical(COMPOUND_WATER_ID, 70, 1).chemical;
-        chem4 = idToChemical(COMPOUND_WATER_ID, 50, 1).chemical;
-        chem5 = idToChemical(COMPOUND_TABLE_SALT_ID, 50, 1).chemical;
-        chemControl1 = new ChemicalController2D(chem1);
-        chemControl2 = new ChemicalController2D(chem2);
+        chemControl1 = idToChemical(COMPOUND_WATER_ID, 30, 1);
+        chemControl2 = idToChemical(COMPOUND_WATER_ID, 20, 1);
+        chemControl3 = idToChemical(COMPOUND_WATER_ID, 70, 1);
+        chemControl4 = idToChemical(COMPOUND_WATER_ID, 50, 1);
+        chemControl5 = idToChemical(COMPOUND_TABLE_SALT_ID, 50, 1);
+        chemControl6 = idToChemical(ELEMENT_CARBON_ATOMIC_NUM, 1, 1);
+        chemControl7 = idToChemical(ELEMENT_CHLORINE_ATOMIC_NUM, 1, 1);
+        chem1 = chemControl1.chemical;
+        chem2 = chemControl2.chemical;
+        chem3 = chemControl3.chemical;
+        chem4 = chemControl4.chemical;
+        chem5 = chemControl5.chemical;
+        chem6 = chemControl6.chemical;
+        chem7 = chemControl7.chemical;
     }
 });
 
@@ -231,6 +245,62 @@ QUnit.test('addTo:', function(assert){
     assert.false(beakerControl1.addTo(chem1), "Should fail to add a non chemical controller parameter");
 });
 
+QUnit.test('checkForSolutions:', function(assert){
+    var s;
+
+    beaker1.setCapacity(1000);
+    beaker1.setResidue(0);
+
+    beakerControl1.emptyOut();
+    beakerControl1.addTo(chemControl4);
+    assert.false(beakerControl1.checkForSolutions(), "Checking no solution is made with only one chemical");
+
+    beakerControl1.addTo(chemControl6);
+    assert.false(beakerControl1.checkForSolutions(), "Checking no solution is made with only one water soluble chemical");
+
+    beakerControl1.emptyOut();
+    beakerControl1.addTo(chemControl4);
+    beakerControl1.addTo(chemControl5);
+    assert.equal(beaker1.getTotalContentsMass(), 100, "Checking the mass of the contents before making a solution.");
+    assert.equal(beaker1.contents.length, 2, "Checking there are two chemicals in the beaker before making a solution");
+    assert.true(beakerControl1.checkForSolutions(), "Checking a solution is made with salt and water");
+    assert.equal(beaker1.contents.length, 1, "Checking the beaker has one chemical in the beaker after making a solution");
+    assert.equal(beaker1.getTotalContentsMass(), 100, "Checking that the mass of the contents is the same after making a solution.");
+    s = beaker1.contents[0];
+    assert.equal(s.solute.getID(), COMPOUND_WATER_ID, "Checking that the solute is the water");
+    assert.equal(s.solvents[0].getID(), COMPOUND_TABLE_SALT_ID, "Checking that the solvent is the salt");
+
+    beakerControl1.addTo(new ChemicalController2D(chem4.copyChem()));
+    assert.equal(beaker1.contents.length, 2, "Checking there are two chemicals in the beaker before adding to a solution");
+    assert.equal(beaker1.getTotalContentsMass(), 150, "Checking the mass of the contents before adding to a solution.");
+    assert.true(beakerControl1.checkForSolutions(), "Checking a solution is added to with water and salt water");
+    assert.equal(beaker1.contents.length, 1, "Checking there is one chemical in the beaker after adding to a solution");
+    assert.equal(beaker1.getTotalContentsMass(), 150, "Checking the mass of the contents after adding to a solution.");
+
+    beakerControl1.emptyOut();
+    beakerControl1.addTo(chemControl4);
+    beakerControl1.addTo(chemControl5);
+    beakerControl1.addTo(chemControl7);
+    assert.equal(beaker1.getTotalContentsMass(), 101, "Checking the mass of the contents before making a solution.");
+    assert.equal(beaker1.contents.length, 3, "Checking there are three chemicals in the beaker before making a solution");
+    assert.true(beakerControl1.checkForSolutions(), "Checking a solution is made with salt, chlorine, and water");
+    assert.equal(beaker1.contents.length, 1, "Checking the beaker has one chemical in the beaker after making a solution");
+    assert.equal(beaker1.getTotalContentsMass(), 101, "Checking that the mass of the contents is the same after making a solution.");
+    s = beaker1.contents[0];
+    assert.equal(s.solute.getID(), COMPOUND_WATER_ID, "Checking that the solute is the water");
+    assert.equal(s.solvents.length, 2, "Checking there are two solvents")
+    var salt = s.solvents[0];
+    var chlorine = s.solvents[1];
+    if(chlorine.getID() === COMPOUND_TABLE_SALT_ID){
+        let temp = chlorine;
+        chlorine = salt;
+        salt = temp;
+    }
+    assert.equal(chlorine.getID(), ELEMENT_CHLORINE_ATOMIC_NUM, "Checking that the solvents include chlorine");
+    assert.equal(salt.getID(), COMPOUND_TABLE_SALT_ID, "Checking that the solvents include salt");
+
+});
+
 QUnit.test('removeOverflow:', function(assert){
     beaker1.setCapacity(50);
     var c
@@ -310,6 +380,10 @@ QUnit.test('hasSpace:', function(assert){
     chem2.setMass(2);
     container.setContents([chem1, chem2]);
     assert.false(controller.hasSpace(chem1), "Should not have space");
+
+    chem1.setMass(5.00000000000000000001);
+    controller.emptyOut();
+    assert.true(controller.hasSpace(chem1), "Checking chem with a slight overflow has space");
 });
 
 QUnit.test('remainingSpace:', function(assert){

@@ -292,7 +292,7 @@ class ContainerController2D extends EquipmentController2D{
 
     /**
     If any of the Chemicals in this Controller's Container's contents can be combined to a solution, do so
-    returns: true if a solution was made, false otherwise
+    returns: true if a solution was made or modified, false otherwise
     */
     checkForSolutions(){
         let conts = this.equipment.contents;
@@ -311,6 +311,9 @@ class ContainerController2D extends EquipmentController2D{
             }
         }
 
+        // Keep track of if a chemical was combined into a solution
+        var solutionModified = false;
+
         // For each solution, go through each chemical and see if any of those chemicals exist in the solution, if they do, combine the common chemicals
         let chemControl = new ChemicalController2D(null);
         for(var s = 0; s < solutions.length; s++){
@@ -323,6 +326,7 @@ class ContainerController2D extends EquipmentController2D{
                     let combined = chemControl.combine([chem])[0];
                     chem.setMass(combined.getMass());
                     conts.splice(cIndexes[c], 1);
+                    solutionModified = true;
                 }
             }
             // Update the mass of the solution
@@ -330,7 +334,7 @@ class ContainerController2D extends EquipmentController2D{
         }
 
 
-        // Find all water soluble Chemicals, if less than one exists, return false
+        // Find all water soluble Chemicals, if less than one exists, the method is done
         let cs = [];
         let indexes = [];
         for(var i = 0; i < conts.length; i++){
@@ -339,9 +343,9 @@ class ContainerController2D extends EquipmentController2D{
                 indexes.push(i);
             }
         }
-        if(cs.length < 2) return false;
+        if(cs.length < 2) return solutionModified;
 
-        // If they are, create a solution from the contents, using the least dense Chemical as the solute
+        // If there are enough valid contents for a solution, create a solution from the contents, using the least dense Chemical as the solute
         //  The least dense chemical is assumed to be at the end of the list
         let solute = cs[cs.length - 1];
 
