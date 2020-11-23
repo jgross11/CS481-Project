@@ -6,6 +6,7 @@
 
 let chemicalSearchResultContainer = null;
 let allChemicalsList = {};
+let allChemicalsMap = {};
 let submissionErrorDiv = null;
 
 
@@ -55,12 +56,23 @@ function loadChemicalsInDB(){
 
     postData('load-all-chemicals', x).then(function(data){
         allChemicalsList = data;
+        console.log(allChemicalsList);
         displayChemicalResults(allChemicalsList);
+        // populate map for efficiency's sake
+        // will be used later when searching for chemicals
+        // TODO consider changing the return type of the backend POST function
+        // TODO to make this step redundant
+        for(i in allChemicalsList){
+            allChemicalsMap[allChemicalsList[i]["formula"]] = allChemicalsList[i];
+            // TODO: the listIndex trick is awful, please fix
+            allChemicalsMap[allChemicalsList[i]["formula"]].listIndex = i;
+        }
+        console.log(allChemicalsMap);
     });
 }
 
 function displayChemicalResults(list){
-    chemicalSearchResultContainer.innerHTML = "";
+    chemicalSearchResultContainer.innerHTML = ""; 
     for(let i = 0; i < list.length; i++){
         let chem = list[i];
         chemicalSearchResultContainer.innerHTML += '<div style="border: 1px solid black" id="chemicalSearchResult" onclick="addChemical('+i+')">'+
