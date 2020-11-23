@@ -299,6 +299,9 @@
         updateExperimentEquipmentList();
     }
 
+    // dynamically loads the appropriate script for a piece of equipment
+    // to be used for testing step / experiment validity
+    // equipmentIndex: the index of the equipment in allEquipmentList (in ObjectIDs.js)
     function loadEquipmentScript(equipmentIndex){
         let scriptURL = null;
         switch(equipmentIndex){
@@ -416,11 +419,11 @@
 
     function addEquation(equationIndex){
         // allEquationList found in equationFormHandler.js
-        // contains all equation informatino in DB
+        // contains all equation information in DB
         let equationToAdd = allEquationList[equationIndex];
         let equationID = equationToAdd.equationID;
 
-        // ensure ID isn't already in experiment
+        // ensure equation isn't already in experiment
         for(let i = 0; i < equations.length; i++){
             if(equations[i].equationID === equationID){
                 console.log("equation already in list");
@@ -428,6 +431,42 @@
             }
         }
         equations.push(equationToAdd);
+        
+        // ensure reactants / products properties for this equation are in chemical properties list
+        // TODO: the following could be O(n) with a map but the implementation is left as an exercise to the reader
+        // TODO: the listIndex trick is awful, please fix
+        for(let i = 0; i < equationToAdd.reactantFormulas.length; i++){
+            let reactant = equationToAdd.reactantFormulas[i];
+            let reactantInList = false;
+            for(let j = 0; j < chemDisplay.length; j++){
+                let infoInList = chemDisplay[j];
+                if(infoInList.formula === reactant){
+                    reactantInList = true;
+                    break;
+                }
+            }
+            // add reactant to list if not already in list
+            if(!reactantInList){
+                addChemical(allChemicalsMap[reactant].listIndex);
+            }
+        }
+
+        // same thing for the products
+        for(let i = 0; i < equationToAdd.productFormulas.length; i++){
+            let product = equationToAdd.productFormulas[i];
+            let productInList = false;
+            for(let j = 0; j < chemDisplay.length; j++){
+                let infoInList = chemDisplay[j];
+                if(infoInList.formula === product){
+                    productInList = true;
+                    break;
+                }
+            }
+            // add reactant to list if not already in list
+            if(!productInList){
+                addChemical(allChemicalsMap[product].listIndex);
+            }
+        }
     }
 
     // Overwrites creation page HTML to notify user they must log in / verify 
