@@ -1,5 +1,6 @@
 var properties;
 var chem;
+var carbon;
 var fakeChem;
 
 var DELTA = 0.001;
@@ -11,6 +12,7 @@ QUnit.module("Chemical", {
     beforeEach: function(){
         properties = new ChemProperties(ELEMENT_HYDROGEN_ATOMIC_NUM);
         chem = new Chemical(5.0, properties, 10.0, 0.5);
+        carbon = new Chemical(5.0, new ChemProperties(ELEMENT_CARBON_ATOMIC_NUM), 10.0, 0.5);
         fakeChem = new Chemical(5.0, new ChemProperties(null), 20.0, 0.5);
     }
 });
@@ -62,7 +64,12 @@ QUnit.test('getTexture:', function(assert){
     assert.deepEqual(chem.getTexture(), [255, 255, 200, 200], "Checking correct color is found for liquid state");
 
     chem.setMatterState(MATTER_STATE_GAS);
-    assert.deepEqual(chem.getTexture(), [255, 255, 200, 255, 180], "Checking correct color is found for gas state");
+    assert.deepEqual(chem.getTexture(), [255, 255, 200, 180], "Checking correct color is found for gas state");
+});
+
+QUnit.test('getMatterState:', function(assert){
+    chem.setMatterState(MATTER_STATE_SOLID);
+    assert.equal(chem.getMatterState(), MATTER_STATE_SOLID, "Checking solid state was obtained successfully");
 });
 
 QUnit.test('setMatterState:', function(assert){
@@ -104,6 +111,61 @@ QUnit.test('getID:', function(assert){
     let p = new ChemProperties(ELEMENT_HELIUM_ATOMIC_NUM);
     chem.setProperties(p);
     assert.equal(chem.getID(), 2, "Helium should have ID 2");
+});
+
+QUnit.test('getCreator:', function(assert){
+    assert.equal(chem.getCreator(), "Nature", "Checking creator is correctly obtained");
+    assert.equal(carbon.getCreator(), "Nature", "Checking creator is correctly obtained");
+});
+
+QUnit.test('getName:', function(assert){
+    assert.equal(chem.getName(), "Hydrogen", "Checking name is correctly obtained");
+    assert.equal(carbon.getName(), "Carbon", "Checking name is correctly obtained");
+});
+
+QUnit.test('getSymbol:', function(assert){
+    assert.equal(chem.getSymbol(), "H", "Checking symbol is correctly obtained");
+    assert.equal(carbon.getSymbol(), "C", "Checking symbol is correctly obtained");
+});
+
+QUnit.test('getSolidColor:', function(assert){
+    assert.deepEqual(chem.getSolidColor(), [255, 255, 200, 255], "Checking color for solid is correctly obtained");
+    assert.deepEqual(carbon.getSolidColor(), [200, 70, 70, 255], "Checking color for solid is correctly obtained");
+});
+
+QUnit.test('getLiquidColor:', function(assert){
+    assert.deepEqual(chem.getLiquidColor(), [255, 255, 200, 200], "Checking color for liquid is correctly obtained");
+    assert.deepEqual(carbon.getLiquidColor(), [200, 70, 70, 200], "Checking color for liquid is correctly obtained");
+});
+
+QUnit.test('getGasColor:', function(assert){
+    assert.deepEqual(chem.getGasColor(), [255, 255, 200, 180], "Checking color for gas is correctly obtained");
+    assert.deepEqual(carbon.getGasColor(), [200, 70, 70, 180], "Checking color for gas is correctly obtained");
+});
+
+QUnit.test('getMolarMass:', function(assert){
+    assert.equal(chem.getMolarMass(), 1.008, "Checking molar mass is correctly obtained");
+    assert.equal(carbon.getMolarMass(), 12.011, "Checking molar mass is correctly obtained");
+});
+
+QUnit.test('getMeltingPoint:', function(assert){
+    assert.equal(chem.getMeltingPoint(), -259, "Checking melting point is correctly obtained");
+    assert.equal(carbon.getMeltingPoint(), 3500, "Checking melting point is correctly obtained");
+});
+
+QUnit.test('getBoilingPoint:', function(assert){
+    assert.equal(chem.getBoilingPoint(), -253, "Checking boiling point is correctly obtained");
+    assert.equal(carbon.getBoilingPoint(), 4827, "Checking boiling point is correctly obtained");
+});
+
+QUnit.test('getDensity:', function(assert){
+    assert.equal(chem.getDensity(), 0.09, "Checking density point is correctly obtained");
+    assert.equal(carbon.getDensity(), 2.26, "Checking density point is correctly obtained");
+});
+
+QUnit.test('getWaterSolubility:', function(assert){
+    assert.true(chem.getWaterSolubility(), "Checking water solubility is correctly obtained");
+    assert.false(carbon.getWaterSolubility(), "Checking water solubility is correctly obtained");
 });
 
 QUnit.test('copyChem:', function(assert){

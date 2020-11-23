@@ -74,9 +74,9 @@ function getColorInt(color){
 Get a color between 2 colors based on their relative weights, the higher the weight,
     the closer to that color the final color will be.
 Both colors must be a list of values, and each must be the same length
-c1: The first color
+c1: The first color, a list of 3 or 4 values
 w1: The weight of the first color, must be positive and nonzero
-c2: The second color
+c2: The second color, a list of 3 or 4 values
 w2: The weight of the second color, must be positive and nonzero
 returns: The combined color
 */
@@ -91,16 +91,16 @@ function colorRatio(c1, w1, c2, w2){
 
 /**
 Combine a list of colors together via ratios, see colorRatio for more details.
-cs: The colors
+cs: The colors, a list of lists, each containing of 3 or 4 values
 ws: The weight, indexes correspond to the color indexes
 returns: The combined color
 */
 function colorRatioMultiple(cs, ws){
     var c = cs[0];
-    var w = ws[0];
+    var w = 0;
     for(var i = 1; i < cs.length; i++){
+        w += ws[i - 1];
         c = colorRatio(c, w, cs[i], ws[i]);
-        w += ws[i];
     }
     return c;
 }

@@ -174,6 +174,9 @@ QUnit.test('zeroOut:', function(assert){
 
     scaleControl.removeScaleObject();
     assert.equal(scale.getZeroedWeight(), -beakerControl.equipment.mass, "Checking that after removing object, zeroed mass is negative that of the object");
+
+    scaleControl.zeroOut();
+    assert.equal(scale.getZeroedWeight(), -beakerControl.equipment.mass, "Checking that zeroed mass is the same after nothing is changed but zeroOut is called again");
 });
 
 QUnit.test('clearZeroOut:', function(assert){
@@ -186,6 +189,7 @@ QUnit.test('clearZeroOut:', function(assert){
 });
 
 QUnit.todo('update:', function(assert){
+    scaleControl.update();
     assert.true(false);
 });
 

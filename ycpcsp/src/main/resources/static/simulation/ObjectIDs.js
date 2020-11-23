@@ -179,7 +179,7 @@ function initTestChemProperties(){
             https://www.lenntech.com/periodic-chart-elements/boiling-point.htm
     */
     makeChemical("H", "Hydrogen", "Nature",
-        [255, 255, 200, 255], [255, 255, 200, 200], [255, 255, 200, 255, 180],
+        [255, 255, 200, 255], [255, 255, 200, 200], [255, 255, 200, 180],
         ELEMENT_HYDROGEN_ATOMIC_NUM, 1.008, -259, -253, 0.09, true);
     makeChemical("He", "Helium", "Nature",
         [255, 255, 150, 255], [255, 255, 150, 200], [255, 255, 150, 180],

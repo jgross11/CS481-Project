@@ -47,7 +47,7 @@ QUnit.test('canContain:', function(assert){
 
     assert.true(controller.canContain(chem), "Empty weigh boat should be able to contain any solid chemical");
 
-    controller.addTo(chem);
+    controller.addTo(chemControl);
     assert.true(controller.canContain(chem), "Weigh boat should be able to add chemical of the same kind");
     assert.false(controller.canContain(chemNew), "Weigh boat should not be able to add chemical of the a different kind");
 
@@ -58,7 +58,7 @@ QUnit.test('canContain:', function(assert){
 
     chem.setTemperature(-1000);
     chemControl.calculateMatterState();
-    assert.true(controller.canContain(chem), "Weigh boat should not be able to contain a solid");
+    assert.true(controller.canContain(chem), "Weigh boat should be able to contain a solid");
 });
 
 QUnit.todo('draw:', function(assert){
