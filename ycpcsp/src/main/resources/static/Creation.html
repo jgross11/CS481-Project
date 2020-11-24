@@ -164,6 +164,10 @@
                 
                 
             </div>
+
+            <div id="stepContainer">
+
+            </div>
         </div>
     </div>
 
@@ -203,10 +207,20 @@
     let chemDisplay = [];
 
     // experiment list divs
-    let chemicalDiv = null;
-    let equipmentDiv = null;
+    let chemicalListDiv = null;
+    let equipmentListDiv = null;
     let equationDiv = null;
-    let stepDiv = null;
+    let stepListDiv = null;
+
+    // set to true when a user can add a step to an experiment
+    // (after a certain amount of components have been added)
+    let canAddStep = false;
+
+    // set to true when the step form is displayed
+    let isStepFormVisible = false;
+
+    // div containing all pieces needed to add a step
+    let stepFormDiv = null;
 
     // contains status of equipment scripts
     // false - appropriate script(s) not loaded
@@ -250,10 +264,11 @@
         loadEquipment();
 
         // get references for list divs
-        chemicalDiv = document.getElementById("experimentChemicalContainer");
-        equipmentDiv = document.getElementById("experimentEquipmentContainer");
-        stepDiv = document.getElementById("experimentStepContainer");
-        equationsDiv = document.getElementById("experimentEquationContainer");
+        chemicalListDiv = document.getElementById("experimentChemicalContainer");
+        equipmentListDiv = document.getElementById("experimentEquipmentContainer");
+        stepListDiv = document.getElementById("experimentStepContainer");
+        equationsListDiv = document.getElementById("experimentEquationContainer");
+        stepFormDiv = document.getElementById("stepContainer");
 
         // initialize all equipment script statuses to false - not loaded
         // TODO: blame Zaq (probably) for array indices having to start at 1
@@ -264,13 +279,87 @@
         }
     }
 
+    
+    // determines whether a step is able to be created
+    // and displays the 'add step' button if possible
+    function updateAddStep(){
+        // TODO this could be much more sophisticated
+        // TODO for example, it could scan the lists of equipment
+        // TODO in the experiment to see if it is possible to create a step
+        // TODO with the present equipment. 
+
+        // If there are two experiment components (one equipment and one chemical / two (different types of) equipment),
+        // then draw the 'add step' button 
+        // TODO need to sum non-null equipments, rather than just looking at lengths
+        if((chemDisplay.length > 0 && equipments.length > 0) || equipments.length > 1){
+            if(!canAddStep){
+                stepFormDiv.innerHTML = '<input type="button" value="Add Step" onclick="showStepForm()">';
+                canAddStep = true;
+            }
+        } else{
+            canAddStep = false;
+            isStepFormVisible = false;
+            stepFormDiv.innerHTML = '';
+        }
+    }
+
+    /*
+    handles displaying of 'new step' form in all its
+    parts based on the given processNumber
+    0 - actor selection
+    1 - chemical information gathering (concentration, quantity, etc.) if selected actor is a chemical
+    2 - receiver information
+    3 - function 
+    4 - step summary / confirmation
+    TODO more?
+    */
+    function showStepForm(processNumber){
+        if(!isStepFormVisible){
+            stepFormDiv.innerHTML += generateActorOptions();
+            isStepFormVisible = true;
+        }
+    }
+
+    // handles the selection of an actor within the step creation form
+    function handleActorSelection(){
+        let actorSelection = document.getElementById("actor");
+        let actorChocie = actorSelection.options[actorSelection.selectedIndex];
+        // valid choices will have an integer value
+        if(isNaN(parseInt(actorChoice.value))){
+            return;
+        }
+        actorChoice.type == "EQUIPMENT" ? console.log("equipment selected") : console.log("chemical selected");
+    }
+
+    // generates valid actor drop down menus and returns the HTML string
+    function generateActorOptions(){
+        let result = '<br><label for="actor">Choose your actor: </label>'+
+                    '<select name="actor" id="actor" onchange="handleActorSelection()">' + 
+                    '<option value="equipmentDefault">### EQUIPMENT ###</option>';
+        for(let i = 0; i < equipments.length; i++){
+            if(equipments[i] != null){
+                let equipment = equipments[i];
+                result += '<option type="EQUIPMENT" value="'+(equipment.equipmentID)+'">'+equipment.name+'</option>';
+            }
+        }
+        // TODO ensure one chem list contains all the relevant information for a chemical (properties etc.)
+        // TODO will have one list that contains chemical information, one list that contains instances
+        result += '</select>';
+        return result;
+    }
+
+    // generates valid receiver drop down menus and returns the HTML string
+    function generateReceiverOptions(){
+
+    }
+
     // updates contents of the "equipment in experiment" list div
     function updateExperimentEquipmentList(){
-        equipmentDiv.innerHTML = "Equipment in experiment: <br>";
+        equipmentListDiv.innerHTML = "Equipment in experiment: <br>";
         for(let i = 0; i < equipments.length; i++){
             let equip = equipments[i];
             if(equip != null){
-                equipmentDiv.innerHTML += "<div id='experimentEquipmentComponent'>"+allEquipmentList[i].name+": "+equip.quantity+"</div>";
+                equipmentListDiv.innerHTML += "<div id='experimentEquipmentComponent'>"+equip.name+": "+equip.quantity+"</div>";
             }
         }
     }
@@ -293,10 +382,11 @@
         if(equipments[equipmentIndex] != null){
             equipments[equipmentIndex].quantity++;
         } else{
-            equipments[equipmentIndex] = {equipmentID: equipment.equipmentID, quantity: 1};
+            equipments[equipmentIndex] = {equipmentID: equipment.equipmentID, name: equipment.name, quantity: 1};
         }
         loadEquipmentScript(equipment.equipmentID);
         updateExperimentEquipmentList();
+        updateAddStep();
     }
 
     // dynamically loads the appropriate script for a piece of equipment
@@ -401,19 +491,17 @@
         
         chemInfos.push(chemID);
         let chemName = chemicalToAdd.name;
-        let mass = 1;
-        let concentration =1;
-        chemDisplay.push({name: chemName, formula: chemicalToAdd.formula});
-        chems.push({chemName, chemID, mass, concentration});
+        chemDisplay.push({name: chemName, formula: chemicalToAdd.formula, chemID: chemID});
         updateExperimentChemicalList();
+        updateAddStep();
     }
 
     // updates contents of the "chemicals in experiment" list div
     function updateExperimentChemicalList(){
-        chemicalDiv.innerHTML = "Chemicals in experiment: <br>";
+        chemicalListDiv.innerHTML = "Chemicals in experiment: <br>";
         for(let i = 0; i < chemDisplay.length; i++){
             let chem = chemDisplay[i];
-            chemicalDiv.innerHTML += "<div id='experimentChemicalComponent'>"+chem.name+": "+chem.formula+"</div>";
+            chemicalListDiv.innerHTML += "<div id='experimentChemicalComponent'>"+chem.name+": "+chem.formula+"</div>";
         }
     }
 
@@ -446,8 +534,10 @@
                 }
             }
             // add reactant to list if not already in list
+            // if adding chemical, may need to now display step button as well
             if(!reactantInList){
                 addChemical(allChemicalsMap[reactant].listIndex);
+                updateAddStep();
             }
         }
 
@@ -462,9 +552,11 @@
                     break;
                 }
             }
-            // add reactant to list if not already in list
+            // add product to list if not already in list
+            // if adding chemical, may need to now display step button as well
             if(!productInList){
                 addChemical(allChemicalsMap[product].listIndex);
+                updateAddStep();
             }
         }
     }
@@ -480,5 +572,7 @@
     function toggleVisibility(div){
         div.style.display = div.style.display == "inline" ? "none" : "inline";
     }
+
+
 </script>
 </html>
