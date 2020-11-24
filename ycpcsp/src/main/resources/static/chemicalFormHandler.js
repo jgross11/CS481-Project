@@ -56,7 +56,6 @@ function loadChemicalsInDB(){
 
     postData('load-all-chemicals', x).then(function(data){
         allChemicalsList = data;
-        console.log(allChemicalsList);
         displayChemicalResults(allChemicalsList);
         // populate map for efficiency's sake
         // will be used later when searching for chemicals
@@ -67,7 +66,6 @@ function loadChemicalsInDB(){
             // TODO: the listIndex trick is awful, please fix
             allChemicalsMap[allChemicalsList[i]["formula"]].listIndex = i;
         }
-        console.log(allChemicalsMap);
     });
 }
 
