@@ -220,14 +220,16 @@
     let canAddStep = false;
 
     // step creation form state consts
-    let SHOW_STEP_FORM = 0;
+    let STEP_SHOW_FORM = 0;
     let STEP_PROCESS_ACTOR = 1;
     let STEP_PROCESS_CHEMICAL_CREATION = 2;
     let STEP_PROCESS_RECEIVER = 3;
     let STEP_PROCESS_FUNCTION = 4;
     let STEP_PROCESS_SUMMARY = 5;
 
+    // TODO: may be useful sometime?
     // let currentState = -1;
+    // let currentNumberOfSteps = 0;
 
     // object that represents a step as its being created
     let stepInProgress = {};
@@ -299,11 +301,15 @@
     3 - receiver information
     4 - function 
     5 - step summary / confirmation
+    
+    ########## NOTE: this function is the yang to handleFormAction's yin
+    ########## when working on one, you will almost certainly have to modify
+    ########## or reference the other.
     */
     function changeStepFormState(stateNumber){
         console.log('got state number=' + stateNumber);
         switch(stateNumber){
-            case SHOW_STEP_FORM:
+            case STEP_SHOW_FORM:
                 // TODO this could be much more sophisticated
                 // TODO for example, it could scan the lists of equipment
                 // TODO in the experiment to see if it is possible to create a step
@@ -328,23 +334,76 @@
             break;
             
             case STEP_PROCESS_ACTOR:
-                stepFormDiv.innerHTML = generateActorOptions();
+                let actorFormCode = '<br><label for="actor">Choose your actor: </label>'+
+                                '<select name="actor" id="actor" onchange="handleFormAction(STEP_PROCESS_ACTOR)">' + 
+                                '<option value="equipmentDefault">### EQUIPMENT ###</option>';
+                for(let i = 0; i < equipments.length; i++){
+                    if(equipments[i] != null){
+                        let equipment = equipments[i];
+                        actorFormCode += '<option id="EQUIPMENT" value="'+(equipment.equipmentID)+'">'+equipment.name+'</option>';
+                    }
+                }
+                if(chemInfos.length > 0){
+                    actorFormCode += '<option value="chemicalDefault">### CHEMICALS ###</option>';
+                    for(let i = 0; i < chemInfos.length; i++){
+                        let chem = chemInfos[i];
+                        console.log(chem);
+                        actorFormCode += '<option id="CHEMICAL" value="'+(chem.chemID)+'">'+ chem.name + " - " + chem.formula +'</option>';
+                    }
+                }
+                actorFormCode += '</select>';
+                stepFormDiv.innerHTML = actorFormCode;
             break;
             
             case STEP_PROCESS_CHEMICAL_CREATION:
-                
+                // TODO display appropriate unit depending on lab / chemical temperature
+                let chemicalCreationFormCode = '<br><input id="quantity" type="number" min = 0 placeholder="Enter amount">'+
+                                                '<input id="concentration" type="number" min = 0 placeholder="Enter concentration">'+
+                                                '<input type="button" value="Create chemical instance" onclick="handleFormAction(STEP_PROCESS_CHEMICAL_CREATION)">';
+                stepFormDiv.innerHTML = chemicalCreationFormCode;
             break;
             
             case STEP_PROCESS_RECEIVER:
-                stepFormDiv.innerHTML = generateReceiverOptions();
+                // TODO make this generate only valid receiver options based on the actor object
+                let receiverFormCode = '<br><label for="receiver">Choose your receiver: </label>'+
+                        '<select name="receiver" id="receiver" onchange="handleFormAction(STEP_PROCESS_RECEIVER)">' + 
+                        '<option value="equipmentDefault">### EQUIPMENT ###</option>';
+                for(let i = 0; i < equipments.length; i++){
+                    if(equipments[i] != null){
+                        let equipment = equipments[i];
+                        receiverFormCode += '<option id="EQUIPMENT" value="'+(equipment.equipmentID)+'">'+equipment.name+'</option>';
+                    }
+                }
+                if(chemInfos.length > 0){
+                    receiverFormCode += '<option value="chemicalDefault">### CHEMICALS ###</option>';
+                    for(let i = 0; i < chemInfos.length; i++){
+                        let chem = chemInfos[i];
+                        receiverFormCode += '<option id="CHEMICAL" value="'+(chem.chemID)+'">'+ chem.name + " - " + chem.formula +'</option>';
+                    }
+                }
+                receiverFormCode += '</select>';
+                stepFormDiv.innerHTML = receiverFormCode;
             break;
             
             case STEP_PROCESS_FUNCTION:
-            
+                let functionFormCode = '<br><label for="function">Choose your function: </label>'+
+                                        '<select name="function" id="function" onchange="handleFormAction(STEP_PROCESS_FUNCTION)">' + 
+                                        '<option value="functionDefault">### FUNCTION ###</option>';
+                // TODO only display valid functions for actor
+                for(let i = 0; i < equipments.length; i++){
+                    if(equipments[i] != null){
+                        let equipment = equipments[i];
+                        functionFormCode += '<option id="FUNCTION" value="'+(equipment.equipmentID)+'">'+equipment.name+'</option>';
+                    }
+                }
+                functionFormCode += '</select>';
+                stepFormDiv.innerHTML = functionFormCode;
             break;
             
             case STEP_PROCESS_SUMMARY:
-            
+                // TODO format step nicely for humans
+                let summaryCode = '<br>' + JSON.stringify(stepInProgress) + '<br> <input type="button" value="Create Step" onclick="handleFormAction(STEP_PROCESS_SUMMARY)">';
+                stepFormDiv.innerHTML = summaryCode;
             break;
         }
     }
@@ -357,6 +416,10 @@
         3 - receiver selection has been submitted
         4 - function selection has been submitted
         5 - step confirmation has been submitted
+
+    ########## NOTE: this function is the yang to changeStepForm's yin
+    ########## when working on one, you will almost certainly have to modify
+    ########## or reference the other.
     */
     function handleFormAction(stateNumber){
         switch(stateNumber){
@@ -385,86 +448,69 @@
             break;
             
             case STEP_PROCESS_CHEMICAL_CREATION:
-                
+                let quantity = document.getElementById('quantity').value;
+                let concentration = document.getElementById('concentration').value;
+                if(quantity == "" || concentration == "" || isNaN(quantity) || isNaN(concentration)){
+                    return;
+                }
+                else{
+                    console.log("valid quantity="+quantity+" and concentration="+concentration);
+                }
             break;
             
             case STEP_PROCESS_RECEIVER:
-            // selection element 
-            let receiverSelection = document.getElementById("receiver");
+                // selection element 
+                let receiverSelection = document.getElementById("receiver");
 
-            // selected option
-            let receiverChoice = receiverSelection.options[receiverSelection.selectedIndex];
+                // selected option
+                let receiverChoice = receiverSelection.options[receiverSelection.selectedIndex];
 
-            // valid choices will have an integer value
-            if(isNaN(parseInt(receiverChoice.value))){
-                return;
-            }
-            // set step actor type accordingly
-            stepInProgress.receiverIsEquipment = receiverChoice.id == "EQUIPMENT" ? true : false;
+                // valid choices will have an integer value
+                if(isNaN(parseInt(receiverChoice.value))){
+                    return;
+                }
+                // set step actor type accordingly
+                stepInProgress.receiverIsEquipment = receiverChoice.id == "EQUIPMENT" ? true : false;
 
-            // set actor id
-            stepInProgress.receiverID = receiverChoice.value;
+                // set actor id
+                stepInProgress.receiverID = receiverChoice.value;
 
-            console.log('step after receiver selection');
-            console.log(stepInProgress);
+                console.log('step after receiver selection');
+                console.log(stepInProgress);
 
-            // update form to draw appropriate next state
-            stepInProgress.receiverIsEquipment ? changeStepFormState(STEP_PROCESS_FUNCTION) : changeStepFormState(STEP_PROCESS_CHEMICAL_CREATION);
+                // update form to draw appropriate next state
+                stepInProgress.receiverIsEquipment ? changeStepFormState(STEP_PROCESS_FUNCTION) : changeStepFormState(STEP_PROCESS_CHEMICAL_CREATION);
             break;
             
             case STEP_PROCESS_FUNCTION:
-            
+                // selection element 
+                let functionSelection = document.getElementById("function");
+
+                // selected option
+                let functionChoice = functionSelection.options[functionSelection.selectedIndex];
+
+                // valid choices will have an integer value
+                if(isNaN(parseInt(functionChoice.value))){
+                    return;
+                }
+                
+                // set step function accordingly
+                stepInProgress.functionID = functionChoice.value;
+
+                console.log('step after function selection');
+                console.log(stepInProgress);
+
+                // update form, draw summary
+                changeStepFormState(STEP_PROCESS_SUMMARY);
             break;
             
             case STEP_PROCESS_SUMMARY:
-            
+                steps.push(stepInProgress);
+                stepInProgress = {};
+                updateExperimentStepList()
+                changeStepFormState(STEP_PROCESS_ACTOR);
             break;
         }
-    }
-
-    // generates valid actor drop down menu and returns the HTML string
-    function generateActorOptions(){
-        let result = '<br><label for="actor">Choose your actor: </label>'+
-                    '<select name="actor" id="actor" onchange="handleFormAction(STEP_PROCESS_ACTOR)">' + 
-                    '<option value="equipmentDefault">### EQUIPMENT ###</option>';
-        for(let i = 0; i < equipments.length; i++){
-            if(equipments[i] != null){
-                let equipment = equipments[i];
-                result += '<option id="EQUIPMENT" value="'+(equipment.equipmentID)+'">'+equipment.name+'</option>';
-            }
-        }
-        if(chemInfos.length > 0){
-            result += '<option value="chemicalDefault">### CHEMICALS ###</option>';
-            for(let i = 0; i < chemInfos.length; i++){
-                let chem = chemInfos[i];
-                result += '<option id="CHEMICAL" value="'+(chem.chemID)+'">'+ chem.name + " - " + chem.formula +'</option>';
-            }
-        }
-        result += '</select>';
-        return result;
-    }
-
-    // generates valid receiver drop down menus and returns the HTML string
-    // TODO: make this only display experiment objects that can interact with the selected actor
-    function generateReceiverOptions(){
-        let result = '<br><label for="receiver">Choose your receiver: </label>'+
-                    '<select name="receiver" id="receiver" onchange="handleFormAction(STEP_PROCESS_RECEIVER)">' + 
-                    '<option value="equipmentDefault">### EQUIPMENT ###</option>';
-        for(let i = 0; i < equipments.length; i++){
-            if(equipments[i] != null){
-                let equipment = equipments[i];
-                result += '<option id="EQUIPMENT" value="'+(equipment.equipmentID)+'">'+equipment.name+'</option>';
-            }
-        }
-        if(chemInfos.length > 0){
-            result += '<option value="chemicalDefault">### CHEMICALS ###</option>';
-            for(let i = 0; i < chemInfos.length; i++){
-                let chem = chemInfos[i];
-                result += '<option id="CHEMICAL" value="'+(chem.chemID)+'">'+ chem.name + " - " + chem.formula +'</option>';
-            }
-        }
-        result += '</select>';
-        return result;
     }
 
     // updates contents of the "equipment in experiment" list div
@@ -475,6 +521,14 @@
             if(equip != null){
                 equipmentListDiv.innerHTML += "<div id='experimentEquipmentComponent'>"+equip.name+": "+equip.quantity+"</div>";
             }
+        }
+    }
+
+    function updateExperimentStepList(){
+        stepListDiv.innerHTML = "Steps in experiment: <br>";
+        // TODO formatting
+        for(let i = 0; i < steps.length; i++){
+            stepListDiv.innerHTML += '<div id="experimentStepComponent">'+JSON.stringify(steps[i])+'</div>';
         }
     }
 
@@ -500,7 +554,7 @@
         }
         loadEquipmentScript(equipment.equipmentID);
         updateExperimentEquipmentList();
-        changeStepFormState(SHOW_STEP_FORM);
+        changeStepFormState(STEP_SHOW_FORM);
     }
 
     // dynamically loads the appropriate script for a piece of equipment
@@ -606,7 +660,7 @@
         let chemName = chemicalToAdd.name;
         chemInfos.push({name: chemName, formula: chemicalToAdd.formula, chemID: chemID});
         updateExperimentChemicalList();
-        changeStepFormState(SHOW_STEP_FORM);
+        changeStepFormState(STEP_SHOW_FORM);
     }
 
     // updates contents of the "chemicals in experiment" list div
@@ -650,7 +704,7 @@
             // if adding chemical, may need to now display step button as well
             if(!reactantInList){
                 addChemical(allChemicalsMap[reactant].listIndex);
-                changeStepFormState(SHOW_STEP_FORM);
+                changeStepFormState(STEP_SHOW_FORM);
             }
         }
 
@@ -669,7 +723,7 @@
             // if adding chemical, may need to now display step button as well
             if(!productInList){
                 addChemical(allChemicalsMap[product].listIndex);
-                changeStepFormState(SHOW_STEP_FORM);
+                changeStepFormState(STEP_SHOW_FORM);
             }
         }
     }
