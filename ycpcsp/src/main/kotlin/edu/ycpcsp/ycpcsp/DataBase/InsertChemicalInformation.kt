@@ -21,7 +21,6 @@ fun insertCompound(comp : ChemicalProperties) : Boolean{
             preparedStatement.setDouble(6, comp.meltingPoint)
             preparedStatement.setDouble(7, comp.boilingPoint)
             preparedStatement.setInt(8,0);
-
             preparedStatement.executeUpdate()
             var rs = preparedStatement.generatedKeys
 
