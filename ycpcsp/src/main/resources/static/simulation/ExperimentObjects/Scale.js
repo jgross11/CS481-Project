@@ -12,6 +12,9 @@ class Scale extends Equipment{
         this.setDisplayedWeight(0.0);
         this.setObjectToBeWeighed(objectToBeWeighed);
         this.setZeroOut(0.0);
+
+        // The listener used to update the object on this scale
+        this.weighingObjectPosListener = null;
     }
 
     /**
@@ -111,14 +114,32 @@ class ScaleController2D extends EquipmentController2D{
         // Set the actual Container and update the scale's displayed mass
         this.equipment.setObjectToBeWeighed(objectToBeWeighed);
         this.updateWeighingObjectMass();
+
+        // Set up a listener for the equipment
+        let eq = this.equipment;
+        eq.weighingObjectPosListener = new Listener(this, function(obj){
+            let held = obj.equipment.objectToBeWeighed.equipment;
+
+            // Do nothing if the object is still close enough to the scale on the y axis
+            if(Math.abs(held.position[1] + held.size[1] - obj.y()) < 0.1) return;
+
+            let oldPos = held.position;
+            obj.removeScaleObject();
+            held.setPosition(oldPos);
+        });
+        eq.objectToBeWeighed.equipment.addPositionListener(eq.weighingObjectPosListener);
     }
 
     /**
     Take the object on this Controller's Scale off of the Scale
     */
     removeScaleObject(){
-        let weigh = this.equipment.objectToBeWeighed;
+        // Remove the listener from the equipment
+        let eq = this.equipment;
+        let weigh = eq.objectToBeWeighed;
         if(weigh === null) return;
+        weigh.equipment.removePositionListener(eq.weighingObjectPosListener);
+
         let center = this.getCenter();
         weigh.setCenter(center[0] - weigh.width() - this.width(), center[1]);
         weigh.keepInBounds(EXP_CAMERA_OUTLINE_BOUNDS);
@@ -211,10 +232,6 @@ class ScaleController2D extends EquipmentController2D{
     */
     update(){
         this.updateWeighingObjectMass();
-        /*
-        TODO find a way to set the Scale to be holding nothing when the user moves the Scale's Container
-            Also find out how to do these operations without using update()
-        */
     }
 
     /**
