@@ -124,7 +124,7 @@ QUnit.todo('drawSprite:', function(assert){
 QUnit.todo('draw:', function(assert){
     assert.true(false);
 });
-drawActionsList
+
 QUnit.test('shouldRender:', function(assert){
     equip1.setPosition([0, 0]);
     equip1.setSize([10, 10]);

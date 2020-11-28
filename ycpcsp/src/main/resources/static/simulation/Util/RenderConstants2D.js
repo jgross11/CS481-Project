@@ -187,6 +187,8 @@ let KEY_EXP_PAN_CAMERA_DOWN;
 
 // Key for moving Experiment to next Instruction
 let KEY_EXP_NEXT_INSTRUCTION;
+// Key for removing selected equipment and placing it back in the equipment bar
+let KEY_EXP_REMOVE_EQUIPMENT;
 // Key for resetting Experiment to default state
 let KEY_EXP_RESET;
 // Key for displaying Chemical list
@@ -217,6 +219,7 @@ function setUpControlConstants(){
     KEY_EXP_PAN_CAMERA_DOWN = DOWN_ARROW;
 
     KEY_EXP_NEXT_INSTRUCTION = 73; // code 73 = i
+    KEY_EXP_REMOVE_EQUIPMENT = 69; // code 69 = e
     KEY_EXP_RESET = 82; // code 83 = r
     KEY_EXP_DISPLAY_CHEMS = 67; // code 67 = c
     KEY_EXP_DISPLAY_EQUIPS = 86; // code 86 = r

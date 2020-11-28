@@ -378,6 +378,20 @@ QUnit.test('displayEquipmentBoxes:', function(assert){
         "Displaying equipmentBoxes should place it in the displayedBoxList");
 });
 
+QUnit.test('removeSelectedEquipment:', function(assert){
+    controller.setSelectedActor(null);
+    assert.false(controller.removeSelectedEquipment(), "Checking selected actor isn't removed when there is none");
+
+    controller.setSelectedActor(beakerControl1);
+    beaker1.setContents(chem);
+    assert.false(beaker1.isEmpty(), "Checking beaker was not empty before being removed");
+    assert.false(controller.placedEquipment.includes(beakerControl1), "Checking beaker is placed");
+
+    assert.true(controller.removeSelectedEquipment(), "Checking selected actor is removed when there is a selection");
+    assert.true(beaker1.isEmpty(), "Checking beaker was empty and reset after being removed");
+    assert.false(controller.placedEquipment.includes(beakerControl1), "Checking beaker is no longer placed");
+});
+
 QUnit.test('isDisplayEquipment:', function(assert){
     controller.reset();
     assert.true(controller.isDisplayEquipment(), "By default, the Equipment list should show");
@@ -781,8 +795,11 @@ QUnit.test('DisplayBoxList createBox:', function(assert){
 
 QUnit.test('DisplayBoxList add:', function(assert){
     eList.add(beakerControl1);
-
     assert.deepEqual(eList.get(0), beakerControl1, "Obtained beaker should be the one added");
+
+    eList.add(beakerControl2, 4);
+    assert.deepEqual(eList.get(1), beakerControl2, "Obtained beaker should be the one added");
+    assert.equal(eList.boxes[1].index, 4, "Index should be arbitrarily set");
 });
 
 QUnit.test('DisplayBoxList remove:', function(assert){

@@ -265,6 +265,25 @@ class ExperimentController2D{
     }
 
     /**
+    Take the selected Actor and remove it from the experiment
+    returns: true if the selected actor was removed, false otherwise
+    */
+    removeSelectedEquipment(){
+        let sel = this.selectedActor;
+        if(sel !== null){
+            sel.reset();
+            this.unPlaceEquipment(sel);
+
+            // Put the equipment back in the list if it exists in the experiment
+            let index = this.experiment.equipment.indexOf(sel);
+            if(index >= 0) this.equipmentBoxes.add(sel, index);
+            this.setSelectedActor(null);
+            return true;
+        }
+        return false;
+    }
+
+    /**
     Set the DisplayBoxList to EquipmentBoxList instead of the ChemicalBoxList
     */
     displayEquipmentBoxes(){
@@ -594,6 +613,7 @@ class ExperimentController2D{
         switch(keyCode){
             case KEY_EXP_RESET_SELECTED: this.clearSelected(); break;
             case KEY_EXP_NEXT_INSTRUCTION: this.nextInstruction(); break;
+            case KEY_EXP_REMOVE_EQUIPMENT: this.removeSelectedEquipment(); break;
             case KEY_EXP_RESET: this.reset(); break;
             case KEY_EXP_DISPLAY_CHEMS: this.displayChemicalBoxes(); break;
             case KEY_EXP_DISPLAY_EQUIPS: this.displayEquipmentBoxes(); break;
@@ -781,7 +801,7 @@ class ExperimentController2D{
         g.fill(200);
         g.noStroke();
         g.textSize(18);
-        var y = 410;
+        var y = 390;
         let x = 650;
         g.text("Left click equipment to move it", x, y += 20);
         g.text("Right click a equipment to select, blue = actor, green = receiver", x, y += 20);
@@ -793,6 +813,7 @@ class ExperimentController2D{
         g.text("\tChemicals added have 0% to 5% error", x, y += 20);
         g.text("Press T/Y to decrease/increase the room's temperature", x, y += 20);
         g.text("Press I to run the next instruction", x, y += 20);
+        g.text("Press E to remove and reset the selected actor", x, y += 20);
         g.text("Press R to reset the simulation", x, y += 20);
         g.text("Press C to view Chemical tab, then click a chemical to select", x, y += 20);
         g.text("Press V to view Equipment tab, then click and drag to add equipment", x, y += 20);
@@ -900,9 +921,10 @@ class DisplayBoxList{
     /**
     Add a new DisplayBox to this List with the given Object
     obj: The Object which will be added in this List
+    index: The new index for the box, do not include to add this to the end of the list
     */
-    add(obj){
-        this.boxes.push(this.createBox(obj, this.boxes.length));
+    add(obj, index = this.boxes.length){
+        this.boxes.push(this.createBox(obj, index));
     }
 
     /**
