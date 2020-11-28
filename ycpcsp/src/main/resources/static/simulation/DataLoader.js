@@ -3,23 +3,45 @@ let SESSION_EXPERIMENT_NAME = "experimentData";
 // Constants for the fields of JSON for Experiment parsing to JSON
 let EXP_JSON_TITLE = "title";
 let EXP_JSON_CREATOR = "creatorName";
-let EXP_JSON_CHEM_PROPERTIES = "chemProperties";
-let EXP_JSON_EQUATIONS = "equations";
-let EXP_JSON_EQUIPMENT = "equipment";
-let EXP_JSON_EQUIP_OBJ_ID = "objectID";
-let EXP_JSON_EQUIP_AMOUNT = "amount";
-let EXP_JSON_CHEMICALS = "chemicals";
-let EXP_JSON_CHEM_ID = "id";
-let EXP_JSON_CHEM_MASS = "mass";
-let EXP_JSON_CHEM_CONCENTRATION = "concentration";
-let EXP_JSON_INSTRUCTIONS = "steps";
-let EXP_JSON_INS_STEP_NUM = "stepNumber";
-let EXP_JSON_INS_ACTOR_INDEX = "actorIndex";
-let EXP_JSON_INS_ACTOR_IS_EQUIP = "actorID";
-let EXP_JSON_INS_RECEIVER_INDEX = "receiverIndex";
-let EXP_JSON_INS_RECEIVER_IS_EQUIP = "receiverID";
-let EXP_JSON_INS_FUNC_ID = "functionID";
 
+let EXP_JSON_EQUIPMENT = "equipment";
+    let EXP_JSON_EQUIP_OBJ_ID = "objectID";
+    let EXP_JSON_EQUIP_AMOUNT = "amount";
+
+let EXP_JSON_CHEMICALS = "chemicals";
+    let EXP_JSON_CHEM_ID = "id";
+    let EXP_JSON_CHEM_MASS = "mass";
+    let EXP_JSON_CHEM_CONCENTRATION = "concentration";
+
+let EXP_JSON_INSTRUCTIONS = "steps";
+    let EXP_JSON_INS_STEP_NUM = "stepNumber";
+    let EXP_JSON_INS_ACTOR_INDEX = "actorIndex";
+    let EXP_JSON_INS_ACTOR_IS_EQUIP = "isActorEquipment";
+    let EXP_JSON_INS_RECEIVER_INDEX = "receiverIndex";
+    let EXP_JSON_INS_RECEIVER_IS_EQUIP = "isReceiverEquipment";
+    let EXP_JSON_INS_FUNC_ID = "functionID";
+
+let EXP_JSON_CHEM_PROPERTIES = "chemicalProperties";
+    let CHEMICAL_PROPERTY_SYMBOL = "formula";
+    let CHEMICAL_PROPERTY_NAME = "name";
+    let CHEMICAL_PROPERTY_CREATOR = "creatorID";
+    let CHEMICAL_PROPERTY_COLOR_SOLID = "colorSolid";
+    let CHEMICAL_PROPERTY_COLOR_LIQUID = "colorLiquid";
+    let CHEMICAL_PROPERTY_COLOR_GAS = "colorGas";
+    let CHEMICAL_PROPERTY_ID = "chemicalInformationID";
+    let CHEMICAL_PROPERTY_MOLAR_MASS = "molarMass";
+    let CHEMICAL_PROPERTY_MELTING_POINT = "meltingPoint";
+    let CHEMICAL_PROPERTY_BOILING_POINT = "boilingPoint";
+    let CHEMICAL_PROPERTY_DENSITY = "density";
+    let CHEMICAL_PROPERTY_WATER_SOLUBLE = "isWaterSoluble";
+
+let EXP_JSON_EQUATIONS = "equations";
+    let EQUATION_PROPERTY_REACTANTS = "reactants";
+    let EQUATION_PROPERTY_PRODUCTS = "products";
+        let EQUATION_COMPONENT_PROPERTY_COEFFICIENT = "coefficient";
+        let EQUATION_COMPONENT_PROPERTY_ID = "chemicalID";
+    let EQUATION_PROPERTY_ID = "equationID";
+    let EQUATION_PROPERTY_CREATOR = "creatorID";
 
 function submitTestExperimentToBackend(){
     let testJSON = getTestJSON();
