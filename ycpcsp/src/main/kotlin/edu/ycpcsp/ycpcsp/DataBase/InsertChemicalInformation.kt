@@ -17,7 +17,7 @@ fun insertCompound(comp : ChemicalProperties) : Boolean{
             preparedStatement.setString(2, comp.name)
             preparedStatement.setDouble(3, comp.molarMass)
             preparedStatement.setDouble(4, comp.density)
-            preparedStatement.setBoolean(5, comp.isWaterSoluable)
+            preparedStatement.setBoolean(5, comp.isWaterSoluble)
             preparedStatement.setDouble(6, comp.meltingPoint)
             preparedStatement.setDouble(7, comp.boilingPoint)
             preparedStatement.setInt(8, -1)

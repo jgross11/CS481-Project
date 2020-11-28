@@ -1,9 +1,6 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
-import java.sql.DriverManager
 import java.sql.SQLException
-import java.util.*
-import edu.ycpcsp.ycpcsp.Models.*
 import edu.ycpcsp.ycpcsp.PostDataClasses.UserAndExperiment
 import java.sql.Statement
 
@@ -37,9 +34,9 @@ fun CreateExperiment(userAndExperiment: UserAndExperiment): Boolean {
                     preparedSt.setInt(1, newExperimentKey)
                     preparedSt.setInt(2, step.stepNumber)
                     preparedSt.setInt(3, step.actorIndex)
-                    preparedSt.setBoolean(4, step.actorID)
+                    preparedSt.setBoolean(4, step.isActorEquipment)
                     preparedSt.setInt(5, step.receiverIndex)
-                    preparedSt.setBoolean(6, step.receiverID)
+                    preparedSt.setBoolean(6, step.isReceiverEquipment)
                     preparedSt.setInt(7, step.functionID)
 
                     preparedSt.executeUpdate()

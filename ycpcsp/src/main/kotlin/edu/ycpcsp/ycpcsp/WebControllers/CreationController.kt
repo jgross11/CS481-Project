@@ -70,7 +70,7 @@ class CreationController {
         newChemical.meltingPoint = chemical.ChemicalPhaseChangeSolid;
         newChemical.name =  chemical.ChemicalName;
         newChemical.molarMass = chemical.ChemicalMass;
-        newChemical.isWaterSoluable = chemical.ChemicalWaterSoluable;
+        newChemical.isWaterSoluble = chemical.ChemicalWaterSoluable;
         newChemical.boilingPoint = chemical.ChemicalPhaseChangeLiquid;
         newChemical.formula = chemical.ChemicalFormula;
         newChemical.density =  chemical.ChemicalDensity;

@@ -1,11 +1,7 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
-import java.sql.DriverManager
 import java.sql.SQLException
-import java.util.*
 import edu.ycpcsp.ycpcsp.Models.*
-import java.sql.Statement
-import kotlin.math.exp
 
 fun ModifyExperiment(experiment: Experiment): Boolean {
 
@@ -54,9 +50,9 @@ fun ModifyExperiment(experiment: Experiment): Boolean {
                         "WHERE experiment_ID = ?;")
                 preparedSt.setInt(1, steps.stepNumber)
                 preparedSt.setInt(2, steps.actorIndex)
-                preparedSt.setBoolean(3, steps.actorID)
+                preparedSt.setBoolean(3, steps.isActorEquipment)
                 preparedSt.setInt(4, steps.receiverIndex)
-                preparedSt.setBoolean(5, steps.receiverID)
+                preparedSt.setBoolean(5, steps.isReceiverEquipment)
                 preparedSt.setInt(6, steps.functionID)
                 preparedSt.setInt(7, experiment.experimentID)
                 preparedSt.executeUpdate()

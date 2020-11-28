@@ -14,7 +14,7 @@ package edu.ycpcsp.ycpcsp.Models
  * creatorID - the user ID of the person who submitted this information to DB
  */
 
-class ChemicalProperties (var chemicalInformationID : Int, var formula : String, var name : String, var molarMass : Double, var density : Double, var isWaterSoluable : Boolean, var meltingPoint : Double, var boilingPoint : Double, var creatorID : Int){
+class ChemicalProperties (var chemicalInformationID : Int, var formula : String, var name : String, var molarMass : Double, var density : Double, var isWaterSoluble : Boolean, var meltingPoint : Double, var boilingPoint : Double, var creatorID : Int){
 
     var colors = ChemicalColorStates()
     // null constructor
@@ -28,7 +28,7 @@ class ChemicalProperties (var chemicalInformationID : Int, var formula : String,
     }
 
     override fun toString() : String{
-        return "$name: $formula | created by userid = $creatorID | id=$chemicalInformationID, mass = $molarMass, density=$density, watersoluble: $isWaterSoluable, gas @ ${boilingPoint}C, solid @ ${meltingPoint}C, colors: ${colors.toString()}\n"
+        return "$name: $formula | created by userid = $creatorID | id=$chemicalInformationID, mass = $molarMass, density=$density, watersoluble: $isWaterSoluble, gas @ ${boilingPoint}C, solid @ ${meltingPoint}C, colors: ${colors.toString()}\n"
     }
 
 }
