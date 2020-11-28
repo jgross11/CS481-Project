@@ -7,11 +7,32 @@ let EXPERIMENT_FRAME_RATE = 60;
 let CANVAS_WIDTH = 1280;
 // The height of the canvas being displayed
 let CANVAS_HEIGHT = 800;
+// The position of the P5 canvas on the x axis
+let CANVAS_X_OFFSET = 50;
+// The position of the P5 canvas on the y axis
+let CANVAS_Y_OFFSET = 50;
+// The P5 position mode for placing the canvas in the web page
+let CANVAS_POSITION_MODE = "relative";
 // The background color of the canvas
 let CANVAS_BACKGROUND_COLOR = 120;
 // The background color of the experiment
 let EXP_BACKGROUND_COLOR = 60;
 
+// Loading screen constants
+// The color of the background of the loading screen
+let LOADING_SCREEN_BACKGROUND_COLOR = 60;
+// The color of the stroke for the text on the loading screen
+let LOADING_SCREEN_TEXT_STROKE_COLOR = 30;
+// The stroke weight for the text of the loading screen
+let LOADING_SCREEN_TEXT_STROKE_WEIGHT = 5;
+// The size of the text on the loading screen
+let LOADING_SCREEN_TEXT_SIZE = 100;
+// The color of the text on the loading screen
+let LOADING_SCREEN_TEXT_COLOR = 200;
+// The text to display for the loading screen
+let LOADING_SCREEN_TEXT = "Loading your experiment";
+
+// Experiment constants
 // The size of the border displayed at the edge of the Experiment
 let EXP_BORDER_SIZE = 25;
 // The color of the border displayed at the edge of the Experiment
