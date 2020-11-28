@@ -23,12 +23,14 @@
 <body>
     <a href="/" class="button">Home</a><br>
     <div id="creationPageForm">
-        <label for="experimentNameBox">Experiment name: </label><br>
-        <input type="text" placeholder="Enter the experiment name" id="experimentNameBox"><br>
-        
-        <label for="experimentCreatorBox">Experiment creator: </label><br>
-        <input type="text" placeholder="Experiment Creator" id="experimentCreatorBox" disabled><br><br>
+        <div id="experimentInformationBox">
+            <label for="experimentNameBox">Experiment name: </label><br>
+            <input type="text" placeholder="Enter the experiment name" id="experimentNameBox"><br>
+            
+            <label for="experimentCreatorBox">Experiment creator: </label><br>
+            <input type="text" placeholder="Experiment Creator" id="experimentCreatorBox" disabled><br><br>
 
+        </div>
         <div id="experimentComponentListContainer">
             <div id="experimentEquipmentContainer"></div><br>
             <div id="experimentChemicalContainer"></div><br>
@@ -174,6 +176,9 @@
     <!-- error setting, data verification functionality-->
     <script src="./helperFunctions.js"></script>
 
+    <!-- JSON constants for submitting experiment -->
+    <script src="./simulation/DataLoader.js"></script>
+
     <!-- contains all logic for searching, adding, submitting equations-->
     <script src="./equationFormHandler.js"></script>
 
@@ -194,7 +199,8 @@
 
 <script reference="form-tying-together-script.js">
 
-    // contains all usable equipment information
+    // user who's creating experiment
+    let user = null;
 
     // experiment lists
     // TODO dicts?
@@ -219,6 +225,9 @@
     // set to true when a user can add a step to an experiment
     // (after a certain amount of components have been added)
     let canAddStep = false;
+
+    // set to true when a user can submit their experiment (at least one step exists), false otherwise
+    let canSubmitExperiment = false;
 
     // step creation form state consts
     let STEP_SHOW_FORM = 0;
@@ -248,7 +257,7 @@
     function initCreation(){
         
         // only allow components to be created if user is logged in and has verified their account
-        let user = JSON.parse(sessionStorage.getItem("user"));
+        user = JSON.parse(sessionStorage.getItem("user"));
         let listDivList = document.getElementsByClassName("list");
         
         if(user != null && !user.isQuarantined){
@@ -404,7 +413,15 @@
             
             case STEP_PROCESS_SUMMARY:
                 // TODO format step nicely for humans
-                let summaryCode = '<br>' + JSON.stringify(stepInProgress) + '<br> <input type="button" value="Create Step" onclick="handleFormAction(STEP_PROCESS_SUMMARY)">';
+                console.log(stepInProgress);
+                let summaryCode = '<br>' + 
+                (stepInProgress.actorIsEquipment ? equipments[stepInProgress.actorID-1].name : chemInfos[stepInProgress.chemInstanceToAdd.id].name + ", quantity=" + stepInProgress.chemInstanceToAdd.quantity + ", concentration=" + stepInProgress.chemInstanceToAdd.concentration) +
+                " acts on " + 
+                (stepInProgress.receiverIsEquipment ? equipments[stepInProgress.receiverID-1].name : chemInfos[stepInProgress.chemInstanceToAdd.id].name + ", quantity=" + stepInProgress.chemInstanceToAdd.quantity + ", concentration=" + stepInProgress.chemInstanceToAdd.concentration) +
+                " with function " +
+                // TODO reformat with actual function text
+                stepInProgress.functionID + 
+                '<br> <input type="button" value="Create Step" onclick="handleFormAction(STEP_PROCESS_SUMMARY)">';
                 stepFormDiv.innerHTML = summaryCode;
             break;
         }
@@ -544,14 +561,19 @@
             break;
             
             case STEP_PROCESS_SUMMARY:
-                if(stepInProgress.chemInstanceToAdd !== null && stepInProgress.chemInstanceToAdd !== undefined){
-                    console.log(stepInProgress.chemInstanceToAdd);
+                if(stepInProgress.chemInstanceToAdd != null && stepInProgress.chemInstanceToAdd != undefined){
                     chems.push(stepInProgress.chemInstanceToAdd);
                     delete stepInProgress.chemInstanceToAdd;
                 }
                 steps.push(stepInProgress);
                 stepInProgress = {};
-                updateExperimentStepList()
+                updateExperimentStepList();
+                // draw experiment submit button if not already drawn
+                if(!canSubmitExperiment){
+                    document.getElementById("experimentInformationBox").insertAdjacentHTML(
+                        'beforeend', '<input type="button" value="Submit Experiment" onclick="submitExperiment()">');
+                    canSubmitExperiment = true;
+                }
                 changeStepFormState(STEP_PROCESS_ACTOR);
             break;
         }
@@ -788,6 +810,76 @@
     // menu toggle animation
     function toggleVisibility(div){
         div.style.display = div.style.display == "inline" ? "none" : "inline";
+    }
+
+    // compiles all relevant lists into an experiment object to be submitted to back end for submission
+    function submitExperiment(){
+        let title = document.getElementById("experimentNameBox").value;
+        if(title == "" || title == null){
+            return;
+        }
+        let experiment = {};
+        let grouping = {};
+        experiment.steps = steps;
+        experiment.chems = chems;
+        experiment.equations = equations;
+        experiment[EXP_JSON_TITLE] = title;
+        experiment[EXP_JSON_CREATOR] = user.fullName;
+        experiment[EXP_JSON_CHEM_PROPERTIES] = chemInfos;
+        experiment[EXP_JSON_EQUATIONS] = equations;
+        experiment[EXP_JSON_EQUIPMENT] = equipments;
+        experiment[EXP_JSON_CHEMICALS] = chems;
+        experiment[EXP_JSON_INSTRUCTIONS] = steps;
+        grouping = {experiment, user};
+        console.log(grouping);
+        postData('save-new-creation', grouping).then(function(data){
+            console.log(data);
+        });
+        
+        /*
+            let chems = [];
+    let equipments = [];
+    let chemInfos = {};
+    let equations = [];
+    let steps = [];
+
+        let EXP_JSON_TITLE = "title";
+        let EXP_JSON_CREATOR = "creatorName";
+        let EXP_JSON_CHEM_PROPERTIES = "chemProperties";
+        let EXP_JSON_EQUATIONS = "equations";
+        let EXP_JSON_EQUIPMENT = "equipment";
+        let EXP_JSON_EQUIP_OBJ_ID = "objectID";
+        let EXP_JSON_EQUIP_AMOUNT = "amount";
+        let EXP_JSON_CHEMICALS = "chemicals";
+        let EXP_JSON_CHEM_ID = "id";
+        let EXP_JSON_CHEM_MASS = "mass";
+        let EXP_JSON_CHEM_CONCENTRATION = "concentration";
+        let EXP_JSON_INSTRUCTIONS = "steps";
+        let EXP_JSON_INS_STEP_NUM = "stepNumber";
+        let EXP_JSON_INS_ACTOR_INDEX = "actorIndex";
+        let EXP_JSON_INS_ACTOR_IS_EQUIP = "actorID";
+        let EXP_JSON_INS_RECEIVER_INDEX = "receiverIndex";
+        let EXP_JSON_INS_RECEIVER_IS_EQUIP = "receiverID";
+        let EXP_JSON_INS_FUNC_ID = "functionID";
+
+        function creatExp(){
+            let user = JSON.parse(sessionStorage.getItem("user"));
+
+            let exp = {};
+            exp[EXP_JSON_TITLE] = prompt("Enter a Title.", "");
+            exp[EXP_JSON_CREATOR] = user.firstName;
+
+            exp[EXP_JSON_EQUIPMENT] = sortArrayByKey(sendequip, EXP_JSON_EQUIP_OBJ_ID, false);
+            exp[EXP_JSON_CHEMICALS] = sortArrayByKey(sendchem, [EXP_JSON_CHEM_ID, EXP_JSON_CHEM_MASS, EXP_JSON_CHEM_CONCENTRATION], true);
+            exp[EXP_JSON_INSTRUCTIONS] = sortArrayByKey(sendsteps, EXP_JSON_INS_STEP_NUM, false);
+
+            return exp;
+        }
+
+    
+    
+    
+    */
     }
 
 
