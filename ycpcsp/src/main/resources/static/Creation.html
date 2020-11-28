@@ -197,9 +197,10 @@
     // contains all usable equipment information
 
     // experiment lists
+    // TODO dicts?
     let chems = [];
     let equipments = [];
-    let chemInfos = [];
+    let chemInfos = {};
     let equations = [];
     let steps = [];
 
@@ -318,7 +319,7 @@
                 // If there are two experiment components (one equipment and one chemical / two (different types of) equipment),
                 // then draw the 'add step' button 
                 // TODO need to sum non-null equipments, rather than just looking at lengths
-                if((chemInfos.length > 0 && equipments.length > 0) || equipments.length > 1){
+                if((Object.keys(chemInfos).length > 0 && equipments.length > 0) || equipments.length > 1){
                     if(!canAddStep){
                         stepFormContainerDiv.insertAdjacentHTML('afterbegin', '<input type="button" value="Add Step" onclick="changeStepFormState(STEP_PROCESS_ACTOR)">');
                         canAddStep = true;
@@ -334,6 +335,8 @@
             break;
             
             case STEP_PROCESS_ACTOR:
+                // reset any potential step progress
+                stepInProgress = {};
                 let actorFormCode = '<br><label for="actor">Choose your actor: </label>'+
                                 '<select name="actor" id="actor" onchange="handleFormAction(STEP_PROCESS_ACTOR)">' + 
                                 '<option value="equipmentDefault">### EQUIPMENT ###</option>';
@@ -343,12 +346,11 @@
                         actorFormCode += '<option id="EQUIPMENT" value="'+(equipment.equipmentID)+'">'+equipment.name+'</option>';
                     }
                 }
-                if(chemInfos.length > 0){
+                if(Object.keys(chemInfos).length > 0){
                     actorFormCode += '<option value="chemicalDefault">### CHEMICALS ###</option>';
-                    for(let i = 0; i < chemInfos.length; i++){
-                        let chem = chemInfos[i];
-                        console.log(chem);
-                        actorFormCode += '<option id="CHEMICAL" value="'+(chem.chemID)+'">'+ chem.name + " - " + chem.formula +'</option>';
+                    for(let key in chemInfos){
+                        let chem = chemInfos[key];
+                        actorFormCode += '<option id="CHEMICAL" value="'+(key)+'">'+ chem.name + " - " + chem.formula +'</option>';
                     }
                 }
                 actorFormCode += '</select>';
@@ -374,11 +376,11 @@
                         receiverFormCode += '<option id="EQUIPMENT" value="'+(equipment.equipmentID)+'">'+equipment.name+'</option>';
                     }
                 }
-                if(chemInfos.length > 0){
+                if(Object.keys(chemInfos).length > 0){
                     receiverFormCode += '<option value="chemicalDefault">### CHEMICALS ###</option>';
-                    for(let i = 0; i < chemInfos.length; i++){
-                        let chem = chemInfos[i];
-                        receiverFormCode += '<option id="CHEMICAL" value="'+(chem.chemID)+'">'+ chem.name + " - " + chem.formula +'</option>';
+                    for(let key in chemInfos){
+                        let chem = chemInfos[key];
+                        receiverFormCode += '<option id="CHEMICAL" value="'+(key)+'">'+ chem.name + " - " + chem.formula +'</option>';
                     }
                 }
                 receiverFormCode += '</select>';
@@ -429,7 +431,7 @@
 
                 // selected option
                 let actorChoice = actorSelection.options[actorSelection.selectedIndex];
-                
+
                 // valid choices will have an integer value
                 if(isNaN(parseInt(actorChoice.value))){
                     return;
@@ -454,7 +456,27 @@
                     return;
                 }
                 else{
-                    console.log("valid quantity="+quantity+" and concentration="+concentration);
+                    // chem was chosen as actor, which from the sim standpoint,
+                    // is incorrect, and needs to be changed here
+                    if(stepInProgress.receiverID == null){
+                        console.log(stepInProgress);
+                        stepInProgress.chemInstanceToAdd = {id: stepInProgress.actorID, quantity: quantity, concentration: concentration};
+                        stepInProgress.receiverID = chems.length;
+                        stepInProgress.receiverIsEquipment = false;
+                        delete stepInProgress.actorID;
+                        delete stepInProgress.actorIsEquipment;
+                        console.log(stepInProgress);
+                        console.log(chems);
+                        changeStepFormState(STEP_PROCESS_RECEIVER);
+                    
+                    // otherwise, chem was chosen as receiver, which is fine
+                    } else{
+                        stepInProgress.chemInstanceToAdd = {id: stepInProgress.receiverID, quantity: quantity, concentration: concentration};
+                        stepInProgress.receiverID = chems.length;
+                        console.log(stepInProgress);
+                        console.log(chems);
+                        changeStepFormState(STEP_PROCESS_FUNCTION);
+                    }
                 }
             break;
             
@@ -469,17 +491,34 @@
                 if(isNaN(parseInt(receiverChoice.value))){
                     return;
                 }
-                // set step actor type accordingly
-                stepInProgress.receiverIsEquipment = receiverChoice.id == "EQUIPMENT" ? true : false;
+                
+                // must check for chemical case, as sim logic dictates adding to container
+                // has container as actor, chem as receiver
+                // this will be true when chemical was selected as actor, when in the sim,
+                // it is actually the receiver...
 
-                // set actor id
-                stepInProgress.receiverID = receiverChoice.value;
+                // TODO check for invalid step compositions
+                if(stepInProgress.actorID == null){
+                    // set step receiver type accordingly
+                    stepInProgress.actorIsEquipment = receiverChoice.id == "EQUIPMENT" ? true : false;
 
+                    // set actor id
+                    stepInProgress.actorID = receiverChoice.value;
+
+                    // update form to draw appropriate next state
+                    stepInProgress.actorIsEquipment ? changeStepFormState(STEP_PROCESS_FUNCTION) : changeStepFormState(STEP_PROCESS_CHEMICAL_CREATION);
+                } else{
+                    // set step receiver type accordingly
+                    stepInProgress.receiverIsEquipment = receiverChoice.id == "EQUIPMENT" ? true : false;
+
+                    // set receiver id
+                    stepInProgress.receiverID = receiverChoice.value;
+
+                    // update form to draw appropriate next state
+                    stepInProgress.receiverIsEquipment ? changeStepFormState(STEP_PROCESS_FUNCTION) : changeStepFormState(STEP_PROCESS_CHEMICAL_CREATION);
+                }
                 console.log('step after receiver selection');
                 console.log(stepInProgress);
-
-                // update form to draw appropriate next state
-                stepInProgress.receiverIsEquipment ? changeStepFormState(STEP_PROCESS_FUNCTION) : changeStepFormState(STEP_PROCESS_CHEMICAL_CREATION);
             break;
             
             case STEP_PROCESS_FUNCTION:
@@ -505,6 +544,11 @@
             break;
             
             case STEP_PROCESS_SUMMARY:
+                if(stepInProgress.chemInstanceToAdd !== null && stepInProgress.chemInstanceToAdd !== undefined){
+                    console.log(stepInProgress.chemInstanceToAdd);
+                    chems.push(stepInProgress.chemInstanceToAdd);
+                    delete stepInProgress.chemInstanceToAdd;
+                }
                 steps.push(stepInProgress);
                 stepInProgress = {};
                 updateExperimentStepList()
@@ -528,7 +572,15 @@
         stepListDiv.innerHTML = "Steps in experiment: <br>";
         // TODO formatting
         for(let i = 0; i < steps.length; i++){
-            stepListDiv.innerHTML += '<div id="experimentStepComponent">'+JSON.stringify(steps[i])+'</div>';
+            let step = steps[i];
+            stepListDiv.innerHTML += '<div id="experimentStepComponent"> Step ' + (i+1) + ": "+
+            (step.actorIsEquipment ? equipments[step.actorID-1].name : chemInfos[chems[step.actorID].id].name + ", quantity=" + chems[step.actorID].quantity + ", concentration=" + chems[step.actorID].concentration) +
+            " acts on " + 
+            (step.receiverIsEquipment ? equipments[step.receiverID-1].name : chemInfos[chems[step.receiverID].id].name + ", quantity=" + chems[step.receiverID].quantity + ", concentration=" + chems[step.receiverID].concentration) +
+            " with function " +
+            // TODO reformat with actual function text
+            step.functionID + 
+            '</div>';
         }
     }
 
@@ -650,15 +702,13 @@
         let chemID = chemicalToAdd.chemicalInformationID;
 
         // ensure chem isn't already in experiment
-        for(let i = 0; i < chemInfos.length; i++){
-            if(chemInfos[i].chemID === chemID){
+        for(let key in chemInfos){
+            if(key == chemID){
                 console.log("chem already in list");
                 return;
             }
         }
-        
-        let chemName = chemicalToAdd.name;
-        chemInfos.push({name: chemName, formula: chemicalToAdd.formula, chemID: chemID});
+        chemInfos[chemID] = {name: chemicalToAdd.name, formula: chemicalToAdd.formula};
         updateExperimentChemicalList();
         changeStepFormState(STEP_SHOW_FORM);
     }
@@ -666,8 +716,8 @@
     // updates contents of the "chemicals in experiment" list div
     function updateExperimentChemicalList(){
         chemicalListDiv.innerHTML = "Chemicals in experiment: <br>";
-        for(let i = 0; i < chemInfos.length; i++){
-            let chem = chemInfos[i];
+        for(let key in chemInfos){
+            let chem = chemInfos[key];
             chemicalListDiv.innerHTML += "<div id='experimentChemicalComponent'>"+chem.name+": "+chem.formula+"</div>";
         }
     }
@@ -693,8 +743,8 @@
         for(let i = 0; i < equationToAdd.reactantFormulas.length; i++){
             let reactant = equationToAdd.reactantFormulas[i];
             let reactantInList = false;
-            for(let j = 0; j < chemInfos.length; j++){
-                let infoInList = chemInfos[j];
+            for(let key in chemInfos){
+                let infoInList = chemInfos[key];
                 if(infoInList.formula === reactant){
                     reactantInList = true;
                     break;
@@ -712,8 +762,8 @@
         for(let i = 0; i < equationToAdd.productFormulas.length; i++){
             let product = equationToAdd.productFormulas[i];
             let productInList = false;
-            for(let j = 0; j < chemInfos.length; j++){
-                let infoInList = chemInfos[j];
+            for(let key in chemInfos){
+                let infoInList = chemInfos[key];
                 if(infoInList.formula === product){
                     productInList = true;
                     break;
