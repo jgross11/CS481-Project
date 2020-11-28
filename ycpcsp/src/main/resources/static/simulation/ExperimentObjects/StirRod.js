@@ -67,6 +67,7 @@ class StirRodController2D extends EquipmentController2D{
     Reset this Container's StirRod. Currently StirRods do nothing on reset
     */
     reset(){
+        super.reset();
     }
 
     /**

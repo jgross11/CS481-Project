@@ -92,7 +92,7 @@ QUnit.test('reset:', function(assert){
     refractometer.setLens(lensControl);
     assert.equal(refractometer.lensControl, lensControl, "Checking lens was set");
     controller.reset();
-    assert.equal(refractometer.lensControl, lensControl, "Checking lens is now null");
+    assert.equal(refractometer.lensControl, null, "Checking lens is now null");
 });
 
 QUnit.test('getFuncDescriptions:', function(assert){
@@ -108,6 +108,7 @@ QUnit.test('setLens:', function(assert){
     controller.setLens(lensControl);
     assert.deepEqual(refractometer.lensControl, lensControl, "Should set lens with valid type");
     assert.notDeepEqual(lens.position, oldPos, "Checking position of lens was updated");
+    assert.equal(lens.positionListeners.length, 1, "Checking a listener was added to the lens");
 });
 
 QUnit.test('removeLens:', function(assert){
@@ -117,8 +118,10 @@ QUnit.test('removeLens:', function(assert){
 
     oldPos = lens.position;
     controller.setLens(lensControl);
+    assert.equal(lens.positionListeners.length, 1, "Checking a listener was added to the lens");
     controller.removeLens();
     assert.notDeepEqual(lens.position, oldPos, "Checking lens position is changed when it is removed from the refractometer");
+    assert.equal(lens.positionListeners.length, 0, "Checking a listener was removed from the lens");
 });
 
 QUnit.todo('draw:', function(assert){

@@ -228,12 +228,12 @@ class EquipmentController2D extends ExperimentObjectController2D{
     Reset this Controller's Equipment to a default state
     */
     reset(){
-        throw new Error("All EquipmentController2D objects must implement reset");
+        this.equipment.positionListeners = [];
     }
 
     /**
     Update the state of this Controller's Equipment by one frame in the simulation.
-    Override this method to have events happen in sub equipment.
+    Override this method to have events happen in sub Equipment.
     */
     update(){}
 

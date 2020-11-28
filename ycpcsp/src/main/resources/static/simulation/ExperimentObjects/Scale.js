@@ -181,6 +181,7 @@ class ScaleController2D extends EquipmentController2D{
     Reset this Controller's Scale by resetting the zero value and removing equipment
     */
     reset(){
+        super.reset();
         this.removeScaleObject();
         this.clearZeroOut();
     }
