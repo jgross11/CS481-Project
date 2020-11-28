@@ -404,6 +404,7 @@ class ExperimentController2D{
 
         if(this.experiment === null) return;
 
+
         let eqs = this.experiment.equipment;
         for(var i = 0; i < eqs.length; i++){
             eqs[i].reset();

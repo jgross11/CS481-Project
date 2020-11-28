@@ -104,7 +104,12 @@ QUnit.test('inBounds:', function(assert){
 });
 
 QUnit.test('reset:', function(assert){
-    assert.throws(control5.reset, "A generic EquipmentController2D object should throw an error on unimplemented reset");
+    let listen = new Listener(null, null);
+    equip5.addPositionListener(listen);
+    assert.deepEqual(equip5.positionListeners, [listen], "Checking the listener was added");
+
+    control5.reset();
+    assert.deepEqual(equip5.positionListeners, [], "Checking the listener was removed");
 });
 
 QUnit.test('update:', function(assert){

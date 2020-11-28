@@ -25,6 +25,9 @@ var beakerControl;
 var water;
 
 QUnit.module("EyeDropperController2D", {
+    before: function(){
+        initTestChemProperties();
+    },
     beforeEach: function(){
         dropper = new EyeDropper();
         controller = new EyeDropperController2D(dropper);
@@ -83,6 +86,31 @@ QUnit.test('canContain:', function(assert){
     assert.false(controller.canContain(newC.chemical), "Checking eye droppers cannot contain a new kind of chemical with one already in place");
 });
 
-QUnit.todo('canContain:', function(assert){
-    assert.true(false);
+QUnit.test('canContain:', function(assert){
+    let chemControl = idToChemical(COMPOUND_WATER_ID, 0.01, 1);
+    let chem = chemControl.chemical;
+    chem.setTemperature(50);
+    chemControl.calculateMatterState();
+
+    let chemNewControl = idToChemical(ELEMENT_HELIUM_ATOMIC_NUM, 0.01, 1);
+    let chemNew = chemNewControl.chemical;
+    chemNew.setTemperature(-270);
+    chemNewControl.calculateMatterState();
+
+    assert.true(controller.canContain(chem), "Empty eye dropper should be able to contain a liquid");
+
+    controller.addTo(chemControl);
+    assert.false(dropper.isEmpty(), "Should have successfully added the chemical");
+    assert.true(controller.canContain(chem), "Eye dropper should be able to add chemical of the same kind");
+    assert.false(controller.canContain(chemNew), "Eye dropper should not be able to add chemical of the a different kind");
+
+    controller.emptyOut();
+    chem.setTemperature(-50);
+    chemControl.calculateMatterState();
+    assert.false(controller.canContain(chem), "Eye dropper should not be able to contain a solid");
+
+    controller.emptyOut();
+    chem.setTemperature(150);
+    chemControl.calculateMatterState();
+    assert.false(controller.canContain(chem), "Eye dropper should not be able to contain a gas");
 });

@@ -15,14 +15,6 @@ class ChemicalSolution extends Chemical{
     }
 
     /**
-    Get the ID representing this Solution type
-    returns: The id, solutions do not have integer ids, so the symbol is returned
-    */
-    getID(){
-        return this.getSymbol();
-    }
-
-    /**
     Set the current Chemical used as the solute of this Solution
     solute: The new Chemical for the solute
     */
@@ -135,7 +127,7 @@ class ChemicalSolution extends Chemical{
         let solvs = this.solvents;
         for(var i = 0; i < solvs.length; i++){
             s += solvs[i].getSymbol();
-            if(i < solvs.length - 1) s += ",";
+            if(i < solvs.length - 1) s += ", ";
         }
         return s;
     }
@@ -172,7 +164,7 @@ class ChemicalSolution extends Chemical{
     */
     getColorWeightCombine(stateType){
         // Ensuring infinite recursion doesn't happen if non chemicals are parts of the solution
-        if(!(this.solute instanceof Chemical)) return null;
+        if(this.solute instanceof ChemicalSolution) return null;
 
         // Begin the lists with the solute
         var cs = [this.solute.getTexture(stateType)];
@@ -181,7 +173,7 @@ class ChemicalSolution extends Chemical{
         // Create a list of all the textures and volumes for relative weights
         for(var i = 0; i < this.solvents.length; i++){
             // Ensuring infinite recursion doesn't happen if non chemicals are parts of the solution
-            if(!(this.solvents[i] instanceof Chemical)) return null;
+            if(this.solvents[i] instanceof ChemicalSolution) return null;
             cs.push(this.solvents[i].getTexture(stateType));
             ws.push(this.solvents[i].getVolume());
         }
@@ -234,12 +226,12 @@ class ChemicalSolution extends Chemical{
     */
     getDensity(){
         // Get the density of the solute with ratio to its mass
-        var total = this.solute.getMass() * this.solute.getDensity();
+        var total = this.solute.getVolume();
 
         // Get the density of all solvents with ratio to their masses
         let solvs = this.solvents;
         for(var i = 0; i < solvs.length; i++){
-            total += solvs[i].getMass() * solvs[i].getDensity();
+            total += solvs[i].getVolume();
         }
 
         // Determine the final density based on the relative masses of the solute and solvents
@@ -272,11 +264,12 @@ class ChemicalSolution extends Chemical{
 
     /**
     Make an exact copy of this ChemicalSolution
-    returns: The ChemicalSolution copy
+    returns: The ChemicalSolution copy, or null if this ChemicalSolution is invalid
     */
     copyChem(){
         let s = [];
         let solvs = this.solvents;
+        if(this.solute instanceof ChemicalSolution) return;
         for(var i = 0; i < solvs.length; i++){
             if(!(solvs[i] instanceof ChemicalSolution)) s.push(solvs[i].copyChem());
         }

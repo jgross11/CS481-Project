@@ -25,9 +25,6 @@ function setup(){
     // Load image assets
     loadImages();
 
-    // Set up chemical properties test database
-    initTestChemProperties();
-
     // Grab data from session storage
     loadSessionData();
 }
@@ -37,7 +34,11 @@ Initialize the experiment and controller objects from the session data
 */
 function initExperiment(data){
     if(LOAD_EXPERIMENT_FROM_SERVER) mainExperiment = parseExperiment(data);
-    else mainExperiment = parseExperiment(getTestJSON());
+    else{
+        // Set up chemical properties test database
+        initTestChemProperties();
+        mainExperiment = parseExperiment(getLab3JSON());
+    }
     mainExpController = new ExperimentController2D(mainExperiment, true);
 }
 
