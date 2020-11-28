@@ -70,6 +70,26 @@ let EXP_BOX_SELECT_COLOR = [200, 200, 255, 200];
 
 // Constants for equipment rendering
 
+// Size of text for displaying possible actions for equipment
+EQUIP_ACTIONS_LIST_TEXT_SIZE = 16;
+// Offset from the mouse on the x axis for the list's position
+EQUIP_ACTIONS_LIST_X_OFFSET = 13;
+// Offset from the mouse on the y axis for the list's position
+EQUIP_ACTIONS_LIST_Y_OFFSET = 0;
+// The stroke weight of the outline of the list
+EQUIP_ACTIONS_LIST_STROKE_WEIGHT = 1;
+// The color of the stroke of the outline of the list
+EQUIP_ACTIONS_LIST_STROKE_COLOR = 0;
+// The fill in color for the list
+EQUIP_ACTIONS_LIST_FILL_COLOR = 255;
+// The extra width added to each box in the list on top of the text width
+EQUIP_ACTIONS_LIST_BOX_EXTRA_WIDTH = 6;
+// The height of each box in the list
+EQUIP_ACTIONS_LIST_BOX_HEIGHT = 18;
+// The color of the text in the list
+EQUIP_ACTIONS_LIST_TEXT_COLOR = 0;
+
+
 // Vertices for defining the rendering of the shape of the Erlenmeyer flask chemical
 let ERLENMEYER_FLASK_VERTICES = [
     // bottom

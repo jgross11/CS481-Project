@@ -124,11 +124,15 @@ QUnit.todo('drawSprite:', function(assert){
 QUnit.todo('draw:', function(assert){
     assert.true(false);
 });
-
+drawActionsList
 QUnit.test('shouldRender:', function(assert){
     equip1.setPosition([0, 0]);
     equip1.setSize([10, 10]);
     assert.true(control1.shouldRender([5, 5, 100, 100]), "Should render on intersecting bounds");
     assert.true(control1.shouldRender([10, 7, 100, 100]), "Should render on touching bounds");
     assert.false(control1.shouldRender([11, 11, 100, 100]), "Should not render on not touching bounds");
+});
+
+QUnit.todo('drawActionsList:', function(assert){
+    assert.true(false);
 });

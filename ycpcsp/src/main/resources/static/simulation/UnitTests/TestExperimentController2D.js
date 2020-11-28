@@ -708,6 +708,10 @@ QUnit.todo('render:', function(assert){
     assert.true(false);
 });
 
+QUnit.todo('drawExperimentBorder:', function(assert){
+    assert.true(false);
+});
+
 QUnit.todo('drawSelectedIndicator:', function(assert){
     assert.true(false);
 });

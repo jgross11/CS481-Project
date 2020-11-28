@@ -546,14 +546,12 @@ class ExperimentController2D{
     Call when the mouse is released
     */
     mouseRelease(){
-        // Handle left click, for moving objects
-        if(mouseButton === LEFT){
-            // See if the Equipment boxes should be placed or unselected
-            this.updateEquipmentBoxPlacement();
+        // Whenever the mouse is released, it should stop moving the piece of equipment
+        // See if the Equipment boxes should be placed or unselected
+        this.updateEquipmentBoxPlacement();
 
-            // Stop moving a piece of Equipment inside the Experiment on mouse release
-            this.setMovingEquipment(null);
-        }
+        // Stop moving a piece of Equipment inside the Experiment on mouse release
+        this.setMovingEquipment(null);
     }
 
     /**
@@ -728,11 +726,7 @@ class ExperimentController2D{
         this.camera.translateGraphics(expG);
 
         // draw a border around the experiment
-        expG.noFill();
-        expG.stroke(EXP_BORDER_COLOR);
-        expG.strokeWeight(EXP_BORDER_SIZE);
-        let camB = EXP_CAMERA_OUTLINE_BOUNDS;
-        expG.rect(camB[0], camB[1], camB[2], camB[3]);
+        this.drawExperimentBorder(expG);
 
         // Draw the text for the temperature of the Experiment
         g.fill(0);
@@ -740,12 +734,6 @@ class ExperimentController2D{
         g.textSize(20);
         var s = "Temperature: " + exp.roomTemperature;
         g.text(s, EXP_BOUNDS[3] , 50);
-
-        // Draw the lab table
-        // TODO
-
-        // Draw the disposal area
-        // TODO
 
         // Draw all of the Disposers
         this.experiment.disposers.forEach(function(disposer){
@@ -764,13 +752,6 @@ class ExperimentController2D{
         // Draw the selected equipment if it exists
         this.drawSelectedIndicator(selAct, true, expG);
         this.drawSelectedIndicator(selRec, false, expG);
-
-        // Draw options button
-        // TODO
-
-
-        // Draw steps button
-        // TODO
 
         // Draw the final image of the lab to the main canvas
         g.stroke(0);
@@ -818,29 +799,24 @@ class ExperimentController2D{
         g.text("Use arrow keys to move camera", x, y += 20);
 
         // Draw the list of possible actions for the selected actor
-        if(this.selectedActor !== null){
-            // TODO make render constants
-            // TODO Place this code in equipmentController2D
-            let options = selAct.getFuncDescriptions();
-            g.textSize(16);
-            let baseX = mouseX + 15;
-            let baseY = mouseY;
-            for(var i = 0; i < options.length; i++){
-                let s = (i + 1) + ": " + options[i];
-
-                g.strokeWeight(1);
-                g.stroke(0);
-                g.fill(255);
-                g.rect(baseX - 2, baseY + (i - 1) * 18 + 3, g.textWidth(s) + 6, 18);
-
-                g.noStroke();
-                g.fill(0);
-                g.text(s, baseX, baseY + i * 18);
-            }
+        if(selAct !== null){
+            selAct.drawActionsList(g);
         }
 
         // Draw the final graphics image to the canvas
         canvasGraphics.image(g, 0, 0);
+    }
+
+    /**
+    Draw the border for the Experiment, showing the edge of where the experiment can pan
+    g: The P5 graphics object to use for rendering
+    */
+    drawExperimentBorder(g){
+        g.noFill();
+        g.stroke(EXP_BORDER_COLOR);
+        g.strokeWeight(EXP_BORDER_SIZE);
+        let camB = EXP_CAMERA_OUTLINE_BOUNDS;
+        g.rect(camB[0], camB[1], camB[2], camB[3]);
     }
 
     /**
