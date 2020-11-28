@@ -140,6 +140,8 @@ let SCALE_MASS_TEXT_Y_OFFSET = 0.7;
 let REFRACTOMETER_TEXT_SIZE = 15;
 // The color of the text displaying the density for a refractometer
 let REFRACTOMETER_TEXT_COLOR = 255;
+// The number of decimal places to display for the density for a refractometer
+let REFRACTOMETER_DECIMAL_PLACES = 3;
 // The percentage of the width which is used as offset for rendering the refractometer text
 let REFRACTOMETER_TEXT_X_OFFSET = 0.5;
 // The percentage of the height which is used as offset for rendering the refractometer text

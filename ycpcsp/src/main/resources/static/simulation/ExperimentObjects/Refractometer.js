@@ -177,8 +177,7 @@ class RefractometerController2D extends EquipmentController2D{
             graphics.textSize(REFRACTOMETER_TEXT_SIZE);
             graphics.fill(REFRACTOMETER_TEXT_COLOR);
             graphics.noStroke();
-            // TODO make render constant
-            graphics.text(conts.getDensity().toFixed(3),
+            graphics.text(conts.getDensity().toFixed(REFRACTOMETER_DECIMAL_PLACES),
                 this.x() + this.width() * REFRACTOMETER_TEXT_X_OFFSET,
                 this.y() + this.height() * REFRACTOMETER_TEXT_Y_OFFSET);
         }
