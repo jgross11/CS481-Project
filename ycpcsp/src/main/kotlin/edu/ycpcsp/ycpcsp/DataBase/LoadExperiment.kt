@@ -1,12 +1,7 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
-import edu.ycpcsp.ycpcsp.Models.ChemicalObject
-import edu.ycpcsp.ycpcsp.Models.EquipmentObject
-import edu.ycpcsp.ycpcsp.Models.Experiment
-import edu.ycpcsp.ycpcsp.Models.Step
-import java.sql.DriverManager
+import edu.ycpcsp.ycpcsp.Models.*
 import java.sql.SQLException
-import java.util.*
 
 
 /**
@@ -32,7 +27,7 @@ fun LoadExperiment(id: String) : Experiment {
             //Creator name query
             var preparedSt = connection.prepareStatement("Select Distinct title, firstName, lastName from Database.Experiments join Database.Users on Database.Experiments.creatorID = Database.Users.UserID where ExperimentsID = ? ")
             preparedSt.setString(1, id)
-            val rs = preparedSt.executeQuery()
+            var rs = preparedSt.executeQuery()
             rs.fetchSize = 2
             rs.next()
             val title = rs.getString("title")
@@ -72,15 +67,69 @@ fun LoadExperiment(id: String) : Experiment {
             experiment.chemicals = Array<ChemicalObject>(rs3.fetchSize) { ChemicalObject(0, 0.0, 0.0) }
             rs3.next()
             for (x in 1..rs3.fetchSize) {
-                val type_id = rs3.getInt("type_id")
+                val typeId = rs3.getInt("type_id")
                 val quantity = rs3.getDouble("mass")
                 val concentration = rs3.getDouble("concentration")
-                experiment.chemicals[x - 1] = ChemicalObject(type_id, quantity, concentration)
+                experiment.chemicals[x - 1] = ChemicalObject(typeId, quantity, concentration)
                 rs3.next()
             }
 
-            // TODO: insert chemical information query
-            // TODO: insert equation information query (not necessarily in that order)
+            // chemical properties query
+            preparedSt = connection.prepareStatement("SELECT * FROM Database.Chemical_Information JOIN Database.Experiment_ChemicalInformation ON ExperimentID = ? AND ChemicalInformationID = idChemical_Information JOIN Database.ChemistryGraphics ON ChemicalID = idChemical_Information")
+            preparedSt.setString(1, id)
+            rs = preparedSt.executeQuery()
+            rs.last()
+            var numRows = rs.row
+            rs.beforeFirst()
+            experiment.chemicalProperties = Array<ChemicalProperties>(numRows){ChemicalProperties()}
+            rs.next()
+            for(x in 1..numRows){
+                var newChem = ChemicalProperties(rs.getInt(1), rs.getString(2), rs.getString(3),
+                                            rs.getDouble(4), rs.getDouble(5), rs.getBoolean(6),
+                                            rs.getDouble(7), rs.getDouble(8), rs.getInt(9))
+                newChem.colors.gasColor = rs.getInt(15)
+                newChem.colors.liquidColor = rs.getInt(16)
+                newChem.colors.solidColor = rs.getInt(17)
+                experiment.chemicalProperties[x-1] = newChem
+                rs.next()
+            }
+
+            // equation information query
+            preparedSt = connection.prepareStatement("SELECT * FROM Database.Equations_Information, Database.Experiment_Equation, Database.Equation_Components WHERE ExperimentID = ? AND EquationInformationID = Experiment_Equation.EquationID AND EquationInformationID = Equation_Components.EquationID")
+            preparedSt.setString(1, id)
+            rs = preparedSt.executeQuery()
+
+            val equationMap = HashMap<Int, ChemicalEquation>()
+            if(rs.first()){
+                do{
+                    var equation = equationMap[rs.getInt(equationIDIndex)]
+                    // append new component if equation object already created
+                    if(equation != null){
+                        // if component is reactant
+                        if(rs.getBoolean(8)){
+                            equation.reactants = equation.reactants.plus(EquationComponent(rs.getInt(9), rs.getInt(10)))
+                        } else{
+                            equation.products = equation.products.plus(EquationComponent(rs.getInt(9), rs.getInt(10)))
+                        }
+                        // put updated equation back into map
+                        equationMap[equation.equationID] = equation
+                    }
+                    // otherwise, create the equation object with the first piece of information
+                    else{
+                        equation = ChemicalEquation(rs.getInt(equationIDIndex), rs.getInt(2))
+                        if(rs.getBoolean(isReactantIndex)){
+                            equation.reactants = Array(1){ EquationComponent(rs.getInt(9), rs.getInt(10)) }
+                        } else{
+                            equation.products = Array(1){ EquationComponent(rs.getInt(9), rs.getInt(10)) }
+                        }
+                        // put new equation back into map
+                        equationMap[equation.equationID] = equation
+                    }
+                }while(rs.next())
+
+                // create equations list with values of populated map
+                experiment.equations = equationMap.values.toTypedArray()
+            }
 
 
             //Step Query
