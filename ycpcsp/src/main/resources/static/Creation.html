@@ -730,7 +730,7 @@
                 return;
             }
         }
-        chemInfos[chemID] = {name: chemicalToAdd.name, formula: chemicalToAdd.formula};
+        chemInfos[chemID] = chemicalToAdd;
         updateExperimentChemicalList();
         changeStepFormState(STEP_SHOW_FORM);
     }
@@ -818,14 +818,52 @@
         if(title == "" || title == null){
             return;
         }
+        // chemInfos map to list
+        let chemInfosList = [];
+        console.log("chemInfos keys");
+        let keys = Object.keys(chemInfos);
+        for(key in keys){
+            chemInfosList.push(chemInfos[keys[key]]);
+        }
+
+        // equipment formatting
+        for(let i in equipments){
+            let equip = equipments[i];
+            equip[EXP_JSON_EQUIP_AMOUNT] = equip.quantity;
+            delete equip.quantity;
+            equip[EXP_JSON_EQUIP_OBJ_ID] = equip.equipmentID;
+            delete equip.equipmentID;
+        }
+
+        // chemical instances formatting
+        for(let i in chems){
+            let chem = chems[i];
+            chem[EXP_JSON_CHEM_MASS] = chem.quantity;
+            delete chem.quantity;
+        }
+
+        // step formatting
+        for(let i in steps){
+            let step = steps[i];
+            step[EXP_JSON_INS_STEP_NUM] = i+1;
+            step[EXP_JSON_INS_ACTOR_INDEX] = step.actorID;
+            delete step.actorID;
+            step[EXP_JSON_INS_ACTOR_IS_EQUIP] = step.actorIsEquipment;
+            delete step.actorIsEquipment;
+            step[EXP_JSON_INS_RECEIVER_INDEX] = step.receiverID;
+            delete step.receiverID;
+            step[EXP_JSON_INS_RECEIVER_IS_EQUIP] = step.receiverIsEquipment;
+            delete step.receiverIsEquipment;
+        }
+
+
         let experiment = {};
         let grouping = {};
-        experiment.steps = steps;
-        experiment.chems = chems;
-        experiment.equations = equations;
+        console.log(chemInfos);
+        console.log(chemInfosList);
         experiment[EXP_JSON_TITLE] = title;
         experiment[EXP_JSON_CREATOR] = user.fullName;
-        experiment[EXP_JSON_CHEM_PROPERTIES] = chemInfos;
+        experiment[EXP_JSON_CHEM_PROPERTIES] = chemInfosList;
         experiment[EXP_JSON_EQUATIONS] = equations;
         experiment[EXP_JSON_EQUIPMENT] = equipments;
         experiment[EXP_JSON_CHEMICALS] = chems;
