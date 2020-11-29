@@ -28,7 +28,6 @@ fun getAllEquationInformation() : Array<ChemicalEquationResult?>?{
                 rs.first()
 
                 // maps equationID to the appropriate equation, for 'serial' loading of equation information
-                // this code ran correctly on the first try, yes I am very proud of it
                 val equationMap = HashMap<Int, ChemicalEquationResult>()
                 for(i in 0 until numRows){
                     var equation = equationMap[rs.getInt(equationIDIndex)]

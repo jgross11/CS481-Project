@@ -14,7 +14,15 @@ package edu.ycpcsp.ycpcsp.Models
  * creatorID - the user ID of the person who submitted this information to DB
  */
 
-class ChemicalProperties (var chemicalInformationID : Int, var formula : String, var name : String, var molarMass : Double, var density : Double, var isWaterSoluble : Boolean, var meltingPoint : Double, var boilingPoint : Double, var creatorID : Int){
+class ChemicalProperties (var chemicalInformationID : Int,
+                          var formula : String,
+                          var name : String,
+                          var molarMass : Double,
+                          var density : Double,
+                          var isWaterSoluble : Boolean,
+                          var meltingPoint : Double,
+                          var boilingPoint : Double,
+                          var creatorID : Int){
 
     var colors = ChemicalColorStates()
     // null constructor
