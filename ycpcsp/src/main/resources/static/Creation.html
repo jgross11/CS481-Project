@@ -29,6 +29,7 @@
             
             <label for="experimentCreatorBox">Experiment creator: </label><br>
             <input type="text" placeholder="Experiment Creator" id="experimentCreatorBox" disabled><br><br>
+            <div id="experimentSubmissionButtonError"></div>
 
         </div>
         <div id="experimentComponentListContainer">
@@ -210,6 +211,9 @@
     let equations = [];
     let steps = [];
 
+    // display map for equipment
+    let displayEquipment = {};
+
     // experiment list divs
     let chemicalListDiv = null;
     let equipmentListDiv = null;
@@ -317,7 +321,6 @@
     ########## or reference the other.
     */
     function changeStepFormState(stateNumber){
-        console.log('got state number=' + stateNumber);
         switch(stateNumber){
             case STEP_SHOW_FORM:
                 // TODO this could be much more sophisticated
@@ -348,12 +351,11 @@
                 stepInProgress = {};
                 let actorFormCode = '<br><label for="actor">Choose your actor: </label>'+
                                 '<select name="actor" id="actor" onchange="handleFormAction(STEP_PROCESS_ACTOR)">' + 
+                                '<option value="equipmentDefault">Choose an object</option>' + 
                                 '<option value="equipmentDefault">### EQUIPMENT ###</option>';
                 for(let i = 0; i < equipments.length; i++){
-                    if(equipments[i] != null){
-                        let equipment = equipments[i];
-                        actorFormCode += '<option id="EQUIPMENT" value="'+(equipment.equipmentID)+'">'+equipment.name+'</option>';
-                    }
+                    let equipment = equipments[i];
+                    actorFormCode += '<option id="EQUIPMENT" value="'+(i)+'">'+equipment.name+'</option>';
                 }
                 if(Object.keys(chemInfos).length > 0){
                     actorFormCode += '<option value="chemicalDefault">### CHEMICALS ###</option>';
@@ -378,12 +380,11 @@
                 // TODO make this generate only valid receiver options based on the actor object
                 let receiverFormCode = '<br><label for="receiver">Choose your receiver: </label>'+
                         '<select name="receiver" id="receiver" onchange="handleFormAction(STEP_PROCESS_RECEIVER)">' + 
+                        '<option value="equipmentDefault">Choose an object</option>' + 
                         '<option value="equipmentDefault">### EQUIPMENT ###</option>';
                 for(let i = 0; i < equipments.length; i++){
-                    if(equipments[i] != null){
-                        let equipment = equipments[i];
-                        receiverFormCode += '<option id="EQUIPMENT" value="'+(equipment.equipmentID)+'">'+equipment.name+'</option>';
-                    }
+                    let equipment = equipments[i];
+                    receiverFormCode += '<option id="EQUIPMENT" value="'+(i)+'">'+equipment.name+'</option>';
                 }
                 if(Object.keys(chemInfos).length > 0){
                     receiverFormCode += '<option value="chemicalDefault">### CHEMICALS ###</option>';
@@ -401,6 +402,8 @@
                                         '<select name="function" id="function" onchange="handleFormAction(STEP_PROCESS_FUNCTION)">' + 
                                         '<option value="functionDefault">### FUNCTION ###</option>';
                 // TODO only display valid functions for actor
+
+
                 for(let i = 0; i < equipments.length; i++){
                     if(equipments[i] != null){
                         let equipment = equipments[i];
@@ -415,9 +418,9 @@
                 // TODO format step nicely for humans
                 console.log(stepInProgress);
                 let summaryCode = '<br>' + 
-                (stepInProgress.actorIsEquipment ? equipments[stepInProgress.actorID-1].name : chemInfos[stepInProgress.chemInstanceToAdd.id].name + ", quantity=" + stepInProgress.chemInstanceToAdd.quantity + ", concentration=" + stepInProgress.chemInstanceToAdd.concentration) +
+                (stepInProgress.actorIsEquipment ? equipments[stepInProgress.actorID].name : chemInfos[stepInProgress.chemInstanceToAdd.id].name + ", quantity=" + stepInProgress.chemInstanceToAdd.quantity + ", concentration=" + stepInProgress.chemInstanceToAdd.concentration) +
                 " acts on " + 
-                (stepInProgress.receiverIsEquipment ? equipments[stepInProgress.receiverID-1].name : chemInfos[stepInProgress.chemInstanceToAdd.id].name + ", quantity=" + stepInProgress.chemInstanceToAdd.quantity + ", concentration=" + stepInProgress.chemInstanceToAdd.concentration) +
+                (stepInProgress.receiverIsEquipment ? equipments[stepInProgress.receiverID].name : chemInfos[stepInProgress.chemInstanceToAdd.id].name + ", quantity=" + stepInProgress.chemInstanceToAdd.quantity + ", concentration=" + stepInProgress.chemInstanceToAdd.concentration) +
                 " with function " +
                 // TODO reformat with actual function text
                 stepInProgress.functionID + 
@@ -482,8 +485,6 @@
                         stepInProgress.receiverIsEquipment = false;
                         delete stepInProgress.actorID;
                         delete stepInProgress.actorIsEquipment;
-                        console.log(stepInProgress);
-                        console.log(chems);
                         changeStepFormState(STEP_PROCESS_RECEIVER);
                     
                     // otherwise, chem was chosen as receiver, which is fine
@@ -582,8 +583,9 @@
     // updates contents of the "equipment in experiment" list div
     function updateExperimentEquipmentList(){
         equipmentListDiv.innerHTML = "Equipment in experiment: <br>";
-        for(let i = 0; i < equipments.length; i++){
-            let equip = equipments[i];
+        let keys = Object.keys(displayEquipment);
+        for(let i in keys){
+            let equip = displayEquipment[keys[i]];
             if(equip != null){
                 equipmentListDiv.innerHTML += "<div id='experimentEquipmentComponent'>"+equip.name+": "+equip.quantity+"</div>";
             }
@@ -596,9 +598,9 @@
         for(let i = 0; i < steps.length; i++){
             let step = steps[i];
             stepListDiv.innerHTML += '<div id="experimentStepComponent"> Step ' + (i+1) + ": "+
-            (step.actorIsEquipment ? equipments[step.actorID-1].name : chemInfos[chems[step.actorID].id].name + ", quantity=" + chems[step.actorID].quantity + ", concentration=" + chems[step.actorID].concentration) +
+            (step.actorIsEquipment ? equipments[step.actorID].name : chemInfos[chems[step.actorID].id].name + ", quantity=" + chems[step.actorID].quantity + ", concentration=" + chems[step.actorID].concentration) +
             " acts on " + 
-            (step.receiverIsEquipment ? equipments[step.receiverID-1].name : chemInfos[chems[step.receiverID].id].name + ", quantity=" + chems[step.receiverID].quantity + ", concentration=" + chems[step.receiverID].concentration) +
+            (step.receiverIsEquipment ? equipments[step.receiverID].name : chemInfos[chems[step.receiverID].id].name + ", quantity=" + chems[step.receiverID].quantity + ", concentration=" + chems[step.receiverID].concentration) +
             " with function " +
             // TODO reformat with actual function text
             step.functionID + 
@@ -621,11 +623,17 @@
     function addEquipment(equipmentIndex){
 
         let equipment = allEquipmentList[equipmentIndex];
-        if(equipments[equipmentIndex] != null){
-            equipments[equipmentIndex].quantity++;
+        
+        // equipment list summary for display purposes
+        if(displayEquipment[equipmentIndex] != null){
+            displayEquipment[equipmentIndex].quantity++;
         } else{
-            equipments[equipmentIndex] = {equipmentID: equipment.equipmentID, name: equipment.name, quantity: 1};
+            displayEquipment[equipmentIndex] = {equipmentID: equipment.equipmentID, name: equipment.name, quantity: 1};
         }
+
+        // experiment equipment list
+        equipments.push(equipment);
+        
         loadEquipmentScript(equipment.equipmentID);
         updateExperimentEquipmentList();
         changeStepFormState(STEP_SHOW_FORM);
@@ -815,9 +823,15 @@
     // compiles all relevant lists into an experiment object to be submitted to back end for submission
     function submitExperiment(){
         let title = document.getElementById("experimentNameBox").value;
+        
+        // if invalid title, draw error message
         if(title == "" || title == null){
+            document.getElementById("experimentSubmissionButtonError").innerHTML = "Please enter a name for your experiment.";
             return;
         }
+
+        // no error, so clear error message
+        document.getElementById("experimentSubmissionButtonError").innerHTML = "";
         // chemInfos map to list
         let chemInfosList = [];
         console.log("chemInfos keys");
@@ -827,12 +841,15 @@
         }
 
         // equipment formatting
-        for(let i in equipments){
-            let equip = equipments[i];
+        let equipmentList = [];
+        let equipmentKeys = Object.keys(displayEquipment);
+        for(let i in equipmentKeys){
+            let equip = displayEquipment[equipmentKeys[i]];
             equip[EXP_JSON_EQUIP_AMOUNT] = equip.quantity;
             delete equip.quantity;
             equip[EXP_JSON_EQUIP_OBJ_ID] = equip.equipmentID;
             delete equip.equipmentID;
+            equipmentList.push(equip);
         }
 
         // chemical instances formatting
@@ -865,7 +882,7 @@
         experiment[EXP_JSON_CREATOR] = user.fullName;
         experiment[EXP_JSON_CHEM_PROPERTIES] = chemInfosList;
         experiment[EXP_JSON_EQUATIONS] = equations;
-        experiment[EXP_JSON_EQUIPMENT] = equipments;
+        experiment[EXP_JSON_EQUIPMENT] = equipmentList;
         experiment[EXP_JSON_CHEMICALS] = chems;
         experiment[EXP_JSON_INSTRUCTIONS] = steps;
         grouping = {experiment, user};
