@@ -218,6 +218,8 @@ let KEY_EXP_DISPLAY_CHEMS;
 let KEY_EXP_DISPLAY_EQUIPS;
 // Key for resetting selected Equipment
 let KEY_EXP_RESET_SELECTED;
+// Key for swapping selected actor and receiver
+let KEY_EXP_SWAP_SELECTION;
 
 // Keys for adding a set amount of a Chemical to a Container
 let KEY_EXP_ADD_CHEM_0001 = 49; // key code for '1'
@@ -241,7 +243,8 @@ function setUpControlConstants(){
 
     KEY_EXP_NEXT_INSTRUCTION = 73; // code 73 = i
     KEY_EXP_REMOVE_EQUIPMENT = 69; // code 69 = e
-    KEY_EXP_RESET = 82; // code 83 = r
+    KEY_EXP_SWAP_SELECTION = 83; // code 83 = s
+    KEY_EXP_RESET = 82; // code 82 = r
     KEY_EXP_DISPLAY_CHEMS = 67; // code 67 = c
     KEY_EXP_DISPLAY_EQUIPS = 86; // code 86 = r
     KEY_EXP_RESET_SELECTED = ESCAPE;

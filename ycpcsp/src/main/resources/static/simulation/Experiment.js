@@ -265,6 +265,20 @@ class ExperimentController2D{
     }
 
     /**
+    Switch the selected actor and receiver, or do nothing if one of them is null
+    returns: true if the actor and receiver were swapped, false otherwise
+    */
+    swapActorReceiver(){
+        let act = this.selectedActor;
+        let rec = this.selectedReceiver;
+        if(act === null || rec === null) return false;
+
+        this.selectedActor = rec;
+        this.selectedReceiver = act;
+        return true;
+    }
+
+    /**
     Take the selected Actor and remove it from the experiment
     returns: true if the selected actor was removed, false otherwise
     */
@@ -617,6 +631,7 @@ class ExperimentController2D{
             case KEY_EXP_RESET: this.reset(); break;
             case KEY_EXP_DISPLAY_CHEMS: this.displayChemicalBoxes(); break;
             case KEY_EXP_DISPLAY_EQUIPS: this.displayEquipmentBoxes(); break;
+            case KEY_EXP_SWAP_SELECTION: this.swapActorReceiver(); break;
 
             case KEY_EXP_ADD_CHEM_0001:
             case KEY_EXP_ADD_CHEM_001:
@@ -801,7 +816,7 @@ class ExperimentController2D{
         g.fill(200);
         g.noStroke();
         g.textSize(18);
-        var y = 390;
+        var y = 370;
         let x = 650;
         g.text("Left click equipment to move it", x, y += 20);
         g.text("Right click a equipment to select, blue = actor, green = receiver", x, y += 20);
@@ -814,6 +829,7 @@ class ExperimentController2D{
         g.text("Press T/Y to decrease/increase the room's temperature", x, y += 20);
         g.text("Press I to run the next instruction", x, y += 20);
         g.text("Press E to remove and reset the selected actor", x, y += 20);
+        g.text("Press S to swap selected actor and receiver", x, y += 20);
         g.text("Press R to reset the simulation", x, y += 20);
         g.text("Press C to view Chemical tab, then click a chemical to select", x, y += 20);
         g.text("Press V to view Equipment tab, then click and drag to add equipment", x, y += 20);

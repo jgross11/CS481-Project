@@ -372,6 +372,28 @@ QUnit.test('nextInstruction:', function(assert){
     assert.equal(controller.instructionCounter, 2, "Instruction should be on 2");
 });
 
+QUnit.test('swapActorReceiver:', function(assert){
+    controller.setSelectedActor(null);
+    controller.setSelectedReceiver(null);
+    assert.false(controller.swapActorReceiver(), "Should fail to swap actor and receiver with any null values");
+
+    controller.setSelectedActor(beakerControl1);
+    controller.setSelectedReceiver(null);
+    assert.false(controller.swapActorReceiver(), "Should fail to swap actor and receiver with any null values");
+
+    controller.setSelectedActor(null);
+    controller.setSelectedReceiver(beakerControl2);
+    assert.false(controller.swapActorReceiver(), "Should fail to swap actor and receiver with any null values");
+
+    controller.setSelectedActor(beakerControl1);
+    controller.setSelectedReceiver(beakerControl2);
+    assert.deepEqual(controller.selectedActor, beakerControl1, "Should set actor");
+    assert.deepEqual(controller.selectedReceiver, beakerControl2, "Should set receiver");
+    assert.true(controller.swapActorReceiver(), "Should swap actor and receiver with non null values");
+    assert.deepEqual(controller.selectedActor, beakerControl2, "Should swap actor to receiver");
+    assert.deepEqual(controller.selectedReceiver, beakerControl1, "Should swap receiver to actor");
+});
+
 QUnit.test('displayEquipmentBoxes:', function(assert){
     controller.displayEquipmentBoxes();
     assert.deepEqual(controller.displayedBoxList, controller.equipmentBoxes,
