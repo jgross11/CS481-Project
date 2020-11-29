@@ -186,7 +186,11 @@
     <!-- contains all logic for searching, adding, submitting chemicals-->
     <script src="./chemicalFormHandler.js"></script>
 
-    <!-- all experiments that are created will need these scripts 
+    <!-- contains all logic for loading images (necessary for determining actor functions) -->
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.1.9/lib/p5.js"></script>
+    <script src="./simulation/Util/InstanceID.js"></script>
+
+    <!-- experiments that are created will need these scripts 
         for valid step / valid experiment checking -->
     <script src="./simulation/objectIDs.js"></script>
     <script src="./simulation/Experiment.js"></script>
@@ -195,6 +199,7 @@
     <script src="./simulation/ExperimentObjects/Equipment.js"></script>
     <script src="./simulation/ExperimentObjects/Containers/Container.js"></script>
     <script src="./simulation/ExperimentObjects/Disposers/Disposer.js"></script>
+    <script src="./simulation/Util/Util.js"></script>
     
 </body>
 
@@ -252,6 +257,9 @@
     // false - appropriate script(s) not loaded
     // true - appropriate script(s) loaded
     let equipmentScriptStatus = null;
+
+    // used to determine if Images.js needs to be imported
+    let loadedAnything = false;
     
     initCreation();
 
@@ -259,7 +267,7 @@
     
     // Calls all relevant functions necessary to load all components of the create experiment page
     function initCreation(){
-        
+
         // only allow components to be created if user is logged in and has verified their account
         user = JSON.parse(sessionStorage.getItem("user"));
         let listDivList = document.getElementsByClassName("list");
@@ -304,6 +312,11 @@
         for(let i = 1; i < equipmentScriptStatus.length; i++){
             equipmentScriptStatus[i] = false;
         }
+
+        // images must be loaded to ensure proper simulation object construction when determining 
+        // appropriate functions for an actor object, which is odd, but
+        // TODO images must be loaded for equipment preview
+        setup();
     }
 
     /*
@@ -402,13 +415,11 @@
                                         '<select name="function" id="function" onchange="handleFormAction(STEP_PROCESS_FUNCTION)">' + 
                                         '<option value="functionDefault">### FUNCTION ###</option>';
                 // TODO only display valid functions for actor
-
-
-                for(let i = 0; i < equipments.length; i++){
-                    if(equipments[i] != null){
-                        let equipment = equipments[i];
-                        functionFormCode += '<option id="FUNCTION" value="'+(equipment.equipmentID)+'">'+equipment.name+'</option>';
-                    }
+                let actorSimulationObject = idToEquipment(equipments[stepInProgress.actorID].equipmentID);
+                let validFunctions = actorSimulationObject.getFuncDescriptions();
+                
+                for(let i in validFunctions){
+                    functionFormCode += '<option id="FUNCTION" value="'+(i)+'">'+validFunctions[i]+'</option>';
                 }
                 functionFormCode += '</select>';
                 stepFormDiv.innerHTML = functionFormCode;
@@ -423,7 +434,7 @@
                 (stepInProgress.receiverIsEquipment ? equipments[stepInProgress.receiverID].name : chemInfos[stepInProgress.chemInstanceToAdd.id].name + ", quantity=" + stepInProgress.chemInstanceToAdd.quantity + ", concentration=" + stepInProgress.chemInstanceToAdd.concentration) +
                 " with function " +
                 // TODO reformat with actual function text
-                stepInProgress.functionID + 
+                stepInProgress.functionDescription + 
                 '<br> <input type="button" value="Create Step" onclick="handleFormAction(STEP_PROCESS_SUMMARY)">';
                 stepFormDiv.innerHTML = summaryCode;
             break;
@@ -553,6 +564,7 @@
                 
                 // set step function accordingly
                 stepInProgress.functionID = functionChoice.value;
+                stepInProgress.functionDescription = functionChoice.innerHTML;
 
                 console.log('step after function selection');
                 console.log(stepInProgress);
@@ -603,7 +615,7 @@
             (step.receiverIsEquipment ? equipments[step.receiverID].name : chemInfos[chems[step.receiverID].id].name + ", quantity=" + chems[step.receiverID].quantity + ", concentration=" + chems[step.receiverID].concentration) +
             " with function " +
             // TODO reformat with actual function text
-            step.functionID + 
+            step.functionDescription + 
             '</div>';
         }
     }
@@ -644,6 +656,13 @@
     // equipmentIndex: the index of the equipment in allEquipmentList (in ObjectIDs.js)
     function loadEquipmentScript(equipmentIndex){
         let scriptURL = null;
+        if(!loadedAnything){
+            let equipmentScript = document.createElement("script");
+            equipmentScript.setAttribute("async", "false");
+            equipmentScript.setAttribute("src", "./simulation/Images.js");
+            document.body.appendChild(equipmentScript);
+            loadedAnything = true;
+        }
         switch(equipmentIndex){
             case ID_EQUIP_BEAKER_50mL:
             case ID_EQUIP_BEAKER_150mL:
@@ -891,50 +910,11 @@
             console.log(data);
         });
         
-        /*
-            let chems = [];
-    let equipments = [];
-    let chemInfos = {};
-    let equations = [];
-    let steps = [];
+    }
 
-        let EXP_JSON_TITLE = "title";
-        let EXP_JSON_CREATOR = "creatorName";
-        let EXP_JSON_CHEM_PROPERTIES = "chemProperties";
-        let EXP_JSON_EQUATIONS = "equations";
-        let EXP_JSON_EQUIPMENT = "equipment";
-        let EXP_JSON_EQUIP_OBJ_ID = "objectID";
-        let EXP_JSON_EQUIP_AMOUNT = "amount";
-        let EXP_JSON_CHEMICALS = "chemicals";
-        let EXP_JSON_CHEM_ID = "id";
-        let EXP_JSON_CHEM_MASS = "mass";
-        let EXP_JSON_CHEM_CONCENTRATION = "concentration";
-        let EXP_JSON_INSTRUCTIONS = "steps";
-        let EXP_JSON_INS_STEP_NUM = "stepNumber";
-        let EXP_JSON_INS_ACTOR_INDEX = "actorIndex";
-        let EXP_JSON_INS_ACTOR_IS_EQUIP = "actorID";
-        let EXP_JSON_INS_RECEIVER_INDEX = "receiverIndex";
-        let EXP_JSON_INS_RECEIVER_IS_EQUIP = "receiverID";
-        let EXP_JSON_INS_FUNC_ID = "functionID";
-
-        function creatExp(){
-            let user = JSON.parse(sessionStorage.getItem("user"));
-
-            let exp = {};
-            exp[EXP_JSON_TITLE] = prompt("Enter a Title.", "");
-            exp[EXP_JSON_CREATOR] = user.firstName;
-
-            exp[EXP_JSON_EQUIPMENT] = sortArrayByKey(sendequip, EXP_JSON_EQUIP_OBJ_ID, false);
-            exp[EXP_JSON_CHEMICALS] = sortArrayByKey(sendchem, [EXP_JSON_CHEM_ID, EXP_JSON_CHEM_MASS, EXP_JSON_CHEM_CONCENTRATION], true);
-            exp[EXP_JSON_INSTRUCTIONS] = sortArrayByKey(sendsteps, EXP_JSON_INS_STEP_NUM, false);
-
-            return exp;
-        }
-
-    
-    
-    
-    */
+    // p5 helper function..
+    function setup(){
+        //loadImages();
     }
 
 
