@@ -27,22 +27,22 @@ let ID_EQUIP_REFRACTOMETER_LENS = 19;
 
 // contains all usable equipment information
 var allEquipmentList = [
-    { Equip: 'BEAKER_50mL',     equipmentID:ID_EQUIP_BEAKER_50mL,       name: "Beaker (50mL)"},
-    { Equip: 'BEAKER_150mL',    equipmentID:ID_EQUIP_BEAKER_150mL,      name: "Beaker (150mL)"},
-    { Equip: 'BEAKER_250mL',    equipmentID:ID_EQUIP_BEAKER_250mL,      name: "Beaker (250mL)"},
-    { Equip: 'BEAKER_600mL',    equipmentID:ID_EQUIP_BEAKER_600mL,      name: "Beaker (600mL)"},
-    { Equip: 'SCALE',           equipmentID:ID_EQUIP_SCALE,             name: "Scale"},
-    { Equip: 'TRASHCAN',        equipmentID:ID_EQUIP_TRASHCAN,          name: "Trashcan"},
-    { Equip: 'GRADUATED_25mL',  equipmentID:ID_EQUIP_GRADUATED_25mL,    name: "Graduated Cylinder (25mL)" },
-    { Equip: 'GRADUATED_50mL',  equipmentID:ID_EQUIP_GRADUATED_50mL,    name: "Graduated Cylinder (50mL)" },
-    { Equip: 'GRADUATED_100mL', equipmentID:ID_EQUIP_GRADUATED_100mL,   name: "Graduated Cylinder (100mL)" },
-    { Equip: 'GRADUATED_1000mL',equipmentID:ID_EQUIP_GRADUATED_1000mL,  name: "Graduated Cylinder (1000mL)" },
-    { Equip: 'FLASK_25mL',      equipmentID:ID_EQUIP_FLASK_25mL,        name: "Erlenmeyer Flask (25mL)" },
-    { Equip: 'FLASK_50mL',      equipmentID:ID_EQUIP_FLASK_50mL,        name: "Erlenmeyer Flask (50mL)" },
-    { Equip: 'FLASK_125mL',     equipmentID:ID_EQUIP_FLASK_125mL,       name: "Erlenmeyer Flask (125mL)" },
-    { Equip: 'FLASK_1000mL',    equipmentID:ID_EQUIP_FLASK_1000mL,      name: "Erlenmeyer Flask (1000mL)" },
-    { Equip: 'WEIGH_BOAT',      equipmentID:ID_EQUIP_WEIGH_BOAT,        name: "Weigh Boat" },
-    { Equip: 'STIR_ROD',        equipmentID:ID_EQUIP_STIR_ROD,          name: "Stir Rod" }
+    { equipmentID:ID_EQUIP_BEAKER_50mL,       name: "Beaker (50mL)"},
+    { equipmentID:ID_EQUIP_BEAKER_150mL,      name: "Beaker (150mL)"},
+    { equipmentID:ID_EQUIP_BEAKER_250mL,      name: "Beaker (250mL)"},
+    { equipmentID:ID_EQUIP_BEAKER_600mL,      name: "Beaker (600mL)"},
+    { equipmentID:ID_EQUIP_SCALE,             name: "Scale"},
+    { equipmentID:ID_EQUIP_TRASHCAN,          name: "Trashcan"},
+    { equipmentID:ID_EQUIP_GRADUATED_25mL,    name: "Graduated Cylinder (25mL)" },
+    { equipmentID:ID_EQUIP_GRADUATED_50mL,    name: "Graduated Cylinder (50mL)" },
+    { equipmentID:ID_EQUIP_GRADUATED_100mL,   name: "Graduated Cylinder (100mL)" },
+    { equipmentID:ID_EQUIP_GRADUATED_1000mL,  name: "Graduated Cylinder (1000mL)" },
+    { equipmentID:ID_EQUIP_FLASK_25mL,        name: "Erlenmeyer Flask (25mL)" },
+    { equipmentID:ID_EQUIP_FLASK_50mL,        name: "Erlenmeyer Flask (50mL)" },
+    { equipmentID:ID_EQUIP_FLASK_125mL,       name: "Erlenmeyer Flask (125mL)" },
+    { equipmentID:ID_EQUIP_FLASK_1000mL,      name: "Erlenmeyer Flask (1000mL)" },
+    { equipmentID:ID_EQUIP_WEIGH_BOAT,        name: "Weigh Boat" },
+    { equipmentID:ID_EQUIP_STIR_ROD,          name: "Stir Rod" }
 ]
 
 // sessionStorage.setItem("EquipID", JSON.stringify(EquipID));
