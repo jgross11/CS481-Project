@@ -28,7 +28,7 @@ class ChemicalProperties (var chemicalInformationID : Int, var formula : String,
     }
 
     override fun toString() : String{
-        return "$name: $formula | created by userid = $creatorID | id=$chemicalInformationID, mass = $molarMass, density=$density, watersoluble: $isWaterSoluble, gas @ ${boilingPoint}C, solid @ ${meltingPoint}C, colors: ${colors.toString()}\n"
+        return "$name: $formula | created by userid = $creatorID | id=$chemicalInformationID, mass = $molarMass, density=$density, watersoluble: $isWaterSoluble, gas @ ${boilingPoint}C, solid @ ${meltingPoint}C, colors: ${colors.toString()}"
     }
 
 }
