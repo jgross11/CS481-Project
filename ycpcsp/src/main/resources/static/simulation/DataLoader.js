@@ -349,12 +349,12 @@ function getTestJSON(){
     exp[EXP_JSON_EQUIPMENT] = sortArrayByKey(equips, EXP_JSON_EQUIP_OBJ_ID, false);
 
     let chems = [];
-    //chems.push(makeTestChemicalJSON(ID_CHEM_TEST_RED, 20, 1));
-    //chems.push(makeTestChemicalJSON(ID_CHEM_TEST_RED, 20, 1));
-    //chems.push(makeTestChemicalJSON(ID_CHEM_TEST_BLUE, 20, 1));
-    //chems.push(makeTestChemicalJSON(ID_CHEM_TEST_WHITE, 50, 1));
-    //chems.push(makeTestChemicalJSON(ID_CHEM_TEST_GREEN, 10, 1));
-    //chems.push(makeTestChemicalJSON(ID_CHEM_TEST_BLACK, 10, 1));
+    chems.push(makeTestChemicalJSON(ID_CHEM_TEST_RED, 20, 1));
+    chems.push(makeTestChemicalJSON(ID_CHEM_TEST_RED, 20, 1));
+    chems.push(makeTestChemicalJSON(ID_CHEM_TEST_BLUE, 20, 1));
+    chems.push(makeTestChemicalJSON(ID_CHEM_TEST_WHITE, 50, 1));
+    chems.push(makeTestChemicalJSON(ID_CHEM_TEST_GREEN, 10, 1));
+    chems.push(makeTestChemicalJSON(ID_CHEM_TEST_BLACK, 10, 1));
     chems.push(makeTestChemicalJSON(ELEMENT_SODIUM_ATOMIC_NUM, 10, 1));
     //chems.push(makeTestChemicalJSON(ELEMENT_CHLORINE_ATOMIC_NUM, 10, 1));
     chems.push(makeTestChemicalJSON(COMPOUND_CHLORINE_GAS_ID, 10, 1));
