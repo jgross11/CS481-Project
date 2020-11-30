@@ -3,7 +3,7 @@ var mainExpController = null;
 var mainExpCanvas = null;
 
 // true to load data from the actual database, false to use test data defined by the return of getTestJSON()
-let LOAD_EXPERIMENT_FROM_SERVER = false;
+let LOAD_EXPERIMENT_FROM_SERVER = true;
 
 /**
 P5.js function, called when script is initially loaded
@@ -37,7 +37,7 @@ function initExperiment(data){
     else{
         // Set up chemical properties test database
         initTestChemProperties();
-        mainExperiment = parseExperiment(getLab3JSON());
+        mainExperiment = parseExperiment(getTestJSON());
     }
 
     // Create the experiment object proper
