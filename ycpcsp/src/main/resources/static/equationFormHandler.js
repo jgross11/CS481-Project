@@ -80,7 +80,7 @@ function searchEquation(searchValue){
 // create list on webpage to display results
 function displayEquationResults(list){
     equationSearchResultContainer.innerHTML = "";
-    for(let i in lists){
+    for(let i in list){
         equationSearchResultContainer.innerHTML += '<div style="border: 1px solid black" id="equationSearchResult" onclick="addEquation('+i+')">'+list[i]["string"]+'</div>'
     }
 }
