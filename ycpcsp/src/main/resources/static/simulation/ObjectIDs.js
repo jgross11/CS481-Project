@@ -264,27 +264,7 @@ function initTestChemProperties(){
 
 
 
-// Constants for fields in CHEMICAL_PROPERTIES
-let CHEMICAL_PROPERTY_SYMBOL = "symbol";
-let CHEMICAL_PROPERTY_NAME = "name";
-let CHEMICAL_PROPERTY_CREATOR = "creator";
-let CHEMICAL_PROPERTY_COLORS = "colors";
-let CHEMICAL_PROPERTY_COLOR_SOLID = "colorSolid";
-let CHEMICAL_PROPERTY_COLOR_LIQUID = "colorLiquid";
-let CHEMICAL_PROPERTY_COLOR_GAS = "colorGas";
-let CHEMICAL_PROPERTY_ID = "id";
-let CHEMICAL_PROPERTY_MOLAR_MASS = "molarMass";
-let CHEMICAL_PROPERTY_MELTING_POINT = "meltingPoint";
-let CHEMICAL_PROPERTY_BOILING_POINT = "boilingPoint";
-let CHEMICAL_PROPERTY_DENSITY = "density";
-let CHEMICAL_PROPERTY_WATER_SOLUBLE = "waterSoluble";
 
-let EQUATION_PROPERTY_REACTANTS = "reactants";
-let EQUATION_PROPERTY_PRODUCTS = "products";
-let EQUATION_PROPERTY_ID = "id";
-
-let EQUATION_COMPONENT_PROPERTY_COEFFICIENT = "coefficient";
-let EQUATION_COMPONENT_PROPERTY_ID = "id";
 /**
 Add a new chemical to the CHEMICAL_PROPERTIES list
 symbol: The symbol used to display the chemical

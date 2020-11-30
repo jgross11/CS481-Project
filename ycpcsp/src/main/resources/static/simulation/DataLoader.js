@@ -25,9 +25,10 @@ let EXP_JSON_CHEM_PROPERTIES = "chemicalProperties";
     let CHEMICAL_PROPERTY_SYMBOL = "formula";
     let CHEMICAL_PROPERTY_NAME = "name";
     let CHEMICAL_PROPERTY_CREATOR = "creatorID";
-    let CHEMICAL_PROPERTY_COLOR_SOLID = "colorSolid";
-    let CHEMICAL_PROPERTY_COLOR_LIQUID = "colorLiquid";
-    let CHEMICAL_PROPERTY_COLOR_GAS = "colorGas";
+    let CHEMICAL_PROPERTY_COLORS = "colors";
+    let CHEMICAL_PROPERTY_COLOR_SOLID = "solidColor";
+    let CHEMICAL_PROPERTY_COLOR_LIQUID = "liquidColor";
+    let CHEMICAL_PROPERTY_COLOR_GAS = "gasColor";
     let CHEMICAL_PROPERTY_ID = "chemicalInformationID";
     let CHEMICAL_PROPERTY_MOLAR_MASS = "molarMass";
     let CHEMICAL_PROPERTY_MELTING_POINT = "meltingPoint";
@@ -135,7 +136,7 @@ rawProperties: The list of properties
 function parseChemProperties(rawProperties){
     for(var i = 0; i < rawProperties.length; i++){
         let p = rawProperties[i];
-        let c = r[CHEMICAL_PROPERTY_COLORS];
+        let c = p[CHEMICAL_PROPERTY_COLORS];
         makeChemical(
             p[CHEMICAL_PROPERTY_SYMBOL],
             p[CHEMICAL_PROPERTY_NAME],
