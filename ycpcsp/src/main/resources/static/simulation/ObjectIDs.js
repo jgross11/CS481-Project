@@ -266,6 +266,7 @@ function initTestChemProperties(){
 let CHEMICAL_PROPERTY_SYMBOL = "symbol";
 let CHEMICAL_PROPERTY_NAME = "name";
 let CHEMICAL_PROPERTY_CREATOR = "creator";
+let CHEMICAL_PROPERTY_COLORS = "colors";
 let CHEMICAL_PROPERTY_COLOR_SOLID = "colorSolid";
 let CHEMICAL_PROPERTY_COLOR_LIQUID = "colorLiquid";
 let CHEMICAL_PROPERTY_COLOR_GAS = "colorGas";

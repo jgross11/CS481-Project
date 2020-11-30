@@ -113,13 +113,14 @@ rawProperties: The list of properties
 function parseChemProperties(rawProperties){
     for(var i = 0; i < rawProperties.length; i++){
         let p = rawProperties[i];
+        let c = r[CHEMICAL_PROPERTY_COLORS];
         makeChemical(
             p[CHEMICAL_PROPERTY_SYMBOL],
             p[CHEMICAL_PROPERTY_NAME],
             p[CHEMICAL_PROPERTY_CREATOR],
-            getColorListObjectFromInt(p[CHEMICAL_PROPERTY_COLOR_SOLID]),
-            getColorListObjectFromInt(p[CHEMICAL_PROPERTY_COLOR_LIQUID]),
-            getColorListObjectFromInt(p[CHEMICAL_PROPERTY_COLOR_GAS]),
+            getColorListObjectFromInt(c[CHEMICAL_PROPERTY_COLOR_SOLID]),
+            getColorListObjectFromInt(c[CHEMICAL_PROPERTY_COLOR_LIQUID]),
+            getColorListObjectFromInt(c[CHEMICAL_PROPERTY_COLOR_GAS]),
             p[CHEMICAL_PROPERTY_ID],
             p[CHEMICAL_PROPERTY_MOLAR_MASS],
             p[CHEMICAL_PROPERTY_MELTING_POINT],
