@@ -22,21 +22,22 @@ class ChemicalProperties (var chemicalInformationID : Int,
                           var isWaterSoluble : Boolean,
                           var meltingPoint : Double,
                           var boilingPoint : Double,
-                          var creatorID : Int){
+                          var creatorID : Int,
+                          var rating : Int){
 
     var colors = ChemicalColorStates()
     // null constructor
-    constructor() : this(-1, "", "", 0.0, 0.0, false, 0.0, 0.0, -1){
+    constructor() : this(-1, "", "", 0.0, 0.0, false, 0.0, 0.0, -1,0){
 
     }
 
     // used when compound is first created on FE and given to BE (before ID exists in DB)
     constructor(formula: String, name: String, mass: Double, density: Double, isWaterSoluable: Boolean, solidTemp: Double, gasTemp: Double) : this(
-            -1, formula, name, mass, density, isWaterSoluable, solidTemp, gasTemp, -1){
+            -1, formula, name, mass, density, isWaterSoluable, solidTemp, gasTemp, -1,0){
     }
 
     override fun toString() : String{
-        return "$name: $formula | created by userid = $creatorID | id=$chemicalInformationID, mass = $molarMass, density=$density, watersoluble: $isWaterSoluble, gas @ ${boilingPoint}C, solid @ ${meltingPoint}C, colors: ${colors.toString()}"
+        return "$name: $formula | created by userid = $creatorID | id=$chemicalInformationID, mass = $molarMass, density=$density, watersoluble: $isWaterSoluble, gas @ ${boilingPoint}C, solid @ ${meltingPoint}C, colors: ${colors.toString()}, rate @ ${rating}"
     }
 
 }

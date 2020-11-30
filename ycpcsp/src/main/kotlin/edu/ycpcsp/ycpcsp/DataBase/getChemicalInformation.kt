@@ -16,6 +16,7 @@ const val CompoundSolubleIndex = 6
 const val CompoundSolidIndex = 7
 const val CompoundGasIndex = 8
 const val creatorIDIndex = 9
+const val Rating = 10
 
 fun getCompoundInformationByName(name : String) : ChemicalProperties?{
     var connection = getDBConnection()
@@ -26,7 +27,7 @@ fun getCompoundInformationByName(name : String) : ChemicalProperties?{
             var rs = preparedStatement.executeQuery()
             return if(rs.first()){
                 var comp = ChemicalProperties(rs.getInt(CompoundIDIndex), rs.getString(CompoundFormulaIndex), rs.getString(CompoundNameIndex), rs.getDouble(CompoundMassIndex), rs.getDouble(CompoundDensityIndex),
-                        rs.getBoolean(CompoundSolubleIndex), rs.getDouble(CompoundSolidIndex), rs.getDouble(CompoundGasIndex), rs.getInt(creatorIDIndex))
+                        rs.getBoolean(CompoundSolubleIndex), rs.getDouble(CompoundSolidIndex), rs.getDouble(CompoundGasIndex), rs.getInt(creatorIDIndex), rs.getInt(Rating))
                 preparedStatement = connection.prepareStatement("SELECT * FROM Database.ChemistryGraphics WHERE ChemicalID = ?;")
                 preparedStatement.setInt(1, comp.chemicalInformationID)
                 rs = preparedStatement.executeQuery()
@@ -59,7 +60,7 @@ fun getCompoundInformationByFormula(formula : String) : ChemicalProperties?{
             var rs = preparedStatement.executeQuery()
             return if(rs.first()){
                 var comp = ChemicalProperties(rs.getInt(CompoundIDIndex), rs.getString(CompoundFormulaIndex), rs.getString(CompoundNameIndex), rs.getDouble(CompoundMassIndex), rs.getDouble(CompoundDensityIndex),
-                        rs.getBoolean(CompoundSolubleIndex), rs.getDouble(CompoundSolidIndex), rs.getDouble(CompoundGasIndex), rs.getInt(creatorIDIndex))
+                        rs.getBoolean(CompoundSolubleIndex), rs.getDouble(CompoundSolidIndex), rs.getDouble(CompoundGasIndex), rs.getInt(creatorIDIndex), rs.getInt(Rating))
                 preparedStatement = connection.prepareStatement("SELECT * FROM Database.ChemistryGraphics WHERE ChemicalID = ?;")
                 preparedStatement.setInt(1, comp.chemicalInformationID)
                 rs = preparedStatement.executeQuery()
@@ -93,7 +94,7 @@ fun getCompoundInformationByID(id : Int) : ChemicalProperties?{
             var rs = preparedStatement.executeQuery()
             return if(rs.first()){
                 var comp = ChemicalProperties(rs.getInt(CompoundIDIndex), rs.getString(CompoundFormulaIndex), rs.getString(CompoundNameIndex), rs.getDouble(CompoundMassIndex), rs.getDouble(CompoundDensityIndex),
-                        rs.getBoolean(CompoundSolubleIndex), rs.getDouble(CompoundSolidIndex), rs.getDouble(CompoundGasIndex), rs.getInt(creatorIDIndex))
+                        rs.getBoolean(CompoundSolubleIndex), rs.getDouble(CompoundSolidIndex), rs.getDouble(CompoundGasIndex), rs.getInt(creatorIDIndex),rs.getInt(Rating))
                 preparedStatement = connection.prepareStatement("SELECT * FROM Database.ChemistryGraphics WHERE ChemicalID = ?;")
                 preparedStatement.setInt(1, comp.chemicalInformationID)
                 rs = preparedStatement.executeQuery()

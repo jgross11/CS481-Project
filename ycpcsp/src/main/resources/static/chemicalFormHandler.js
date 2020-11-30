@@ -74,7 +74,7 @@ function displayChemicalResults(list){
     for(let i = 0; i < list.length; i++){
         let chem = list[i];
         chemicalSearchResultContainer.innerHTML += '<div style="border: 1px solid black" id="chemicalSearchResult" onclick="addChemical('+i+')">'+
-        chem["name"]+" | "+chem["formula"]+" | molecular mass="+chem["molarMass"]+" | density="+chem["density"]+" | gas @ "+chem["boilingPoint"]+'°C'+" | solid @ "+chem["meltingPoint"]+'°C</div>'
+        chem["name"]+" | "+chem["formula"]+" | molecular mass="+chem["molarMass"]+" | density="+chem["density"]+" | gas @ "+chem["boilingPoint"]+'°C'+" | solid @ "+chem["meltingPoint"]+'°C</div><button onclick="RateUp('+i+')"> + </button> +chem["rating"]+<button onclick="RateDown('+i+')"> - </button>'
     }
 }
 
