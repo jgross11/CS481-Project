@@ -51,7 +51,7 @@
             <div id="chemicalContainer">
                 <div class="header" onclick="toggleVisibility(document.getElementById('chemicalSubHeaderContainer'))">Chemical</div>
                 <div class="list" id="chemicalSubHeaderContainer">
-                    <div class="subheader" id="chemicalSearch" onclick="toggleVisibility(document.getElementById('chemicalSearchContainer'))">Chemical Search</div>
+                    <div class="subheader" id="chemicalSearch" onclick="toggleVisibility(document.getElementById('chemicalSearchContainer'))">Search for a chemical</div>
                     <div class="list"id="chemicalSearchContainer">
                         <label for="chemicalSeachBar">Search for chemical</label><br>
                         <input type="text" placeholder="Search for chemical" name="chemicalSeachBar" id="chemicalSeachBar" oninput="searchChemical(this.value)"><br><br>
@@ -59,7 +59,7 @@
             
                         </div>
                     </div>
-                    <div class="subheader" id="chemicalAdd" onclick="toggleVisibility(document.getElementById('insertChemicalFormContainer')); initChemicalCreation()">Add Chemical</div>
+                    <div class="subheader" id="chemicalAdd" onclick="toggleVisibility(document.getElementById('insertChemicalFormContainer')); initChemicalCreation()">New chemical information</div>
                     <div class="list" id="insertChemicalFormContainer">
                         <label for="chemicalNameBox">Enter chemical name</label><br>
                         <div id="chemicalNameBox-error"></div><br>
@@ -131,7 +131,7 @@
             <div id="equationContainer">
                 <div class="header" onclick="toggleVisibility(document.getElementById('subheaderContainer'))">Equation</div>
                 <div class="list" id="subheaderContainer">
-                    <div class="subheader" id="equationSearch" onclick="toggleVisibility(document.getElementById('searchSubheaderContainer'))">Equation Search</div>
+                    <div class="subheader" id="equationSearch" onclick="toggleVisibility(document.getElementById('searchSubheaderContainer'))">Search for an equation</div>
                         <div class="list" id="searchSubheaderContainer">
                             <div id="equationList">
                                 <label for="equationSeachBar">Search for equation</label><br>
@@ -141,7 +141,7 @@
                                 </div>
                             </div>
                         </div>
-                    <div class="subheader" id="equationAdd" onclick="toggleVisibility(document.getElementById('insertEquationFormContainer')); initEquationCreation()">Add Equation </div>
+                    <div class="subheader" id="equationAdd" onclick="toggleVisibility(document.getElementById('insertEquationFormContainer')); initEquationCreation()">New equation </div>
                     <div class="list" id="insertEquationFormContainer">
                         <div id="equationPreview"></div><br>
                         <div id="equationError"></div><br>
@@ -191,7 +191,7 @@
     <script src="./simulation/Util/InstanceID.js"></script>
 
     <!-- experiments that are created will need these scripts 
-        for valid step / valid experiment checking -->
+         for valid step / valid experiment checking -->
     <script src="./simulation/objectIDs.js"></script>
     <script src="./simulation/Experiment.js"></script>
     <script src="./simulation/Instruction.js"></script>
@@ -302,7 +302,7 @@
         for(let i = 1; i < equipmentScriptStatus.length; i++){
             equipmentScriptStatus[i] = false;
         }
-        
+
     }
 
     /*
