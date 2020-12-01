@@ -28,7 +28,7 @@ class SimulationController {
     fun getSimulationData(@RequestBody id : Int) : Experiment{
         var exp = Experiment()
         println(id)
-        exp = LoadExperiment("$id");
+        exp = LoadExperiment("$id")
         return exp
     }
 
@@ -40,13 +40,6 @@ class SimulationController {
         var result = true
         println("User ${userAndExp.user.getFullName()} wants to submit following experiment data to DB:")
         println(userAndExp.experiment)
-        // FOR TESTING PURPOSES ONLY
-        var copyAlreadyInDB = LoadExperiment("21")
-        println("\nCOMPARED TO\n")
-        println(copyAlreadyInDB)
-        println("result: ${copyAlreadyInDB.equals(userAndExp.experiment)}")
-        // NOTE: THEY MATCH! GOOD FOR NOW
-        // END TESTING PURPOSES
         result = CreateExperiment(userAndExp)
         return result
     }

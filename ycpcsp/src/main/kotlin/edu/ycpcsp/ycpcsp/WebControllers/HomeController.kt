@@ -67,15 +67,15 @@ class HomeController {
     @PostMapping(path = ["/Playlist"], consumes = ["application/json"], produces = ["application/json"])
     @ResponseBody
     fun PlaylistSearch(@RequestBody userid: Int): ArrayList<String> {
-        println("Loading Users Recent Experiments")
+        println("Loading Users Playlist")
         println(userid)
         var ListOfRecent = arrayListOf<String>()
         //ListOfRecent = PlaylistSearch(userid);
         //println(ListOfRecent[0])
-
+        println(userid)
+        var ListOfRecentPlaylist  = PlaylistSearchTwo(userid)
+        println(ListOfRecentPlaylist)
         //For Now Here Is a fake one
-
-
         return ListOfRecent;
     }
 

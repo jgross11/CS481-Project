@@ -28,7 +28,7 @@ fun CreateExperiment(userAndExperiment: UserAndExperiment): Boolean {
                 if (rs.next()) {
                     newExperimentKey = rs.getInt(1)
                 }
-                println(newExperimentKey)
+                println("New experiment key: $newExperimentKey")
 
                 // insert steps
                 for (step in userAndExperiment.experiment.steps) {
@@ -45,7 +45,7 @@ fun CreateExperiment(userAndExperiment: UserAndExperiment): Boolean {
                     preparedSt.executeUpdate()
                 }
 
-                // TODO insert chemicals
+                // insert chemical instances
                 for (chemical in userAndExperiment.experiment.chemicals) {
                     preparedSt = connection.prepareStatement("INSERT INTO Database.Chemicals (experiment_ID, type_id, mass, concentration)\n" +
                             "VALUES (?, ?, ?, ?)")
@@ -55,7 +55,7 @@ fun CreateExperiment(userAndExperiment: UserAndExperiment): Boolean {
                     preparedSt.setDouble(4, chemical.concentration)
                     preparedSt.executeUpdate()
                 }
-                // TODO insert equipment
+                // insert equipment
                 for (equipment in userAndExperiment.experiment.equipment) {
                     preparedSt = connection.prepareStatement("INSERT INTO Database.Equipments (experiment_ID, object_ID, amount)\n" +
                             "VALUES (?, ?, ?)")
@@ -64,8 +64,25 @@ fun CreateExperiment(userAndExperiment: UserAndExperiment): Boolean {
                     preparedSt.setInt(3, equipment.amount)
                     preparedSt.executeUpdate()
                 }
+
+                // insert equations
+                for(equation in userAndExperiment.experiment.equations){
+                    preparedSt = connection.prepareStatement("INSERT INTO Database.Experiment_Equation (EquationID, ExperimentID) VALUES (?, ?);")
+                    preparedSt.setInt(1, equation.equationID)
+                    preparedSt.setInt(2, newExperimentKey)
+                    preparedSt.executeUpdate()
+                }
+
+                // insert chemical information
+                for(chemicalInformation in userAndExperiment.experiment.chemicalProperties){
+                    preparedSt = connection.prepareStatement("INSERT INTO Database.Experiment_ChemicalInformation (ExperimentID, ChemicalInformationID) VALUES (?, ?);")
+                    preparedSt.setInt(1, newExperimentKey)
+                    preparedSt.setInt(2, chemicalInformation.chemicalInformationID)
+                    preparedSt.executeUpdate()
+                }
+
                 // TODO ensure all queries actually execute and handle errors accordingly
-                //if the updates work this method will return false
+                // if the updates work this method will return true
                 return true
             } catch (ex: SQLException) {
                 println("Error the query returned with a null result set. The query must have been entered incorrectly")

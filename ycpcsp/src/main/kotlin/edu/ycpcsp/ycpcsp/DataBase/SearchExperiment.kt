@@ -5,9 +5,10 @@ import edu.ycpcsp.ycpcsp.PostDataClasses.SearchFormData
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.*
+import kotlin.collections.ArrayList
 
 
-fun SearchExperiment(searchCriteria: SearchFormData) : MutableList<SearchObject> {
+fun SearchExperiment(searchCriteria: SearchFormData) : Array<SearchObject> {
     val serverCredentials = serverCredential()
     val username = serverCredentials?.get(0)
     val password = serverCredentials?.get(1)
@@ -24,13 +25,12 @@ fun SearchExperiment(searchCriteria: SearchFormData) : MutableList<SearchObject>
         //Connection for the database to get it connected and then execute the query to insert the values into the database
         val conn = DriverManager.getConnection(url, connectionProps)
         //Experiment Search Query
-        val query = "Select title, firstName, lastName from Database.Experiments join Database.Users on Database.Experiments.creatorID = Database.Users.UserID where title like ?"
+        val query = "Select Distinct ExperimentsID, title, firstName, lastName from Database.Experiments join Database.Users on Database.Experiments.creatorID = Database.Users.UserID where title like ?"
         val ps = conn.prepareStatement(query)
         ps.setString(1, "%$searchCriteria%")
         val rs = ps.executeQuery()
 
         //make string list to store the names in
-        val ExperimentValues: MutableList<SearchObject> = arrayListOf()
 
         //find the fetch size by going to end
         rs.last()
@@ -38,13 +38,17 @@ fun SearchExperiment(searchCriteria: SearchFormData) : MutableList<SearchObject>
         rs.beforeFirst()
         rs.fetchSize = num
 
+        //create an empty array of search objects for the search query to store into
+        val ExperimentValues = Array<SearchObject>(rs.fetchSize) { SearchObject(0, "","" ) }
+
         //go to first value and start putting the names of the experiments in the list
         rs.next()
         for (x in 1..rs.fetchSize) {
-            val title = rs.getString("title")
-            val CreatorName = rs.getString("firstName") + " " + rs.getString("lastName")
-            val searchObj = SearchObject(title, CreatorName)
-            ExperimentValues.add(searchObj)
+            val id = rs.getInt("ExperimentsID") // get the id of the experiment
+            val title = rs.getString("title")   // get the title of the experiment
+            val creatorName = rs.getString("firstName") + " " + rs.getString("lastName")    // get the first name and the last name of the experiment creator and store it into one value
+            ExperimentValues[x-1] = SearchObject(id, title, creatorName) // store the new search object into the array
+            rs.next()   // iterate forward one search result
         }
 
         //return the names mutable list
@@ -59,5 +63,5 @@ fun SearchExperiment(searchCriteria: SearchFormData) : MutableList<SearchObject>
     }
 
     //If you get here then there was a failure so return empty array
-    return arrayListOf()
+    return Array<SearchObject>(0) { SearchObject(0 ,"", "") }
 }

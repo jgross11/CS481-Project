@@ -4,10 +4,7 @@ import edu.ycpcsp.ycpcsp.DataBase.*
 import edu.ycpcsp.ycpcsp.Models.Experiment
 import edu.ycpcsp.ycpcsp.Models.SecurityQuestion
 import edu.ycpcsp.ycpcsp.Models.User
-import edu.ycpcsp.ycpcsp.PostDataClasses.EditUserFormData
-import edu.ycpcsp.ycpcsp.PostDataClasses.LoginFormData
-import edu.ycpcsp.ycpcsp.PostDataClasses.SignupFormData
-import edu.ycpcsp.ycpcsp.PostDataClasses.UserAndExperiment
+import edu.ycpcsp.ycpcsp.PostDataClasses.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
@@ -188,6 +185,13 @@ class DatabaseTests {
             }
 
         }
+    }
+
+    @Test
+    fun testSearchExperiment(){
+        val searchData = SearchFormData("Color")
+        val result = SearchExperiment(searchData)
+        assertEquals(6, result[0])
     }
 
 }
