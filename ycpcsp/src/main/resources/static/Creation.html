@@ -620,7 +620,8 @@
                 }
                 
                 // set step function accordingly
-                stepInProgress.functionID = functionChoice.value;
+                // function descriptions are one off from function mapping in sim, must add 1
+                stepInProgress.functionID = parseInt(functionChoice.value)+1;
                 stepInProgress.functionDescription = functionChoice.innerHTML;
 
                 console.log('step after function selection');
