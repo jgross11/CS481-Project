@@ -1,5 +1,6 @@
 package edu.ycpcsp.ycpcsp.WebControllers
 
+import edu.ycpcsp.ycpcsp.DataBase.getAllChemicalInformation
 import edu.ycpcsp.ycpcsp.DataBase.getCompoundInformationByName
 import edu.ycpcsp.ycpcsp.DataBase.insertCompound
 import edu.ycpcsp.ycpcsp.Models.ChemicalProperties
