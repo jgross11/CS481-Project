@@ -26,13 +26,13 @@ class ChemicalProperties (var chemicalInformationID : Int,
 
     var colors = ChemicalColorStates()
     // null constructor
-    constructor() : this(-1, "", "", 0.0, 0.0, false, 0.0, 0.0, -1){
+    constructor() : this(-1, "", "", 0.0, 0.0, false, 0.0, 0.0, -1,0){
 
     }
 
     // used when compound is first created on FE and given to BE (before ID exists in DB)
-    constructor(formula: String, name: String, mass: Double, density: Double, isWaterSoluable: Boolean, solidTemp: Double, gasTemp: Double) : this(
-            -1, formula, name, mass, density, isWaterSoluable, solidTemp, gasTemp, -1){
+    constructor(formula: String, name: String, mass: Double, density: Double, isWaterSoluable: Boolean, solidTemp: Double, gasTemp: Double, Rating: Int) : this(
+            -1, formula, name, mass, density, isWaterSoluable, solidTemp, gasTemp, -1,0){
     }
 
     override fun toString() : String{

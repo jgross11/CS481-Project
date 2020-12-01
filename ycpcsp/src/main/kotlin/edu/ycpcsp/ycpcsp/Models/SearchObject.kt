@@ -3,20 +3,20 @@ package edu.ycpcsp.ycpcsp.Models
 import com.fasterxml.jackson.annotation.JsonTypeName
 
 /**
- *  Class that represents a chemical used in an experiment
- *  Contains name (inherited from ExperimentObject), quantity, and concentration
+ *  Class that represents a search object used in an search query
+ *  Contains id, title, and creatorName
  */
 
-@JsonTypeName("chemical")
+@JsonTypeName("search")
 
 data class SearchObject(
-        var id : String,
+        var id : Int,
         var title : String,
-        var CreatorName : String
+        var creatorName : String
 )
 
 {
     override fun toString(): String {
-        return "$id $title $CreatorName"
+        return "$id $title $creatorName"
     }
 }

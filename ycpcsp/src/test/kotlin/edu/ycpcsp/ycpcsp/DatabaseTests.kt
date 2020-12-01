@@ -4,10 +4,7 @@ import edu.ycpcsp.ycpcsp.DataBase.*
 import edu.ycpcsp.ycpcsp.Models.Experiment
 import edu.ycpcsp.ycpcsp.Models.SecurityQuestion
 import edu.ycpcsp.ycpcsp.Models.User
-import edu.ycpcsp.ycpcsp.PostDataClasses.EditUserFormData
-import edu.ycpcsp.ycpcsp.PostDataClasses.LoginFormData
-import edu.ycpcsp.ycpcsp.PostDataClasses.SignupFormData
-import edu.ycpcsp.ycpcsp.PostDataClasses.UserAndExperiment
+import edu.ycpcsp.ycpcsp.PostDataClasses.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
@@ -131,6 +128,39 @@ class DatabaseTests {
         }
     }
     @Test
+    fun testCreateAdminUser(){
+        val adminUser = SignupFormData("aaa", "aaa", "aaa", "aaa", "aaa", 1, "answ", 2, "answw", 3, "answww")
+
+        assertTrue(CreateAdminUser(adminUser) != -1)
+        if(CreateAdminUser(adminUser) != -1){
+            println("Create Admin User worked")
+        } else{
+            println("Error: Create Admin User did not work")
+        }
+
+    }
+    @Test
+    fun testLoadAdminUser(){
+        val adminUser2 = LoadAdminUser("aaa")
+        assertTrue(adminUser2.firstName.compareTo("Aaa") == 0)
+        if(adminUser2.firstName.compareTo("Aaa") == 0){println("Load Admin User Worked")} else{
+            println("Load Admin User did not work")
+        }
+    }
+    @Test
+    fun testDeleteAdminUser(){
+        val adminUser2 = LoadAdminUser("aaa")
+        val testDelete = DeleteAdminUser(adminUser2)
+        assertTrue(testDelete)
+
+        if(testDelete){
+            println("Delete Admin User works")
+        } else{
+            println("Delete Admin User does not work")
+        }
+    }
+
+    @Test
     fun testFindMyExperiments(){
         val userID = LoadUser("jgross11@ycp.edu")
         val testExperiment = Experiment("Color", "Josh Gross", 1)
@@ -155,6 +185,13 @@ class DatabaseTests {
             }
 
         }
+    }
+
+    @Test
+    fun testSearchExperiment(){
+        val searchData = SearchFormData("Color")
+        val result = SearchExperiment(searchData)
+        assertEquals(6, result[0])
     }
 
 }

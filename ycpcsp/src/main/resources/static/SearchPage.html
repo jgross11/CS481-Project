@@ -46,19 +46,21 @@
                     var br2 = document.createElement("br");
                     newDiv.appendChild(br2);
                     document.getElementById("SearchBar").appendChild(newDiv);
-                    var button = document.createElement("text");
+                    var elem = document.createElement("BUTTON");
                     identity = mutable[i].id;
-                    button.innerHTML = "<button class='button' onclick='loadSimulation(identity)'> Load Experiment</button>";
+                    elem.innerHTML = "<button class='button' onclick='loadSimulation(identity)'> Load Experiment</button>";
+                    newDiv.appendChild(elem);
 
-                    newDiv.appendChild(button);
                     var br3 = document.createElement("br");
                     newDiv.appendChild(br3);
                     var br4 = document.createElement("br");
                     newDiv.appendChild(br4);
+                    newDiv.style.border = "solid black";
 
                 }
             });
     }
+
 
     function loadSimulation(simulationID){
         sessionStorage.setItem("simulationToLoad", simulationID);

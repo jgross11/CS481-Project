@@ -1,7 +1,5 @@
 package edu.ycpcsp.ycpcsp.WebControllers
 
-import edu.ycpcsp.ycpcsp.DataBase.getAllChemicalInformation
-import edu.ycpcsp.ycpcsp.DataBase.getAllEquationInformation
 import edu.ycpcsp.ycpcsp.DataBase.getCompoundInformationByName
 import edu.ycpcsp.ycpcsp.DataBase.insertCompound
 import edu.ycpcsp.ycpcsp.Models.ChemicalProperties
@@ -23,6 +21,7 @@ class ChemicalInsertionController {
         println("Sending user to chemical insertion page...")
         return "ChemicalInsertion.html"
     }
+
 
     // returns all chemical information in DB, raw
     @PostMapping(path = ["/load-all-chemicals"], consumes = ["application/json"], produces = ["application/json"])

@@ -1,14 +1,16 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
-import edu.ycpcsp.ycpcsp.Models.SearchObject
-import edu.ycpcsp.ycpcsp.PostDataClasses.SearchFormData
+import edu.ycpcsp.ycpcsp.DataBase.serverCredential
+import edu.ycpcsp.ycpcsp.Models.PlayList
+import edu.ycpcsp.ycpcsp.Models.PlaylistObject
+import edu.ycpcsp.ycpcsp.Models.User
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.*
 import kotlin.collections.ArrayList
 
 
-fun SearchExperiment(searchCriteria: SearchFormData) : Array<SearchObject> {
+fun PlaylistExperimentSearch(Playlist_ID: Int) : ArrayList<PlaylistObject> {
     val serverCredentials = serverCredential()
     val username = serverCredentials?.get(0)
     val password = serverCredentials?.get(1)
@@ -25,12 +27,14 @@ fun SearchExperiment(searchCriteria: SearchFormData) : Array<SearchObject> {
         //Connection for the database to get it connected and then execute the query to insert the values into the database
         val conn = DriverManager.getConnection(url, connectionProps)
         //Experiment Search Query
-        val query = "Select Distinct ExperimentsID, title, firstName, lastName from Database.Experiments join Database.Users on Database.Experiments.creatorID = Database.Users.UserID where title like ?"
+        println(Playlist_ID)
+        val query = "SELECT s.ExperimentsID, s.creatorID, s.title, u.firstName, u.lastName FROM Playlist_Experiments p INNER JOIN Experiments s ON s.ExperimentsID = p.Experiment_ID inner join Users u on u.UserID = s.creatorID WHERE p.Playlist_Id = ? "
         val ps = conn.prepareStatement(query)
-        ps.setString(1, "%$searchCriteria%")
+        ps.setInt(1, Playlist_ID)
         val rs = ps.executeQuery()
 
         //make string list to store the names in
+        val RecentExperiments = ArrayList<PlaylistObject>()
 
         //find the fetch size by going to end
         rs.last()
@@ -38,21 +42,19 @@ fun SearchExperiment(searchCriteria: SearchFormData) : Array<SearchObject> {
         rs.beforeFirst()
         rs.fetchSize = num
 
-        //create an empty array of search objects for the search query to store into
-        val ExperimentValues = Array<SearchObject>(rs.fetchSize) { SearchObject(0, "","" ) }
-
         //go to first value and start putting the names of the experiments in the list
         rs.next()
+
+
         for (x in 1..rs.fetchSize) {
-            val id = rs.getInt("ExperimentsID") // get the id of the experiment
-            val title = rs.getString("title")   // get the title of the experiment
-            val creatorName = rs.getString("firstName") + " " + rs.getString("lastName")    // get the first name and the last name of the experiment creator and store it into one value
-            ExperimentValues[x-1] = SearchObject(id, title, creatorName) // store the new search object into the array
-            rs.next()   // iterate forward one search result
+
+            var WhatIsGoing = PlaylistObject(rs.getInt(rs.getInt("ExperimentsID")), rs.getInt("creatorID"), rs.getString("title"), rs.getString("firstName"), rs.getString("lastName"))
+            RecentExperiments.add(WhatIsGoing)
+            rs.next()
         }
 
         //return the names mutable list
-        return ExperimentValues
+        return RecentExperiments
 
     } catch (ex: SQLException) {
         // handle any errors
@@ -63,5 +65,5 @@ fun SearchExperiment(searchCriteria: SearchFormData) : Array<SearchObject> {
     }
 
     //If you get here then there was a failure so return empty array
-    return Array<SearchObject>(0) { SearchObject(0 ,"", "") }
+    return arrayListOf()
 }

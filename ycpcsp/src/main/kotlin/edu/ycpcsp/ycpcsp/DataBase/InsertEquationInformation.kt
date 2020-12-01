@@ -44,20 +44,22 @@ fun insertEquation(equation : EquationFormData) : Boolean{
                 val equationID = rs.getInt(1)
                 // insert the relevant information for each reactant
                 for(i in equation.reactants.indices) {
-                    preparedStatement = connection.prepareStatement("INSERT INTO Database.Equation_Components (EquationID, isReactant, ChemicalCoefficient, ChemicalInformationID) VALUES (?, ?, ?, ?);")
+                    preparedStatement = connection.prepareStatement("INSERT INTO Database.Equation_Components (EquationID, isReactant, ChemicalCoefficient, ChemicalInformationID,Rating) VALUES (?, ?, ?, ?,?);")
                     preparedStatement.setInt(1, equationID)
                     preparedStatement.setBoolean(2, true)
                     preparedStatement.setInt(3, equation.reactants[i][0].toInt())
                     preparedStatement.setInt(4, reactantsInformation[i].chemicalInformationID)
+                    preparedStatement.setInt(5,0)
                     preparedStatement.executeUpdate()
                 }
                 // insert the relevant information for each product
                 for(i in equation.products.indices) {
-                    preparedStatement = connection.prepareStatement("INSERT INTO Database.Equation_Components (EquationID, isReactant, ChemicalCoefficient, ChemicalInformationID) VALUES (?, ?, ?, ?);")
+                    preparedStatement = connection.prepareStatement("INSERT INTO Database.Equation_Components (EquationID, isReactant, ChemicalCoefficient, ChemicalInformationID, Rating) VALUES (?, ?, ?, ?, ?);")
                     preparedStatement.setInt(1, equationID)
                     preparedStatement.setBoolean(2, false)
                     preparedStatement.setInt(3, equation.products[i][0].toInt())
                     preparedStatement.setInt(4, productsInformation[i].chemicalInformationID)
+                    preparedStatement.setInt(5,0)
                     preparedStatement.executeUpdate()
                 }
                 return true
