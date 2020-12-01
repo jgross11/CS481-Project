@@ -452,12 +452,13 @@
             
             // draw summary of the step with given actor, receiver, and function information
             case STEP_PROCESS_SUMMARY:
+
                 let summaryCode = '<br>' + 
                 
                 // if actor / receiver is equipment, display name of equipment, otherwise display chemical name, quantity, and amount
-                (stepInProgress.actorIsEquipment ? equipments[stepInProgress.actorID].name : chemInfos[stepInProgress.chemInstanceToAdd.id].name + ", quantity=" + stepInProgress.chemInstanceToAdd.quantity + ", concentration=" + stepInProgress.chemInstanceToAdd.concentration) +
+                (stepInProgress.actorIsEquipment ? equipments[uniqueIDToIndex(stepInProgress.actorID, equipments)].name : chemInfos[stepInProgress.chemInstanceToAdd.id].name + ", quantity=" + stepInProgress.chemInstanceToAdd.quantity + ", concentration=" + stepInProgress.chemInstanceToAdd.concentration) +
                 " acts on " + 
-                (stepInProgress.receiverIsEquipment ? equipments[stepInProgress.receiverID].name : chemInfos[stepInProgress.chemInstanceToAdd.id].name + ", quantity=" + stepInProgress.chemInstanceToAdd.quantity + ", concentration=" + stepInProgress.chemInstanceToAdd.concentration) +
+                (stepInProgress.receiverIsEquipment ? equipments[uniqueIDToIndex(stepInProgress.receiverID, equipments)].name : chemInfos[stepInProgress.chemInstanceToAdd.id].name + ", quantity=" + stepInProgress.chemInstanceToAdd.quantity + ", concentration=" + stepInProgress.chemInstanceToAdd.concentration) +
                 " with function " +
                 
                 // include function description
@@ -620,7 +621,7 @@
                 }
                 
                 // set step function accordingly
-                // function descriptions are one off from function mapping in sim, must add 1
+                // function description indices are one off from function mapping indices in sim, must add 1
                 stepInProgress.functionID = parseInt(functionChoice.value)+1;
                 stepInProgress.functionDescription = functionChoice.innerHTML;
 
@@ -683,9 +684,9 @@
             stepListDiv.innerHTML += '<div id="experimentStepComponent"> Step ' + (i+1) + ": " +
             // if actor / receiver is equipment, draw name, otherwise draw chemical name, quantity, and concentration
             // TODO fix attrocious uniqueIDToIndex repeats
-            (step.actorIsEquipment ? equipments[step.actorID].name : chemInfos[chems[uniqueIDToIndex(step.actorID, chems)].id].name + ", quantity=" + chems[uniqueIDToIndex(step.actorID, chems)].quantity + ", concentration=" + chems[uniqueIDToIndex(step.actorID, chems)].concentration) +
+            (step.actorIsEquipment ? equipments[uniqueIDToIndex(step.actorID, equipments)].name : chemInfos[chems[uniqueIDToIndex(step.actorID, chems)].id].name + ", quantity=" + chems[uniqueIDToIndex(step.actorID, chems)].quantity + ", concentration=" + chems[uniqueIDToIndex(step.actorID, chems)].concentration) +
             " acts on " + 
-            (step.receiverIsEquipment ? equipments[step.receiverID].name : chemInfos[chems[uniqueIDToIndex(step.receiverID, chems)].id].name + ", quantity=" + chems[uniqueIDToIndex(step.receiverID, chems)].quantity + ", concentration=" + chems[uniqueIDToIndex(step.receiverID, chems)].concentration) +
+            (step.receiverIsEquipment ? equipments[uniqueIDToIndex(step.receiverID, equipments)].name : chemInfos[chems[uniqueIDToIndex(step.receiverID, chems)].id].name + ", quantity=" + chems[uniqueIDToIndex(step.receiverID, chems)].quantity + ", concentration=" + chems[uniqueIDToIndex(step.receiverID, chems)].concentration) +
             " with function " +
             
             // draw function description
@@ -1096,7 +1097,11 @@
         // submit coupled object for submission on DB
         
         postData('save-new-creation', grouping).then(function(data){
-            console.log(data);
+            if(data != -1){
+                loadSimulation(data);
+            } else{
+                document.getElementById("experimentSubmissionButtonError").innerHTML = "Experiment creation failed, please try again.";
+            }
         });
              
     }
