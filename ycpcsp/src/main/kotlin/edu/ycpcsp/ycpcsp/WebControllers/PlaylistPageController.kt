@@ -29,7 +29,7 @@ class PlaylistPageController {
     fun loadUserPlaylist(@RequestBody user : Int) : ArrayList<PlayList> {
         println("made it to PlaylistPageController line 25")
         //TODO make it so that the data reaches to data base
-        val ListToBeReturned: ArrayList<PlayList> = PlaylistSearch(30)
+        val ListToBeReturned: ArrayList<PlayList> = PlaylistSearch(user)
         return ListToBeReturned;
     }
 

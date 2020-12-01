@@ -96,7 +96,7 @@
         // not logged in
         else{
             console.log("Made it to line 62, PlaylistPage.html");
-            postData('Playlist-Loader', 30).then(function(data){
+            postData('Playlist-Loader', user.id).then(function(data){
                 console.log(data);
                 playlist = data;
                 var select = document.getElementById("selectPlaylist");
@@ -135,7 +135,7 @@
 
         var NewPlaylist = {
             Playlist_Name: document.getElementById("PlaylistName").value,
-            creator_ID: 30
+            creator_ID: user.id
         }
         postData('Playlist-Adder', NewPlaylist).then(function(data){
             console.log(data);
