@@ -847,6 +847,31 @@
                 scriptURL = "./simulation/ExperimentObjects/StirRod.js";
                 equipmentScriptStatus[ID_EQUIP_STIR_ROD] = true;
             break;
+
+            case ID_EQUIP_EYE_DROPPER:
+                if(equipmentScriptStatus[ID_EQUIP_EYE_DROPPER]){
+                    return;
+                }
+                scriptURL = "./simulation/ExperimentObjects/Containers/EyeDropper.js";
+                equipmentScriptStatus[ID_EQUIP_EYE_DROPPER] = true;
+            break;
+
+            case ID_EQUIP_REFRACTOMETER:
+                if(equipmentScriptStatus[ID_EQUIP_REFRACTOMETER]){
+                    return;
+                }
+                scriptURL = "./simulation/ExperimentObjects/Refractometer.js";
+                equipmentScriptStatus[ID_EQUIP_REFRACTOMETER] = true;
+            break;
+
+            case ID_EQUIP_REFRACTOMETER_LENS:
+                if(equipmentScriptStatus[ID_EQUIP_REFRACTOMETER_LENS]){
+                    return;
+                }
+                scriptURL = "./simulation/ExperimentObjects/Containers/RefractometerLens.js";
+                console.log(scriptURL);
+                equipmentScriptStatus[ID_EQUIP_REFRACTOMETER_LENS] = true;
+            break;
         }
 
         // if a script needs to be imported, import it
