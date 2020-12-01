@@ -763,10 +763,14 @@
     }
 
     function RateUp(chemicalIndex){
-
+        var rate = getChemRatingById(chemicalIndex);
+        rate++;
+        updateRatingByID(rate,user.id);
     }
     function RateDown(chemicalIndex){
-
+        var rate = getChemRatingById(chemicalIndex);
+        rate--;
+        updateRatingByID(rate,user.id);
     }
 
 
