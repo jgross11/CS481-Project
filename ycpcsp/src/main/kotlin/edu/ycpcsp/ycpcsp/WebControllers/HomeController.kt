@@ -66,7 +66,7 @@ class HomeController {
 
     @PostMapping(path = ["/Playlist"], consumes = ["application/json"], produces = ["application/json"])
     @ResponseBody
-    fun PlaylistSearch(@RequestBody userid: Int): ArrayList<String> {
+    fun playlistFetch(@RequestBody userid: Int): ArrayList<String> {
         println("Loading Users Playlist")
         println(userid)
         var ListOfRecent = arrayListOf<String>()
