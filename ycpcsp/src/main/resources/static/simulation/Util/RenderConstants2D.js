@@ -7,11 +7,32 @@ let EXPERIMENT_FRAME_RATE = 60;
 let CANVAS_WIDTH = 1280;
 // The height of the canvas being displayed
 let CANVAS_HEIGHT = 800;
+// The position of the P5 canvas on the x axis
+let CANVAS_X_OFFSET = 50;
+// The position of the P5 canvas on the y axis
+let CANVAS_Y_OFFSET = 50;
+// The P5 position mode for placing the canvas in the web page
+let CANVAS_POSITION_MODE = "relative";
 // The background color of the canvas
 let CANVAS_BACKGROUND_COLOR = 120;
 // The background color of the experiment
 let EXP_BACKGROUND_COLOR = 60;
 
+// Loading screen constants
+// The color of the background of the loading screen
+let LOADING_SCREEN_BACKGROUND_COLOR = 60;
+// The color of the stroke for the text on the loading screen
+let LOADING_SCREEN_TEXT_STROKE_COLOR = 30;
+// The stroke weight for the text of the loading screen
+let LOADING_SCREEN_TEXT_STROKE_WEIGHT = 5;
+// The size of the text on the loading screen
+let LOADING_SCREEN_TEXT_SIZE = 100;
+// The color of the text on the loading screen
+let LOADING_SCREEN_TEXT_COLOR = 200;
+// The text to display for the loading screen
+let LOADING_SCREEN_TEXT = "Loading your experiment";
+
+// Experiment constants
 // The size of the border displayed at the edge of the Experiment
 let EXP_BORDER_SIZE = 25;
 // The color of the border displayed at the edge of the Experiment
@@ -70,6 +91,26 @@ let EXP_BOX_SELECT_COLOR = [200, 200, 255, 200];
 
 // Constants for equipment rendering
 
+// Size of text for displaying possible actions for equipment
+EQUIP_ACTIONS_LIST_TEXT_SIZE = 16;
+// Offset from the mouse on the x axis for the list's position
+EQUIP_ACTIONS_LIST_X_OFFSET = 13;
+// Offset from the mouse on the y axis for the list's position
+EQUIP_ACTIONS_LIST_Y_OFFSET = 0;
+// The stroke weight of the outline of the list
+EQUIP_ACTIONS_LIST_STROKE_WEIGHT = 1;
+// The color of the stroke of the outline of the list
+EQUIP_ACTIONS_LIST_STROKE_COLOR = 0;
+// The fill in color for the list
+EQUIP_ACTIONS_LIST_FILL_COLOR = 255;
+// The extra width added to each box in the list on top of the text width
+EQUIP_ACTIONS_LIST_BOX_EXTRA_WIDTH = 6;
+// The height of each box in the list
+EQUIP_ACTIONS_LIST_BOX_HEIGHT = 18;
+// The color of the text in the list
+EQUIP_ACTIONS_LIST_TEXT_COLOR = 0;
+
+
 // Vertices for defining the rendering of the shape of the Erlenmeyer flask chemical
 let ERLENMEYER_FLASK_VERTICES = [
     // bottom
@@ -113,6 +154,16 @@ let WEIGH_BOAT_CHEM_HEIGHT = 3;
 // The vertices used to render the shape of the weigh boat's chemicals
 let WEIGH_BOAT_VERTICES = [[0, 1], [1, 1], [0.5, 0]];
 
+
+// X offset for rendering the eye dropper contents, percentage based on width of dropper
+let EYE_DROPPER_X_OFFSET = 0.25;
+// Y offset for rendering the eye dropper contents, percentage based on height of dropper
+let EYE_DROPPER_Y_OFFSET = 0.26;
+// The percentage of a eye dropper's width which is used to render chemicals
+let EYE_DROPPER_WIDTH_OFFSET = 0.5;
+// The percentage of a eye dropper's height which is used to render chemicals
+let EYE_DROPPER_HEIGHT_OFFSET = 0.63;
+
 // The color of the text on scales
 let SCALE_TEXT_COLOR = 0;
 // The size of the text displayed on scales
@@ -126,6 +177,26 @@ let SCALE_ZEROED_TEXT_X_OFFSET = 0.1;
 // The percentage of a scale's height where the text on the scale is rendered
 let SCALE_MASS_TEXT_Y_OFFSET = 0.7;
 
+// The size of the text displaying the density for a refractometer
+let REFRACTOMETER_TEXT_SIZE = 15;
+// The color of the text displaying the density for a refractometer
+let REFRACTOMETER_TEXT_COLOR = 255;
+// The number of decimal places to display for the density for a refractometer
+let REFRACTOMETER_DECIMAL_PLACES = 3;
+// The percentage of the width which is used as offset for rendering the refractometer text
+let REFRACTOMETER_TEXT_X_OFFSET = 0.5;
+// The percentage of the height which is used as offset for rendering the refractometer text
+let REFRACTOMETER_TEXT_Y_OFFSET = 0.66;
+
+// The percentage of the width of a refractometer lens added to the x position for rendering its contents
+let REFRACTOMETER_LENS_X_OFFSET = 0.3;
+// The percentage of the height of a refractometer lens added to the y position for rendering its contents
+let REFRACTOMETER_LENS_Y_OFFSET = 0.1;
+// The percentage of the width of a refractometer lens which the contents can take up
+let REFRACTOMETER_LENS_WIDTH_OFFSET = 0.6;
+// The percentage of the height of a refractometer lens which the contents can take up
+let REFRACTOMETER_LENS_HEIGHT_OFFSET = 0.8;
+
 
 // Constants used for key inputs for Experiment
 
@@ -137,6 +208,8 @@ let KEY_EXP_PAN_CAMERA_DOWN;
 
 // Key for moving Experiment to next Instruction
 let KEY_EXP_NEXT_INSTRUCTION;
+// Key for removing selected equipment and placing it back in the equipment bar
+let KEY_EXP_REMOVE_EQUIPMENT;
 // Key for resetting Experiment to default state
 let KEY_EXP_RESET;
 // Key for displaying Chemical list
@@ -145,13 +218,19 @@ let KEY_EXP_DISPLAY_CHEMS;
 let KEY_EXP_DISPLAY_EQUIPS;
 // Key for resetting selected Equipment
 let KEY_EXP_RESET_SELECTED;
+// Key for swapping selected actor and receiver
+let KEY_EXP_SWAP_SELECTION;
 
 // Keys for adding a set amount of a Chemical to a Container
-let KEY_EXP_ADD_CHEM_1 = 49;
-let KEY_EXP_ADD_CHEM_5 = 50;
-let KEY_EXP_ADD_CHEM_10 = 51;
-let KEY_EXP_ADD_CHEM_20 = 52;
-let KEY_EXP_ADD_CHEM_25 = 53;
+let KEY_EXP_ADD_CHEM_0001 = 49; // key code for '1'
+let KEY_EXP_ADD_CHEM_001 = 50; // key code for '2'
+let KEY_EXP_ADD_CHEM_01 = 51; // key code for '3'
+let KEY_EXP_ADD_CHEM_1 = 52; // key code for '4'
+let KEY_EXP_ADD_CHEM_10 = 53; // key code for '5'
+let KEY_EXP_ADD_CHEM_100 = 54; // key code for '6'
+
+let KEY_EXP_DECREASE_TEMPERATURE = 84; // key code for 'y'
+let KEY_EXP_INCREASE_TEMPERATURE = 89; // key code for 't'
 
 /**
 Set up constants to use for key presses in the Experiment
@@ -163,7 +242,9 @@ function setUpControlConstants(){
     KEY_EXP_PAN_CAMERA_DOWN = DOWN_ARROW;
 
     KEY_EXP_NEXT_INSTRUCTION = 73; // code 73 = i
-    KEY_EXP_RESET = 82; // code 83 = r
+    KEY_EXP_REMOVE_EQUIPMENT = 69; // code 69 = e
+    KEY_EXP_SWAP_SELECTION = 83; // code 83 = s
+    KEY_EXP_RESET = 82; // code 82 = r
     KEY_EXP_DISPLAY_CHEMS = 67; // code 67 = c
     KEY_EXP_DISPLAY_EQUIPS = 86; // code 86 = r
     KEY_EXP_RESET_SELECTED = ESCAPE;

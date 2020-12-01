@@ -6,26 +6,26 @@
 </head>
 <body>
 <script>
-    let testColor = {
-        r: 0,
-        g: 135,
-        b: 255,
-        a: 79
-    };
+    let testColor = [
+        10,
+        135,
+        255,
+        79
+    ];
 
     console.log(getColorInt(testColor));
     console.log(getColorObjectFromInt(getColorInt(testColor)));
     function getColorInt(color){
-        return (color.r << 24) | (color.g << 16) | (color.b << 8) | color.a;
+        return (color[0] << 24) | (color[1] << 16) | (color[2] << 8) | color[3];
     }
 
     function getColorObjectFromInt(value){
-        return {
-            r: value >> 24,
-            g: value >> 16 & 0xFF,
-            b: value >> 8 & 0xFF,
-            a: value & 0xFF
-        };
+        return [
+            value >> 24,
+            value >> 16 & 0xFF,
+            value >> 8 & 0xFF,
+            value & 0xFF
+        ];
     }
 
 </script>

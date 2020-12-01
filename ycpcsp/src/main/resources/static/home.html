@@ -127,7 +127,7 @@
 <div id="PlaylistBox">
     <form id="myForm">
         <select id="selectNumber">
-            <option>Choose a number</option>
+            <option id="firstfield"></option>
         </select>
     </form>
   </div>
@@ -135,7 +135,7 @@
 
 
 <div class="dropup">
-    <button class="dropbtn2">FaQ</button>
+    <button class="dropbtn2" onclick="CreationPage()">Lab Creation</button>
     <div class="dropup-content">
 
     </div>
@@ -175,7 +175,8 @@
         PlayList = data;
     }); */
 
-    var array ;
+    var array = [];
+    var PlayList = [];
     function display(elm) {
         var x = elm.getAttribute('value');
         //TODO here is where we want to search for
@@ -185,7 +186,9 @@
     var user = JSON.parse(sessionStorage.getItem("user"));
 
     checkForLogin();
-
+    function CreationPage(){
+        window.location.href = "/Creation";
+    }
     function checkForLogin(){
         // attempt to get user information from session
 
@@ -280,7 +283,7 @@
         boxDiv.innerHTML = "<h3> Your experiments </h3><br>"
         for(var i = 0; i < user.experiments.length; i++){
             var experiment = user.experiments[i];
-            var experimentInListDiv = "<div id=\"userExperiment\" style=\"text-align: center; width: 200px; height: 50px; border: 1px solid black\" onclick=\"loadSimulation("+experiment.id+")\">"+
+            var experimentInListDiv = "<div id=\"userExperiment\" style=\"text-align: center; width: 200px; height: 50px; border: 1px solid #000000\" onclick=\"loadSimulation("+experiment.id+")\">"+
                                         experiment.title + "<br>" +
                                         experiment.id + "<br><\div>";
             boxDiv.innerHTML += experimentInListDiv;
@@ -291,7 +294,14 @@
         var dropDownContents = document.getElementById("dropdown-content");
         dropDownContents.innerHTML = "<button onclick=\"profile()\">My Profile</button><br><br><button onclick=\"logout()\">Log out</button>";
     }
+    postData('Playlist', 30).then(function(data){
+        console.log(data);
+        PlayList = data;
+    });
 
+    if(PlayList.length >= 0){
+        document.getElementById("firstfield").innerHTML = "No Playlist";
+    }
     function profile(){
         window.location.href = "/profile";
     }

@@ -9,31 +9,41 @@ import java.sql.SQLException
 import java.util.*
 
 
+/**
+ *  This function loads all of the necessary components to load and interact with an experiment on the front end.
+ *  Components loaded include:
+ *  Experiment properties - name, creator and experimentID
+ *  A list containing all equipment
+ *  A list containing all chemical instances (amounts, concentrations)
+ *  A list containing all step information
+ *  A list containing all chemical information for chemical instances (molar mass, formula, etc.) - TODO WIP
+ *  A list containing all chemical equation information (reactant / product formulas and coefficients) - TODO WIP
+ *  @param id: the id of the experiment to load
+ *  @return: the constructed Experiment object
+ */
 fun LoadExperiment(id: String) : Experiment {
     val connection = getDBConnection()
     if(connection != null) {
         try {
 
-            //Experiment Query
+            //Experiment object
             var experiment = Experiment()
 
-            //User query
-            // grab the title first name last name from the database
+            //Creator name query
             var preparedSt = connection.prepareStatement("Select Distinct title, firstName, lastName from Database.Experiments join Database.Users on Database.Experiments.creatorID = Database.Users.UserID where ExperimentsID = ? ")
-            preparedSt.setString(1, id) // set the ? to the ide of which experiment were looking for
+            preparedSt.setString(1, id)
             val rs = preparedSt.executeQuery()
-
             rs.fetchSize = 2
             rs.next()
-            val title = rs.getString("title")   // get the title
-            val creatorName = rs.getString("firstName") + " " + rs.getString("lastName") // get the first and last name and store them in one variable
-            experiment.title = title    // set the title to the title selected
-            experiment.creatorName = creatorName    // set the creator name to the one we created earlier
+            val title = rs.getString("title")
+            val creatorName = rs.getString("firstName") + " " + rs.getString("lastName")
+            experiment.title = title
+            experiment.creatorName = creatorName
 
 
             //Equipment query
             preparedSt = connection.prepareStatement("Select Distinct object_ID, amount from Database.Equipments join Database.Experiments on Database.Experiments.ExperimentsID = Database.Equipments.experiment_ID where ExperimentsID = ? ")
-            preparedSt.setString(1, id) // set the ? to the ide of which experiment were looking for
+            preparedSt.setString(1, id)
 
             val rs2 = preparedSt.executeQuery()
 
@@ -46,11 +56,11 @@ fun LoadExperiment(id: String) : Experiment {
             for (x in 1..rs2.fetchSize) {
                 val object_ID = rs2.getInt("object_ID")
                 val amount = rs2.getInt("amount")
-
                 experiment.equipment[x - 1] = (EquipmentObject(object_ID, amount))
+                rs2.next()
             }
 
-            //Chemical query
+            //Chemical instance query
             preparedSt = connection.prepareStatement("Select type_id, mass, concentration from Database.Chemicals join Database.Experiments on Database.Experiments.ExperimentsID = Database.Chemicals.experiment_ID where experiment_ID = ? ")
             preparedSt.setString(1, id)
 
@@ -68,6 +78,9 @@ fun LoadExperiment(id: String) : Experiment {
                 experiment.chemicals[x - 1] = ChemicalObject(type_id, quantity, concentration)
                 rs3.next()
             }
+
+            // TODO: insert chemical information query
+            // TODO: insert equation information query (not necessarily in that order)
 
 
             //Step Query
@@ -91,7 +104,6 @@ fun LoadExperiment(id: String) : Experiment {
                 experiment.steps[x - 1] = Step(step_number, actor_index, actor_ID, receiver_index, receiver_ID, function_ID)
                 rs4.next()
             }
-
 
 
             return experiment

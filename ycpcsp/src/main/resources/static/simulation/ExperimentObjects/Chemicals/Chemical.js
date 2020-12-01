@@ -26,6 +26,30 @@ class Chemical extends ExperimentObject{
     }
 
     /**
+    Get the volume of this Chemical in milliliters
+    return: The volume
+    */
+    getVolume(){
+        return this.getMass() / this.getDensity();
+    }
+
+    /**
+    Set the current volume of this Chemical
+    volume: The volume in milliliters
+    */
+    setVolume(volume){
+        this.setMass(volume * this.getDensity());
+    }
+
+    /**
+    Add the given amount of milliliters to this Chemical
+    volume: The volume to add
+    */
+    addVolume(volume){
+        this.setVolume(this.getVolume() + volume);
+    }
+
+    /**
     Set the properties object of this Chemical
     properties: The properties object
     */
@@ -43,15 +67,35 @@ class Chemical extends ExperimentObject{
 
     /**
     Get the texture to use for rendering this Chemical
+    state: The state for the texture, or null to use this Chemical's current state, default null
     return: A list of 3 or 4 values [red, green, blue, alpha], alpha is option representing the color of this Chemical
     */
-    getTexture(){
-        switch(this.matterState){
-            case MATTER_STATE_SOLID: return this.properties.getSolidColor();
-            case MATTER_STATE_LIQUID: return this.properties.getLiquidColor();
-            case MATTER_STATE_GAS: return this.properties.getGasColor();
+    getTexture(state = null){
+        if(state === null) state = this.matterState;
+        switch(state){
+            case MATTER_STATE_SOLID: return this.getSolidColor();
+            case MATTER_STATE_LIQUID: return this.getLiquidColor();
+            case MATTER_STATE_GAS: return this.getGasColor();
             default: return null;
         }
+    }
+
+    /**
+    Get the current state of matter of this Chemical
+    returns: The state, based on the defined constants in this file
+    */
+    getMatterState(){
+        return this.matterState;
+    }
+
+    /**
+    Set the current matter state of this Chemical using the constants.
+    Use MATTER_STATE_SOLID for a solid state
+    Use MATTER_STATE_LIQUID for a liquid state
+    Use MATTER_STATE_GAS for a gaseous state
+    */
+    setMatterState(state){
+        this.matterState = state;
     }
 
     /**
@@ -67,10 +111,110 @@ class Chemical extends ExperimentObject{
 
     /**
     Get the ID representing this Chemical type
+    returns: The id
     */
     getID(){
         return this.properties.getID();
     }
+
+    /**
+    Get the creator property of this Chemical
+    return: The creator
+    */
+    getCreator(){
+        return this.properties.getCreator();
+    }
+
+    /**
+    Get the name property of this Chemical
+    returns: The name
+    */
+    getName(){
+        return this.properties.getName();
+    }
+
+    /**
+    Get the symbol property of this Chemical
+    returns: The symbol
+    */
+    getSymbol(){
+        return this.properties.getSymbol();
+    }
+
+    /*
+    Get the solid color property of this Chemical
+    returns: The color
+    */
+    getSolidColor(){
+        return this.properties.getSolidColor();
+    }
+
+    /*
+    Get the liquid color property of this Chemical
+    returns: The color
+    */
+    getLiquidColor(){
+        return this.properties.getLiquidColor();
+    }
+
+    /*
+    Get the gas color property of this Chemical
+    returns: The color
+    */
+    getGasColor(){
+        return this.properties.getGasColor();
+    }
+
+    /**
+    Get the molar mass of this Chemical
+    returns: The molar mass
+    */
+    getMolarMass(){
+        return this.properties.getMolarMass();
+    }
+
+    /**
+    Get the melting point property of this Chemical
+    returns: The temperature, in Celsius
+    */
+    getMeltingPoint(){
+        return this.properties.getMeltingPoint();
+    }
+
+    /**
+    Get the boiling point property of this Chemical
+    returns: The temperature, in Celsius
+    */
+    getBoilingPoint(){
+        return this.properties.getBoilingPoint();
+    }
+
+    /**
+    Get the density property of this Chemical
+    returns: The density
+    */
+    getDensity(){
+        return this.properties.getDensity();
+    }
+
+    /**
+    Get the water solubility property of this Chemical
+    return: The water solubility
+    */
+    getWaterSolubility(){
+        return this.properties.getWaterSolubility();
+    }
+
+    /**
+    Make an exact copy of this Chemical
+    returns: The Chemical copy
+    */
+    copyChem(){
+        var newC = new Chemical(this.getMass(), this.properties, this.temperature, this.concentration);
+        newC.setMatterState(this.matterState);
+        return newC;
+    }
+
 }
 
 
@@ -148,8 +292,15 @@ class ChemicalController2D extends ExperimentObjectController2D{
     returns: A floating point value, the number of moles
     */
     calculateMoles(){
-        // TODO implement
-        return 0;
+        return this.chemical.getMass() / this.chemical.getMolarMass();
+    }
+
+    /**
+    Determine the mass of a given number of moles based on this Controller's Chemical
+    returns: A floating point value, the mass in grams
+    */
+    calculateMass(moles){
+        return moles * this.chemical.getMolarMass();
     }
 
     /**
@@ -157,7 +308,11 @@ class ChemicalController2D extends ExperimentObjectController2D{
     The result is stored in the matterState field in the Chemical
     */
     calculateMatterState(){
-        // TODO implement
+        let c = this.chemical;
+        if(c === null) return;
+        if(c.temperature > c.getBoilingPoint()) c.setMatterState(MATTER_STATE_GAS);
+        else if(c.temperature > c.getMeltingPoint()) c.setMatterState(MATTER_STATE_LIQUID);
+        else c.setMatterState(MATTER_STATE_SOLID);
     }
 
     /**
@@ -166,19 +321,18 @@ class ChemicalController2D extends ExperimentObjectController2D{
     This method does not change this Controller's Chemical.
     This method will combine all common elements in the given list, i.e. if the list has two instances of chemicalA,
         they wil both be combined into one instance of chemicalA, with the combined mass of both instances of chemicalA.
-    Currently combines common Chemicals, but does not perform chemical equation interactions
-    Also ensures that the chemicals are sorted by density.
+    Any chemicals which react as a formula, will do so after this method call.
+    Also ensures that the chemicals are sorted by density, least dense Chemicals at the end.
     chems: The Chemicals to combine
     returns: The list of Chemicals, or null if they could not be combined
     */
     combine(chems){
         // Checking to make sure parameters exist
         if(!Array.isArray(chems) || chems === null) return null;
-        if(this.chemical !== null) chems.push(this.copyChem());
+        if(this.chemical !== null) chems.push(this.chemical.copyChem());
         if(chems.length < 1) return chems;
 
-        // Go through each Chemical in the list and see if the chemical can be added
-        //  also add each Chemical to the list to return
+        // Go through each Chemical in the list and see if any chemicals can be combined from having the same ID
         let indexes = {};
         let control = new ChemicalController2D(null);
         for(var i = 0; i < chems.length; i++){
@@ -189,28 +343,69 @@ class ChemicalController2D extends ExperimentObjectController2D{
             // If the current chemical has not yet been indexed, add it to the index dictionary
             if(indexed === undefined){
                 control.setChemical(c);
-                let newC = control.copyChem();
+                let newC = control.chemical.copyChem();
                 indexes[cID] = newC;
                 chems[i] = newC;
             }
             // If the chemical exists, combine their masses and remove the common instance from the list
             else{
                 // TODO handle concentration values
-                indexed.setMass(indexed.mass + c.mass);
+                indexed.setMass(indexed.getMass() + c.getMass());
                 chems.splice(i, 1);
                 i--;
             }
-            // TODO handle interactions when chemicals should combine to produce something new
         }
 
+        // Create a dictionary of chem list
+        /*
+        This is a very hacky way of doing this.
+        Parts of this method should be overridden as separate methods in ChemicalSolution.
+        I would do that, but it is impossible to do with the current architecture of using models and controllers.
+        I would simply not use models and controllers as they are a poor approach to this type of code,
+        but as a result of the requirements of the class for this project, I had to use model and controller classes.
+        So this code is bad because I was required to make it bad, sue me.
+        Instead, I'm making a special case here for ChemicalSolutions to not be added to the dictionary
+        */
+        let solutions = [];
+        let cDict = [];
+        for(var i = 0; i < chems.length; i++){
+            let c = chems[i];
+            if(c instanceof ChemicalSolution) solutions.push(c);
+            else cDict[c.getID()] = c;
+        }
+
+        // Check for if each of the equations can be applied to the dictionary
+        EQUATION_PROPERTIES.forEach(function(obj, id){
+            let equation = new ChemEquation(id);
+            equation.processChemList(this);
+        }, cDict);
+
+        // Clear out the chems list
+        chems.splice(0, chems.length);
+
+        // Add all elements from the dictionary to the chem list
+        cDict.forEach(function(obj){
+            chems.push(obj);
+        }, chems);
+        // Add all solutions from the dictionary to the chem list
+        solutions.forEach(function(obj){
+            chems.push(obj);
+        }, chems);
+
+        /*
+        TODO improve this by inserting new chemicals based on their density, rather than sorting each time,
+            also move it to above the combining
+            This is so they can be inserted by density as they are added back to chem list
+        */
         // Sort the chemicals by their densities, smallest at the end
-        // TODO improve this by inserting new chemicals based on their density, rather than sorting each time
-        return chems.sort(function(a, b){
-            let ad = a.properties.getDensity();
-            let bd = b.properties.getDensity();
+        chems.sort(function(a, b){
+            let ad = a.getDensity();
+            let bd = b.getDensity();
             if(ad === bd) return 0;
             return (ad > bd) ? -1 : 1;
         });
+
+        return chems;
     }
 
     /**
@@ -224,20 +419,10 @@ class ChemicalController2D extends ExperimentObjectController2D{
     split(percent){
         let c = this.chemical
         if(percent < 0 || percent > 1 || c === null) return null;
-        var chem = this.copyChem();
-        chem.setMass(chem.mass * (1 - percent));
-        c.setMass(c.mass * percent);
+        var chem = c.copyChem();
+        chem.setMass(chem.getMass() * (1 - percent));
+        c.setMass(c.getMass() * percent);
         return chem;
-    }
-
-    /**
-    Make an exact copy of this Controller's Chemical
-    returns: The Chemical copy
-    */
-    copyChem(){
-        let c = this.chemical
-        if(c === null) return null;
-        return new Chemical(c.mass, c.properties, c.temperature, c.concentration);
     }
 
     /**
@@ -315,7 +500,7 @@ function drawChemicalRectMultiple(graphics, chems, totalQuantity, x, y, w, h){
         let c = chems[i];
         let tex = c.getTexture();
         if(tex !== null && tex !== undefined){
-            var hPerc = h * c.mass / totalQuantity;
+            var hPerc = h * c.getVolume() / totalQuantity;
             graphics.fill(tex);
             graphics.noStroke();
             currentY -= hPerc;
@@ -354,7 +539,7 @@ function drawChemicalShapeMultiple(graphics, chems, totalQuantity, vertices, x, 
                 buffer.vertex(vertices[j][0], vertices[j][1]);
             }
             buffer.endShape(CLOSE);
-            let ratio = h * c.mass / totalQuantity;
+            let ratio = h * c.getVolume() / totalQuantity;
             let hr = h - ratio;
             currentY -= ratio;
             graphics.image(buffer, x, currentY, w, ratio, 0, currentY - y, w, ratio);
