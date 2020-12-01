@@ -219,6 +219,9 @@
     // display map for equipment
     let displayEquipment = {};
 
+    // unique ID to be given to experiment objects (equipment, chemicals) used when generating steps
+    let nextUniqueID = -1;
+
     // experiment list divs
     let chemicalListDiv = null;
     let equipmentListDiv = null;
@@ -303,6 +306,9 @@
             equipmentScriptStatus[i] = false;
         }
 
+        // generate unique experiment object IDs to be used in step conversion starting at 0
+        nextUniqueID = 0
+
     }
 
     /*
@@ -360,7 +366,7 @@
                 // draw a value for each equipment in the list                
                 for(let i in equipments){
                     let equipment = equipments[i];
-                    actorFormCode += '<option id="EQUIPMENT" value="'+(i)+'">'+equipment.name+'</option>';
+                    actorFormCode += '<option id="EQUIPMENT" value="'+(equipment.uniqueID)+'">'+equipment.name+'</option>';
                 }
 
                 // draw a value for each chemical in the list
@@ -403,7 +409,7 @@
                 // draw a value for each equipment in the list
                 for(let i in equipments){
                     let equipment = equipments[i];
-                    receiverFormCode += '<option id="EQUIPMENT" value="'+(i)+'">'+equipment.name+'</option>';
+                    receiverFormCode += '<option id="EQUIPMENT" value="'+(equipment.uniqueID)+'">'+equipment.name+'</option>';
                 }
 
                 // draw a value for each chemical if at least one is in list
@@ -527,10 +533,10 @@
                         console.log(stepInProgress);
                         
                         // add chemical instance to step to be added to chems list later 
-                        stepInProgress.chemInstanceToAdd = {id: stepInProgress.actorID, quantity: quantity, concentration: concentration};
+                        stepInProgress.chemInstanceToAdd = {id: stepInProgress.actorID, quantity: quantity, concentration: concentration, uniqueID: nextUniqueID};
                         
                         // change chemical from actor to receiver in step 
-                        stepInProgress.receiverID = chems.length;
+                        stepInProgress.receiverID = nextUniqueID++;
                         stepInProgress.receiverIsEquipment = false;
                         delete stepInProgress.actorID;
                         delete stepInProgress.actorIsEquipment;
@@ -542,10 +548,10 @@
                     } else{
 
                         // add chemical instance to step to be added to chems list later
-                        stepInProgress.chemInstanceToAdd = {id: stepInProgress.receiverID, quantity: quantity, concentration: concentration};
+                        stepInProgress.chemInstanceToAdd = {id: stepInProgress.receiverID, quantity: quantity, concentration: concentration, uniqueID: nextUniqueID};
                         
                         // set index of receiver in step to be next index of chems list
-                        stepInProgress.receiverID = chems.length;
+                        stepInProgress.receiverID = nextUniqueID++;
                         console.log(stepInProgress);
                         console.log(chems);
                         
@@ -673,17 +679,18 @@
         // draw each step in experiment 
         for(let i = 0; i < steps.length; i++){
             let step = steps[i];
-            stepListDiv.innerHTML += '<div id="experimentStepComponent"> Step ' + (i+1) + ": "+
-            
+            stepListDiv.innerHTML += '<div id="experimentStepComponent"> Step ' + (i+1) + ": " +
             // if actor / receiver is equipment, draw name, otherwise draw chemical name, quantity, and concentration
-            (step.actorIsEquipment ? equipments[step.actorID].name : chemInfos[chems[step.actorID].id].name + ", quantity=" + chems[step.actorID].quantity + ", concentration=" + chems[step.actorID].concentration) +
+            // TODO fix attrocious uniqueIDToIndex repeats
+            (step.actorIsEquipment ? equipments[step.actorID].name : chemInfos[chems[uniqueIDToIndex(step.actorID, chems)].id].name + ", quantity=" + chems[uniqueIDToIndex(step.actorID, chems)].quantity + ", concentration=" + chems[uniqueIDToIndex(step.actorID, chems)].concentration) +
             " acts on " + 
-            (step.receiverIsEquipment ? equipments[step.receiverID].name : chemInfos[chems[step.receiverID].id].name + ", quantity=" + chems[step.receiverID].quantity + ", concentration=" + chems[step.receiverID].concentration) +
+            (step.receiverIsEquipment ? equipments[step.receiverID].name : chemInfos[chems[uniqueIDToIndex(step.receiverID, chems)].id].name + ", quantity=" + chems[uniqueIDToIndex(step.receiverID, chems)].quantity + ", concentration=" + chems[uniqueIDToIndex(step.receiverID, chems)].concentration) +
             " with function " +
             
             // draw function description
             step.functionDescription + 
             '</div>';
+
         }
     }
 
@@ -712,8 +719,11 @@
             displayEquipment[equipmentIndex] = {equipmentID: equipment.equipmentID, name: equipment.name, quantity: 1};
         }
 
+        // give unique ID to this equipment to be used when building steps
+        let equipWithUID = {equipmentID: equipment.equipmentID, name: equipment.name, uniqueID: nextUniqueID++};
+
         // experiment equipment list
-        equipments.push(equipment);
+        equipments.push(equipWithUID);
         
         // try to load simulation script for this equipment in order to
         // obtain function descriptions when used in step creation
@@ -1008,12 +1018,49 @@
             delete chem.quantity;
         }
 
+        // simulation requires step actor / receiver IDs to be indices in their respective arrays, which haven't been built yet
+        // so, create said arrays and swap actor / receiver IDs with indices the object will be in on sim.
+
+        // equipment is currently in order that equipment objects were selected, need to be in ascending order by equipmentID
+        equipments.sort(function (equip1, equip2){
+            return equip1.equipmentID - equip2.equipmentID;
+        });
+
+        console.log("before");
+        console.log(chems);
+        // similar thing for chem instances, although they must be sorted by ID, then mass, then concentration.
+        chems.sort(function(chem1, chem2){
+            // sort first by ID
+           if(chem1.id == chem2.id){
+               // then by mass, floating point so be careful with comparison
+                if(chem1[EXP_JSON_CHEM_MASS] - chem2[EXP_JSON_CHEM_MASS] < 0.0001){
+                    return chem1.concentration - chem2.concentration;
+                }
+                // if ID and mass are (almost) equal, sort by concentration
+                return chem1[EXP_JSON_CHEM_MASS] - chem2[EXP_JSON_CHEM_MASS];
+           }
+           return chem1.id - chem2.id;
+        });
+        console.log("after");
+        console.log(chems);
+
+        console.log("before");
+        console.log(steps);
+        // now, go through steps and update actor / receiver ID to index in array, rather than unique ID
+        for(let x in steps){
+            let step = steps[x];
+            step.actorID = uniqueIDToIndex(step.actorID, step.actorIsEquipment ? equipments : chems);
+            step.receiverID = uniqueIDToIndex(step.receiverID, step.receiverIsEquipment ? equipments : chems);
+        }
+        console.log("after");
+        console.log(steps);
+
         // step formatting
         // simply convert fields found in this file to JSON fields
         // as Jackson requires exact field name matching
         for(let i in steps){
             let step = steps[i];
-            step[EXP_JSON_INS_STEP_NUM] = i+1;
+            step[EXP_JSON_INS_STEP_NUM] = parseInt(i)+1;
             step[EXP_JSON_INS_ACTOR_INDEX] = step.actorID;
             delete step.actorID;
             step[EXP_JSON_INS_ACTOR_IS_EQUIP] = step.actorIsEquipment;
@@ -1046,12 +1093,27 @@
         console.log(grouping);
 
         // submit coupled object for submission on DB
+        
         postData('save-new-creation', grouping).then(function(data){
             console.log(data);
         });
-        
+             
     }
 
+    // given a unique ID for an experiment object, 
+    // iterate through the given simulation list 
+    // and return the index of the object whose 
+    // unique ID matches the given one
+    // return: the index of the object whose unique ID matches the given one
+    // return: -1 if the index isn't in the list (error occurred...)
+    function uniqueIDToIndex(value, list){
+        for(let x in list){
+            if(list[x].uniqueID == value){
+                return x;
+            }
+        }
+        return -1
+    }
 
 </script>
 </html>
