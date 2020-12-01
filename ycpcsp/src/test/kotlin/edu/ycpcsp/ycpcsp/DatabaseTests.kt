@@ -204,7 +204,7 @@ class DatabaseTests {
     fun testSearchExperiment(){
         val searchData = SearchFormData("Color")
         val result = SearchExperiment(searchData)
-        assertEquals(6, result[0])
+        assertEquals(6, result[0].id)
     }
 
 }
