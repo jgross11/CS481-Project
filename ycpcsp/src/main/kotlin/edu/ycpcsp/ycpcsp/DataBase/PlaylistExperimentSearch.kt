@@ -1,6 +1,8 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
+import edu.ycpcsp.ycpcsp.DataBase.serverCredential
 import edu.ycpcsp.ycpcsp.Models.PlayList
+import edu.ycpcsp.ycpcsp.Models.PlaylistObject
 import edu.ycpcsp.ycpcsp.Models.User
 import java.sql.DriverManager
 import java.sql.SQLException
@@ -8,7 +10,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-fun PlaylistSearch(userId: Int) : ArrayList<PlayList> {
+fun PlaylistExperimentSearch(Playlist_ID: Int) : ArrayList<PlaylistObject> {
     val serverCredentials = serverCredential()
     val username = serverCredentials?.get(0)
     val password = serverCredentials?.get(1)
@@ -25,14 +27,14 @@ fun PlaylistSearch(userId: Int) : ArrayList<PlayList> {
         //Connection for the database to get it connected and then execute the query to insert the values into the database
         val conn = DriverManager.getConnection(url, connectionProps)
         //Experiment Search Query
-        println(userId)
-        val query = "Select * from Database.Playlist where user_ID = ? "
+        println(Playlist_ID)
+        val query = "SELECT s.ExperimentsID, s.creatorID, s.title, u.firstName, u.lastName FROM Playlist_Experiments p INNER JOIN Experiments s ON s.ExperimentsID = p.Experiment_ID inner join Users u on u.UserID = s.creatorID WHERE p.Playlist_Id = ? "
         val ps = conn.prepareStatement(query)
-        ps.setInt(1, userId)
+        ps.setInt(1, Playlist_ID)
         val rs = ps.executeQuery()
 
         //make string list to store the names in
-        val RecentExperiments = arrayListOf<PlayList>()
+        val RecentExperiments = ArrayList<PlaylistObject>()
 
         //find the fetch size by going to end
         rs.last()
@@ -42,16 +44,11 @@ fun PlaylistSearch(userId: Int) : ArrayList<PlayList> {
 
         //go to first value and start putting the names of the experiments in the list
         rs.next()
-        var contains = true
 
 
         for (x in 1..rs.fetchSize) {
 
-            var WhatIsGoing = PlayList(rs.getInt("user_ID"), rs.getString("Playlist_Name"), rs.getInt("Playlist_ID"))
-
-            WhatIsGoing.Experiment = PlaylistExperimentSearch(rs.getInt("Playlist_ID"))
-            //TODO got to find a way to bring some Experiments here today getlist of experimentsID that need to be grabbed and then grab their other stuff
-
+            var WhatIsGoing = PlaylistObject(rs.getInt(rs.getInt("ExperimentsID")), rs.getInt("creatorID"), rs.getString("title"), rs.getString("firstName"), rs.getString("lastName"))
             RecentExperiments.add(WhatIsGoing)
             rs.next()
         }
@@ -70,4 +67,3 @@ fun PlaylistSearch(userId: Int) : ArrayList<PlayList> {
     //If you get here then there was a failure so return empty array
     return arrayListOf()
 }
-
