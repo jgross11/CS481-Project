@@ -27,7 +27,7 @@ fun getCompoundInformationByName(name : String) : ChemicalProperties?{
             var rs = preparedStatement.executeQuery()
             return if(rs.first()){
 
-                var comp = ChemicalInformation(rs.getInt(CompoundIDIndex), rs.getString(CompoundFormulaIndex), rs.getString(CompoundNameIndex), rs.getDouble(CompoundMassIndex), rs.getDouble(CompoundDensityIndex),
+                var comp = ChemicalProperties(rs.getInt(CompoundIDIndex), rs.getString(CompoundFormulaIndex), rs.getString(CompoundNameIndex), rs.getDouble(CompoundMassIndex), rs.getDouble(CompoundDensityIndex),
                         rs.getBoolean(CompoundSolubleIndex), rs.getDouble(CompoundSolidIndex), rs.getDouble(CompoundGasIndex), rs.getInt(creatorIDIndex),rs.getInt(RatingIndex))
 
                 preparedStatement = connection.prepareStatement("SELECT * FROM Database.ChemistryGraphics WHERE ChemicalID = ?;")
@@ -62,7 +62,7 @@ fun getCompoundInformationByFormula(formula : String) : ChemicalProperties?{
             var rs = preparedStatement.executeQuery()
             return if(rs.first()){
 
-                var comp = ChemicalInformation(rs.getInt(CompoundIDIndex), rs.getString(CompoundFormulaIndex), rs.getString(CompoundNameIndex), rs.getDouble(CompoundMassIndex), rs.getDouble(CompoundDensityIndex),
+                var comp = ChemicalProperties(rs.getInt(CompoundIDIndex), rs.getString(CompoundFormulaIndex), rs.getString(CompoundNameIndex), rs.getDouble(CompoundMassIndex), rs.getDouble(CompoundDensityIndex),
                         rs.getBoolean(CompoundSolubleIndex), rs.getDouble(CompoundSolidIndex), rs.getDouble(CompoundGasIndex), rs.getInt(creatorIDIndex),rs.getInt(RatingIndex))
 
                 preparedStatement = connection.prepareStatement("SELECT * FROM Database.ChemistryGraphics WHERE ChemicalID = ?;")
@@ -99,7 +99,7 @@ fun getCompoundInformationByID(id : Int) : ChemicalProperties?{
             var rs = preparedStatement.executeQuery()
             return if(rs.first()){
 
-                var comp = ChemicalInformation(rs.getInt(CompoundIDIndex), rs.getString(CompoundFormulaIndex), rs.getString(CompoundNameIndex), rs.getDouble(CompoundMassIndex), rs.getDouble(CompoundDensityIndex),
+                var comp = ChemicalProperties(rs.getInt(CompoundIDIndex), rs.getString(CompoundFormulaIndex), rs.getString(CompoundNameIndex), rs.getDouble(CompoundMassIndex), rs.getDouble(CompoundDensityIndex),
                         rs.getBoolean(CompoundSolubleIndex), rs.getDouble(CompoundSolidIndex), rs.getDouble(CompoundGasIndex), rs.getInt(creatorIDIndex),rs.getInt(RatingIndex))
 
                 preparedStatement = connection.prepareStatement("SELECT * FROM Database.ChemistryGraphics WHERE ChemicalID = ?;")

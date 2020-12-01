@@ -1,6 +1,5 @@
 package edu.ycpcsp.ycpcsp.WebControllers
 
-import edu.ycpcsp.ycpcsp.Models.ChemicalInformation
 import edu.ycpcsp.ycpcsp.Models.User
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
