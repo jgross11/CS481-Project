@@ -22,7 +22,8 @@ class ChemicalProperties (var chemicalInformationID : Int,
                           var isWaterSoluble : Boolean,
                           var meltingPoint : Double,
                           var boilingPoint : Double,
-                          var creatorID : Int){
+                          var creatorID : Int,
+                          var rating : Int){
 
     var colors = ChemicalColorStates()
     // null constructor

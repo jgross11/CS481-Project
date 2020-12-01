@@ -1,6 +1,5 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
-import edu.ycpcsp.ycpcsp.Models.ChemicalInformation
 import java.sql.SQLException
 
 

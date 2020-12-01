@@ -1,7 +1,6 @@
 package edu.ycpcsp.ycpcsp.WebControllers
 
 import edu.ycpcsp.ycpcsp.DataBase.*
-import edu.ycpcsp.ycpcsp.Models.ChemicalInformation
 import edu.ycpcsp.ycpcsp.Models.PlayList
 import edu.ycpcsp.ycpcsp.Models.SearchObject
 import edu.ycpcsp.ycpcsp.Models.User
