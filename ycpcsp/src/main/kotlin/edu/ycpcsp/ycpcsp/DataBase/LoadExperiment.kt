@@ -107,20 +107,20 @@ fun LoadExperiment(id: String) : Experiment {
                     if(equation != null){
                         // if component is reactant
                         if(rs.getBoolean(8)){
-                            equation.reactants = equation.reactants.plus(EquationComponent(rs.getInt(9), rs.getInt(10)))
+                            equation.reactants = equation.reactants.plus(EquationComponent(rs.getInt(10), rs.getInt(11)))
                         } else{
-                            equation.products = equation.products.plus(EquationComponent(rs.getInt(9), rs.getInt(10)))
+                            equation.products = equation.products.plus(EquationComponent(rs.getInt(10), rs.getInt(11)))
                         }
                         // put updated equation back into map
                         equationMap[equation.equationID] = equation
                     }
                     // otherwise, create the equation object with the first piece of information
                     else{
-                        equation = ChemicalEquation(rs.getInt(equationIDIndex), rs.getInt(2))
+                        equation = ChemicalEquation(rs.getInt(equationIDIndex), rs.getInt(2), rs.getInt(3))
                         if(rs.getBoolean(isReactantIndex)){
-                            equation.reactants = Array(1){ EquationComponent(rs.getInt(9), rs.getInt(10)) }
+                            equation.reactants = Array(1){ EquationComponent(rs.getInt(10), rs.getInt(11)) }
                         } else{
-                            equation.products = Array(1){ EquationComponent(rs.getInt(9), rs.getInt(10)) }
+                            equation.products = Array(1){ EquationComponent(rs.getInt(10), rs.getInt(11)) }
                         }
                         // put new equation back into map
                         equationMap[equation.equationID] = equation

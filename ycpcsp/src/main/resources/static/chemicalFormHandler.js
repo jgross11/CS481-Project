@@ -148,19 +148,20 @@ function submitChemical(){
         };
 
         // build chemical object for mapping
-        let chemical = {
-            name: chemicalName,
-            formula: chemicalFormula,
-            mass: chemicalMass,
-            density: chemicalDensity,
-            isWaterSoluable: soluble,
-            solidTemp: chemicalMP,
-            gasTemp: chemicalBP,
-            colors: colorStates
-        };
+        let chemical = {};
+        chemical[CHEMICAL_PROPERTY_NAME] = chemicalName;
+        chemical[CHEMICAL_PROPERTY_SYMBOL] = chemicalFormula;
+        chemical[CHEMICAL_PROPERTY_MOLAR_MASS] = chemicalMass;
+        chemical[CHEMICAL_PROPERTY_DENSITY] = chemicalDensity;
+        chemical[CHEMICAL_PROPERTY_WATER_SOLUBLE] = soluble;
+        chemical[CHEMICAL_PROPERTY_MELTING_POINT] = chemicalMP;
+        chemical[CHEMICAL_PROPERTY_BOILING_POINT] = chemicalBP;
+        chemical[CHEMICAL_PROPERTY_COLORS] = colorStates;
         submissionErrorDiv.innerHTML = "";
 
         // submit chemical information to DB
+        console.log(chemical);
+        
         postData('submit-chemical-information', chemical).then(function(data){
             if(data){
                 submissionErrorDiv.innerHTML = "Submission successful";
@@ -174,6 +175,7 @@ function submitChemical(){
             // TODO newly added chemical, but, alas, time...
             loadChemicalsInDB();
         });
+        
 
     // verification failed in at least one spot
     } else{
