@@ -32,6 +32,8 @@ class SimulationController {
         return exp
     }
 
+    /*
+    TODO this functionality should've been moved to CreationController, keep this for now to ensure nothing breaks
     // given an Experiment object representing a newly created experiment,
     // attempt to save Experiment object in DB. return true if save successful, false otherwise
     @PostMapping(path = ["/save-new-simulation"], consumes = ["application/json"], produces = ["application/json"])
@@ -42,7 +44,7 @@ class SimulationController {
         println(userAndExp.experiment)
         result = CreateExperiment(userAndExp)
         return result
-    }
+    }*/
 
     // given an Experiment object representing a modified experiment (edit(s) made to one already in DB)
     // overwrite old information in DB with new information. return true if overwrite successful, false otherwise
