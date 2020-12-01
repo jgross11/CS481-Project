@@ -106,7 +106,7 @@ fun LoadExperiment(id: String) : Experiment {
                     // append new component if equation object already created
                     if(equation != null){
                         // if component is reactant
-                        if(rs.getBoolean(8)){
+                        if(rs.getBoolean(9)){
                             equation.reactants = equation.reactants.plus(EquationComponent(rs.getInt(10), rs.getInt(11)))
                         } else{
                             equation.products = equation.products.plus(EquationComponent(rs.getInt(10), rs.getInt(11)))
