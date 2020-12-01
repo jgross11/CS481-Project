@@ -35,12 +35,10 @@ class CreationController {
     // attempt to save Experiment object in DB. return true if save successful, false otherwise
     @PostMapping(path = ["/save-new-creation"], consumes = ["application/json"], produces = ["application/json"])
     @ResponseBody
-    fun submitNewSimulation(@RequestBody userAndExp : UserAndExperiment) : Boolean{
-        var result = true
+    fun submitNewSimulation(@RequestBody userAndExp : UserAndExperiment) : Int{
         println("User ${userAndExp.user?.getFullName()} wants to submit following experiment data to DB:")
         println(userAndExp.experiment)
-        result = CreateExperiment(userAndExp)
-        return result
+        return CreateExperiment(userAndExp)
     }
 
     // given an Experiment object representing a modified experiment (edit(s) made to one already in DB)
