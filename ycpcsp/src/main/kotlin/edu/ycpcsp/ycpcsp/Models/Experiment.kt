@@ -59,11 +59,11 @@ data class Experiment(
         }
         result += "chemical informations:\n"
         for(ci in chemicalProperties){
-            result += "${ci.toString()}\n"
+            result += "$ci\n"
         }
         result += "equations:\n"
         for(eq in equations){
-            result += "${eq.toString()}\n"
+            result += "$eq\n"
         }
         return result
     }

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <link href='select2/dist/css/select2.min.css' rel='stylesheet' type='text/css'>
+</head>
+<body>
+
+// Beginning of scripts in use
+<script src="https://cdn.jsdelivr.net/npm/p5@1.1.9/lib/p5.js"></script>
+<script src="./helperFunctions.js"></script>
+
+
+<script src="simulation/ObjectIDs.js"></script>
+<script src="simulation/DataLoader.js"></script>
+<script src="simulation/Util/Util.js"></script>
+
+
+
+<script src="simulation/ExperimentObjects/ExperimentObject.js"></script>
+<script src="simulation/ExperimentObjects/Equipment.js"></script>
+<script src="simulation/ExperimentObjects/Chemical.js"></script>
+<script src="simulation/ExperimentObjects/ChemProperties.js"></script>
+<script src="simulation/ExperimentObjects/Scale.js"></script>
+<script src="simulation/ExperimentObjects/StirRod.js"></script>
+
+<script src="simulation/ExperimentObjects/Containers/Container.js"></script>
+<script src="simulation/ExperimentObjects/Containers/Beaker.js"></script>
+<script src="simulation/ExperimentObjects/Containers/ErlenmeyerFlask.js"></script>
+<script src="simulation/ExperimentObjects/Containers/GraduatedCylinder.js"></script>
+<script src="simulation/ExperimentObjects/Containers/WeighBoat.js"></script>
+
+<script src="simulation/ExperimentObjects/Disposers/Disposer.js"></script>
+<script src="simulation/ExperimentObjects/Disposers/Trashcan.js"></script>
+<!--
+Ending scripts in use
+Main div
+-->
+<div style="width:100%;">
+<!-- left Div for chemicals that are not verified -->
+<div style="float:left; width:50%;">
+    <select id='unverifiedChemicals' style='width: 200px;'>
+        <option value='0'>H20</option>
+    </select>
+    <input type='button' value='Seleted option' id='unverified_but_read'>
+    <br/>
+    <div id='unverifiedResult'></div>
+</div>
+<!-- ending of left div for chemicals that are not verified -->
+
+<!-- Right Div for chemical that verified -->
+<div style="float:right; width:50%;">
+    <select id='verifiedChemicals' style='width: 200px;'>
+        <option value='0'>H20</option>
+        <option value='1'>New Chemical</option>
+    </select>
+    <input type='button' value='Seleted option' id='verified_but_read'>
+    <br/>
+    <div id='verifiedResult'></div>
+
+</div>
+<!-- ending for Div for chemicla that are verified -->
+</div>
+<!-- ending of main Div -->
+</body>
+<script>
+
+    $(document).ready(function(){
+
+        // Initialize select2
+        $("#verifiedChemicals").select2();
+
+        // Read selected option
+        $('#verified_but_read').click(function(){
+            var username = $('#verifiedChemicals option:selected').text();
+            var userid = $('#verifiedChemicals').val();
+
+            $('#verifiedResult').html("id : " + userid + ", name : " + username);
+
+        });
+    });
+
+    var verifiedChemicalList = ["H20","C02"];
+    (function() {
+        var elm = document.getElementById('verifiedChemicals'),
+            df = document.createDocumentFragment();
+        for (var i = 0; i < verifiedChemicalList.length; i++) {
+            var option = document.createElement('option');
+            option.value = i;
+            option.appendChild(document.createTextNode(verifiedChemicalList[i]));
+            df.appendChild(option);
+        }
+        elm.appendChild(df);
+    }());
+
+
+    $(document).ready(function() {
+        $('.js-example-basic-single').select2();
+    });
+
+</script>
+</html>

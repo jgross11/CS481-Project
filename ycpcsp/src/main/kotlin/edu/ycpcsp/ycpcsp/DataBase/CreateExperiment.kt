@@ -1,13 +1,10 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
-import java.sql.DriverManager
 import java.sql.SQLException
-import java.util.*
-import edu.ycpcsp.ycpcsp.Models.*
 import edu.ycpcsp.ycpcsp.PostDataClasses.UserAndExperiment
 import java.sql.Statement
 
-fun CreateExperiment(userAndExperiment: UserAndExperiment): Boolean {
+fun CreateExperiment(userAndExperiment: UserAndExperiment): Int {
 
    var connection = getDBConnection()
 
@@ -37,9 +34,9 @@ fun CreateExperiment(userAndExperiment: UserAndExperiment): Boolean {
                     preparedSt.setInt(1, newExperimentKey)
                     preparedSt.setInt(2, step.stepNumber)
                     preparedSt.setInt(3, step.actorIndex)
-                    preparedSt.setBoolean(4, step.actorID)
+                    preparedSt.setBoolean(4, step.isActorEquipment)
                     preparedSt.setInt(5, step.receiverIndex)
-                    preparedSt.setBoolean(6, step.receiverID)
+                    preparedSt.setBoolean(6, step.isReceiverEquipment)
                     preparedSt.setInt(7, step.functionID)
 
                     preparedSt.executeUpdate()
@@ -82,8 +79,8 @@ fun CreateExperiment(userAndExperiment: UserAndExperiment): Boolean {
                 }
 
                 // TODO ensure all queries actually execute and handle errors accordingly
-                // if the updates work this method will return true
-                return true
+                // if the updates work this method will return the newly generated key for loading purposes
+                return newExperimentKey
             } catch (ex: SQLException) {
                 println("Error the query returned with a null result set. The query must have been entered incorrectly")
                 ex.printStackTrace()
@@ -91,7 +88,7 @@ fun CreateExperiment(userAndExperiment: UserAndExperiment): Boolean {
         }
 
         //This means the query failed to find anything
-        return false
+        return -1
     } catch (ex: SQLException) {
         // handle any errors
         ex.printStackTrace()
@@ -100,5 +97,5 @@ fun CreateExperiment(userAndExperiment: UserAndExperiment): Boolean {
         ex.printStackTrace()
     }
     //This means that the result was not the same
-    return false
+    return -1
 }

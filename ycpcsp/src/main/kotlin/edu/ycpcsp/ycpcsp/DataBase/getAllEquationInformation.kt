@@ -28,16 +28,17 @@ fun getAllEquationInformation() : Array<ChemicalEquationResult?>?{
                 rs.first()
 
                 // maps equationID to the appropriate equation, for 'serial' loading of equation information
-                // this code ran correctly on the first try, yes I am very proud of it
                 val equationMap = HashMap<Int, ChemicalEquationResult>()
                 for(i in 0 until numRows){
                     var equation = equationMap[rs.getInt(equationIDIndex)]
                     // append new component if equation object already created
                     if(equation != null){
                         if(rs.getBoolean(isReactantIndex)){
-                            equation.reactants = equation.reactants.plus(rs.getInt(coefficientIndex).toString() +  rs.getString(equationFormulaIndex))
+                            equation.reactantCoefficients = equation.reactantCoefficients.plus(rs.getInt(coefficientIndex))
+                            equation.reactantFormulas = equation.reactantFormulas.plus(rs.getString(equationFormulaIndex))
                         } else{
-                            equation.products = equation.products.plus(rs.getInt(coefficientIndex).toString() +  rs.getString(equationFormulaIndex))
+                            equation.productCoefficients = equation.productCoefficients.plus(rs.getInt(coefficientIndex))
+                            equation.productFormulas = equation.productFormulas.plus(rs.getString(equationFormulaIndex))
                         }
                         // put updated equation back into map
                         equationMap[equation.equationID] = equation
@@ -46,9 +47,11 @@ fun getAllEquationInformation() : Array<ChemicalEquationResult?>?{
                     else{
                         equation = ChemicalEquationResult(rs.getInt(equationIDIndex))
                         if(rs.getBoolean(isReactantIndex)){
-                            equation.reactants = Array(1){rs.getInt(coefficientIndex).toString() +  rs.getString(equationFormulaIndex)}
+                            equation.reactantCoefficients = intArrayOf(rs.getInt(coefficientIndex))
+                            equation.reactantFormulas = Array(1){rs.getString(equationFormulaIndex)}
                         } else{
-                            equation.products = Array(1){rs.getInt(coefficientIndex).toString() +  rs.getString(equationFormulaIndex)}
+                            equation.productCoefficients = intArrayOf(rs.getInt(coefficientIndex))
+                            equation.productFormulas = Array(1){rs.getString(equationFormulaIndex)}
                         }
                         // put updated equation back into map
                         equationMap[equation.equationID] = equation

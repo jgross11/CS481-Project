@@ -24,27 +24,28 @@ let ID_EQUIP_EYE_DROPPER = 17;
 let ID_EQUIP_REFRACTOMETER = 18;
 let ID_EQUIP_REFRACTOMETER_LENS = 19;
 
-var EquipID = [
-    { Equip: 'BEAKER_50mL', ID:1},
-    { Equip: 'BEAKER_150mL',ID:2},
-    { Equip: 'BEAKER_250mL',ID:3},
-    { Equip: 'BEAKER_600mL',ID:4},
-    { Equip: 'SCALE',ID:5},
-    { Equip: 'TRASHCAN',ID:6},
-    { Equip: 'GRADUATED_25mL',ID:7 },
-    { Equip: 'GRADUATED_50mL',ID:8 },
-    { Equip: 'GRADUATED_100mL',ID:9 },
-    { Equip: 'GRADUATED_1000mL',ID:10 },
-    { Equip: 'FLASK_25mL',ID:11 },
-    { Equip: 'FLASK_50mL',ID:12 },
-    { Equip: 'FLASK_100mL',ID:13 },
-    { Equip: 'FLASK_1000mL',ID:14 },
-    { Equip: 'WEIGH_BOAT',ID:15 },
-    { Equip: 'STIR_ROD',ID:16 },
-    { Equip: 'EYE_DROPPER',ID:17 }
-];
 
-sessionStorage.setItem("EquipID", JSON.stringify(EquipID));
+// contains all usable equipment information
+var allEquipmentList = [
+    { equipmentID:ID_EQUIP_BEAKER_50mL,       name: "Beaker (50mL)"},
+    { equipmentID:ID_EQUIP_BEAKER_150mL,      name: "Beaker (150mL)"},
+    { equipmentID:ID_EQUIP_BEAKER_250mL,      name: "Beaker (250mL)"},
+    { equipmentID:ID_EQUIP_BEAKER_600mL,      name: "Beaker (600mL)"},
+    { equipmentID:ID_EQUIP_SCALE,             name: "Scale"},
+    { equipmentID:ID_EQUIP_TRASHCAN,          name: "Trashcan"},
+    { equipmentID:ID_EQUIP_GRADUATED_25mL,    name: "Graduated Cylinder (25mL)" },
+    { equipmentID:ID_EQUIP_GRADUATED_50mL,    name: "Graduated Cylinder (50mL)" },
+    { equipmentID:ID_EQUIP_GRADUATED_100mL,   name: "Graduated Cylinder (100mL)" },
+    { equipmentID:ID_EQUIP_GRADUATED_1000mL,  name: "Graduated Cylinder (1000mL)" },
+    { equipmentID:ID_EQUIP_FLASK_25mL,        name: "Erlenmeyer Flask (25mL)" },
+    { equipmentID:ID_EQUIP_FLASK_50mL,        name: "Erlenmeyer Flask (50mL)" },
+    { equipmentID:ID_EQUIP_FLASK_125mL,       name: "Erlenmeyer Flask (125mL)" },
+    { equipmentID:ID_EQUIP_FLASK_1000mL,      name: "Erlenmeyer Flask (1000mL)" },
+    { equipmentID:ID_EQUIP_WEIGH_BOAT,        name: "Weigh Boat" },
+    { equipmentID:ID_EQUIP_STIR_ROD,          name: "Stir Rod" }
+]
+
+// sessionStorage.setItem("EquipID", JSON.stringify(EquipID));
 
 // Constants for indexing chemicals
 
@@ -262,27 +263,7 @@ function initTestChemProperties(){
 }
 
 
-// Constants for fields in CHEMICAL_PROPERTIES
-let CHEMICAL_PROPERTY_SYMBOL = "symbol";
-let CHEMICAL_PROPERTY_NAME = "name";
-let CHEMICAL_PROPERTY_CREATOR = "creator";
-let CHEMICAL_PROPERTY_COLORS = "colors";
-let CHEMICAL_PROPERTY_COLOR_SOLID = "colorSolid";
-let CHEMICAL_PROPERTY_COLOR_LIQUID = "colorLiquid";
-let CHEMICAL_PROPERTY_COLOR_GAS = "colorGas";
-let CHEMICAL_PROPERTY_ID = "id";
-let CHEMICAL_PROPERTY_MOLAR_MASS = "molarMass";
-let CHEMICAL_PROPERTY_MELTING_POINT = "meltingPoint";
-let CHEMICAL_PROPERTY_BOILING_POINT = "boilingPoint";
-let CHEMICAL_PROPERTY_DENSITY = "density";
-let CHEMICAL_PROPERTY_WATER_SOLUBLE = "waterSoluble";
 
-let EQUATION_PROPERTY_REACTANTS = "reactants";
-let EQUATION_PROPERTY_PRODUCTS = "products";
-let EQUATION_PROPERTY_ID = "id";
-
-let EQUATION_COMPONENT_PROPERTY_COEFFICIENT = "coefficient";
-let EQUATION_COMPONENT_PROPERTY_ID = "id";
 
 /**
 Add a new chemical to the CHEMICAL_PROPERTIES list

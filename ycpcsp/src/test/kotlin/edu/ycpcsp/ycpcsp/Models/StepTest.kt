@@ -20,7 +20,7 @@ internal class StepTest {
 
     @Test
     fun testGetActorId(){
-        assertEquals(true, testStep.actorID)
+        assertEquals(true, testStep.isActorEquipment)
     }
 
     @Test
@@ -30,7 +30,7 @@ internal class StepTest {
 
     @Test
     fun testGetReceiverId(){
-        assertEquals(false, testStep.receiverID)
+        assertEquals(false, testStep.isReceiverEquipment)
     }
 
     @Test

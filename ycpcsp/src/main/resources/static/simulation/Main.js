@@ -42,6 +42,7 @@ function initExperiment(data){
 
     // Create the experiment object proper
     mainExpController = new ExperimentController2D(mainExperiment, true);
+    console.log(CHEMICAL_PROPERTIES);
 }
 
 /**

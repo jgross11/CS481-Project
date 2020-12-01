@@ -1,20 +1,18 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
+
 import java.sql.SQLException
 
-fun RemovePlaylist(PlaylistId: Int) : Boolean {
+fun InsertPlaylisy(Userid: Int, Playlist_Name: String) : Boolean {
 
     var connection = getDBConnection()
 
     try {
         if(connection != null) {
 
-            var preparedSt = connection.prepareStatement("DELETE FROM Database.Playlist WHERE PlaylistID = ?")
-            preparedSt.setInt(1, PlaylistId)
-            preparedSt.executeUpdate()
-
-            preparedSt = connection.prepareStatement("DELETE FROM Database.PlaylistFollowing WHERE PlaylistID = ?")
-            preparedSt.setInt(1, PlaylistId)
+            var preparedSt = connection.prepareStatement("INSERT INTO Database.Playlist(user_ID, Playlist_Name) VALUES (?, ?)")
+            preparedSt.setInt(1, Userid)
+            preparedSt.setString(2, Playlist_Name)
             preparedSt.executeUpdate()
 
             return true

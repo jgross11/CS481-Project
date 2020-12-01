@@ -35,19 +35,10 @@ class CreationController {
     // attempt to save Experiment object in DB. return true if save successful, false otherwise
     @PostMapping(path = ["/save-new-creation"], consumes = ["application/json"], produces = ["application/json"])
     @ResponseBody
-    fun submitNewSimulation(@RequestBody userAndExp : UserAndExperiment) : Boolean{
-        var result = true
+    fun submitNewSimulation(@RequestBody userAndExp : UserAndExperiment) : Int{
         println("User ${userAndExp.user?.getFullName()} wants to submit following experiment data to DB:")
         println(userAndExp.experiment)
-        // FOR TESTING PURPOSES ONLY
-        var copyAlreadyInDB = LoadExperiment("21")
-        println("\nCOMPARED TO\n")
-        println(copyAlreadyInDB)
-        println("result: ${copyAlreadyInDB.equals(userAndExp.experiment)}")
-        // NOTE: THEY MATCH! GOOD FOR NOW
-        // END TESTING PURPOSES
-        result = CreateExperiment(userAndExp)
-        return result
+        return CreateExperiment(userAndExp)
     }
 
     // given an Experiment object representing a modified experiment (edit(s) made to one already in DB)
@@ -70,7 +61,7 @@ class CreationController {
         newChemical.meltingPoint = chemical.ChemicalPhaseChangeSolid;
         newChemical.name =  chemical.ChemicalName;
         newChemical.molarMass = chemical.ChemicalMass;
-        newChemical.isWaterSoluable = chemical.ChemicalWaterSoluable;
+        newChemical.isWaterSoluble = chemical.ChemicalWaterSoluable;
         newChemical.boilingPoint = chemical.ChemicalPhaseChangeLiquid;
         newChemical.formula = chemical.ChemicalFormula;
         newChemical.density =  chemical.ChemicalDensity;
