@@ -141,7 +141,7 @@
     </div>
 </div>
 <div class="dropup">
-    <button class="dropbtn2">FaQ</button>
+    <button class="dropbtn2" onclick="PlaylistPage()">Playlist Management</button>
     <div class="dropup-content">
 
     </div>
@@ -164,16 +164,6 @@
 </body>
 
 <script>
-    /*var userid = 4;
-    postData('Recent-experiment', userid).then(function(data){
-        console.log(data);
-        array = data
-    });
-
-    postData('Playlist', user.id).then(function(data){
-        console.log(data);
-        PlayList = data;
-    }); */
 
     var array = [];
     var PlayList = [];
@@ -188,6 +178,9 @@
     checkForLogin();
     function CreationPage(){
         window.location.href = "/Creation";
+    }
+    function PlaylistPage(){
+        window.location.href = "/PlaylistPage"
     }
     function checkForLogin(){
         // attempt to get user information from session
@@ -233,7 +226,7 @@
                         array = ["String Cheese", "Please work"];
                     });
 
-                    postData('Playlist', user.id).then(function(data){
+                    postData('Playlist', user.scho).then(function(data){
                         console.log(data);
                         PlayList = data; 
                     });
@@ -294,6 +287,7 @@
         var dropDownContents = document.getElementById("dropdown-content");
         dropDownContents.innerHTML = "<button onclick=\"profile()\">My Profile</button><br><br><button onclick=\"logout()\">Log out</button>";
     }
+
     postData('Playlist', 30).then(function(data){
         console.log(data);
         PlayList = data;
