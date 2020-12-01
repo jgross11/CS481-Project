@@ -10,7 +10,7 @@ import java.sql.SQLException
  *  Returns an array containing all equation information in DB for FE search purposes
  */
 
-const val equationFormulaIndex = 9
+const val equationFormulaIndex = 10
 
 fun getAllEquationInformation() : Array<ChemicalEquationResult?>?{
     var connection = getDBConnection()
@@ -68,6 +68,11 @@ fun getAllEquationInformation() : Array<ChemicalEquationResult?>?{
                         if (equation != null) {
                             equation.string = equation.toString()
                         }
+                    }
+                }
+                if (equationArr != null) {
+                    for(eq in equationArr){
+                        println(eq)
                     }
                 }
                 equationArr
