@@ -73,7 +73,7 @@ class HomeController {
         //ListOfRecent = PlaylistSearch(userid);
         //println(ListOfRecent[0])
         println(userid)
-        var ListOfRecentPlaylist  = PlaylistSearchTwo(userid)
+        var ListOfRecentPlaylist  = PlaylistSearch(userid)
         println(ListOfRecentPlaylist)
         //For Now Here Is a fake one
         return ListOfRecent;
