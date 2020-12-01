@@ -10,6 +10,9 @@ class Refractometer extends Equipment{
     constructor(lensControl = null){
         super([0, 0], [120, 36], 2, SPRITE_REFRACTOMETER);
         this.lensControl = lensControl;
+
+        // The listener used to track when the refractometer's lens is removed
+        this.heldLensPosListener = null;
     }
 
     /**
@@ -99,6 +102,7 @@ class RefractometerController2D extends EquipmentController2D{
     Reset this Controller's Scale by resetting the zero value and removing equipment
     */
     reset(){
+        super.reset();
         this.removeLens();
     }
 
@@ -120,6 +124,20 @@ class RefractometerController2D extends EquipmentController2D{
         let eq = this.equipment;
         eq.setLens(lensControl);
         eq.updateLensPosition();
+
+        // Set up a listener for the lens
+        let lensEq = this.equipment.lensControl.equipment;
+        eq.heldLensPosListener = new Listener(this, function(obj){
+            let held = obj.equipment.lensControl.equipment;
+
+            // Do nothing if the object is still close enough to the scale on the x axis
+            if(Math.abs(held.position[0] - obj.x()) < 0.1) return;
+
+            let oldPos = held.position;
+            obj.removeLens();
+            held.setPosition(oldPos);
+        });
+        lensEq.addPositionListener(eq.heldLensPosListener);
     }
 
     /**
@@ -128,13 +146,17 @@ class RefractometerController2D extends EquipmentController2D{
     removeLens(){
         let eq = this.equipment;
         let lens = this.equipment.lensControl;
-        // Properly remove the lens
-        this.setLens(null);
+        // Do nothing if the lens does not exist
+        if(lens === null) return;
 
-        // Position the lens off of the refractometer, if one was removed
-        if(lens !== null){
-            lens.equipment.setPosition([this.x() - lens.width() - 10, this.y()], EXP_CAMERA_OUTLINE_BOUNDS);
-        }
+        // Remove the listener
+        lens.equipment.removePositionListener(eq.heldLensPosListener);
+
+        // Properly remove the lens
+        this.equipment.setLens(null);
+
+        // Position the lens off of the refractometer
+        lens.equipment.setPosition([this.x() - lens.width() - 10, this.y()], EXP_CAMERA_OUTLINE_BOUNDS);
     }
 
     /**
@@ -155,8 +177,7 @@ class RefractometerController2D extends EquipmentController2D{
             graphics.textSize(REFRACTOMETER_TEXT_SIZE);
             graphics.fill(REFRACTOMETER_TEXT_COLOR);
             graphics.noStroke();
-            // TODO make render constant
-            graphics.text(conts.getDensity().toFixed(3),
+            graphics.text(conts.getDensity().toFixed(REFRACTOMETER_DECIMAL_PLACES),
                 this.x() + this.width() * REFRACTOMETER_TEXT_X_OFFSET,
                 this.y() + this.height() * REFRACTOMETER_TEXT_Y_OFFSET);
         }

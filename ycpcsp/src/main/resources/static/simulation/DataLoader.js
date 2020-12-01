@@ -113,13 +113,14 @@ rawProperties: The list of properties
 function parseChemProperties(rawProperties){
     for(var i = 0; i < rawProperties.length; i++){
         let p = rawProperties[i];
+        let c = r[CHEMICAL_PROPERTY_COLORS];
         makeChemical(
             p[CHEMICAL_PROPERTY_SYMBOL],
             p[CHEMICAL_PROPERTY_NAME],
             p[CHEMICAL_PROPERTY_CREATOR],
-            getColorListObjectFromInt(p[CHEMICAL_PROPERTY_COLOR_SOLID]),
-            getColorListObjectFromInt(p[CHEMICAL_PROPERTY_COLOR_LIQUID]),
-            getColorListObjectFromInt(p[CHEMICAL_PROPERTY_COLOR_GAS]),
+            getColorListObjectFromInt(c[CHEMICAL_PROPERTY_COLOR_SOLID]),
+            getColorListObjectFromInt(c[CHEMICAL_PROPERTY_COLOR_LIQUID]),
+            getColorListObjectFromInt(c[CHEMICAL_PROPERTY_COLOR_GAS]),
             p[CHEMICAL_PROPERTY_ID],
             p[CHEMICAL_PROPERTY_MOLAR_MASS],
             p[CHEMICAL_PROPERTY_MELTING_POINT],
@@ -327,12 +328,12 @@ function getTestJSON(){
     exp[EXP_JSON_EQUIPMENT] = sortArrayByKey(equips, EXP_JSON_EQUIP_OBJ_ID, false);
 
     let chems = [];
-    //chems.push(makeTestChemicalJSON(ID_CHEM_TEST_RED, 20, 1));
-    //chems.push(makeTestChemicalJSON(ID_CHEM_TEST_RED, 20, 1));
-    //chems.push(makeTestChemicalJSON(ID_CHEM_TEST_BLUE, 20, 1));
-    //chems.push(makeTestChemicalJSON(ID_CHEM_TEST_WHITE, 50, 1));
-    //chems.push(makeTestChemicalJSON(ID_CHEM_TEST_GREEN, 10, 1));
-    //chems.push(makeTestChemicalJSON(ID_CHEM_TEST_BLACK, 10, 1));
+    chems.push(makeTestChemicalJSON(ID_CHEM_TEST_RED, 20, 1));
+    chems.push(makeTestChemicalJSON(ID_CHEM_TEST_RED, 20, 1));
+    chems.push(makeTestChemicalJSON(ID_CHEM_TEST_BLUE, 20, 1));
+    chems.push(makeTestChemicalJSON(ID_CHEM_TEST_WHITE, 50, 1));
+    chems.push(makeTestChemicalJSON(ID_CHEM_TEST_GREEN, 10, 1));
+    chems.push(makeTestChemicalJSON(ID_CHEM_TEST_BLACK, 10, 1));
     chems.push(makeTestChemicalJSON(ELEMENT_SODIUM_ATOMIC_NUM, 10, 1));
     //chems.push(makeTestChemicalJSON(ELEMENT_CHLORINE_ATOMIC_NUM, 10, 1));
     chems.push(makeTestChemicalJSON(COMPOUND_CHLORINE_GAS_ID, 10, 1));
@@ -379,9 +380,9 @@ function getTestJSON(){
 /**
 Temporary function for getting lab 3 JSON file
 */
-function getLab3aJSON(){
+function getLab3JSON(){
     let exp = {};
-    exp[EXP_JSON_TITLE] = "Lab 3A";
+    exp[EXP_JSON_TITLE] = "Lab 3";
     exp[EXP_JSON_CREATOR] = "Gen Chem";
 
     let equips = [];
@@ -390,6 +391,9 @@ function getLab3aJSON(){
     let flask = 2;
     let boat = 3;
     let rod = 4;
+    let eyeDropper = 5;
+    let refractometer = 6;
+    let refractometerLens = 7;
     let water = 0;
     let salt = 1;
     equips.push(makeTestEquipmentJSON(ID_EQUIP_SCALE, 1));
@@ -397,6 +401,9 @@ function getLab3aJSON(){
     equips.push(makeTestEquipmentJSON(ID_EQUIP_FLASK_125mL, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_WEIGH_BOAT, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_STIR_ROD, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_EYE_DROPPER, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_REFRACTOMETER, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_REFRACTOMETER_LENS, 1));
     exp[EXP_JSON_EQUIPMENT] = sortArrayByKey(equips, EXP_JSON_EQUIP_OBJ_ID, false);
 
     let chems = [];
@@ -406,6 +413,7 @@ function getLab3aJSON(){
 
     let steps = [];
     var s = 0;
+    // Part A
     steps.push(makeTestInstructionJSON(s++, scale, true, flask, true, ID_FUNC_SCALE_TO_TAKE_WEIGHT));
     steps.push(makeTestInstructionJSON(s++, scale, true, flask, true, ID_FUNC_SCALE_REMOVE_OBJECT));
     steps.push(makeTestInstructionJSON(s++, cylinder, true, water, false, ID_FUNC_CONTAINER_ADD_TO));
@@ -419,6 +427,15 @@ function getLab3aJSON(){
     steps.push(makeTestInstructionJSON(s++, scale, true, null, true, ID_FUNC_SCALE_CLEAR_ZERO));
     steps.push(makeTestInstructionJSON(s++, scale, true, flask, true, ID_FUNC_SCALE_TO_TAKE_WEIGHT));
     steps.push(makeTestInstructionJSON(s++, scale, true, null, true, ID_FUNC_SCALE_REMOVE_OBJECT));
+
+    // Part B
+    steps.push(makeTestInstructionJSON(s++, flask, true, eyeDropper, true, ID_FUNC_CONTAINER_POUR_INTO));
+    steps.push(makeTestInstructionJSON(s++, eyeDropper, true, refractometerLens, true, ID_FUNC_EYE_DROPPER_DROP));
+    steps.push(makeTestInstructionJSON(s++, eyeDropper, true, refractometerLens, true, ID_FUNC_EYE_DROPPER_DROP));
+    steps.push(makeTestInstructionJSON(s++, refractometer, true, refractometerLens, true, ID_FUNC_REFRACTOMETER_SET_LENS));
+    steps.push(makeTestInstructionJSON(s++, flask, true, null, true, ID_FUNC_CONTAINER_EMPTY_IN_TRASH));
+
+    // set the instruction list
     exp[EXP_JSON_INSTRUCTIONS] = sortArrayByKey(steps, EXP_JSON_INS_STEP_NUM, false);
 
     return exp;

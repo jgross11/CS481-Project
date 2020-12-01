@@ -22,6 +22,30 @@ class Equipment extends ExperimentObject{
         this.size = size
         this.instanceID = nextInstanceID();
         this.sprite = sprite;
+
+        // A list of functions which get called when the position of this Equipment is updated
+        this.positionListeners = [];
+    }
+
+    /**
+    Add the given function to the list of functions called when this Equipment's position is updated
+    Does nothing if the function is already in the list
+    listener: The function to add
+    */
+    addPositionListener(listener){
+        let pl = this.positionListeners;
+        if(!pl.includes(listener)) pl.push(listener);
+    }
+
+    /**
+    Remove the given function from the list of functions called when this Equipment's position is updated.
+    Does nothing if the listener is not in the list
+    listener: The function to remove
+    */
+    removePositionListener(listener){
+        let pl = this.positionListeners;
+        let i = pl.indexOf(listener);
+        if(i >= 0) pl.splice(i, 1);
     }
 
     /**
@@ -40,6 +64,13 @@ class Equipment extends ExperimentObject{
     */
     setPosition(pos, bounds = null){
         this.position = pos
+
+        // Run update functions
+        let pl = this.positionListeners;
+        for(var i = 0; i < pl.length; i++){
+            pl[i].call();
+        }
+
         let control = new EquipmentController2D(this);
         if(bounds !== null) control.keepInBounds(bounds);
     }
@@ -197,12 +228,12 @@ class EquipmentController2D extends ExperimentObjectController2D{
     Reset this Controller's Equipment to a default state
     */
     reset(){
-        throw new Error("All EquipmentController2D objects must implement reset");
+        this.equipment.positionListeners = [];
     }
 
     /**
     Update the state of this Controller's Equipment by one frame in the simulation.
-    Override this method to have events happen in sub equipment.
+    Override this method to have events happen in sub Equipment.
     */
     update(){}
 
@@ -231,4 +262,29 @@ class EquipmentController2D extends ExperimentObjectController2D{
     shouldRender(bounds){
         return rectInRect2D(bounds, this.toRect());
     }
+
+    /**
+    Draw the list of possible actions to use for this Controller's Equipment
+    g: The P5 graphics object to use for drawing
+    */
+    drawActionsList(g){
+        let options = this.getFuncDescriptions();
+        g.textSize(EQUIP_ACTIONS_LIST_TEXT_SIZE);
+        let baseX = mouseX + EQUIP_ACTIONS_LIST_X_OFFSET;
+        let baseY = mouseY + EQUIP_ACTIONS_LIST_Y_OFFSET;
+        for(var i = 0; i < options.length; i++){
+            let s = (i + 1) + ": " + options[i];
+
+            g.strokeWeight(EQUIP_ACTIONS_LIST_STROKE_WEIGHT);
+            g.stroke(EQUIP_ACTIONS_LIST_STROKE_COLOR);
+            g.fill(EQUIP_ACTIONS_LIST_FILL_COLOR);
+            g.rect(baseX, baseY + (i - 1) * EQUIP_ACTIONS_LIST_BOX_HEIGHT + EQUIP_ACTIONS_LIST_BOX_EXTRA_WIDTH * 0.5,
+                g.textWidth(s) + EQUIP_ACTIONS_LIST_BOX_EXTRA_WIDTH, EQUIP_ACTIONS_LIST_BOX_HEIGHT);
+
+            g.noStroke();
+            g.fill(EQUIP_ACTIONS_LIST_TEXT_COLOR);
+            g.text(s, baseX, baseY + i * EQUIP_ACTIONS_LIST_BOX_HEIGHT);
+        }
+    }
+
 }

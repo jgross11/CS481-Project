@@ -38,16 +38,17 @@ fun SearchExperiment(searchCriteria: SearchFormData) : Array<SearchObject> {
         rs.beforeFirst()
         rs.fetchSize = num
 
+        //create an empty array of search objects for the search query to store into
         val ExperimentValues = Array<SearchObject>(rs.fetchSize) { SearchObject(0, "","" ) }
 
         //go to first value and start putting the names of the experiments in the list
         rs.next()
         for (x in 1..rs.fetchSize) {
-            val id = rs.getInt("ExperimentsID")
-            val title = rs.getString("title")
-            val creatorName = rs.getString("firstName") + " " + rs.getString("lastName")
-            ExperimentValues[x-1] = SearchObject(id, title, creatorName)
-            rs.next()
+            val id = rs.getInt("ExperimentsID") // get the id of the experiment
+            val title = rs.getString("title")   // get the title of the experiment
+            val creatorName = rs.getString("firstName") + " " + rs.getString("lastName")    // get the first name and the last name of the experiment creator and store it into one value
+            ExperimentValues[x-1] = SearchObject(id, title, creatorName) // store the new search object into the array
+            rs.next()   // iterate forward one search result
         }
 
         //return the names mutable list
