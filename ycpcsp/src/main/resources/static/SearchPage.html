@@ -5,7 +5,7 @@
    Search Page
 </head>
 <form id="search" name="SearchBar"  method="post">
-    <input type="text" id ="input" placeholder="Search..." onkeypress="handleEnterKey(event)"/>
+    <input type="text" id ="input" placeholder="Search...">
     <input value="Search" type="button" id="searchFunction" name="searchFunctionButton" onclick="submitSearchFunction()">
 </form>
 
@@ -17,17 +17,6 @@
 
 
 <script>
-    function handleEnterKey(e){
-        if(e.keyCode == 13){
-            try{
-                e.preventDefault ? e.preventDefault() : (e.returnValue = false);
-
-                submitSearchFunction();
-            }catch(err){
-                console.log(err.message);
-            }
-        }
-    }
 
     var identity = {};
     function submitSearchFunction(){
@@ -57,19 +46,21 @@
                     var br2 = document.createElement("br");
                     newDiv.appendChild(br2);
                     document.getElementById("SearchBar").appendChild(newDiv);
-                    var button = document.createElement("text");
+                    var elem = document.createElement("BUTTON");
                     identity = mutable[i].id;
-                    button.innerHTML = "<button class='button' onclick='loadSimulation(identity)'> Load Experiment</button>";
+                    elem.innerHTML = "<button class='button' onclick='loadSimulation(identity)'> Load Experiment</button>";
+                    newDiv.appendChild(elem);
 
-                    newDiv.appendChild(button);
                     var br3 = document.createElement("br");
                     newDiv.appendChild(br3);
                     var br4 = document.createElement("br");
                     newDiv.appendChild(br4);
+                    newDiv.style.border = "solid black";
 
                 }
             });
     }
+
 
     function loadSimulation(simulationID){
         sessionStorage.setItem("simulationToLoad", simulationID);

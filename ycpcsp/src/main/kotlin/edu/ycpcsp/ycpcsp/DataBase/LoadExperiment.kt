@@ -18,22 +18,22 @@ fun LoadExperiment(id: String) : Experiment {
             var experiment = Experiment()
 
             //User query
-            //These queries dont' have
+            // grab the title first name last name from the database
             var preparedSt = connection.prepareStatement("Select Distinct title, firstName, lastName from Database.Experiments join Database.Users on Database.Experiments.creatorID = Database.Users.UserID where ExperimentsID = ? ")
-            preparedSt.setString(1, id)
+            preparedSt.setString(1, id) // set the ? to the ide of which experiment were looking for
             val rs = preparedSt.executeQuery()
 
             rs.fetchSize = 2
             rs.next()
-            val title = rs.getString("title")
-            val creatorName = rs.getString("firstName") + " " + rs.getString("lastName")
-            experiment.title = title
-            experiment.creatorName = creatorName
+            val title = rs.getString("title")   // get the title
+            val creatorName = rs.getString("firstName") + " " + rs.getString("lastName") // get the first and last name and store them in one variable
+            experiment.title = title    // set the title to the title selected
+            experiment.creatorName = creatorName    // set the creator name to the one we created earlier
 
 
             //Equipment query
             preparedSt = connection.prepareStatement("Select Distinct object_ID, amount from Database.Equipments join Database.Experiments on Database.Experiments.ExperimentsID = Database.Equipments.experiment_ID where ExperimentsID = ? ")
-            preparedSt.setString(1, id)
+            preparedSt.setString(1, id) // set the ? to the ide of which experiment were looking for
 
             val rs2 = preparedSt.executeQuery()
 
