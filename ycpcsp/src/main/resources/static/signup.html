@@ -83,7 +83,9 @@
 
             // TODO there will need to be another check regarding password complexity, length, etc.
             var passwordGood = password.value.length != 0;
+            var passwordGood = password.value.length > 5;
             var confirmPasswordGood = confirmPassword.value.length != 0;
+            var confirmPasswordGood = confirmPassword.value.length > 5;
             var passwordsMatch = (password.value == confirmPassword.value);
 
 

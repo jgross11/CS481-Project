@@ -8,7 +8,7 @@ fun DeleteUser(id: String?): Boolean{
     val connection = getDBConnection()
     if(connection != null) {
         try {
-            val preparedSt = connection.prepareStatement("DELETE FROM Database.Users WHERE id = ?")
+            val preparedSt = connection.prepareStatement("DELETE FROM Database.Users WHERE UserID = ?")
 
             preparedSt.setString(1, id)
             preparedSt.executeUpdate()
