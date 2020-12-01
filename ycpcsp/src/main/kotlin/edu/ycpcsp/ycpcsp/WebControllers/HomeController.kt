@@ -1,6 +1,7 @@
 package edu.ycpcsp.ycpcsp.WebControllers
 
 import edu.ycpcsp.ycpcsp.DataBase.*
+import edu.ycpcsp.ycpcsp.Models.PlayList
 import edu.ycpcsp.ycpcsp.Models.User
 import edu.ycpcsp.ycpcsp.PostDataClasses.LoginFormData
 import edu.ycpcsp.ycpcsp.PostDataClasses.RecentExperimentLoad
@@ -66,17 +67,18 @@ class HomeController {
 
     @PostMapping(path = ["/Playlist"], consumes = ["application/json"], produces = ["application/json"])
     @ResponseBody
-    fun playlistFetch(@RequestBody userid: Int): ArrayList<String> {
+    fun PlaylistSearchT(@RequestBody userid: Int): ArrayList<PlayList> {
         println("Loading Users Playlist")
         println(userid)
         var ListOfRecent = arrayListOf<String>()
         //ListOfRecent = PlaylistSearch(userid);
         //println(ListOfRecent[0])
+        //TODO Experiment name title and creator name
         println(userid)
         var ListOfRecentPlaylist  = PlaylistSearch(userid)
         println(ListOfRecentPlaylist)
         //For Now Here Is a fake one
-        return ListOfRecent;
+        return ListOfRecentPlaylist;
     }
 
 }
