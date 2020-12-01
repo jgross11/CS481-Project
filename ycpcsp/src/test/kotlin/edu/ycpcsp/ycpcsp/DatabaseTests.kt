@@ -162,28 +162,41 @@ class DatabaseTests {
 
     @Test
     fun testFindMyExperiments(){
-        val userID = LoadUser("jgross11@ycp.edu")
-        val testExperiment = Experiment("Color", "Josh Gross", 1)
+        val userID = LoadUser("test@test.com")
+        val tstExp = mutableListOf<Experiment>()
+        //CreatorName is first name and last name combined
+        tstExp.add(Experiment("test", "Test Test", 1))
+        tstExp.add(Experiment("Iodine Clock", "Test Test", 2))
+        tstExp.add(Experiment("Cool Experiment", "Test Test", 24))
+        tstExp.add(Experiment("Color", "Test Test", 46))
+        tstExp.add(Experiment("Color", "Test Test", 47))
+        tstExp.add(Experiment("Color", "Test Test", 48))
+
         var testChecker = false
 
-        val experiments = FindMyExperiments(userID)
+        val exps = FindMyExperiments(userID)
         //kotlin has this cool experiment iterator
         //the native iterator for each natively sets the variable to "it"
-        experiments.iterator().forEach {
-            assertTrue(it.title.compareTo(testExperiment.title) == 0)
-            if (it.title.compareTo(testExperiment.title) == 0) {
-                print("The title is " + it.title+"---------")
-                assertTrue(it.creatorName.compareTo(testExperiment.creatorName) == 0)
-                if (it.creatorName.compareTo(testExperiment.creatorName) == 0) {
-                    print("Find My Experiments works so far")
-                } else{
-                    print("Error: Everything in Find My Experiments was not the same")
-                }
-                println("-----The creator Name is " + it.creatorName)
-            } else {
-                println("Error: Find My Experiments did not work")
-            }
+        if(exps.size != 0) {
+            for (i in 0 until tstExp.size) {
+                assertTrue(exps[i].title.compareTo(tstExp[i].title) == 0)
+                if (exps[i].title.compareTo(tstExp[i].title) == 0) {
+                    print("The title is " + exps[i].title + "---------")
 
+                    println("-----The creator Name is " + exps[i].creatorName + " It should be " + tstExp[i].creatorName)
+                    assertTrue(exps[i].creatorName.compareTo(tstExp[i].creatorName) == 0)
+                    if (exps[i].creatorName.compareTo(tstExp[i].creatorName) == 0) {
+                        print("Find My Experiments works so far")
+                    } else {
+                        print("Error: Everything in Find My Experiments was not the same")
+                    }
+                } else {
+                    println("Error: Find My Experiments did not work")
+                }
+
+            }
+        } else{
+            println("The searched for experiment was empty")
         }
     }
 
