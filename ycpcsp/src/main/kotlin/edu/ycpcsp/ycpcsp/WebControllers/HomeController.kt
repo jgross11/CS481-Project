@@ -66,14 +66,14 @@ class HomeController {
 
     @PostMapping(path = ["/Playlist"], consumes = ["application/json"], produces = ["application/json"])
     @ResponseBody
-    fun PlaylistSearch(@RequestBody userid: Int): ArrayList<String> {
+    fun playlistFetch(@RequestBody userid: Int): ArrayList<String> {
         println("Loading Users Playlist")
         println(userid)
         var ListOfRecent = arrayListOf<String>()
         //ListOfRecent = PlaylistSearch(userid);
         //println(ListOfRecent[0])
         println(userid)
-        var ListOfRecentPlaylist  = PlaylistSearchTwo(userid)
+        var ListOfRecentPlaylist  = PlaylistSearch(userid)
         println(ListOfRecentPlaylist)
         //For Now Here Is a fake one
         return ListOfRecent;
