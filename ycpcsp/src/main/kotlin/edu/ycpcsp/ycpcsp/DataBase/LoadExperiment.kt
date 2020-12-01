@@ -86,10 +86,10 @@ fun LoadExperiment(id: String) : Experiment {
             for(x in 1..numRows){
                 var newChem = ChemicalProperties(rs.getInt(1), rs.getString(2), rs.getString(3),
                                             rs.getDouble(4), rs.getDouble(5), rs.getBoolean(6),
-                                            rs.getDouble(7), rs.getDouble(8), rs.getInt(9))
-                newChem.colors.gasColor = rs.getInt(15)
-                newChem.colors.liquidColor = rs.getInt(16)
-                newChem.colors.solidColor = rs.getInt(17)
+                                            rs.getDouble(7), rs.getDouble(8), rs.getInt(9), rs.getInt(10))
+                newChem.colors.gasColor = rs.getInt(16)
+                newChem.colors.liquidColor = rs.getInt(17)
+                newChem.colors.solidColor = rs.getInt(18)
                 experiment.chemicalProperties[x-1] = newChem
                 rs.next()
             }
