@@ -1,6 +1,6 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
-import edu.ycpcsp.ycpcsp.Models.Compound
+import edu.ycpcsp.ycpcsp.Models.ChemicalProperties
 import java.sql.SQLException
 
 // element DB indices
@@ -15,8 +15,9 @@ const val CompoundDensityIndex = 5
 const val CompoundSolubleIndex = 6
 const val CompoundSolidIndex = 7
 const val CompoundGasIndex = 8
+const val creatorIDIndex = 9
 
-fun getCompoundInformationByName(name : String) : Compound?{
+fun getCompoundInformationByName(name : String) : ChemicalProperties?{
     var connection = getDBConnection()
     if(connection != null){
         return try{
@@ -24,10 +25,10 @@ fun getCompoundInformationByName(name : String) : Compound?{
             preparedStatement.setString(1, name)
             var rs = preparedStatement.executeQuery()
             return if(rs.first()){
-                var comp = Compound(rs.getInt(CompoundIDIndex), rs.getString(CompoundFormulaIndex), rs.getString(CompoundNameIndex), rs.getDouble(CompoundMassIndex), rs.getDouble(CompoundDensityIndex),
-                        rs.getBoolean(CompoundSolubleIndex), rs.getDouble(CompoundSolidIndex), rs.getDouble(CompoundGasIndex))
+                var comp = ChemicalProperties(rs.getInt(CompoundIDIndex), rs.getString(CompoundFormulaIndex), rs.getString(CompoundNameIndex), rs.getDouble(CompoundMassIndex), rs.getDouble(CompoundDensityIndex),
+                        rs.getBoolean(CompoundSolubleIndex), rs.getDouble(CompoundSolidIndex), rs.getDouble(CompoundGasIndex), rs.getInt(creatorIDIndex))
                 preparedStatement = connection.prepareStatement("SELECT * FROM Database.ChemistryGraphics WHERE ChemicalID = ?;")
-                preparedStatement.setInt(1, comp.compoundID)
+                preparedStatement.setInt(1, comp.chemicalInformationID)
                 rs = preparedStatement.executeQuery()
                 return if(rs.first()){
                     comp.colors.gasColor = rs.getInt(3)
@@ -49,7 +50,7 @@ fun getCompoundInformationByName(name : String) : Compound?{
     return null
 }
 
-fun getCompoundInformationByFormula(formula : String) : Compound?{
+fun getCompoundInformationByFormula(formula : String) : ChemicalProperties?{
     var connection = getDBConnection()
     if(connection != null){
         return try{
@@ -57,10 +58,10 @@ fun getCompoundInformationByFormula(formula : String) : Compound?{
             preparedStatement.setString(1, formula)
             var rs = preparedStatement.executeQuery()
             return if(rs.first()){
-                var comp = Compound(rs.getInt(CompoundIDIndex), rs.getString(CompoundFormulaIndex), rs.getString(CompoundNameIndex), rs.getDouble(CompoundMassIndex), rs.getDouble(CompoundDensityIndex),
-                        rs.getBoolean(CompoundSolubleIndex), rs.getDouble(CompoundSolidIndex), rs.getDouble(CompoundGasIndex))
+                var comp = ChemicalProperties(rs.getInt(CompoundIDIndex), rs.getString(CompoundFormulaIndex), rs.getString(CompoundNameIndex), rs.getDouble(CompoundMassIndex), rs.getDouble(CompoundDensityIndex),
+                        rs.getBoolean(CompoundSolubleIndex), rs.getDouble(CompoundSolidIndex), rs.getDouble(CompoundGasIndex), rs.getInt(creatorIDIndex))
                 preparedStatement = connection.prepareStatement("SELECT * FROM Database.ChemistryGraphics WHERE ChemicalID = ?;")
-                preparedStatement.setInt(1, comp.compoundID)
+                preparedStatement.setInt(1, comp.chemicalInformationID)
                 rs = preparedStatement.executeQuery()
                 return if(rs.first()){
                     comp.colors.gasColor = rs.getInt(3)
@@ -82,7 +83,7 @@ fun getCompoundInformationByFormula(formula : String) : Compound?{
     return null
 }
 
-fun getCompoundInformationByID(id : Int) : Compound?{
+fun getCompoundInformationByID(id : Int) : ChemicalProperties?{
 
     var connection = getDBConnection()
     if(connection != null){
@@ -91,10 +92,10 @@ fun getCompoundInformationByID(id : Int) : Compound?{
             preparedStatement.setInt(1, id)
             var rs = preparedStatement.executeQuery()
             return if(rs.first()){
-                var comp = Compound(rs.getInt(CompoundIDIndex), rs.getString(CompoundFormulaIndex), rs.getString(CompoundNameIndex), rs.getDouble(CompoundMassIndex), rs.getDouble(CompoundDensityIndex),
-                        rs.getBoolean(CompoundSolubleIndex), rs.getDouble(CompoundSolidIndex), rs.getDouble(CompoundGasIndex))
+                var comp = ChemicalProperties(rs.getInt(CompoundIDIndex), rs.getString(CompoundFormulaIndex), rs.getString(CompoundNameIndex), rs.getDouble(CompoundMassIndex), rs.getDouble(CompoundDensityIndex),
+                        rs.getBoolean(CompoundSolubleIndex), rs.getDouble(CompoundSolidIndex), rs.getDouble(CompoundGasIndex), rs.getInt(creatorIDIndex))
                 preparedStatement = connection.prepareStatement("SELECT * FROM Database.ChemistryGraphics WHERE ChemicalID = ?;")
-                preparedStatement.setInt(1, comp.compoundID)
+                preparedStatement.setInt(1, comp.chemicalInformationID)
                 rs = preparedStatement.executeQuery()
                 return if(rs.first()){
                     comp.colors.gasColor = rs.getInt(3)

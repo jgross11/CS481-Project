@@ -1,6 +1,5 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
-import edu.ycpcsp.ycpcsp.Models.Compound
 import edu.ycpcsp.ycpcsp.Models.SecurityQuestion
 import java.sql.SQLException
 

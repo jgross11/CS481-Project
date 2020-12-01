@@ -3,6 +3,8 @@ let SESSION_EXPERIMENT_NAME = "experimentData";
 // Constants for the fields of JSON for Experiment parsing to JSON
 let EXP_JSON_TITLE = "title";
 let EXP_JSON_CREATOR = "creatorName";
+let EXP_JSON_CHEM_PROPERTIES = "chemProperties";
+let EXP_JSON_EQUATIONS = "equations";
 let EXP_JSON_EQUIPMENT = "equipment";
 let EXP_JSON_EQUIP_OBJ_ID = "objectID";
 let EXP_JSON_EQUIP_AMOUNT = "amount";
@@ -82,6 +84,14 @@ function parseExperiment(rawData){
     // Create the base Experiment with the title and creator
     let exp = new Experiment(rawData[EXP_JSON_TITLE], rawData[EXP_JSON_CREATOR]);
 
+    // Parse chem properties
+    let properties = rawData[EXP_JSON_CHEM_PROPERTIES];
+    if(properties !== undefined) parseChemProperties(properties);
+
+    // Parse equations
+    let equations = rawData[EXP_JSON_EQUATIONS];
+    if(equations !== undefined) parseEquations(equations);
+
     // Set the Equipment in the Experiment from the raw data
     exp.setEquipment(parseEquipment(rawData[EXP_JSON_EQUIPMENT]));
 
@@ -93,6 +103,63 @@ function parseExperiment(rawData){
 
     // Return the parsed object
     return exp;
+}
+
+/**
+Parse out the ChemProperties from the given json list of ChemProperties
+Place them all in CHEMICAL_PROPERTIES
+rawProperties: The list of properties
+*/
+function parseChemProperties(rawProperties){
+    for(var i = 0; i < rawProperties.length; i++){
+        let p = rawProperties[i];
+        let c = r[CHEMICAL_PROPERTY_COLORS];
+        makeChemical(
+            p[CHEMICAL_PROPERTY_SYMBOL],
+            p[CHEMICAL_PROPERTY_NAME],
+            p[CHEMICAL_PROPERTY_CREATOR],
+            getColorListObjectFromInt(c[CHEMICAL_PROPERTY_COLOR_SOLID]),
+            getColorListObjectFromInt(c[CHEMICAL_PROPERTY_COLOR_LIQUID]),
+            getColorListObjectFromInt(c[CHEMICAL_PROPERTY_COLOR_GAS]),
+            p[CHEMICAL_PROPERTY_ID],
+            p[CHEMICAL_PROPERTY_MOLAR_MASS],
+            p[CHEMICAL_PROPERTY_MELTING_POINT],
+            p[CHEMICAL_PROPERTY_BOILING_POINT],
+            p[CHEMICAL_PROPERTY_DENSITY],
+            p[CHEMICAL_PROPERTY_WATER_SOLUBLE],
+        );
+    }
+}
+
+/**
+Parse out the Equations from the given json list of Equations
+Place them all in EQUATION_PROPERTIES
+rawEquations: The list of equations
+*/
+function parseEquations(rawEquations){
+    for(var i = 0; i < rawEquations.length; i++){
+        let eq = rawEquations[i];
+        let reacts = parseEquationComponents(eq[EQUATION_PROPERTY_REACTANTS]);
+        let prods = parseEquationComponents(eq[EQUATION_PROPERTY_PRODUCTS]);
+        makeEquation(eq[EQUATION_PROPERTY_ID], reacts, prods);
+    }
+}
+
+/**
+Parse out a list of components for reactants or products
+rawComponents: The list of components
+returns: The parsed list of EquationComponent objects
+*/
+function parseEquationComponents(rawComponents){
+    let comps = [];
+    for(var i = 0; i < rawComponents.length; i++){
+        let c = rawComponents[i];
+        comps.push(new EquationComponent(
+            c[EQUATION_COMPONENT_PROPERTY_COEFFICIENT],
+            c[EQUATION_COMPONENT_PROPERTY_ID]
+        ));
+    }
+    return comps;
 }
 
 /**
@@ -246,32 +313,35 @@ function getTestJSON(){
     exp[EXP_JSON_CREATOR] = "Zaq";
 
     let equips = [];
-    equips.push(makeTestEquipmentJSON(ID_EQUIP_SCALE, 1));
-    equips.push(makeTestEquipmentJSON(ID_EQUIP_BEAKER_50mL, 1));
-    equips.push(makeTestEquipmentJSON(ID_EQUIP_BEAKER_150mL, 1));
-    equips.push(makeTestEquipmentJSON(ID_EQUIP_BEAKER_250mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_BEAKER_50mL, 3));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_BEAKER_600mL, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_SCALE, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_GRADUATED_25mL, 1));
-    equips.push(makeTestEquipmentJSON(ID_EQUIP_GRADUATED_50mL, 1));
-    equips.push(makeTestEquipmentJSON(ID_EQUIP_GRADUATED_100mL, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_GRADUATED_1000mL, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_FLASK_25mL, 1));
-    equips.push(makeTestEquipmentJSON(ID_EQUIP_FLASK_50mL, 1));
-    equips.push(makeTestEquipmentJSON(ID_EQUIP_FLASK_125mL, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_FLASK_1000mL, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_WEIGH_BOAT, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_STIR_ROD, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_EYE_DROPPER, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_REFRACTOMETER, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_REFRACTOMETER_LENS, 1));
     exp[EXP_JSON_EQUIPMENT] = sortArrayByKey(equips, EXP_JSON_EQUIP_OBJ_ID, false);
 
     let chems = [];
+    chems.push(makeTestChemicalJSON(ID_CHEM_TEST_RED, 20, 1));
     chems.push(makeTestChemicalJSON(ID_CHEM_TEST_RED, 20, 1));
     chems.push(makeTestChemicalJSON(ID_CHEM_TEST_BLUE, 20, 1));
     chems.push(makeTestChemicalJSON(ID_CHEM_TEST_WHITE, 50, 1));
     chems.push(makeTestChemicalJSON(ID_CHEM_TEST_GREEN, 10, 1));
     chems.push(makeTestChemicalJSON(ID_CHEM_TEST_BLACK, 10, 1));
+    chems.push(makeTestChemicalJSON(ELEMENT_SODIUM_ATOMIC_NUM, 10, 1));
+    //chems.push(makeTestChemicalJSON(ELEMENT_CHLORINE_ATOMIC_NUM, 10, 1));
+    chems.push(makeTestChemicalJSON(COMPOUND_CHLORINE_GAS_ID, 10, 1));
     chems.push(makeTestChemicalJSON(COMPOUND_TABLE_SALT_ID, 10, 1));
     chems.push(makeTestChemicalJSON(COMPOUND_WATER_ID, 10, 1));
-    chems.push(makeTestChemicalJSON(ELEMENT_HYDROGEN_ATOMIC_NUM, 10, 1));
+    chems.push(makeTestChemicalJSON(COMPOUND_HYDROGEN_GAS_ID, 1.8, 1));
+    //chems.push(makeTestChemicalJSON(ELEMENT_OXYGEN_ATOMIC_NUM, 10, 1));
+    chems.push(makeTestChemicalJSON(COMPOUND_OXYGEN_GAS_ID, 25, 1));
     exp[EXP_JSON_CHEMICALS] = sortArrayByKey(chems, [EXP_JSON_CHEM_ID, EXP_JSON_CHEM_MASS, EXP_JSON_CHEM_CONCENTRATION], true);
 
     let steps = [];
@@ -282,15 +352,37 @@ function getTestJSON(){
     steps.push(makeTestInstructionJSON(4, 2, true, 2, false, ID_FUNC_CONTAINER_ADD_TO));
     exp[EXP_JSON_INSTRUCTIONS] = sortArrayByKey(steps, EXP_JSON_INS_STEP_NUM, false);
 
+    let chemProperties = [];
+    chemProperties.push(makeTestChemProperties("H2", "Hydrogen Gas", "Nature",
+        getColorInt([255, 255, 200, 255]), getColorInt([255, 255, 200, 200]), getColorInt([255, 255, 200, 180]),
+        COMPOUND_HYDROGEN_GAS_ID, 2.016, -259, -253, 0.09, true));
+    chemProperties.push(makeTestChemProperties("O2", "Oxygen Gas", "Nature",
+        getColorInt([220, 220, 220, 255]), getColorInt([220, 220, 220, 200]), getColorInt([220, 220, 220, 180]),
+        COMPOUND_OXYGEN_GAS_ID, 31.99800, -218, -183, 1.43, true));
+    chemProperties.push(makeTestChemProperties("H2O", "Water", "Nature",
+        getColorInt([100, 100, 255, 255]), getColorInt([100, 100, 255, 200]), getColorInt([100, 100, 255, 180]),
+        COMPOUND_WATER_ID, 18.0153, 0, 100, 1, true));
+    exp[EXP_JSON_CHEM_PROPERTIES] = chemProperties;
+
+    let equations = [];
+    equations.push(makeTestChemicalEquation([
+        makeTestChemicalEquationComponent(2, COMPOUND_HYDROGEN_GAS_ID),
+        makeTestChemicalEquationComponent(1, COMPOUND_OXYGEN_GAS_ID)
+    ],[
+        makeTestChemicalEquationComponent(2, COMPOUND_WATER_ID)
+    ]));
+    exp[EXP_JSON_EQUATIONS] = equations;
+
+
     return exp;
 }
 
 /**
 Temporary function for getting lab 3 JSON file
 */
-function getLab3aJSON(){
+function getLab3JSON(){
     let exp = {};
-    exp[EXP_JSON_TITLE] = "Lab 3A";
+    exp[EXP_JSON_TITLE] = "Lab 3";
     exp[EXP_JSON_CREATOR] = "Gen Chem";
 
     let equips = [];
@@ -299,6 +391,9 @@ function getLab3aJSON(){
     let flask = 2;
     let boat = 3;
     let rod = 4;
+    let eyeDropper = 5;
+    let refractometer = 6;
+    let refractometerLens = 7;
     let water = 0;
     let salt = 1;
     equips.push(makeTestEquipmentJSON(ID_EQUIP_SCALE, 1));
@@ -306,6 +401,9 @@ function getLab3aJSON(){
     equips.push(makeTestEquipmentJSON(ID_EQUIP_FLASK_125mL, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_WEIGH_BOAT, 1));
     equips.push(makeTestEquipmentJSON(ID_EQUIP_STIR_ROD, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_EYE_DROPPER, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_REFRACTOMETER, 1));
+    equips.push(makeTestEquipmentJSON(ID_EQUIP_REFRACTOMETER_LENS, 1));
     exp[EXP_JSON_EQUIPMENT] = sortArrayByKey(equips, EXP_JSON_EQUIP_OBJ_ID, false);
 
     let chems = [];
@@ -315,6 +413,7 @@ function getLab3aJSON(){
 
     let steps = [];
     var s = 0;
+    // Part A
     steps.push(makeTestInstructionJSON(s++, scale, true, flask, true, ID_FUNC_SCALE_TO_TAKE_WEIGHT));
     steps.push(makeTestInstructionJSON(s++, scale, true, flask, true, ID_FUNC_SCALE_REMOVE_OBJECT));
     steps.push(makeTestInstructionJSON(s++, cylinder, true, water, false, ID_FUNC_CONTAINER_ADD_TO));
@@ -328,6 +427,15 @@ function getLab3aJSON(){
     steps.push(makeTestInstructionJSON(s++, scale, true, null, true, ID_FUNC_SCALE_CLEAR_ZERO));
     steps.push(makeTestInstructionJSON(s++, scale, true, flask, true, ID_FUNC_SCALE_TO_TAKE_WEIGHT));
     steps.push(makeTestInstructionJSON(s++, scale, true, null, true, ID_FUNC_SCALE_REMOVE_OBJECT));
+
+    // Part B
+    steps.push(makeTestInstructionJSON(s++, flask, true, eyeDropper, true, ID_FUNC_CONTAINER_POUR_INTO));
+    steps.push(makeTestInstructionJSON(s++, eyeDropper, true, refractometerLens, true, ID_FUNC_EYE_DROPPER_DROP));
+    steps.push(makeTestInstructionJSON(s++, eyeDropper, true, refractometerLens, true, ID_FUNC_EYE_DROPPER_DROP));
+    steps.push(makeTestInstructionJSON(s++, refractometer, true, refractometerLens, true, ID_FUNC_REFRACTOMETER_SET_LENS));
+    steps.push(makeTestInstructionJSON(s++, flask, true, null, true, ID_FUNC_CONTAINER_EMPTY_IN_TRASH));
+
+    // set the instruction list
     exp[EXP_JSON_INSTRUCTIONS] = sortArrayByKey(steps, EXP_JSON_INS_STEP_NUM, false);
 
     return exp;
@@ -378,4 +486,63 @@ function makeTestInstructionJSON(stepNum, actIndex, actIsEquip, recIndex, recIsE
     i[EXP_JSON_INS_RECEIVER_IS_EQUIP] = recIsEquip;
     i[EXP_JSON_INS_FUNC_ID] = funcID;
     return i;
+}
+
+/**
+Create a json object for a ChemProperties, which can be placed in the database, or parse into the actual ChemProperties
+symbol: The symbol used to display the chemical
+name: The name of the chemical
+creator: The user who made the chemical
+colorSolid: The color which will be used to display the chemical as a solid [red, green, blue, alpha], alpha is optional
+colorLiquid: The color which will be used to display the chemical as a liquid [red, green, blue, alpha], alpha is optional
+colorGas: The color which will be used to display the chemical as a gas [red, green, blue, alpha], alpha is optional
+id: The id of the chemical
+molarMass: The molar mass of the chemical
+meltingPoint: The temperature, in celsius, at which this chemical melts
+boilingPoint: The temperature, in celsius, at which this chemical boils
+density: The density, in g/cm^3 for solids, and g/L (or kg/m^3 for gases), of the chemical
+waterSoluble: true if the chemical is soluble in water, false otherwise
+returns: the ChemPropertiesT
+*/
+function makeTestChemProperties(symbol, name, creator,
+        colorSolid, colorLiquid, colorGas,
+        id, molarMass, meltingPoint, boilingPoint, density, waterSoluble){
+
+    let p = {};
+    p[CHEMICAL_PROPERTY_ID] = id;
+    p[CHEMICAL_PROPERTY_SYMBOL] = symbol;
+    p[CHEMICAL_PROPERTY_NAME] = name;
+    p[CHEMICAL_PROPERTY_CREATOR] = creator;
+    p[CHEMICAL_PROPERTY_COLOR_SOLID] = colorSolid;
+    p[CHEMICAL_PROPERTY_COLOR_LIQUID] = colorLiquid;
+    p[CHEMICAL_PROPERTY_COLOR_GAS] = colorGas;
+    p[CHEMICAL_PROPERTY_MOLAR_MASS] = molarMass;
+    p[CHEMICAL_PROPERTY_MELTING_POINT] = meltingPoint;
+    p[CHEMICAL_PROPERTY_BOILING_POINT] = boilingPoint;
+    p[CHEMICAL_PROPERTY_DENSITY] = density;
+    p[CHEMICAL_PROPERTY_WATER_SOLUBLE] = waterSoluble;
+    return p;
+}
+
+/**
+Create a json object for a chemical equation, which can be placed in the database, or parse into the actual equation
+reacts: The reactants of the equation, use makeTestChemicalEquationComponent() to create these
+prods: The products of the equation, use makeTestChemicalEquationComponent() to create these
+returns: The equation
+*/
+function makeTestChemicalEquation(reacts, prods){
+    let eq = {};
+    eq[EQUATION_PROPERTY_REACTANTS] = reacts;
+    eq[EQUATION_PROPERTY_PRODUCTS] = prods;
+    return eq;
+}
+
+/**
+Make a component, i.e. reactant or product, for a chemical equation which can be placed in the database or parsed as part of a chemical equation
+*/
+function makeTestChemicalEquationComponent(coefficient, id){
+    let c = {};
+    c[EQUATION_COMPONENT_PROPERTY_COEFFICIENT] = coefficient;
+    c[EQUATION_COMPONENT_PROPERTY_ID] = id;
+    return c;
 }

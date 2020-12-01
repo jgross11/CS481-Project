@@ -3,7 +3,10 @@ package edu.ycpcsp.ycpcsp.WebControllers
 
 import edu.ycpcsp.ycpcsp.DataBase.CreateExperiment
 import edu.ycpcsp.ycpcsp.DataBase.LoadExperiment
+import edu.ycpcsp.ycpcsp.DataBase.insertCompound
+import edu.ycpcsp.ycpcsp.Models.ChemicalProperties
 import edu.ycpcsp.ycpcsp.Models.Experiment
+import edu.ycpcsp.ycpcsp.PostDataClasses.CreationNewChemicalFormData
 import edu.ycpcsp.ycpcsp.PostDataClasses.UserAndExperiment
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
@@ -34,7 +37,7 @@ class CreationController {
     @ResponseBody
     fun submitNewSimulation(@RequestBody userAndExp : UserAndExperiment) : Boolean{
         var result = true
-        println("User ${userAndExp.user.getFullName()} wants to submit following experiment data to DB:")
+        println("User ${userAndExp.user?.getFullName()} wants to submit following experiment data to DB:")
         println(userAndExp.experiment)
         // FOR TESTING PURPOSES ONLY
         var copyAlreadyInDB = LoadExperiment("21")
@@ -56,5 +59,27 @@ class CreationController {
         // TODO ATTEMPT TO OVERWRITE EXISTING DB INFO
         // result = updateExperiment(exp)
         return result
+    }
+    // this post mapping will take the chemical information of a newly created chemical from the creation page and insert into the database
+    // the returning of this post mapping should be a list of chemicals that will be added to Austins list
+    @PostMapping(path = ["/Creation-Of-New-Chemical"], consumes = ["application/json"], produces = ["application/json"])
+    @ResponseBody
+    fun createNewChemical(@RequestBody chemical : CreationNewChemicalFormData) : Boolean{
+        println("yay the think is making it here you heard");
+        var newChemical = ChemicalProperties();
+        newChemical.meltingPoint = chemical.ChemicalPhaseChangeSolid;
+        newChemical.name =  chemical.ChemicalName;
+        newChemical.molarMass = chemical.ChemicalMass;
+        newChemical.isWaterSoluable = chemical.ChemicalWaterSoluable;
+        newChemical.boilingPoint = chemical.ChemicalPhaseChangeLiquid;
+        newChemical.formula = chemical.ChemicalFormula;
+        newChemical.density =  chemical.ChemicalDensity;
+        newChemical.colors.gasColor =chemical.ChemicalGasColor;
+        newChemical.colors.liquidColor = chemical.ChemicalLiquidColor;
+        newChemical.colors.solidColor =chemical.ChemicalSolidColor;
+
+        println(newChemical);
+        return insertCompound(newChemical);
+
     }
 }

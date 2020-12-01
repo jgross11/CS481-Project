@@ -4,7 +4,7 @@ var scalePlaced;
 
 QUnit.module("Scale", {
     beforeEach: function(){
-        beakerControl = idToEquipment(ID_EQUIP_BEAKER_50mL);
+        beakerControl = new BeakerController2D(new Beaker(ID_EQUIP_BEAKER_50mL));
         scale = new Scale(null);
         scalePlaced = new Scale(beakerControl);
     }
@@ -76,8 +76,8 @@ var flaskControl;
 
 QUnit.module("ScaleController2D", {
     beforeEach: function(){
-        beakerControl = idToEquipment(ID_EQUIP_BEAKER_50mL);
-        flaskControl = idToEquipment(ID_EQUIP_FLASK_125mL);
+        beakerControl = new BeakerController2D(new Beaker(ID_EQUIP_BEAKER_50mL));
+        flaskControl = new ErlenmeyerFlaskController2D(new ErlenmeyerFlask(ID_EQUIP_FLASK_125mL));
         scale = new Scale(null);
         scaleControl = new ScaleController2D(scale);
     }
@@ -174,6 +174,9 @@ QUnit.test('zeroOut:', function(assert){
 
     scaleControl.removeScaleObject();
     assert.equal(scale.getZeroedWeight(), -beakerControl.equipment.mass, "Checking that after removing object, zeroed mass is negative that of the object");
+
+    scaleControl.zeroOut();
+    assert.equal(scale.getZeroedWeight(), -beakerControl.equipment.mass, "Checking that zeroed mass is the same after nothing is changed but zeroOut is called again");
 });
 
 QUnit.test('clearZeroOut:', function(assert){
@@ -186,6 +189,7 @@ QUnit.test('clearZeroOut:', function(assert){
 });
 
 QUnit.todo('update:', function(assert){
+    scaleControl.update();
     assert.true(false);
 });
 

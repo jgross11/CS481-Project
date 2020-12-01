@@ -1,14 +1,11 @@
-// equipment object
 package edu.ycpcsp.ycpcsp.Models
-
-import com.fasterxml.jackson.annotation.JsonTypeName
 
 /**
  *  Class that represents a piece of equipment in experiment
- *  Contains: name, inherited from ExperimentObject
+ *  objectID: the DB ID of this piece of equipment
+ *  amount: the number of instances needed of this piece of equipment
  */
 
-@JsonTypeName("equipment")
 
 data class EquipmentObject(
         var objectID  : Int,
@@ -17,6 +14,6 @@ data class EquipmentObject(
 
 
     override fun toString(): String {
-        return "$objectID | $amount"
+        return "Equipment: objectID=$objectID | amount=$amount"
     }
 }
