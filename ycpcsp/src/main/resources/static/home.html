@@ -248,29 +248,11 @@
     }
 
     function writeUserNotLoggedInHTML(){
-
+        
     }
 
     function writeUserLoggedInHTML(){
         var boxDiv = document.getElementById("boxed");
-        var testExperimentOne = {
-            title: "Iodine clock",
-            id: 4
-        };
-        var testExperimentTwo = {
-            title: "Soluable Trimethylane",
-            id: 17
-        };
-        var testExperimentThree = {
-            title: "You guessed it: HCl!",
-            id: 101
-        };
-        var testExperimentFour = {
-            title: "Color",
-            id: 21
-        };
-
-        user.experiments = [testExperimentOne, testExperimentTwo, testExperimentThree, testExperimentFour];
         boxDiv.innerHTML = "<h3> Your experiments </h3><br>"
         for(var i = 0; i < user.experiments.length; i++){
             var experiment = user.experiments[i];
@@ -287,13 +269,11 @@
     }
 
     postData('Playlist', 30).then(function(data){
-        console.log(data);
-        PlayList = data;
+        if(data != null){
+            if(data.length < 1) document.getElementById("firstfield").innerHTML = "No Playlist";
+            else Playlist = data;
+        }
     });
-
-    if(PlayList.length >= 0){
-        document.getElementById("firstfield").innerHTML = "No Playlist";
-    }
     function profile(){
         window.location.href = "/profile";
     }

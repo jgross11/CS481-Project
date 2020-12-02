@@ -46,9 +46,9 @@ fun PlaylistExperimentSearch(Playlist_ID: Int) : ArrayList<PlaylistObject> {
         rs.next()
 
 
-        for (x in 1..rs.fetchSize) {
+        for (x in 1..num) {
 
-            var WhatIsGoing = PlaylistObject(rs.getInt(rs.getInt("ExperimentsID")), rs.getInt("creatorID"), rs.getString("title"), rs.getString("firstName"), rs.getString("lastName"))
+            var WhatIsGoing = PlaylistObject(rs.getInt("ExperimentsID"), rs.getInt("creatorID"), rs.getString("title"), rs.getString("firstName"), rs.getString("lastName"))
             RecentExperiments.add(WhatIsGoing)
             rs.next()
         }
