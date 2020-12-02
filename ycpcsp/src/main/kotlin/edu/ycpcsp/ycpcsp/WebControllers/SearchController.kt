@@ -25,7 +25,9 @@ class SearchController {
         println("Received the search input")
         println(searchFormData)
         val experiment: Array<SearchObject> = SearchExperiment(searchFormData)
-        println(experiment)
+        for(exp in experiment){
+            println(exp.toString())
+        }
         return experiment
     }
 }
