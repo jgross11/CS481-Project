@@ -18,12 +18,13 @@ data class User(var firstName : String = "UNKNOWN",
                 var id : Int = -1
                 )
 {
-    // init questions, experiment, recent experiment arrays as empty
+    // init questions, experiment, recent experiment, playlist  arrays as empty
     var securityQuestions : Array<SecurityQuestion> = arrayOf<SecurityQuestion>()
     var experiments : Array<Experiment> = arrayOf<Experiment>()
     var recentExperiments : Array<Experiment> = arrayOf<Experiment>()
+    var playlists : Array<PlayList> = arrayOf<PlayList>()
 
-    // assume a user is not quarantined, changed to true if user is when fetching from DB
+    // assume a user is not quarantined, changed to true if user is quarantined when fetching from DB
     var isQuarantined = false
     // capitalize name
     init
@@ -77,6 +78,7 @@ data class User(var firstName : String = "UNKNOWN",
         securityQuestions[1] = SecurityQuestion(signupFormData.sq2, signupFormData.sq2a)
         securityQuestions[2] = SecurityQuestion(signupFormData.sq3, signupFormData.sq3a)
     }
+
     fun setContentsFromEdit(editUserFormData: EditUserFormData) {
         firstName = editUserFormData.firstName
         lastName = editUserFormData.lastName
