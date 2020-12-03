@@ -262,4 +262,29 @@ class EquipmentController2D extends ExperimentObjectController2D{
     shouldRender(bounds){
         return rectInRect2D(bounds, this.toRect());
     }
+
+    /**
+    Draw the list of possible actions to use for this Controller's Equipment
+    g: The P5 graphics object to use for drawing
+    */
+    drawActionsList(g){
+        let options = this.getFuncDescriptions();
+        g.textSize(EQUIP_ACTIONS_LIST_TEXT_SIZE);
+        let baseX = mouseX + EQUIP_ACTIONS_LIST_X_OFFSET;
+        let baseY = mouseY + EQUIP_ACTIONS_LIST_Y_OFFSET;
+        for(var i = 0; i < options.length; i++){
+            let s = (i + 1) + ": " + options[i];
+
+            g.strokeWeight(EQUIP_ACTIONS_LIST_STROKE_WEIGHT);
+            g.stroke(EQUIP_ACTIONS_LIST_STROKE_COLOR);
+            g.fill(EQUIP_ACTIONS_LIST_FILL_COLOR);
+            g.rect(baseX, baseY + (i - 1) * EQUIP_ACTIONS_LIST_BOX_HEIGHT + EQUIP_ACTIONS_LIST_BOX_EXTRA_WIDTH * 0.5,
+                g.textWidth(s) + EQUIP_ACTIONS_LIST_BOX_EXTRA_WIDTH, EQUIP_ACTIONS_LIST_BOX_HEIGHT);
+
+            g.noStroke();
+            g.fill(EQUIP_ACTIONS_LIST_TEXT_COLOR);
+            g.text(s, baseX, baseY + i * EQUIP_ACTIONS_LIST_BOX_HEIGHT);
+        }
+    }
+
 }

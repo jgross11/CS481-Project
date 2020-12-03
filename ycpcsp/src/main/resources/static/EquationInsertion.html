@@ -7,7 +7,7 @@
 <body>
     <script src="helperFunctions.js"></script>
     <div id="equationContainer">
-        <div id="insertEquationFormContainer">
+        <div id="insertFormContainer">
             <div id="equationPreview"></div><br>
             <div id="equationError"></div><br>
 
@@ -31,8 +31,8 @@
         <br> <br>
         <div id="equationSearchContainer">
             <label for="equationSeachBar">Search for equation</label><br>
-            <input type="text" placeholder="Search for equation" name="equationSeachBar" id="equationSeachBar" oninput="searchEquation(this.value)"><br><br>
-            <div id="equationSearchResultContainer">
+            <input type="text" placeholder="Search for equation" name="equationSeachBar" id="equationSeachBar" oninput="search(this.value)"><br><br>
+            <div id="searchResultContainer">
 
             </div>
         </div>
@@ -46,7 +46,7 @@
     let reactantFormulas = document.getElementsByName("reactantFormula");
     let productCoefficients = document.getElementsByName("productCoefficient");
     let productFormulas = document.getElementsByName("productFormula");
-    let equationSearchResultContainer = document.getElementById("equationSearchResultContainer");
+    let searchResultContainer = document.getElementById("searchResultContainer");
     let allEquationList = {};
 
     loadEquationsInDB();
@@ -59,11 +59,11 @@
             console.log(data);
             allEquationList = data;
             console.log(allEquationList);
-            displayEquationResults(allEquationList);
+            displayResults(allEquationList);
         });
     }
 
-    function searchEquation(searchValue){
+    function search(searchValue){
         let searchResults = []
         let searchResultSize = 0;
         for(let i = 0; i < allEquationList.length; i++){
@@ -71,13 +71,13 @@
                 searchResults[searchResultSize++] = allEquationList[i];
             }
         }
-        displayEquationResults(searchResults);
+        displayResults(searchResults);
     }
 
-    function displayEquationResults(list){
-        equationSearchResultContainer.innerHTML = "";
+    function displayResults(list){
+        searchResultContainer.innerHTML = "";
         for(let i = 0; i < list.length; i++){
-            equationSearchResultContainer.innerHTML += '<div style="border: 1px solid black" id="equationSearchResult" onclick="addEquation('+list[i]["equationID"]+')">'+list[i]["string"]+'</div>'
+            searchResultContainer.innerHTML += '<div style="border: 1px solid black" id="searchResult" onclick="addEquation('+list[i]["equationID"]+')">'+list[i]["string"]+'</div>'
         }
     }
 
@@ -236,7 +236,11 @@
                 // since new equation now in DB, repull equations to load new equation into list
                 // TODO there is absolutely no need to load every equation again, this could just query for the 
                 // TODO newly added equation, but, alas, time...
-                loadEquationsInDB();
+                let x = {};
+                postData('load-all-equations', x).then(function(data){
+                    allEquationList = data;
+                    displayResults(allEquationList);
+                });
             } else{
                 errorDiv.innerHTML = "Submission failed! Please ensure every product and reactant in your equation is in our system.";
             }

@@ -25,9 +25,10 @@ let EXP_JSON_CHEM_PROPERTIES = "chemicalProperties";
     let CHEMICAL_PROPERTY_SYMBOL = "formula";
     let CHEMICAL_PROPERTY_NAME = "name";
     let CHEMICAL_PROPERTY_CREATOR = "creatorID";
-    let CHEMICAL_PROPERTY_COLOR_SOLID = "colorSolid";
-    let CHEMICAL_PROPERTY_COLOR_LIQUID = "colorLiquid";
-    let CHEMICAL_PROPERTY_COLOR_GAS = "colorGas";
+    let CHEMICAL_PROPERTY_COLORS = "colors";
+    let CHEMICAL_PROPERTY_COLOR_SOLID = "solidColor";
+    let CHEMICAL_PROPERTY_COLOR_LIQUID = "liquidColor";
+    let CHEMICAL_PROPERTY_COLOR_GAS = "gasColor";
     let CHEMICAL_PROPERTY_ID = "chemicalInformationID";
     let CHEMICAL_PROPERTY_MOLAR_MASS = "molarMass";
     let CHEMICAL_PROPERTY_MELTING_POINT = "meltingPoint";
@@ -135,13 +136,14 @@ rawProperties: The list of properties
 function parseChemProperties(rawProperties){
     for(var i = 0; i < rawProperties.length; i++){
         let p = rawProperties[i];
+        let c = p[CHEMICAL_PROPERTY_COLORS];
         makeChemical(
             p[CHEMICAL_PROPERTY_SYMBOL],
             p[CHEMICAL_PROPERTY_NAME],
             p[CHEMICAL_PROPERTY_CREATOR],
-            getColorListObjectFromInt(p[CHEMICAL_PROPERTY_COLOR_SOLID]),
-            getColorListObjectFromInt(p[CHEMICAL_PROPERTY_COLOR_LIQUID]),
-            getColorListObjectFromInt(p[CHEMICAL_PROPERTY_COLOR_GAS]),
+            getColorListObjectFromInt(c[CHEMICAL_PROPERTY_COLOR_SOLID]),
+            getColorListObjectFromInt(c[CHEMICAL_PROPERTY_COLOR_LIQUID]),
+            getColorListObjectFromInt(c[CHEMICAL_PROPERTY_COLOR_GAS]),
             p[CHEMICAL_PROPERTY_ID],
             p[CHEMICAL_PROPERTY_MOLAR_MASS],
             p[CHEMICAL_PROPERTY_MELTING_POINT],
@@ -177,7 +179,7 @@ function parseEquationComponents(rawComponents){
         let c = rawComponents[i];
         comps.push(new EquationComponent(
             c[EQUATION_COMPONENT_PROPERTY_COEFFICIENT],
-            c[EQUATION_COMPONENT_PROPERTY_ID]
+            new ChemProperties(c[EQUATION_COMPONENT_PROPERTY_ID])
         ));
     }
     return comps;
@@ -349,12 +351,12 @@ function getTestJSON(){
     exp[EXP_JSON_EQUIPMENT] = sortArrayByKey(equips, EXP_JSON_EQUIP_OBJ_ID, false);
 
     let chems = [];
-    //chems.push(makeTestChemicalJSON(ID_CHEM_TEST_RED, 20, 1));
-    //chems.push(makeTestChemicalJSON(ID_CHEM_TEST_RED, 20, 1));
-    //chems.push(makeTestChemicalJSON(ID_CHEM_TEST_BLUE, 20, 1));
-    //chems.push(makeTestChemicalJSON(ID_CHEM_TEST_WHITE, 50, 1));
-    //chems.push(makeTestChemicalJSON(ID_CHEM_TEST_GREEN, 10, 1));
-    //chems.push(makeTestChemicalJSON(ID_CHEM_TEST_BLACK, 10, 1));
+    chems.push(makeTestChemicalJSON(ID_CHEM_TEST_RED, 20, 1));
+    chems.push(makeTestChemicalJSON(ID_CHEM_TEST_RED, 20, 1));
+    chems.push(makeTestChemicalJSON(ID_CHEM_TEST_BLUE, 20, 1));
+    chems.push(makeTestChemicalJSON(ID_CHEM_TEST_WHITE, 50, 1));
+    chems.push(makeTestChemicalJSON(ID_CHEM_TEST_GREEN, 10, 1));
+    chems.push(makeTestChemicalJSON(ID_CHEM_TEST_BLACK, 10, 1));
     chems.push(makeTestChemicalJSON(ELEMENT_SODIUM_ATOMIC_NUM, 10, 1));
     //chems.push(makeTestChemicalJSON(ELEMENT_CHLORINE_ATOMIC_NUM, 10, 1));
     chems.push(makeTestChemicalJSON(COMPOUND_CHLORINE_GAS_ID, 10, 1));

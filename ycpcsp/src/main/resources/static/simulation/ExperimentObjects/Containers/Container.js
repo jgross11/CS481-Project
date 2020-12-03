@@ -358,6 +358,10 @@ class ContainerController2D extends EquipmentController2D{
 
         // Add the solution
         conts.push(solution);
+
+        // Remove any overflow in the container from the solutions existing
+        this.removeOverflow();
+
         return true;
     }
 

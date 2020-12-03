@@ -1,5 +1,6 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
+import edu.ycpcsp.ycpcsp.Models.PlayList
 import edu.ycpcsp.ycpcsp.Models.User
 import java.sql.DriverManager
 import java.sql.SQLException
@@ -7,7 +8,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-fun PlaylistSearch(userId: Int) : ArrayList<String> {
+fun PlaylistSearch(userId: Int) : ArrayList<PlayList> {
     val serverCredentials = serverCredential()
     val username = serverCredentials?.get(0)
     val password = serverCredentials?.get(1)
@@ -25,12 +26,13 @@ fun PlaylistSearch(userId: Int) : ArrayList<String> {
         val conn = DriverManager.getConnection(url, connectionProps)
         //Experiment Search Query
         println(userId)
-        val query = "Select * from Database.Playlist where user_ID = \"$userId\"; "
+        val query = "Select * from Database.Playlist where user_ID = ? "
         val ps = conn.prepareStatement(query)
+        ps.setInt(1, userId)
         val rs = ps.executeQuery()
 
         //make string list to store the names in
-        val RecentExperiments = arrayListOf<String>()
+        val RecentExperiments = arrayListOf<PlayList>()
 
         //find the fetch size by going to end
         rs.last()
@@ -44,10 +46,14 @@ fun PlaylistSearch(userId: Int) : ArrayList<String> {
 
 
         for (x in 1..rs.fetchSize) {
-           if(!RecentExperiments.contains(rs.getString("Playlist_Name"))){
-               RecentExperiments.add(rs.getString("Playlist_Name"))
-           }
 
+            var WhatIsGoing = PlayList(rs.getInt("user_ID"), rs.getString("Playlist_Name"), rs.getInt("Playlist_ID"))
+
+            WhatIsGoing.Experiment = PlaylistExperimentSearch(rs.getInt("Playlist_ID"))
+            //TODO got to find a way to bring some Experiments here today getlist of experimentsID that need to be grabbed and then grab their other stuff
+
+            RecentExperiments.add(WhatIsGoing)
+            rs.next()
         }
 
         //return the names mutable list
@@ -65,38 +71,3 @@ fun PlaylistSearch(userId: Int) : ArrayList<String> {
     return arrayListOf()
 }
 
-fun PlaylistSearchTwo(userId: Int): String {
-    val connection = getDBConnection()
-
-    try {
-        if(connection != null) {
-            val preparedSt = connection.prepareStatement("SELECT * FROM Database.Playlist;")
-            preparedSt.setInt(1, userId)
-            val rs = preparedSt.executeQuery()
-
-            try {
-                return if (rs.first()) {
-                    println("the return if gave me somethin")
-                    rs.getString("Playlist_Name")
-
-                } else {
-                    println("the else gave me somethin")
-                    rs.getString("Playlist_Name")
-
-                }
-            } catch (ex: SQLException) {
-                println("Error the query returned with a null result set. The query must have been entered incorrectly")
-                ex.printStackTrace()
-            }
-            return rs.getString("Playlist_Name")
-        }
-
-    } catch (ex: SQLException) {
-        // handle any errors
-        ex.printStackTrace()
-    } catch (ex: Exception) {
-        // handle any errors
-        ex.printStackTrace()
-    }
-    return "didnt make it"
-}

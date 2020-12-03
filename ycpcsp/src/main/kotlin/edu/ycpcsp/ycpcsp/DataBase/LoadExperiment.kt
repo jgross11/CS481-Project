@@ -86,10 +86,10 @@ fun LoadExperiment(id: String) : Experiment {
             for(x in 1..numRows){
                 var newChem = ChemicalProperties(rs.getInt(1), rs.getString(2), rs.getString(3),
                                             rs.getDouble(4), rs.getDouble(5), rs.getBoolean(6),
-                                            rs.getDouble(7), rs.getDouble(8), rs.getInt(9), rs.getInt(9))
-                newChem.colors.gasColor = rs.getInt(15)
-                newChem.colors.liquidColor = rs.getInt(16)
-                newChem.colors.solidColor = rs.getInt(17)
+                                            rs.getDouble(7), rs.getDouble(8), rs.getInt(9), rs.getInt(10))
+                newChem.colors.gasColor = rs.getInt(16)
+                newChem.colors.liquidColor = rs.getInt(17)
+                newChem.colors.solidColor = rs.getInt(18)
                 experiment.chemicalProperties[x-1] = newChem
                 rs.next()
             }
@@ -106,21 +106,21 @@ fun LoadExperiment(id: String) : Experiment {
                     // append new component if equation object already created
                     if(equation != null){
                         // if component is reactant
-                        if(rs.getBoolean(8)){
-                            equation.reactants = equation.reactants.plus(EquationComponent(rs.getInt(9), rs.getInt(10)))
+                        if(rs.getBoolean(9)){
+                            equation.reactants = equation.reactants.plus(EquationComponent(rs.getInt(10), rs.getInt(11)))
                         } else{
-                            equation.products = equation.products.plus(EquationComponent(rs.getInt(9), rs.getInt(10)))
+                            equation.products = equation.products.plus(EquationComponent(rs.getInt(10), rs.getInt(11)))
                         }
                         // put updated equation back into map
                         equationMap[equation.equationID] = equation
                     }
                     // otherwise, create the equation object with the first piece of information
                     else{
-                        equation = ChemicalEquation(rs.getInt(equationIDIndex), rs.getInt(2))
+                        equation = ChemicalEquation(rs.getInt(equationIDIndex), rs.getInt(2), rs.getInt(3))
                         if(rs.getBoolean(isReactantIndex)){
-                            equation.reactants = Array(1){ EquationComponent(rs.getInt(9), rs.getInt(10)) }
+                            equation.reactants = Array(1){ EquationComponent(rs.getInt(10), rs.getInt(11)) }
                         } else{
-                            equation.products = Array(1){ EquationComponent(rs.getInt(9), rs.getInt(10)) }
+                            equation.products = Array(1){ EquationComponent(rs.getInt(10), rs.getInt(11)) }
                         }
                         // put new equation back into map
                         equationMap[equation.equationID] = equation

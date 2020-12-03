@@ -5,20 +5,37 @@
  * NOTE: must also import helperFunctions.js for POST helper function
  */
 
+// div for reactant components 
 let reactantContainer = null;
+
+// div for product components
 let productContainer = null;
+
+// div for reactant coefficients
 let reactantCoefficients = null;
+
+// div for reactant formulas
 let reactantFormulas = null;
+
+// div for product coefficients
 let productCoefficients = null;
+
+// div for product formulas
 let productFormulas = null;
+
+// all equation list container
 let equationSearchResultContainer = null;
+
+// list containing equation information for all equations in DB
 let allEquationList = {};
 
+// on script load, query DB for all equation information and display on page
 function initEquationSearch(){
     equationSearchResultContainer = document.getElementById("equationSearchResultContainer");
     loadEquationsInDB();
 }
 
+// creates basic equation to indicate how to build a new one on webpage
 function initEquationCreation(){
     reactantContainer = document.getElementById("reactantContainer");
     productContainer = document.getElementById("productContainer");
@@ -29,29 +46,41 @@ function initEquationCreation(){
     updatePreview();
 }
 
+// queries database for all equation information and
+// displays information on webpage
 function loadEquationsInDB(){
+    // POST requires data to be sent
+    // TODO write GET helper function(?)
     let x = {};
 
     postData('load-all-equations', x).then(function(data){
+        // set all equations list to be used elsewhere on experiment creation page
         allEquationList = data;
         displayEquationResults(allEquationList);
     });
 }
 
+// given part of or a whole chemical formula, 
+// iterate through all equations list,
+// add and display equations that contain that formula
 function searchEquation(searchValue){
     let searchResults = []
     let searchResultSize = 0;
-    for(let i = 0; i < allEquationList.length; i++){
+    for(let i in allEquationList){
         if(allEquationList[i]['string'].includes(searchValue)){
             searchResults[searchResultSize++] = allEquationList[i];
         }
     }
+
+    // display search results
     displayEquationResults(searchResults);
 }
 
+// given a list of equations (either every one, or search results)
+// create list on webpage to display results
 function displayEquationResults(list){
     equationSearchResultContainer.innerHTML = "";
-    for(let i = 0; i < list.length; i++){
+    for(let i in list){
         equationSearchResultContainer.innerHTML += '<div style="border: 1px solid black" id="equationSearchResult" onclick="addEquation('+i+')">'+list[i]["string"]+'</div>'
     }
 }
@@ -139,6 +168,7 @@ function updatePreview(){
 function submitEquation(){
 
     // check if given information is valid
+    
     // reactant coefficients 
     let errorDiv = document.getElementById("equationError");
     errorDiv.innerHTML = "";
@@ -194,25 +224,30 @@ function submitEquation(){
         return;
     }
 
-
+    // combine reactant coefficients and formulas into one array that will be mapped to backend through Jackson
     let reactants = storeCoefficientsAndFormulas(reactantCoefficients, reactantFormulas);
+
+    // combine product coefficients and formulas into one array that will be mapped to backend through Jackson
     let products = storeCoefficientsAndFormulas(productCoefficients, productFormulas);
+    
+    // combine reactants and products array into one Equation Object to map on backend
     let equation = {
         reactants: reactants, 
         products: products
     };
-    console.log(equation);
+
+    // send constructed equation to backend for submission
     postData('submit-equation-information', equation).then(function(data){
         if(data == true){
             errorDiv.innerHTML = "Submission succesful!";
-            
-            // since new equation now in DB, repull equations to load new equation into list
-            // TODO there is absolutely no need to load every equation again, this could just query for the 
-            // TODO newly added equation, but, alas, time...
-            loadEquationsInDB();
         } else{
             errorDiv.innerHTML = "Submission failed! Please ensure every product and reactant in your equation is in our system.";
         }
+        // in the time it took to create this equation, there is a chance new equations were added to DB
+        // so, we reload all the contents of the DB.
+        // TODO there is absolutely no need to load every equation again, this could just query for the 
+        // TODO newly added equation, but, alas, time...
+        loadEquationsInDB();
     });
 }
 

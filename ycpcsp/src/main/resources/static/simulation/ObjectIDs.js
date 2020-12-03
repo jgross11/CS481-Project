@@ -27,22 +27,25 @@ let ID_EQUIP_REFRACTOMETER_LENS = 19;
 
 // contains all usable equipment information
 var allEquipmentList = [
-    { equipmentID:ID_EQUIP_BEAKER_50mL,       name: "Beaker (50mL)"},
-    { equipmentID:ID_EQUIP_BEAKER_150mL,      name: "Beaker (150mL)"},
-    { equipmentID:ID_EQUIP_BEAKER_250mL,      name: "Beaker (250mL)"},
-    { equipmentID:ID_EQUIP_BEAKER_600mL,      name: "Beaker (600mL)"},
-    { equipmentID:ID_EQUIP_SCALE,             name: "Scale"},
-    { equipmentID:ID_EQUIP_TRASHCAN,          name: "Trashcan"},
-    { equipmentID:ID_EQUIP_GRADUATED_25mL,    name: "Graduated Cylinder (25mL)" },
-    { equipmentID:ID_EQUIP_GRADUATED_50mL,    name: "Graduated Cylinder (50mL)" },
-    { equipmentID:ID_EQUIP_GRADUATED_100mL,   name: "Graduated Cylinder (100mL)" },
-    { equipmentID:ID_EQUIP_GRADUATED_1000mL,  name: "Graduated Cylinder (1000mL)" },
-    { equipmentID:ID_EQUIP_FLASK_25mL,        name: "Erlenmeyer Flask (25mL)" },
-    { equipmentID:ID_EQUIP_FLASK_50mL,        name: "Erlenmeyer Flask (50mL)" },
-    { equipmentID:ID_EQUIP_FLASK_125mL,       name: "Erlenmeyer Flask (125mL)" },
-    { equipmentID:ID_EQUIP_FLASK_1000mL,      name: "Erlenmeyer Flask (1000mL)" },
-    { equipmentID:ID_EQUIP_WEIGH_BOAT,        name: "Weigh Boat" },
-    { equipmentID:ID_EQUIP_STIR_ROD,          name: "Stir Rod" }
+    { equipmentID:ID_EQUIP_BEAKER_50mL,                 name: "Beaker (50mL)"},
+    { equipmentID:ID_EQUIP_BEAKER_150mL,                name: "Beaker (150mL)"},
+    { equipmentID:ID_EQUIP_BEAKER_250mL,                name: "Beaker (250mL)"},
+    { equipmentID:ID_EQUIP_BEAKER_600mL,                name: "Beaker (600mL)"},
+    { equipmentID:ID_EQUIP_SCALE,                       name: "Scale"},
+    { equipmentID:ID_EQUIP_TRASHCAN,                    name: "Trashcan"},
+    { equipmentID:ID_EQUIP_GRADUATED_25mL,              name: "Graduated Cylinder (25mL)" },
+    { equipmentID:ID_EQUIP_GRADUATED_50mL,              name: "Graduated Cylinder (50mL)" },
+    { equipmentID:ID_EQUIP_GRADUATED_100mL,             name: "Graduated Cylinder (100mL)" },
+    { equipmentID:ID_EQUIP_GRADUATED_1000mL,            name: "Graduated Cylinder (1000mL)" },
+    { equipmentID:ID_EQUIP_FLASK_25mL,                  name: "Erlenmeyer Flask (25mL)" },
+    { equipmentID:ID_EQUIP_FLASK_50mL,                  name: "Erlenmeyer Flask (50mL)" },
+    { equipmentID:ID_EQUIP_FLASK_125mL,                 name: "Erlenmeyer Flask (125mL)" },
+    { equipmentID:ID_EQUIP_FLASK_1000mL,                name: "Erlenmeyer Flask (1000mL)" },
+    { equipmentID:ID_EQUIP_WEIGH_BOAT,                  name: "Weigh Boat" },
+    { equipmentID:ID_EQUIP_STIR_ROD,                    name: "Stir Rod" },
+    { equipmentID:ID_EQUIP_EYE_DROPPER,                 name: "Dropper" },
+    { equipmentID:ID_EQUIP_REFRACTOMETER,               name: "Refractometer"},
+    { equipmentID:ID_EQUIP_REFRACTOMETER_LENS,          name: "Refractometer Lens"}
 ]
 
 // sessionStorage.setItem("EquipID", JSON.stringify(EquipID));
@@ -261,6 +264,9 @@ function initTestChemProperties(){
         new EquationComponent(2, new ChemProperties(COMPOUND_TABLE_SALT_ID))
         ]);
 }
+
+
+
 
 /**
 Add a new chemical to the CHEMICAL_PROPERTIES list

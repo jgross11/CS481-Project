@@ -85,4 +85,14 @@ async function postData(address, objectToPost){
     })).json();
 }
 
+/*
+Given a simulation's ID, 
+stores simulation ID in session and redirects to simulation page,
+in order to load simulation.
+*/
+function loadSimulation(simulationID){
+    sessionStorage.setItem("simulationToLoad", simulationID);
+    window.location.href = "/simulation";
+}
+
 console.log("Helper function script loaded successfully!");

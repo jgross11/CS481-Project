@@ -63,6 +63,12 @@ fun main(){
         //VerifyUser(username!!, password!!)
     }
 
-
+    else if (answer == 5){
+        print("Enter in the search result: ")
+        val search = readLine()
+        val searchData = SearchFormData(search!!)
+        val result = SearchExperiment(searchData)
+        print(result)
+    }
 }
 

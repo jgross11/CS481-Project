@@ -32,7 +32,7 @@ class ChemicalProperties (var chemicalInformationID : Int,
     }
 
     // used when compound is first created on FE and given to BE (before ID exists in DB)
-    constructor(formula: String, name: String, mass: Double, density: Double, isWaterSoluable: Boolean, solidTemp: Double, gasTemp: Double) : this(
+    constructor(formula: String, name: String, mass: Double, density: Double, isWaterSoluable: Boolean, solidTemp: Double, gasTemp: Double, Rating: Int) : this(
             -1, formula, name, mass, density, isWaterSoluable, solidTemp, gasTemp, -1,0){
     }
 

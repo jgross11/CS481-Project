@@ -36,8 +36,9 @@ fun insertEquation(equation : EquationFormData) : Boolean{
             }
 
             // now that every reactant / product's information has been found, we can create a new equation
-            var preparedStatement = connection.prepareStatement("INSERT INTO Database.Equations_Information (CreatorUserID) VALUES (?);", Statement.RETURN_GENERATED_KEYS)
+            var preparedStatement = connection.prepareStatement("INSERT INTO Database.Equations_Information (CreatorUserID, Rating) VALUES (?, ?);", Statement.RETURN_GENERATED_KEYS)
             preparedStatement.setInt(1, equation.userID)
+            preparedStatement.setInt(2, 0)
             preparedStatement.executeUpdate()
             val rs = preparedStatement.generatedKeys
             if(rs.next()){

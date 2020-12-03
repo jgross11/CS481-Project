@@ -19,13 +19,36 @@ fun LoadUser(email: String): User {
 
     try {
         if(connection != null) {
-            val preparedSt = connection.prepareStatement("SELECT * FROM Database.Users where email = ?;")
+            var preparedSt = connection.prepareStatement("SELECT * FROM Database.Users where email = ?;")
             preparedSt.setString(1, email)
-            val rs = preparedSt.executeQuery()
+            var rs = preparedSt.executeQuery()
 
             try {
                 return if (rs.first()) {
-                    User(rs.getString(FirstName), rs.getString(LastName), rs.getString(Email), rs.getString(Password), rs.getString(School), rs.getInt(ID))
+                    var user = User(rs.getString(FirstName), rs.getString(LastName), rs.getString(Email), rs.getString(Password), rs.getString(School), rs.getInt(ID))
+
+                    // attempt to populate user experiment array with preview information
+                    preparedSt = connection.prepareStatement("SELECT Experiments.ExperimentsID, Experiments.title FROM Database.Experiments WHERE Experiments.creatorID = ?")
+                    preparedSt.setInt(1, user.id)
+                    rs = preparedSt.executeQuery()
+
+                    // if user has at least one experiment
+                    if(rs.first()) {
+                        rs.last()
+                        val numExperiments = rs.row
+                        rs.first()
+                        var userExperimentArr = Array<Experiment>(numExperiments){Experiment()}
+
+                        // populate an array with each experiment's information
+                        for(i in 0 until numExperiments){
+                            userExperimentArr[i] = Experiment(rs.getString(2), user.getFullName(), rs.getInt(1));
+                            rs.next()
+                        }
+                        // set the user's experiment array to the constructed one
+                        user.experiments = userExperimentArr
+                    }
+                    // return constructed user object
+                    user
                 } else {
                     User()
                 }

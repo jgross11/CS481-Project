@@ -132,3 +132,7 @@ QUnit.test('shouldRender:', function(assert){
     assert.true(control1.shouldRender([10, 7, 100, 100]), "Should render on touching bounds");
     assert.false(control1.shouldRender([11, 11, 100, 100]), "Should not render on not touching bounds");
 });
+
+QUnit.todo('drawActionsList:', function(assert){
+    assert.true(false);
+});

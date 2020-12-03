@@ -7,9 +7,10 @@ import java.sql.SQLException
 // equation DB indices
 const val equationIDIndex = 1
 const val equationCreatorIndex = 2
-const val isReactantIndex = 5
-const val coefficientIndex = 6
-const val chemicalInformationIndex = 7
+const val ratingIndex = 3
+const val isReactantIndex = 6
+const val coefficientIndex = 7
+const val chemicalInformationIndex = 8
 
 /**
  *  Searches the database for an equation whose ID matches that provided
@@ -24,7 +25,7 @@ fun getEquationById(id : Int) : ChemicalEquation?{
             preparedStatement.setInt(1, id)
             val rs = preparedStatement.executeQuery()
             return if(rs.first()){
-                var equation = ChemicalEquation(rs.getInt(equationIDIndex), rs.getInt(equationCreatorIndex))
+                var equation = ChemicalEquation(rs.getInt(equationIDIndex), rs.getInt(equationCreatorIndex), rs.getInt(ratingIndex))
                 var reactants = ArrayList<EquationComponent>()
                 var products = ArrayList<EquationComponent>()
 

@@ -21,11 +21,13 @@ class SearchController {
 
     @PostMapping(path = ["/search-submit"], consumes = ["application/json"], produces = ["application/json"])
     @ResponseBody
-    fun search(@RequestBody searchFormData: SearchFormData) : MutableList<SearchObject>{
+    fun search(@RequestBody searchFormData: SearchFormData) : Array<SearchObject>{
         println("Received the search input")
         println(searchFormData)
-        var experiment: MutableList<SearchObject> = arrayListOf()
-        experiment = SearchExperiment(searchFormData)
+        val experiment: Array<SearchObject> = SearchExperiment(searchFormData)
+        for(exp in experiment){
+            println(exp.toString())
+        }
         return experiment
     }
 }
