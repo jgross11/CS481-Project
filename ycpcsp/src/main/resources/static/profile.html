@@ -13,6 +13,9 @@
     function redirect(){
         window.location.href = "/";
     }
+    function Edit(){
+        window.location.href = "/editprofile";
+    }
 
     function getUserInformation(){
         let user = JSON.parse(sessionStorage.getItem("user"));
@@ -22,6 +25,8 @@
             document.write(user.school+"<br>");
             document.write(user.email+"<br>");
             document.write("   <input value=\"Back\" type=\"button\" id=\"backToHomeButton\" name=\"backToHomeButton\" onclick=\"redirect()\">   ");
+            document.write("   <input value=\"Edit\" type=\"button\" id=\"Edit\" name=\"Edit\" onclick=\"Edit()\">   ");
+
         }
         else{
             redirect();
