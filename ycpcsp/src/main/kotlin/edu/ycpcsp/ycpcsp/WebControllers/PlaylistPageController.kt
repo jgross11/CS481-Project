@@ -26,11 +26,10 @@ class PlaylistPageController {
     //TODO set up the loading of playlist right here.
     @PostMapping(path = ["/Playlist-Loader"], consumes = ["application/json"], produces = ["application/json"])
     @ResponseBody
-    fun loadUserPlaylist(@RequestBody user : Int) : ArrayList<PlayList> {
+    fun loadUserPlaylist(@RequestBody user : Int) : Array<PlayList> {
         println("made it to PlaylistPageController line 25")
         //TODO make it so that the data reaches to data base
-        val ListToBeReturned: ArrayList<PlayList> = PlaylistSearch(user)
-        return ListToBeReturned;
+        return PlaylistSearch(user).toTypedArray();
     }
 
     //TODO Remove playlist

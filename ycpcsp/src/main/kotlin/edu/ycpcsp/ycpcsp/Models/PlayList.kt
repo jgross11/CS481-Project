@@ -1,13 +1,21 @@
 package edu.ycpcsp.ycpcsp.Models
 // The playlist class is used for frontend to backend usage of the playlist object.
 data class PlayList (
-        var Creator_ID: Int,
-        var Playlist_Title: String,
-        var Playlist_ID: Int
+        var creatorID: Int,
+        var title: String,
+        var playlistID: Int
 ){
-    var Experiment = ArrayList<PlaylistObject>(0)
+    var entries = Array<PlaylistObject>(0){ PlaylistObject() }
+
+    // null constructor
+    constructor() : this(-1, "", -1){}
+
     override fun toString(): String {
-        return "$Creator_ID $Playlist_ID ${Playlist_Title}"
+        var result = "$creatorID $playlistID $title"
+        for (entry in entries){
+            result += entry.toString()
+        }
+        return result
     }
 
 

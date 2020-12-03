@@ -1,11 +1,11 @@
 package edu.ycpcsp.ycpcsp.Models
 
 data class PlaylistObject(
-        var Experiment_ID: Int,
-        var Creator_ID:Int,
-        var Title: String,
-        var Firstname: String,
-        var Lastname:String
+        var experimentID: Int,
+        var creatorID:Int,
+        var title: String,
+        var firstName: String,
+        var lastName:String
 )
 {
 
@@ -13,6 +13,6 @@ data class PlaylistObject(
     constructor() : this(-1, -1, "", "", "")
 
     override fun toString(): String {
-        return "$Experiment_ID, $Creator_ID, $Title, $Firstname, $Lastname"
+        return "$experimentID, $creatorID, $title, $firstName, $lastName\n"
     }
 }

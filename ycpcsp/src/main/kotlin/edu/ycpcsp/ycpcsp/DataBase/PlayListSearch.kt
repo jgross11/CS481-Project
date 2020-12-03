@@ -1,7 +1,6 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
 import edu.ycpcsp.ycpcsp.Models.PlayList
-import edu.ycpcsp.ycpcsp.Models.User
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.*
@@ -49,7 +48,7 @@ fun PlaylistSearch(userId: Int) : ArrayList<PlayList> {
 
             var WhatIsGoing = PlayList(rs.getInt("user_ID"), rs.getString("Playlist_Name"), rs.getInt("Playlist_ID"))
 
-            WhatIsGoing.Experiment = PlaylistExperimentSearch(rs.getInt("Playlist_ID"))
+            WhatIsGoing.entries = PlaylistExperimentSearch(rs.getInt("Playlist_ID"))
             //TODO got to find a way to bring some Experiments here today getlist of experimentsID that need to be grabbed and then grab their other stuff
 
             RecentExperiments.add(WhatIsGoing)
