@@ -26,7 +26,7 @@
         margin: 10px;
     }
     #SearchResults > ul{
-        ist-style:none;
+        list-style:none;
         max-height:100px;
         margin:0;
         overflow:auto;
@@ -76,19 +76,20 @@
 
     var playlistExperiments = [];
     var playlist = [];
-
+    let user = null;
+    
     checkForLogin();
-    var user = JSON.parse(sessionStorage.getItem("user"));
+
     //TODO check if the user is logged in if the user is not logged in redirect otherwise postdata for the playlist information.
     //TODO make it so that the list can be expanded.
     function checkForLogin(){
         // attempt to get user information from the session storage
-
+        user = JSON.parse(sessionStorage.getItem("user"));
         console.log("Checking the user");
         console.log(user);
         // logged in
         if(user != null){
-            postData('/Playlist-Loader', user).then(function(data){
+            postData('/Playlist-Loader', user.id).then(function(data){
                 console.log(data);
                 playlist = data;
             });
