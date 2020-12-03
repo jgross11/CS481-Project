@@ -70,11 +70,6 @@ fun getAllEquationInformation() : Array<ChemicalEquationResult?>?{
                         }
                     }
                 }
-                if (equationArr != null) {
-                    for(eq in equationArr){
-                        println(eq)
-                    }
-                }
                 equationArr
             } else{
                 null

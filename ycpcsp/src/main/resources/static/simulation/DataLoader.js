@@ -179,7 +179,7 @@ function parseEquationComponents(rawComponents){
         let c = rawComponents[i];
         comps.push(new EquationComponent(
             c[EQUATION_COMPONENT_PROPERTY_COEFFICIENT],
-            c[EQUATION_COMPONENT_PROPERTY_ID]
+            new ChemProperties(c[EQUATION_COMPONENT_PROPERTY_ID])
         ));
     }
     return comps;

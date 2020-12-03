@@ -1,13 +1,12 @@
 <html>
 <script src="helperFunctions.js"></script>
 <link rel="stylesheet" href="Search.css">
-<head>
+<title>
    Search Page
-</head>
-<form id="search" name="SearchBar"  method="post">
+</title>
+    <a href="/">Home</a><br>
     <input type="text" id ="input" placeholder="Search...">
     <input value="Search" type="button" id="searchFunction" name="searchFunctionButton" onclick="submitSearchFunction()">
-</form>
 
 <body>
 
@@ -48,7 +47,7 @@
                     document.getElementById("SearchBar").appendChild(newDiv);
                     var elem = document.createElement("BUTTON");
                     identity = mutable[i].id;
-                    elem.innerHTML = "<button class='button' onclick='loadSimulation(identity)'> Load Experiment</button>";
+                    elem.innerHTML = "<button class='button' onclick='loadSimulation("+identity+")'> Load Experiment</button>";
                     newDiv.appendChild(elem);
 
                     var br3 = document.createElement("br");

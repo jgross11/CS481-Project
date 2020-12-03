@@ -189,6 +189,7 @@
     <!-- contains all logic for loading images (necessary for determining actor functions) -->
     <script src="https://cdn.jsdelivr.net/npm/p5@1.1.9/lib/p5.js"></script>
     <script src="./simulation/Util/InstanceID.js"></script>
+    <script src="./simulation/Util/RenderConstants2D.js"></script>
 
     <!-- experiments that are created will need these scripts 
          for valid step / valid experiment checking -->
@@ -205,6 +206,9 @@
 
 
 <script reference="form-tying-together-script.js">
+
+    // Function to disable P5 canvas creation
+    function setup(){}
 
     // user who's creating experiment
     let user = null;
@@ -842,6 +846,31 @@
                 }
                 scriptURL = "./simulation/ExperimentObjects/StirRod.js";
                 equipmentScriptStatus[ID_EQUIP_STIR_ROD] = true;
+            break;
+
+            case ID_EQUIP_EYE_DROPPER:
+                if(equipmentScriptStatus[ID_EQUIP_EYE_DROPPER]){
+                    return;
+                }
+                scriptURL = "./simulation/ExperimentObjects/Containers/EyeDropper.js";
+                equipmentScriptStatus[ID_EQUIP_EYE_DROPPER] = true;
+            break;
+
+            case ID_EQUIP_REFRACTOMETER:
+                if(equipmentScriptStatus[ID_EQUIP_REFRACTOMETER]){
+                    return;
+                }
+                scriptURL = "./simulation/ExperimentObjects/Refractometer.js";
+                equipmentScriptStatus[ID_EQUIP_REFRACTOMETER] = true;
+            break;
+
+            case ID_EQUIP_REFRACTOMETER_LENS:
+                if(equipmentScriptStatus[ID_EQUIP_REFRACTOMETER_LENS]){
+                    return;
+                }
+                scriptURL = "./simulation/ExperimentObjects/Containers/RefractometerLens.js";
+                console.log(scriptURL);
+                equipmentScriptStatus[ID_EQUIP_REFRACTOMETER_LENS] = true;
             break;
         }
 
