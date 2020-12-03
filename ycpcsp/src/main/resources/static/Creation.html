@@ -280,10 +280,10 @@
         if(user != null && !user.isQuarantined){
             document.getElementById("experimentCreatorBox").value = user.fullName;
         } else{
-            // UNCOMMENT WHEN NOT EDITING THIS WEBPAGE
+            // UNCOMMENT WHEN NOT EDITING THIS WEBPAGE FOR EASE OF USE
             // overwrite creation form with invalid user message
-            // writePermissionNotice();
-            // return;
+            writePermissionNotice();
+            return;
         }
 
         // fetch and display chemicals from DB
@@ -1127,6 +1127,14 @@
         
         postData('save-new-creation', grouping).then(function(data){
             if(data != -1){
+                // push newly created experiment to user experiment list
+                experiment.experimentID = data;
+                user.experiments.push(experiment);
+
+                // update user in session
+                sessionStorage.setItem("user", JSON.stringify(user));
+
+                // load newly created simulation
                 loadSimulation(data);
             } else{
                 document.getElementById("experimentSubmissionButtonError").innerHTML = "Experiment creation failed, please try again.";
