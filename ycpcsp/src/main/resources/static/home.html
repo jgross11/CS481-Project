@@ -247,20 +247,23 @@
             console.log(user.experiments);
 
             // user experiment list writing
+            let userExperiments = document.createElement("div");
+            userExperiments.id = "userExperiments";
+            userExperiments.style.height = "30%";
+            userExperiments.insertAdjacentHTML("afterbegin", "<h3> Your Experiments </h3>");
+            
+
             // if the user has made experiments, then write previews
             if(user.experiments.length > 0){
-                console.log("yep");
-                // header text
-                boxDiv.innerHTML = "<h3> Your experiments </h3><br>"
 
                 // create container div and set id
                 let userExperimentsContainer = document.createElement("div");
                 userExperimentsContainer.id = "userExperimentsContainer";
-                userExperimentsContainer.style.height = "33%";
+                userExperimentsContainer.style.height = "85%";
                 userExperimentsContainer.style.border = "1px solid black";
                 userExperimentsContainer.style.overflowY = "scroll";
 
-                // create user experiment list code
+                // create user experiment list code with header text
                 let userExperimentString = "";
 
                 // create an experiment box for every experiment the user has created and add to experiment list code
@@ -273,23 +276,62 @@
 
                 // add constructed list code to experiment list container div
                 userExperimentsContainer.insertAdjacentHTML("beforeend", userExperimentString);
+
                 // append container div in list container div
-                boxDiv.appendChild(userExperimentsContainer);
+                userExperiments.appendChild(userExperimentsContainer);
             }
+
+            // otherwise, alert user that they could make one..
+            else{
+                userExperiments.insertAdjacentHTML("beforeend", "Looks like you haven't created any experiments yet! <a href='/Creation'>Create an experiment?</a>");
+            }
+
+            // append user experiment information to page
+            boxDiv.appendChild(userExperiments);
+
+            // user playlist writing
+            let userPlaylists = document.createElement("div");
+            userPlaylists.id = "userPlaylists";
+            userPlaylists.style.height = "30%";
+            userPlaylists.insertAdjacentHTML("afterbegin", "<h3> Your Playlists </h3>");
+            
+            // if the user has any playlists, write the title with option to expand
+            if(user.playlists.length > 0){
+                // create container div and set id
+                let userPlaylistContainer = document.createElement("div");
+                userPlaylistContainer.id = "userPlaylistContainer";
+                userPlaylistContainer.style.height = "100%";
+                userPlaylistContainer.style.border = "1px solid black";
+                userPlaylistContainer.style.overflowY = "scroll";
+
+                // create user playlist list code with header text
+                let userPlaylistString = "";
+
+                // create an playlist box for every playlist the user has created and add to playlist list code
+                for(let i in user.playlists){
+                    var playlist = user.playlists[i];
+                    userPlaylistString += '<div id="userPlaylistEntry" style="text-align: center; width: 200px; height: 50px; border: 1px solid #000000">'+ playlist.title + "<br> </div>";
+                }
+
+                // add constructed list code to playlist list container div
+                userPlaylistContainer.insertAdjacentHTML("beforeend", userPlaylistString);
+                
+                // append container div in list container div
+                userPlaylists.appendChild(userPlaylistContainer);
+            }
+
+            // otherwise, alert user that they could make one..
+            else{
+                userPlaylists.insertAdjacentHTML("beforeend", "Looks like you haven't created any playlists yet! <a href='/PlaylistPage'>Create a playlist?</a>");
+            }
+
+            // append user playlist information to page
+            boxDiv.appendChild(userPlaylists);
 
             var dropButtonDiv = document.getElementById("dropbtn");
             dropButtonDiv.innerHTML = "Welcome, " + user.fullName;
             var dropDownContents = document.getElementById("dropdown-content");
             dropDownContents.innerHTML = "<button onclick=\"profile()\">My Profile</button><br><br><button onclick=\"logout()\">Log out</button>";
-            postData('Playlist', user.id).then(function(data){
-                if(data != null){
-                    /*
-                    if(data.length < 1) document.getElementById("PlaylistBox").innerHTML = "No Playlist";
-                    else Playlist = data;
-                    console.log(data);
-                    */
-                }
-            });
         }
 
         function profile(){
