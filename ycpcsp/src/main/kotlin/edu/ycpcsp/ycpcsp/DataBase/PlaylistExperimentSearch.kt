@@ -10,7 +10,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-fun PlaylistExperimentSearch(Playlist_ID: Int) : ArrayList<PlaylistObject> {
+fun PlaylistExperimentSearch(Playlist_ID: Int) : Array<PlaylistObject> {
     val serverCredentials = serverCredential()
     val username = serverCredentials?.get(0)
     val password = serverCredentials?.get(1)
@@ -54,7 +54,7 @@ fun PlaylistExperimentSearch(Playlist_ID: Int) : ArrayList<PlaylistObject> {
         }
 
         //return the names mutable list
-        return RecentExperiments
+        return RecentExperiments.toTypedArray()
 
     } catch (ex: SQLException) {
         // handle any errors
@@ -65,5 +65,5 @@ fun PlaylistExperimentSearch(Playlist_ID: Int) : ArrayList<PlaylistObject> {
     }
 
     //If you get here then there was a failure so return empty array
-    return arrayListOf()
+    return arrayOf<PlaylistObject>()
 }
