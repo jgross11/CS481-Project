@@ -74,7 +74,7 @@ fun LoadUser(email: String): User {
 
                                 // populate playlist entry list with obtained information
                                 for(x in 0 until numPlaylistEntries){
-                                    playlistEntries[x] = PlaylistObject(rs.getInt(1), rs.getInt(3), rs.getString(2), rs.getString(5), rs.getString(6))
+                                    playlistEntries[x] = PlaylistObject(rs2.getInt(1), rs2.getInt(3), rs2.getString(2), rs2.getString(5), rs2.getString(6))
                                     rs2.next()
                                 }
 
