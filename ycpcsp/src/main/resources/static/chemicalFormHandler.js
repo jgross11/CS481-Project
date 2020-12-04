@@ -157,6 +157,7 @@ function submitChemical(){
         chemical[CHEMICAL_PROPERTY_MELTING_POINT] = chemicalMP;
         chemical[CHEMICAL_PROPERTY_BOILING_POINT] = chemicalBP;
         chemical[CHEMICAL_PROPERTY_COLORS] = colorStates;
+        chemical["creatorID"] = user.id;
         submissionErrorDiv.innerHTML = "";
 
         // submit chemical information to DB
