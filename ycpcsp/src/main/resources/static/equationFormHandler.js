@@ -233,7 +233,8 @@ function submitEquation(){
     // combine reactants and products array into one Equation Object to map on backend
     let equation = {
         reactants: reactants, 
-        products: products
+        products: products,
+        userID: user.id
     };
 
     // send constructed equation to backend for submission
