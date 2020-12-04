@@ -37,16 +37,15 @@
 <body>
 <script src="helperFunctions.js"></script>
 <div id="playlist">
-<form id="myForm">
-    <select id="selectPlaylist">
-        <option>Playlist</option>
-    </select>
-</form>
+    <form id="myForm">
+        <select id="selectPlaylist">
+            <option>Playlist</option>
+        </select>
+    </form>
 </div>
 
 <button onclick="myFunction()" > Grab playlist </button>
 <button onclick="RemovePlaylist()" > Remove Playlist </button>
-<button onclick="CreateNewPlaylist()" > CreateNewPlaylist</button>
 <div id="CreationOfNewPlaylist">
     <form>
         <label for="PlaylistName">Playlist Name: </label>
@@ -63,10 +62,13 @@
     <form id="search" name="SearchBar"  method="post">
         <input type="text" id ="input" placeholder="Search For Experiments" onkeypress="handleEnterKey(event)"/>
         <input value="Search" type="button" id="searchFunction" name="searchFunctionButton" onclick="submitSearchFunction()">
+        <input value="Search PLaylist" type="button" id="searchPlaylistFunction" name="searchFunctionButton" onclick="submitPlaylistSearchFunction()">
     </form>
 </div>
 <div id="SearchResultsArea">
     <ul id="SearchResults">
+    </ul>
+    <ul id="SearchPlaylistResults">
     </ul>
 </div>
 </body>
@@ -77,7 +79,7 @@
     var playlistExperiments = [];
     var playlist = [];
     let user = null;
-    
+
     checkForLogin();
 
     //TODO check if the user is logged in if the user is not logged in redirect otherwise postdata for the playlist information.
@@ -88,7 +90,7 @@
         console.log("Checking the user");
         console.log(user);
         // logged in
-        if(user != null){
+        if(user === null){
             postData('/Playlist-Loader', user.id).then(function(data){
                 console.log(data);
                 playlist = data;
@@ -105,21 +107,21 @@
                 for(var i = 0; i < playlist.length; i++) {
                     var opt = playlist[i];
                     var el = document.createElement("option");
+                    console.log(opt.title);
                     el.textContent = opt.title;
                     el.value = i;
                     el.onclick
                     select.appendChild(el);
                 }
-
             });
         }
     }
 
     function RemovePlaylist(){
         var sel = document.getElementById('selectPlaylist');
-        console.log(playlist[sel.value].playlist_ID);
+        console.log(playlist[sel.value].playlistID);
 
-        postData('Playlist-Remover', playlist[sel.value].playlist_ID).then(function(data){
+        postData('Playlist-Remover', playlist[sel.value].playlistID).then(function(data){
             console.log(data);
             if(data != false){
                 var x = document.getElementById("selectPlaylist");
@@ -135,17 +137,21 @@
         console.log(document.getElementById("PlaylistName").value)
 
         var NewPlaylist = {
-            Playlist_Name: document.getElementById("PlaylistName").value,
+            title: document.getElementById("PlaylistName").value,
             creator_ID: user.id
         }
         postData('Playlist-Adder', NewPlaylist).then(function(data){
             console.log(data);
-            if(data != false){
+            if(data === false){
+
+            }
+            else{
                 var x = document.getElementById("selectPlaylist");
-                x.remove(x.selectedIndex);
+                // Add this playlist to the li
+                playlist.push(NewPlaylist);
+                console.log(playlist[1]);
             }
         });
-
     }
 
 
@@ -154,15 +160,17 @@
     function myFunction(){
         var sel = document.getElementById('selectPlaylist');
         console.log(playlist[sel.value].playlist_ID);
-        playlistExperiments = playlist[sel.value].experiment;
-
+        playlistExperiments = playlist[sel.value].entries;
+        console.log(playlistExperiments.length);
         var ul = document.getElementById('bulk');
+        ul.innerHTML = '';
+
         if(playlistExperiments.length != 0) {
             for (var d = 0; d < playlistExperiments.length; d++) {
                 var li = document.createElement('li')
-                li.innerHTML = playlistExperiments[d];
+                li.innerHTML = playlistExperiments[d].title +" "+"By"+" "+playlistExperiments[d].firstName+" "+ playlistExperiments[d].lastName;
                 document.getElementById('bulk').appendChild(li);
-                li.setAttribute('id', d);
+                li.setAttribute('id', playlistExperiments[d].experimentID);
             }
 
         }
@@ -171,26 +179,17 @@
             li.innerHTML = "No experiments in playlist";
             document.getElementById('bulk').appendChild(li);
         }
+
     }
 
 
     var ul = document.getElementById('bulk');
-    var jim = ['Wow', 'Amazing','Boogie', 'hoodie'];
-    //TODO Load this thing with real experiment.
-    for(var d = 0; d < jim.length; d++){
-        var li = document.createElement('li')
-        li.innerHTML = jim[d];
-        document.getElementById('bulk').appendChild(li);
-        li.setAttribute('id', d);
-    }
 
     ul.addEventListener('click', function(e) {
         if (e.target.tagName === 'LI'){
-            alert(jim[e.target.id]);
-
+            loadSimulation(e.target.id)
         }
     });
-
 
     function submitSearchFunction(){
         var experimentName = document.getElementById("input").value;
@@ -207,19 +206,23 @@
                 li.innerHTML = mutable[i].title +" By "+mutable[i].creatorName;
                 document.getElementById('SearchResults').appendChild(li);
                 li.setAttribute('id', mutable[i].id);
+                li.setAttribute('Type', "Experiment");
             }
         });
+
     }
 
     var SearchResultsListener = document.getElementById('SearchResults');
+
     SearchResultsListener.addEventListener('click', function(e) {
         if (e.target.tagName === 'LI'){
-            if (confirm('Are you sure you want to save this Experiment to Your playlist'+" "+playlist[document.getElementById('selectPlaylist').value].title)) {
+            var sel = document.getElementById('selectPlaylist');
+            if (confirm("Are you sure you want to add"+" "+e.target.innerHTML+" "+" To the playlist"+" "+playlist[sel.value].title)) {
                 // Save it!
+                console.log(playlist[sel.value].playlist_ID)
                 //TODO Send crap to the database playlistID experimentID
-                var sel = document.getElementById('selectPlaylist');
                 var ExperimentTOAdd = {
-                    playlist_ID: playlist[sel.value].playlist_ID,
+                    playlist_ID: playlist[sel.value].playlistID,
                     experiment_ID: e.target.id
                 }
                 console.log(ExperimentTOAdd.playlist_ID)
@@ -236,6 +239,11 @@
 
         }
     });
+
+    function loadSimulation(simulationID){
+        sessionStorage.setItem("simulationToLoad", simulationID);
+        window.location.href = "/simulation";
+    }
 
 </script>
 </html>

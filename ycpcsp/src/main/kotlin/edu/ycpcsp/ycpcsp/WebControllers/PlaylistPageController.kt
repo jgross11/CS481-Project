@@ -40,7 +40,7 @@ class PlaylistPageController {
         println(playlistID)
         var RemoveBoolean = RemovePlaylistDatabase(playlistID)
         println(RemoveBoolean)
-        return true
+        return RemoveBoolean
     }
 
 
@@ -50,7 +50,7 @@ class PlaylistPageController {
     fun AddPlaylist(@RequestBody NewPlaylist : AddNewPlaylistFormData) : Boolean {
         println("made it to line 50 of PlaylistPageController")
         println(NewPlaylist)
-        InsertPlaylisy(NewPlaylist.creator_ID, NewPlaylist.Playlist_Name)
+        InsertPlaylisy(NewPlaylist.creator_ID, NewPlaylist.title)
         return true;
     }
     //TODO Add experiment to playlist
@@ -73,6 +73,16 @@ class PlaylistPageController {
     @PostMapping(path = ["/search-submit-playlist"], consumes = ["application/json"], produces = ["application/json"])
     @ResponseBody
     fun search(@RequestBody searchFormData: SearchFormData) : Array<SearchObject>{
+        println("Received the search input")
+        println(searchFormData)
+        val experiment: Array<SearchObject> = SearchExperiment(searchFormData)
+        println(experiment)
+        return experiment
+    }
+
+    @PostMapping(path = ["/searcsearch-submit-playlisth-submit-playlist"], consumes = ["application/json"], produces = ["application/json"])
+    @ResponseBody
+    fun searchPlaylist(@RequestBody searchFormData: SearchFormData) : Array<SearchObject>{
         println("Received the search input")
         println(searchFormData)
         val experiment: Array<SearchObject> = SearchExperiment(searchFormData)

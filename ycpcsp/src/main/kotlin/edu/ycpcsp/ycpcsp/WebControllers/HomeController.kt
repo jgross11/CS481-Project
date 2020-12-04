@@ -35,8 +35,6 @@ class HomeController {
 
         if(VerifyUser(loginFormData)){
             // TODO construct user object from the appropriate DB query
-
-            // TODO this is currently only half done...
             println("normal login successful")
             return LoadUser(loginFormData.email)
         } else if(verifyQuarantineUser(loginFormData)){
