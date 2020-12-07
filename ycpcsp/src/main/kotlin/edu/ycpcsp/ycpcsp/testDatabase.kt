@@ -1,6 +1,7 @@
 package edu.ycpcsp.ycpcsp
 
 import edu.ycpcsp.ycpcsp.DataBase.*
+import edu.ycpcsp.ycpcsp.PostDataClasses.SearchFormData
 import java.util.Scanner
 
 fun main(){
@@ -62,10 +63,12 @@ fun main(){
         //VerifyUser(username!!, password!!)
     }
 
-    else if(answer ==5){
-        print("Enter in the id of experiment: ")
-        val id = readLine()
-        LoadExperiment(id!!)
+    else if (answer == 5){
+        print("Enter in the search result: ")
+        val search = readLine()
+        val searchData = SearchFormData(search!!)
+        val result = SearchExperiment(searchData)
+        print(result)
     }
 }
 

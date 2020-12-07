@@ -1,9 +1,10 @@
 package edu.ycpcsp.ycpcsp.WebControllers
 
-import edu.ycpcsp.ycpcsp.DataBase.LoadUser
-import edu.ycpcsp.ycpcsp.DataBase.VerifyUser
+import edu.ycpcsp.ycpcsp.DataBase.*
+import edu.ycpcsp.ycpcsp.Models.PlayList
 import edu.ycpcsp.ycpcsp.Models.User
 import edu.ycpcsp.ycpcsp.PostDataClasses.LoginFormData
+import edu.ycpcsp.ycpcsp.PostDataClasses.RecentExperimentLoad
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 
@@ -34,13 +35,48 @@ class HomeController {
 
         if(VerifyUser(loginFormData)){
             // TODO construct user object from the appropriate DB query
-
-            // TODO this is currently only half done...
-            println("login successful")
+            println("normal login successful")
             return LoadUser(loginFormData.email)
+        } else if(verifyQuarantineUser(loginFormData)){
+            println("quarantine login successful")
+            user = LoadQuarantineUser(loginFormData.email)
+            user.isQuarantined = true
+            return user
         }
 
         // return constructed user object, or null, to indicate no user was found (login failed)
         return user
     }
+
+    @PostMapping(path = ["/Recent-experiment"], consumes = ["application/json"], produces = ["application/json"])
+    @ResponseBody
+    fun recentExperimentSearch(@RequestBody userid: Int): ArrayList<String> {
+        println("Loading Users Recent Experiments")
+        println(userid)
+        var ListOfRecent = arrayListOf<String>()
+        //ListOfRecent = RecentExperimentSearch(userid);
+        //println(ListOfRecent[0])
+
+        //For Now Here Is a fake one
+
+
+        return ListOfRecent;
+    }
+
+    @PostMapping(path = ["/Playlist"], consumes = ["application/json"], produces = ["application/json"])
+    @ResponseBody
+    fun PlaylistSearchT(@RequestBody userid: Int): ArrayList<PlayList> {
+        println("Loading Users Playlist")
+        println(userid)
+        var ListOfRecent = arrayListOf<String>()
+        //ListOfRecent = PlaylistSearch(userid);
+        //println(ListOfRecent[0])
+        //TODO Experiment name title and creator name
+        println(userid)
+        var ListOfRecentPlaylist  = PlaylistSearch(userid)
+        println(ListOfRecentPlaylist)
+        //For Now Here Is a fake one
+        return ListOfRecentPlaylist;
+    }
+
 }

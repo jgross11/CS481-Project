@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    let testColor = [
+        10,
+        135,
+        255,
+        79
+    ];
+
+    console.log(getColorInt(testColor));
+    console.log(getColorObjectFromInt(getColorInt(testColor)));
+    function getColorInt(color){
+        return (color[0] << 24) | (color[1] << 16) | (color[2] << 8) | color[3];
+    }
+
+    function getColorObjectFromInt(value){
+        return [
+            value >> 24,
+            value >> 16 & 0xFF,
+            value >> 8 & 0xFF,
+            value & 0xFF
+        ];
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<html>
+<script src="helperFunctions.js"></script>
+<link rel="stylesheet" href="Search.css">
+<title>
+   Search Page
+</title>
+    <a href="/">Home</a><br>
+    <input type="text" id ="input" placeholder="Search...">
+    <input value="Search" type="button" id="searchFunction" name="searchFunctionButton" onclick="submitSearchFunction()">
+
+<body>
+
+    <div id="SearchBar">
+    </div>
+</body>
+
+
+<script>
+
+    var identity = {};
+    function submitSearchFunction(){
+            var experimentName = document.getElementById("input").value;
+            var experiment = {
+                title: experimentName
+            };
+            postData('search-submit', experiment).then(function(data){
+                console.log(data);
+                var mutable = data;
+                var i;
+                document.getElementById("SearchBar").innerHTML = "";
+                for(i = 0; i <mutable.length; i++){
+                    var newDiv = document.createElement("div");
+                    newDiv.className = "result";
+
+                    var title = document.createElement("span");
+                    title.innerText = mutable[i].title;
+                    newDiv.appendChild(title);
+
+                    var br = document.createElement("br");
+                    newDiv.appendChild(br);
+
+                    var name = document.createTextNode(mutable[i].creatorName);
+                    newDiv.appendChild(name);
+
+                    var br2 = document.createElement("br");
+                    newDiv.appendChild(br2);
+                    document.getElementById("SearchBar").appendChild(newDiv);
+                    var elem = document.createElement("BUTTON");
+                    identity = mutable[i].id;
+                    elem.innerHTML = "<button class='button' onclick='loadSimulation("+identity+")'> Load Experiment</button>";
+                    newDiv.appendChild(elem);
+
+                    var br3 = document.createElement("br");
+                    newDiv.appendChild(br3);
+                    var br4 = document.createElement("br");
+                    newDiv.appendChild(br4);
+                    newDiv.style.border = "solid black";
+
+                }
+            });
+    }
+
+
+    function loadSimulation(simulationID){
+        sessionStorage.setItem("simulationToLoad", simulationID);
+        window.location.href = "/simulation";
+    }
+
+
+</script>
+</html>

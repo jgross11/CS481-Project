@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript"
+            src="jquery-1.8.1.min.js"></script>
+</head>
+<style>
+    #bulk {
+        height: 200px;
+        border: 1px solid;
+        overflow-y: auto;
+    }
+    #bulk > li {
+        background: #ff0000;
+        margin: 10px;
+    }
+
+    #SearchResults {
+        height: 400px;
+        border: 1px solid;
+        overflow-y: auto;
+    }
+    #SearchResults > li {
+        margin: 10px;
+    }
+    #SearchResults > ul{
+        list-style:none;
+        max-height:100px;
+        margin:0;
+        overflow:auto;
+        padding:0;
+        text-indent:10px;
+    }
+</style>
+<body>
+<script src="helperFunctions.js"></script>
+<div id="playlist">
+    <form id="myForm">
+        <select id="selectPlaylist">
+            <option>Playlist</option>
+        </select>
+    </form>
+</div>
+
+<button onclick="myFunction()" > Grab playlist </button>
+<button onclick="RemovePlaylist()" > Remove Playlist </button>
+<div id="CreationOfNewPlaylist">
+    <form>
+        <label for="PlaylistName">Playlist Name: </label>
+        <input type="text" id="PlaylistName" name="PlaylistName"><br>
+    </form>
+    <button onclick="AddPlaylist()">Create Playlist</button>
+</div>
+<div id="playlist-Experiments" >
+    <ul id="bulk">
+    </ul>
+</div>
+
+<div id="SearchArea">
+    <form id="search" name="SearchBar"  method="post">
+        <input type="text" id ="input" placeholder="Search For Experiments" onkeypress="handleEnterKey(event)"/>
+        <input value="Search" type="button" id="searchFunction" name="searchFunctionButton" onclick="submitSearchFunction()">
+        <input value="Search PLaylist" type="button" id="searchPlaylistFunction" name="searchFunctionButton" onclick="submitPlaylistSearchFunction()">
+    </form>
+</div>
+<div id="SearchResultsArea">
+    <ul id="SearchResults">
+    </ul>
+    <ul id="SearchPlaylistResults">
+    </ul>
+</div>
+</body>
+<script>
+    // playlistExperiments holds an array of playlist that will be checked for their names.
+    // playlist holds an array of playlist that will be used to do things later on.
+
+    var playlistExperiments = [];
+    var playlist = [];
+    let user = null;
+
+    checkForLogin();
+
+    //TODO check if the user is logged in if the user is not logged in redirect otherwise postdata for the playlist information.
+    //TODO make it so that the list can be expanded.
+    function checkForLogin(){
+        // attempt to get user information from the session storage
+        user = JSON.parse(sessionStorage.getItem("user"));
+        console.log("Checking the user");
+        console.log(user);
+        // logged in
+        if(user === null){
+            postData('/Playlist-Loader', user.id).then(function(data){
+                console.log(data);
+                playlist = data;
+            });
+        }
+        // not logged in
+        else{
+            console.log("Made it to line 62, PlaylistPage.html");
+            postData('Playlist-Loader', user.id).then(function(data){
+                console.log(data);
+                playlist = data;
+                var select = document.getElementById("selectPlaylist");
+
+                for(var i = 0; i < playlist.length; i++) {
+                    var opt = playlist[i];
+                    var el = document.createElement("option");
+                    console.log(opt.title);
+                    el.textContent = opt.title;
+                    el.value = i;
+                    el.onclick
+                    select.appendChild(el);
+                }
+            });
+        }
+    }
+
+    function RemovePlaylist(){
+        var sel = document.getElementById('selectPlaylist');
+        console.log(playlist[sel.value].playlistID);
+
+        postData('Playlist-Remover', playlist[sel.value].playlistID).then(function(data){
+            console.log(data);
+            if(data != false){
+                var x = document.getElementById("selectPlaylist");
+                x.remove(x.selectedIndex);
+            }
+        });
+    }
+
+    //TODO need a way for Experiments to be added to playlist
+
+    function AddPlaylist(){
+        // TODO take two things of information and pass them to backend UserID, PlaylistName
+        console.log(document.getElementById("PlaylistName").value)
+
+        var NewPlaylist = {
+            title: document.getElementById("PlaylistName").value,
+            creator_ID: user.id
+        }
+        postData('Playlist-Adder', NewPlaylist).then(function(data){
+            console.log(data);
+            if(data === false){
+
+            }
+            else{
+                var x = document.getElementById("selectPlaylist");
+                // Add this playlist to the li
+                playlist.push(NewPlaylist);
+                console.log(playlist[1]);
+            }
+        });
+    }
+
+
+
+    //script to get the array value of the button pressed.
+    function myFunction(){
+        var sel = document.getElementById('selectPlaylist');
+        console.log(playlist[sel.value].playlist_ID);
+        playlistExperiments = playlist[sel.value].entries;
+        console.log(playlistExperiments.length);
+        var ul = document.getElementById('bulk');
+        ul.innerHTML = '';
+
+        if(playlistExperiments.length != 0) {
+            for (var d = 0; d < playlistExperiments.length; d++) {
+                var li = document.createElement('li')
+                li.innerHTML = playlistExperiments[d].title +" "+"By"+" "+playlistExperiments[d].firstName+" "+ playlistExperiments[d].lastName;
+                document.getElementById('bulk').appendChild(li);
+                li.setAttribute('id', playlistExperiments[d].experimentID);
+            }
+
+        }
+        else{
+            var li = document.createElement('li')
+            li.innerHTML = "No experiments in playlist";
+            document.getElementById('bulk').appendChild(li);
+        }
+
+    }
+
+
+    var ul = document.getElementById('bulk');
+
+    ul.addEventListener('click', function(e) {
+        if (e.target.tagName === 'LI'){
+            loadSimulation(e.target.id)
+        }
+    });
+
+    function submitSearchFunction(){
+        var experimentName = document.getElementById("input").value;
+        var experiment = {
+            title: experimentName
+        };
+        postData('search-submit-playlist', experiment).then(function(data){
+            console.log(data);
+            var mutable = data;
+            var i;
+            document.getElementById("SearchResults").innerHTML = "";
+            for(i = 0; i <mutable.length; i++){
+                var li = document.createElement('li')
+                li.innerHTML = mutable[i].title +" By "+mutable[i].creatorName;
+                document.getElementById('SearchResults').appendChild(li);
+                li.setAttribute('id', mutable[i].id);
+                li.setAttribute('Type', "Experiment");
+            }
+        });
+
+    }
+
+    var SearchResultsListener = document.getElementById('SearchResults');
+
+    SearchResultsListener.addEventListener('click', function(e) {
+        if (e.target.tagName === 'LI'){
+            var sel = document.getElementById('selectPlaylist');
+            if (confirm("Are you sure you want to add"+" "+e.target.innerHTML+" "+" To the playlist"+" "+playlist[sel.value].title)) {
+                // Save it!
+                console.log(playlist[sel.value].playlist_ID)
+                //TODO Send crap to the database playlistID experimentID
+                var ExperimentTOAdd = {
+                    playlist_ID: playlist[sel.value].playlistID,
+                    experiment_ID: e.target.id
+                }
+                console.log(ExperimentTOAdd.playlist_ID)
+                console.log(ExperimentTOAdd.experiment_ID)
+                postData('/Experiment-Adder', ExperimentTOAdd).then(function(data){
+                    console.log(data);
+
+                });
+                console.log('Thing was saved to the database.');
+            } else {
+                // Do nothing!
+                console.log('Thing was not saved to the database.');
+            }
+
+        }
+    });
+
+    function loadSimulation(simulationID){
+        sessionStorage.setItem("simulationToLoad", simulationID);
+        window.location.href = "/simulation";
+    }
+
+</script>
+</html>

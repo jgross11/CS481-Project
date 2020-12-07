@@ -2,13 +2,14 @@
 	"experiment": {
 		"title": "Color",
 		"creator": "Zaq",
+
 		"equipment": [
 			{
 				"object_ID": 1,
 				"amount": 3
 			}
 		],
-		
+
 		"chemicals": [
 			{
 				"id": 1,
@@ -22,11 +23,11 @@
 			},
 			{
 				"id": 3,
-				"mass": 20,
+				"mass": 10,
 				"concentration": 1
 			}
 		],
-		
+
 		"steps": [
 			{
 				"step_number": 0,
@@ -68,6 +69,73 @@
 				"receiver_ID": false,
 				"function_ID": 2
 			}
+		],
+
+		"chemProperties": [
+			{
+				"id": 10000,
+				"boilingPoint": -253,
+				"colorGas": -14081,
+				"colorLiquid": -14136,
+				"colorSolid": -14156,
+				"creator": "Nature",
+				"density": 0.09,
+				"meltingPoint": -259,
+				"molarMass": 2.016,
+				"name": "Hydrogen Gas",
+				"symbol": "H2",
+				"waterSoluble": true
+			},
+			{
+				"id": 10004,
+				"boilingPoint": -183,
+				"colorGas": -589505281,
+				"colorLiquid": -589505336,
+				"colorSolid": -589505356,
+				"creator": "Nature",
+				"density": 1.43,
+				"meltingPoint": -218,
+				"molarMass": 31.998,
+				"name": "Oxygen Gas",
+				"symbol": "O2",
+				"waterSoluble": true
+			},
+			{
+				"id": 10001,
+				"boilingPoint": 100,
+				"colorGas": 1684340735,
+				"colorLiquid": 1684340680,
+				"colorSolid": 1684340660,
+				"creator": "Nature",
+				"density": 1,
+				"meltingPoint": 0,
+				"molarMass": 18.0153,
+				"name": "Water",
+				"symbol": "H2O",
+				"waterSoluble": true
+			}
+		],
+
+		"equations": [
+			{
+				"reactants": [
+					{
+						"coefficient": 2,
+						"id": 10000
+					},
+					{
+						"coefficient": 1,
+						"id": 10004
+					}
+				],
+				"products": [
+					{
+						"coefficient": 2,
+						"id": 10001
+					}
+				]
+			}
 		]
+
 	}
 }

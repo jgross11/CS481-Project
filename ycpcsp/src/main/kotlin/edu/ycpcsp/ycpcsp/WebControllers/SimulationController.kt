@@ -25,13 +25,15 @@ class SimulationController {
     // otherwise populates and returns Experiment object with relevant info
     @PostMapping(path = ["/simulation-data"], consumes = ["application/json"], produces = ["application/json"])
     @ResponseBody
-    fun getSimulationData(@RequestBody id : Integer) : Experiment{
+    fun getSimulationData(@RequestBody id : Int) : Experiment{
         var exp = Experiment()
         println(id)
-        exp = LoadExperiment("$id");
+        exp = LoadExperiment("$id")
         return exp
     }
 
+    /*
+    TODO this functionality should've been moved to CreationController, keep this for now to ensure nothing breaks
     // given an Experiment object representing a newly created experiment,
     // attempt to save Experiment object in DB. return true if save successful, false otherwise
     @PostMapping(path = ["/save-new-simulation"], consumes = ["application/json"], produces = ["application/json"])
@@ -40,16 +42,9 @@ class SimulationController {
         var result = true
         println("User ${userAndExp.user.getFullName()} wants to submit following experiment data to DB:")
         println(userAndExp.experiment)
-        // FOR TESTING PURPOSES ONLY
-        var copyAlreadyInDB = LoadExperiment("21")
-        println("\nCOMPARED TO\n")
-        println(copyAlreadyInDB)
-        println("result: ${copyAlreadyInDB.equals(userAndExp.experiment)}")
-        // NOTE: THEY MATCH! GOOD FOR NOW
-        // END TESTING PURPOSES
         result = CreateExperiment(userAndExp)
         return result
-    }
+    }*/
 
     // given an Experiment object representing a modified experiment (edit(s) made to one already in DB)
     // overwrite old information in DB with new information. return true if overwrite successful, false otherwise

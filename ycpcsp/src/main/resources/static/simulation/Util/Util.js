@@ -7,7 +7,6 @@ function isFloat(n){
 }
 
 /**
-TODO needs test cases to verify functioning correctly
 Helper function for sorting an array in ascending order
 array: The array to sort
 keys: The element of the array to sort by, or a list of elements
@@ -19,17 +18,16 @@ function sortArrayByKey(array, keys, multiple = false){
         if(multiple){
             var result = 0;
             for(var i = 0; i < keys.length; i++){
-                arraySortCompare(a, b, keys[i]);
+                result = arraySortCompare(a, b, keys[i]);
                 if(result !== 0) return result;
             }
             return result;
         }
-        else return arraySortCompare(a, b, key);
+        else return arraySortCompare(a, b, keys);
     });
 }
 
 /**
-TODO needs test cases to verify functioning correctly
 Helper function for sortArrayByKey. Determine if a is greater than b.
 a: The first element
 b: The second element
@@ -41,4 +39,68 @@ function arraySortCompare(a, b, key){
     var y = b[key];
     if(x < y) return -1;
     return (x > y) ? 1 : 0;
+}
+
+
+/**
+Convert an integer into a color value where each of the bits of the integer represent the 4 different color channels
+value: The integer, first 8 bits are red, next 8 bits are green, next 8 bits are blue, last 8 bits are alpha
+returns: The color, a list of 4 values, each in the range of [0-255]
+
+Fun story, the way this stores 4 values, each ranging from [0-255] in one integer is via bit shifting.
+Because js is so much fun, it basically breaks if you try to use bit shifting on the bit keeping track of the negative sign.
+So, to get around this, we have >>> for the red value, which works because it works, because js.
+This was not a fun story to experience.
+*/
+function getColorListObjectFromInt(value){
+    return [
+        value >>> 24,
+        value >> 16 & 0xFF,
+        value >> 8 & 0xFF,
+        value & 0xFF
+    ];
+}
+
+/**
+Convert a color, a list of 4 elements, to a single integer
+color: The color to convert
+return: The integer representing the color
+*/
+function getColorInt(color){
+    return (color[0] << 24) | (color[1] << 16) | (color[2] << 8) | color[3];
+}
+
+/**
+Get a color between 2 colors based on their relative weights, the higher the weight,
+    the closer to that color the final color will be.
+Both colors must be a list of values, and each must be the same length
+c1: The first color, a list of 3 or 4 values
+w1: The weight of the first color, must be positive and nonzero
+c2: The second color, a list of 3 or 4 values
+w2: The weight of the second color, must be positive and nonzero
+returns: The combined color
+*/
+function colorRatio(c1, w1, c2, w2){
+    var c = [];
+    let w = w1 + w2;
+    for(var i = 0; i < c1.length; i++){
+        c.push((c1[i] * w1 + c2[i] * w2) / w);
+    }
+    return c;
+}
+
+/**
+Combine a list of colors together via ratios, see colorRatio for more details.
+cs: The colors, a list of lists, each containing of 3 or 4 values
+ws: The weight, indexes correspond to the color indexes
+returns: The combined color
+*/
+function colorRatioMultiple(cs, ws){
+    var c = cs[0];
+    var w = 0;
+    for(var i = 1; i < cs.length; i++){
+        w += ws[i - 1];
+        c = colorRatio(c, w, cs[i], ws[i]);
+    }
+    return c;
 }

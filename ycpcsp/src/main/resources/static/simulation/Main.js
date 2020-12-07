@@ -1,31 +1,9 @@
 var mainExperiment = null;
 var mainExpController = null;
+var mainExpCanvas = null;
 
-/*
-
-TODO:
-    Create code for Chemicals, display a Chemical tab
-        Make a key toggle showing and interacting with chemicals vs equipment
-        Click on a chemical to be able to add it to a beaker, use func ids
-    Test cases ChemicalBox, EquipmentBox.getImage, DisplayBox
-        Need to allow them to turn graphics on or off
-    Allow users to select different actions for each piece of equipment
-    Allow equipment and chemicals to be disposed
-    Make a better way of Chemicals in Instructions to keep their stats so they don't change, or maybe have a reset?
-    Make proper layout page with home button
-    Add camera panning
-        Use x and y camera coordinates in the ExperimentController2D
-        Use P5 translate for graphics
-        Create global function to get x and y mouse positions
-        Objects which will not be on the screen should not be rendered, i.e. a renderBounds() method
-        Objects in the experiment should be forced to stay within the experiment bounds
-    Make basic layout for Experiment
-        Update clicking and dragging to change indexes for ExperimentBoxes when they are removed from the list
-        Split Experiment render code into individual methods
-    Optimize performance of searching for adding and removing Equipment, pick a better data structure
-    Create a method to render a static loading screen while the simulator loads
-
-*/
+// true to load data from the actual database, false to use test data defined by the return of getTestJSON()
+let LOAD_EXPERIMENT_FROM_SERVER = true;
 
 /**
 P5.js function, called when script is initially loaded
@@ -33,10 +11,10 @@ P5.js function, called when script is initially loaded
 function setup(){
     // Create the canvas
     let canvas = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
-    canvas.position(50, 50, "relative");
+    canvas.position(CANVAS_X_OFFSET, CANVAS_Y_OFFSET, CANVAS_POSITION_MODE);
 
-    // First load image assets
-    loadImages();
+    // Set the frame rate
+    frameRate(EXPERIMENT_FRAME_RATE);
 
     // Grab data from session storage
     loadSessionData();
@@ -46,15 +24,42 @@ function setup(){
 Initialize the experiment and controller objects from the session data
 */
 function initExperiment(data){
-    mainExperiment = parseExperiment(data);
+    // Set up control constants from RenderConstants2D
+    setUpControlConstants();
+
+    // Load image assets
+    loadImages();
+
+    // Create the experiment graphics
+    mainExpCanvas = createGraphics(CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    if(LOAD_EXPERIMENT_FROM_SERVER) mainExperiment = parseExperiment(data);
+    else{
+        // Set up chemical properties test database
+        initTestChemProperties();
+        mainExperiment = parseExperiment(getTestJSON());
+    }
+
+    // Create the experiment object proper
     mainExpController = new ExperimentController2D(mainExperiment, true);
+    console.log(CHEMICAL_PROPERTIES);
 }
 
 /**
 P5.js function, called when screen is redrawn
 */
 function draw(){
-    if(mainExpController !== null) mainExpController.render();
+    // If the experiment has not yet loaded, draw the loading screen
+    if(mainExpController === null){
+        drawLoadingScreen();
+    }
+    // Otherwise, draw the simulation
+    else{
+        mainExpController.update();
+
+        mainExpController.render(mainExpCanvas);
+        image(mainExpCanvas, 0, 0);
+    }
 }
 
 /**
@@ -93,9 +98,30 @@ function keyPressed(){
 }
 
 /**
-Function to stop the right click menu from showing up
+P5.js function, called when a key on the keyboard is released
+*/
+function keyReleased(){
+    if(mainExpController !== null) mainExpController.keyRelease();
+}
+
+/**
+Draw the loading screen while the experiment loads
+*/
+function drawLoadingScreen(){
+    background(LOADING_SCREEN_BACKGROUND_COLOR);
+    stroke(LOADING_SCREEN_TEXT_STROKE_COLOR);
+    strokeWeight(LOADING_SCREEN_TEXT_STROKE_WEIGHT);
+    textSize(LOADING_SCREEN_TEXT_SIZE)
+    fill(LOADING_SCREEN_TEXT_COLOR);
+    text(LOADING_SCREEN_TEXT,
+        (CANVAS_WIDTH - textWidth(LOADING_SCREEN_TEXT)) * 0.5,
+        (CANVAS_HEIGHT + LOADING_SCREEN_TEXT_SIZE) * 0.5);
+}
+
+/**
+Function to stop the right click menu from showing up.
+return: true if the mouse is outside the P5 canvas, false otherwise
 */
 document.oncontextmenu = function(){
-    // TODO still should activate this normally when mouse is not inside P5 canvas
-    return false;
+    return !pointInRect2D([0, 0, CANVAS_WIDTH, CANVAS_HEIGHT], [mouseX, mouseY]);
 }

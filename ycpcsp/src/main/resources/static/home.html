@@ -1,202 +1,342 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        .dropbtn {
-            background-color: #3498DB;
-            color: white;
-            padding: 16px;
-            font-size: 16px;
-            border: none;
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+
+            .Search {
+                position: absolute;
+                top: 16px;
+                right: 16px;
+            }
+
+            .dropbtn {
+                background-color: #3498DB;
+                color: white;
+                padding: 16px;
+                font-size: 16px;
+                border: none;
 
 
+            }
+            .boxed {
+                border: 1px solid green ;
+                height: 600px;
+            }
+
+            .dropup {
+                position: relative;
+                display: inline-block;
+            }
+
+            .dropup-content {
+                display: none;
+                position: absolute;
+                background-color: #f1f1f1;
+                min-width: 160px;
+                bottom: 50px;
+                z-index: 1;
+            }
+
+            .dropup-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }
+
+            .dropup-content a:hover {background-color: #ccc}
+
+            .dropup:hover .dropup-content {
+                display: block;
+            }
+
+            .dropup:hover .dropbtn {
+                background-color: #2980B9;
+            }
+            .dropbtn2 {
+                background-color: #4CAF50;
+                color: white;
+                padding: 16px;
+                font-size: 16px;
+                border: none;
+                width: 250px;
+            }
+
+            .dropdown {
+                position: relative;
+                display: inline-block;
+            }
+
+            .dropdown-content {
+                display: none;
+                position: absolute;
+                background-color: #f1f1f1;
+                min-width: 160px;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                z-index: 1;
+            }
+
+            .dropdown-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }
+
+            .dropdown-content a:hover {background-color: #ddd;}
+
+            .dropdown:hover .dropdown-content {display: block;}
+
+            .dropdown:hover .dropbtn2 {background-color: #3e8e41;}
+        </style>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+    <body>
+        <script src="helperFunctions.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.12.0/js/md5.min.js"></script>
+
+        <div class="Search">
+            <input type="submit" value="Search" onclick="window.location.href = '/SearchPage'">
+        </div>
+
+        <div class="dropdown">
+            <button id="dropbtn" class="dropbtn">Login</button>
+            <div id= "dropdown-content" class="dropdown-content">
+                <form id="login-form" name="login-form" action="/login-submit" method="post">
+                <label for="email">Email:</label><br>
+                    <input type="text" id="email" name="email"><br>
+                    <div id="email-error"></div><br>
+                    <label for="password">Password:</label><br>
+                    <div id="password-error"></div><br>
+                    <input type="password" id="password" name="password"><br>
+                    <input value="Sign in" type="button" id="verifyInformationButton" name="verifyInformationButton" onclick="submitLoginInformation()">
+                    <a href="/signup">Sign up.</a><br>
+                </form>
+            </div>
+        </div>
+         
+        <div id="boxed" class="boxed">
+            <!-- user experiments container -->
+
+            <!-- recent experiments container -->
+
+            <!-- playlists container -->
+
+        </div>
+        <div class="dropup">
+            <button class="dropbtn2" onclick="CreationPage()">Lab Creation</button>
+            <div class="dropup-content">
+
+            </div>
+        </div>
+        <div class="dropup">
+            <button class="dropbtn2" onclick="PlaylistPage()">Playlist Management</button>
+            <div class="dropup-content">
+
+            </div>
+        </div>
+        <div class="dropup">
+            <button class="dropbtn2">FaQ</button>
+            <div class="dropup-content">
+
+            </div>
+        </div>
+        <div class="dropup">
+            <button class="dropbtn2">FaQ</button>
+            <div class="dropup-content">
+
+            </div>
+        </div>
+    </body>
+
+    <script>
+
+        var array = [];
+        var PlayList = [];
+        function display(elm) {
+            var x = elm.getAttribute('value');
+            //TODO here is where we want to search for
+            console.log(x);
         }
-        .boxed {
-            border: 1px solid green ;
-            height: 600px;
-        }
 
-        .dropup {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropup-content {
-            display: none;
-            position: absolute;
-            background-color: #f1f1f1;
-            min-width: 160px;
-            bottom: 50px;
-            z-index: 1;
-        }
-
-        .dropup-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
-
-        .dropup-content a:hover {background-color: #ccc}
-
-        .dropup:hover .dropup-content {
-            display: block;
-        }
-
-        .dropup:hover .dropbtn {
-            background-color: #2980B9;
-        }
-        .dropbtn2 {
-            background-color: #4CAF50;
-            color: white;
-            padding: 16px;
-            font-size: 16px;
-            border: none;
-            width: 250px;
-        }
-
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f1f1f1;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-        }
-
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
-
-        .dropdown-content a:hover {background-color: #ddd;}
-
-        .dropdown:hover .dropdown-content {display: block;}
-
-        .dropdown:hover .dropbtn2 {background-color: #3e8e41;}
-    </style>
-</head>
-<body>
-<script src="helperFunctions.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.12.0/js/md5.min.js"></script>
-
-<div class="dropdown">
-    <button class="dropbtn">Login</button>
-    <div class="dropdown-content">
-        <form id="login-form" name="login-form" action="/login-submit" method="post">
-        <label for="email">Email:</label><br>
-            <input type="text" id="email" name="email"><br>
-            <div id="email-error"></div><br>
-            <label for="password">Password:</label><br>
-            <div id="password-error"></div><br>
-            <input type="password" id="password" name="password"><br>
-            <input value="Sign in" type="button" id="verifyInformationButton" name="verifyInformationButton" onclick="submitLoginInformation()">
-            <a href="/signup">Sign up.</a><br>
-        </form>
-    </div>
-</div>
-<div class="boxed">
-</div>
-
-<div class="dropup">
-    <button class="dropbtn2">FaQ</button>
-    <div class="dropup-content">
-
-    </div>
-</div>
-<div class="dropup">
-    <button class="dropbtn2">FaQ</button>
-    <div class="dropup-content">
-
-    </div>
-</div>
-<div class="dropup">
-    <button class="dropbtn2">FaQ</button>
-    <div class="dropup-content">
-
-    </div>
-</div>
-<div class="dropup">
-    <button class="dropbtn2">FaQ</button>
-    <div class="dropup-content">
-
-    </div>
-</div>
-<br><br><br>
-<input value="New Simulation" type="button" id="newSimulationButton" name="newSimulationButton" onclick="loadSimulation(-1)"><br>
-<input value="Existing Simulation" type="button" id="loadSimulationButton" name="loadSimulationButton" onclick="loadSimulation(21)"><br>
-
-
-
-</body>
-
-<script>
-
-    checkForLogin();
-
-    function checkForLogin(){
-        // attempt to get user information from session
         var user = JSON.parse(sessionStorage.getItem("user"));
-        console.log("HELLO");
-        console.log(user);
-        // logged in
-        if(user != null){
-            document.write("<input value=\"Log out\" type=\"button\" id=\"logoutButton\" name=\"logoutButton\" onclick=\"logout()\"><br>");
-            document.write("Logged in as: " + user.lastName + ", " + user.firstName);
-        }
-        // not logged in
-        else{
-            document.write("Not currently signed in");
-        }
-    }
 
-    function logout(){
-        sessionStorage.removeItem("user");
-        window.location.href = "/";
-    }
+        checkForLogin();
+        function CreationPage(){
+            window.location.href = "/Creation";
+        }
+        function PlaylistPage(){
+            window.location.href = "/PlaylistPage"
+        }
+        function checkForLogin(){
+            // attempt to get user information from session
 
-    function submitLoginInformation(){
-        var emailDiv = getAndTrimById("email")
-        var email = emailDiv.value;
-        var password = document.getElementById("password").value;
-        // hash password
-        var emailGood = verifyInformation(email, TYPE_EMAIL);
-        var passGood = password.length != 0;
-        if(emailGood && passGood){
-            password = md5(password);
-            var user = {
-                email: email,
-                password: password
-            };
-            postData('login-submit', user).then(function(data){
-                console.log(data);
-                var user = data;
-                if(user.firstName != ""){
-                    sessionStorage.setItem("user", JSON.stringify(user));
-                    window.location.href = "/";
+            console.log("HELLO");
+            console.log(user);
+            // logged in
+            if(user != null){
+                writeUserLoggedInHTML();
+            }
+            // not logged in
+            else{
+                writeUserNotLoggedInHTML();
+            }
+        }
+
+        function logout(){
+            sessionStorage.removeItem("user");
+            window.location.href = "/";
+        }
+
+        function submitLoginInformation(){
+            var emailDiv = getAndTrimById("email")
+            var email = emailDiv.value;
+            var password = document.getElementById("password").value;
+            // hash password
+            var emailGood = verifyInformation(email, TYPE_EMAIL);
+            var passGood = password.length != 0;
+            if(emailGood && passGood){
+                password = md5(password);
+                var user = {
+                    email: email,
+                    password: password
+                };
+                postData('login-submit', user).then(function(data){
+                    console.log(data);
+                    var user = data;
+                    if(user.firstName != ""){
+                        sessionStorage.setItem("user", JSON.stringify(user));
+                        //TODO PostRecentExperiment post goes here.
+                        postData('Recent-experiment', user.id).then(function(data){
+                            console.log(data);
+                            array = ["String Cheese", "Please work"];
+                        });
+
+                        postData('Playlist', user.scho).then(function(data){
+                            console.log(data);
+                            PlayList = data; 
+                        });
+                        window.location.href = "/";
+                    }
+                    else{
+                        setErrorDivMessageByValue("email", "LOGIN FAILED", false);
+                    }
+                });
+
+
+            }
+            else{
+                setErrorDivMessageByValue("email", "Please enter a valid email.", emailGood);
+                setErrorDivMessageByValue("password", "Please enter a valid password.", passGood);
+            }
+        }
+        function loadSimulation(simulationID){
+            sessionStorage.setItem("simulationToLoad", simulationID);
+            window.location.href = "/simulation";
+        }
+
+        function writeUserNotLoggedInHTML(){
+
+        }
+
+        function writeUserLoggedInHTML(){
+            // div containing all user activities - playlists, user experiments, recently viewed experiments, etc.
+            let boxDiv = document.getElementById("boxed");
+            
+            console.log(user.experiments);
+
+            // user experiment list writing
+            let userExperiments = document.createElement("div");
+            userExperiments.id = "userExperiments";
+            userExperiments.style.height = "30%";
+            userExperiments.insertAdjacentHTML("afterbegin", "<h3> Your Experiments </h3>");
+            
+
+            // if the user has made experiments, then write previews
+            if(user.experiments.length > 0){
+
+                // create container div and set id
+                let userExperimentsContainer = document.createElement("div");
+                userExperimentsContainer.id = "userExperimentsContainer";
+                userExperimentsContainer.style.height = "85%";
+                userExperimentsContainer.style.border = "1px solid black";
+                userExperimentsContainer.style.overflowY = "scroll";
+
+                // create user experiment list code with header text
+                let userExperimentString = "";
+
+                // create an experiment box for every experiment the user has created and add to experiment list code
+                for(let i in user.experiments){
+                    var experiment = user.experiments[i];
+                    userExperimentString += '<div id="userExperimentEntry" style="text-align: center; width: 200px; height: 50px; border: 1px solid #000000" onclick="loadSimulation('+experiment.experimentID+')">'+
+                                                experiment.title + "<br>" +
+                                                experiment.experimentID + '</div>';
                 }
-                else{
-                    setErrorDivMessageByValue("email", "LOGIN FAILED", false);
-                }
-            });
-        }
-        else{
-            setErrorDivMessageByValue("email", "Please enter a valid email.", emailGood);
-            setErrorDivMessageByValue("password", "Please enter a valid password.", passGood);
-        }
-    }
 
-    function loadSimulation(simulationID){
-        sessionStorage.setItem("simulationToLoad", simulationID);
-        window.location.href = "/simulation";
-    }
-</script>
+                // add constructed list code to experiment list container div
+                userExperimentsContainer.insertAdjacentHTML("beforeend", userExperimentString);
+
+                // append container div in list container div
+                userExperiments.appendChild(userExperimentsContainer);
+            }
+
+            // otherwise, alert user that they could make one..
+            else{
+                userExperiments.insertAdjacentHTML("beforeend", "Looks like you haven't created any experiments yet! <a href='/Creation'>Create an experiment?</a>");
+            }
+
+            // append user experiment information to page
+            boxDiv.appendChild(userExperiments);
+
+            // user playlist writing
+            let userPlaylists = document.createElement("div");
+            userPlaylists.id = "userPlaylists";
+            userPlaylists.style.height = "30%";
+            userPlaylists.insertAdjacentHTML("afterbegin", "<h3> Your Playlists </h3>");
+            
+            // if the user has any playlists, write the title with option to expand
+            if(user.playlists.length > 0){
+                // create container div and set id
+                let userPlaylistContainer = document.createElement("div");
+                userPlaylistContainer.id = "userPlaylistContainer";
+                userPlaylistContainer.style.height = "100%";
+                userPlaylistContainer.style.border = "1px solid black";
+                userPlaylistContainer.style.overflowY = "scroll";
+
+                // create user playlist list code with header text
+                let userPlaylistString = "";
+
+                // create an playlist box for every playlist the user has created and add to playlist list code
+                for(let i in user.playlists){
+                    var playlist = user.playlists[i];
+                    userPlaylistString += '<div id="userPlaylistEntry" style="text-align: center; width: 200px; height: 50px; border: 1px solid #000000">'+ playlist.title + "<br> </div>";
+                }
+
+                // add constructed list code to playlist list container div
+                userPlaylistContainer.insertAdjacentHTML("beforeend", userPlaylistString);
+                
+                // append container div in list container div
+                userPlaylists.appendChild(userPlaylistContainer);
+            }
+
+            // otherwise, alert user that they could make one..
+            else{
+                userPlaylists.insertAdjacentHTML("beforeend", "Looks like you haven't created any playlists yet! <a href='/PlaylistPage'>Create a playlist?</a>");
+            }
+
+            // append user playlist information to page
+            boxDiv.appendChild(userPlaylists);
+
+            var dropButtonDiv = document.getElementById("dropbtn");
+            dropButtonDiv.innerHTML = "Welcome, " + user.fullName;
+            var dropDownContents = document.getElementById("dropdown-content");
+            dropDownContents.innerHTML = "<button onclick=\"profile()\">My Profile</button><br><br><button onclick=\"logout()\">Log out</button>";
+        }
+
+        function profile(){
+            window.location.href = "/profile";
+        }
+
+    </script>
 </html>

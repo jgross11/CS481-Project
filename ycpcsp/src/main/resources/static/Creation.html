@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Creation</title>
+</head>
+    <style>
+        .list{
+            height: 10%; 
+            overflow: auto;
+            display: none;
+        }
+        .header{
+            font-weight: bolder;
+            font-size: 25px;
+        }
+        .subheader{
+            font-weight: bold;
+            font-size: 20px;
+        }
+    </style>
+    
+<body>
+    <a href="/" class="button">Home</a><br>
+    <div id="creationPageForm">
+        <div id="experimentInformationBox">
+            <label for="experimentNameBox">Experiment name: </label><br>
+            <input type="text" placeholder="Enter the experiment name" id="experimentNameBox"><br>
+            
+            <label for="experimentCreatorBox">Experiment creator: </label><br>
+            <input type="text" placeholder="Experiment Creator" id="experimentCreatorBox" disabled><br><br>
+            <div id="experimentSubmissionButtonError"></div>
+
+        </div>
+        <div id="experimentComponentListContainer">
+            <div id="experimentEquipmentContainer"></div><br>
+            <div id="experimentChemicalContainer"></div><br>
+            <div id="experimentEquationContainer"></div><br>
+            <div id="experimentStepContainer"></div><br>
+        </div>
+
+        <label for="ListContainers">Select a component to add: </label><br>
+        <div id="ListContainers">
+            <div id="equipmentContainer">
+                <div class="header" onclick="toggleVisibility(document.getElementById('equipmentListContainer'))">Equipment</div>
+                <div class="list" id="equipmentListContainer">
+                    
+                </div>
+            </div>
+            
+            <div id="chemicalContainer">
+                <div class="header" onclick="toggleVisibility(document.getElementById('chemicalSubHeaderContainer'))">Chemical</div>
+                <div class="list" id="chemicalSubHeaderContainer">
+                    <div class="subheader" id="chemicalSearch" onclick="toggleVisibility(document.getElementById('chemicalSearchContainer'))">Search for a chemical</div>
+                    <div class="list"id="chemicalSearchContainer">
+                        <label for="chemicalSeachBar">Search for chemical</label><br>
+                        <input type="text" placeholder="Search for chemical" name="chemicalSeachBar" id="chemicalSeachBar" oninput="searchChemical(this.value)"><br><br>
+                        <div id="chemicalSearchResultContainer">
+            
+                        </div>
+                    </div>
+                    <div class="subheader" id="chemicalAdd" onclick="toggleVisibility(document.getElementById('insertChemicalFormContainer')); initChemicalCreation()">New chemical information</div>
+                    <div class="list" id="insertChemicalFormContainer">
+                        <label for="chemicalNameBox">Enter chemical name</label><br>
+                        <div id="chemicalNameBox-error"></div><br>
+                        <input type="text" id="chemicalNameBox" placeholder="Ex. Water"><br><br>
+            
+                        <label for="chemicalFormulaBox">Enter chemical formula</label><br>
+                        <div id="chemicalFormulaBox-error"></div><br>
+                        <input type="text" id="chemicalFormulaBox" placeholder="Ex. H2O"><br><br>
+            
+                        <label for="chemicalMassBox">Enter chemical mass (g/mol)</label><br>
+                        <div id="chemicalMassBox-error"></div><br>
+                        <input type="number" id="chemicalMassBox" placeholder="Ex. 18.01528"><br><br>
+            
+                        <label for="chemicalDensityBox">Enter chemical density (g/mL)</label><br>
+                        <div id="chemicalDensityBox-error"></div><br>
+                        <input type="number" id="chemicalDensityBox" placeholder="Ex. 1.0"><br><br>
+            
+                        Is your chemical water soluble?<br>
+                        <div id="solubility-error"></div><br>
+                        <input type="radio" id="waterSoluble" name="solubility" value="1">
+                        <label for="waterSoluble">Water soluble</label><br>
+            
+                        <input type="radio" id="notWaterSoluble" name="solubility" value="0">
+                        <label for="notWaterSoluble">Not water soluble</label><br><br>
+            
+                        <label for="chemicalMeltingPoint">Enter melting point temp (deg C)</label><br>
+                        <div id="chemicalMeltingPoint-error"></div><br>
+                        <input type="text" id="chemicalMeltingPoint" placeholder="Ex. 0.0"><br><br>
+            
+                        <label for="chemicalBoilingPoint">Enter boiling point temp (deg C)</label><br>
+                        <div id="chemicalBoilingPoint-error"></div><br>
+                        <input type="number" id="chemicalBoilingPoint" placeholder="Ex. 100.0"><br><br>
+            
+                        <div id="gasColorPreviewContainer">
+                            Gas Color Preview: <br>
+                            <div style="width: 50px; height: 50px"id="gasColorPreview"></div>
+                        </div>
+                        <label for="gasColor">Select the color of your element as a gas:</label><br>
+                        <input type="color" id="gasColor" name="gasColor" value="#000000" oninput="updateColor(1)"><br>
+                        <label for="gasColorAlpha">Select the alpha channel of your element as a gas:</label><br>
+                        <input type="range" min="0" max="255" value="255" class="slider" id="gasColorAlpha" oninput="updateColor(1)"><br><br>
+            
+            
+                        <div id="liquidColorPreviewContainer">
+                            Liquid Color Preview: <br>
+                            <div style="width: 50px; height: 50px"id="liquidColorPreview"></div>
+                        </div>
+                        <label for="liquidColor">Select the color of your element as a liquid:</label><br>
+                        <input type="color" id="liquidColor" name="liquidColor" value="#000000" oninput="updateColor(2)"><br><br>
+                        <label for="liquidColorAlpha">Select the alpha channel of your element as a liquid:</label><br>
+                        <input type="range" min="0" max="255" value="255" class="slider" id="liquidColorAlpha" oninput="updateColor(2)"><br><br>
+            
+            
+                        <div id="solidColorPreviewContainer">
+                            Solid Color Preview: <br>
+                            <div style="width: 50px; height: 50px"id="solidColorPreview"></div>
+                        </div>
+                        <label for="solidColor">Select the color of your element as a solid:</label><br>
+                        <input type="color" id="solidColor" name="solidColor" value="#000000" oninput="updateColor(3)"><br>
+                        <label for="solidColorAlpha">Select the alpha channel of your element as a solid:</label><br>
+                        <input type="range" min="0" max="255" value="255" class="slider" id="solidColorAlpha" oninput="updateColor(3)"><br><br>
+            
+                        <div id="chemicalSubmissionError"></div>
+                        <input type="button" id="submitButton" value="Submit" onclick="submitChemical()">
+                    </div>
+                </div>
+            </div>
+            
+            <div id="equationContainer">
+                <div class="header" onclick="toggleVisibility(document.getElementById('subheaderContainer'))">Equation</div>
+                <div class="list" id="subheaderContainer">
+                    <div class="subheader" id="equationSearch" onclick="toggleVisibility(document.getElementById('searchSubheaderContainer'))">Search for an equation</div>
+                        <div class="list" id="searchSubheaderContainer">
+                            <div id="equationList">
+                                <label for="equationSeachBar">Search for equation</label><br>
+                                <input type="text" placeholder="Search for equation" name="equationSeachBar" id="equationSeachBar" oninput="searchEquation(this.value)"><br><br>
+                                <div id="equationSearchResultContainer">
+                    
+                                </div>
+                            </div>
+                        </div>
+                    <div class="subheader" id="equationAdd" onclick="toggleVisibility(document.getElementById('insertEquationFormContainer')); initEquationCreation()">New equation </div>
+                    <div class="list" id="insertEquationFormContainer">
+                        <div id="equationPreview"></div><br>
+                        <div id="equationError"></div><br>
+            
+                        <input type="button" value="Add Reactant" onclick="addReactant(); updatePreview()"> 
+                        <input type="button" value="Add Product" onclick="addProduct(); updatePreview()">
+                        <input type="button" value="Submit Equation" onclick="submitEquation()"><br> 
+                        <div id="reactantContainer">
+                            Reactants <br>
+                            <input type="number" name="reactantCoefficient"
+                            value="1" min="1" step="1" style="width: 50px"
+                            oninput="updatePreview()"> <input name="reactantFormula"type="text" value="H2" style="width: 70px"oninput="updatePreview()" required>
+                        </div>
+                        <br>
+                        <div id="productContainer">
+                            Products <br>
+                            <input type="number" name="productCoefficient"
+                            value="1" min="1" step="1" style="width: 50px"
+                            oninput="updatePreview()"> <input name="productFormula"type="text" value="H2" style="width: 70px"oninput="updatePreview()">
+                        </div>
+                    </div>
+                </div>
+                
+                
+            </div>
+
+            <div id="stepContainer">
+                <div id="addStepFormContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- error setting, data verification functionality-->
+    <script src="./helperFunctions.js"></script>
+
+    <!-- JSON constants for submitting experiment -->
+    <script src="./simulation/DataLoader.js"></script>
+
+    <!-- contains all logic for searching, adding, submitting equations-->
+    <script src="./equationFormHandler.js"></script>
+
+    <!-- contains all logic for searching, adding, submitting chemicals-->
+    <script src="./chemicalFormHandler.js"></script>
+
+    <!-- contains all logic for loading images (necessary for determining actor functions) -->
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.1.9/lib/p5.js"></script>
+    <script src="./simulation/Util/InstanceID.js"></script>
+    <script src="./simulation/Util/RenderConstants2D.js"></script>
+
+    <!-- experiments that are created will need these scripts 
+         for valid step / valid experiment checking -->
+    <script src="./simulation/objectIDs.js"></script>
+    <script src="./simulation/Experiment.js"></script>
+    <script src="./simulation/Instruction.js"></script>
+    <script src="./simulation/ExperimentObjects/ExperimentObject.js"></script>
+    <script src="./simulation/ExperimentObjects/Equipment.js"></script>
+    <script src="./simulation/ExperimentObjects/Containers/Container.js"></script>
+    <script src="./simulation/ExperimentObjects/Disposers/Disposer.js"></script>
+    <script src="./simulation/Util/Util.js"></script>
+    
+</body>
+
+
+<script reference="form-tying-together-script.js">
+
+    // Function to disable P5 canvas creation
+    function setup(){}
+
+    // user who's creating experiment
+    let user = null;
+
+    // experiment lists
+    let chems = [];
+    let equipments = [];
+    let chemInfos = {};
+    let equations = [];
+    let steps = [];
+
+    // display map for equipment
+    let displayEquipment = {};
+
+    // unique ID to be given to experiment objects (equipment, chemicals) used when generating steps
+    let nextUniqueID = -1;
+
+    // experiment list divs
+    let chemicalListDiv = null;
+    let equipmentListDiv = null;
+    let equationDiv = null;
+    let stepListDiv = null;
+    
+    // div containing add step button and form div
+    let stepFormContainerDiv = null;
+
+    // step form div
+    let stepFormDiv = null;
+
+    // set to true when a user can add a step to an experiment
+    // (after a certain amount of components have been added)
+    let canAddStep = false;
+
+    // set to true when a user can submit their experiment (at least one step exists), false otherwise
+    let canSubmitExperiment = false;
+
+    // step creation form state consts
+    let STEP_SHOW_FORM = 0;
+    let STEP_PROCESS_ACTOR = 1;
+    let STEP_PROCESS_CHEMICAL_CREATION = 2;
+    let STEP_PROCESS_RECEIVER = 3;
+    let STEP_PROCESS_FUNCTION = 4;
+    let STEP_PROCESS_SUMMARY = 5;
+
+    // object that represents a step as its being created
+    let stepInProgress = {};
+
+    // contains status of equipment scripts
+    // false - appropriate script(s) not loaded
+    // true - appropriate script(s) loaded
+    let equipmentScriptStatus = null;
+
+    // used to determine if Images.js needs to be imported
+    // for actor function determination
+    // TODO for equipment preview purposes
+    let loadedAnything = false;
+    
+    initCreation();
+
+    
+    
+    // Calls all relevant functions necessary to load all components of the create experiment page
+    function initCreation(){
+
+        // only allow components to be created if user is logged in and has verified their account
+        user = JSON.parse(sessionStorage.getItem("user"));
+        let listDivList = document.getElementsByClassName("list");
+        
+        if(user != null && !user.isQuarantined){
+            document.getElementById("experimentCreatorBox").value = user.fullName;
+        } else{
+            // UNCOMMENT WHEN NOT EDITING THIS WEBPAGE FOR EASE OF USE
+            // overwrite creation form with invalid user message
+            writePermissionNotice();
+            return;
+        }
+
+        // fetch and display chemicals from DB
+        initChemicalSearch();
+
+        // fetch and display equations from DB
+        initEquationSearch();
+
+        // display equipments from DataLoader.js
+        loadEquipment();
+
+        // get references for list display divs
+        chemicalListDiv = document.getElementById("experimentChemicalContainer");
+        equipmentListDiv = document.getElementById("experimentEquipmentContainer");
+        stepListDiv = document.getElementById("experimentStepContainer");
+        equationsListDiv = document.getElementById("experimentEquationContainer");
+        
+        stepFormContainerDiv = document.getElementById("stepContainer");
+        stepFormDiv = document.getElementById("addStepFormContainer");
+
+        // initialize all equipment script statuses to false - not loaded
+        equipmentScriptStatus = Array(allEquipmentList.length+1);
+        for(let i = 1; i < equipmentScriptStatus.length; i++){
+            equipmentScriptStatus[i] = false;
+        }
+
+        // generate unique experiment object IDs to be used in step conversion starting at 0
+        nextUniqueID = 0
+
+    }
+
+    /*
+    handles displaying of 'new step' form in all its
+    parts based on the given stateNumber
+    0 - create add step button to init step addition process
+    1 - actor selection
+    2 - chemical information gathering (concentration, quantity, etc.) if selected actor is a chemical
+    3 - receiver information
+    4 - function 
+    5 - step summary / confirmation
+    
+    ########## NOTE: this function is the yang to handleFormAction's yin
+    ########## when working on one, you will almost certainly have to modify
+    ########## or reference the other.
+    */
+    function changeStepFormState(stateNumber){
+        switch(stateNumber){
+
+            // draw 'add step' button if a valid step can be created
+            case STEP_SHOW_FORM:
+                // TODO this could be much more sophisticated
+                // TODO for example, it could scan the lists of equipment
+                // TODO in the experiment to see if it is possible to create a step
+                // TODO with the present equipment / chemicals. 
+
+                // If there are two experiment components (one equipment and one chemical / two equipment),
+                // then draw the 'add step' button 
+                if((Object.keys(chemInfos).length > 0 && equipments.length > 0) || equipments.length > 1){
+                    if(!canAddStep){
+                        stepFormContainerDiv.insertAdjacentHTML('afterbegin', '<input type="button" value="Add Step" onclick="changeStepFormState(STEP_PROCESS_ACTOR)">');
+                        canAddStep = true;
+                    }
+                } else{
+                    canAddStep = false;
+                    // remove button if no longer able to add step (removed equipment / chemicals)
+                    if(stepFormContainerDiv.children[0].type == "button"){
+                        stepFormContainerDiv.removeChild(stepFormContainerDiv.children[0]);
+                    }
+                    return;
+                }
+            break;
+            
+            // draw dropdown with list of available equipment and chemicals to choose from
+            case STEP_PROCESS_ACTOR:
+                // reset any potential step progress
+                stepInProgress = {};
+
+                // draw placeholder and equipment category values
+                let actorFormCode = '<br><label for="actor">Choose your actor: </label>'+
+                                '<select name="actor" id="actor" onchange="handleFormAction(STEP_PROCESS_ACTOR)">' + 
+                                '<option value="equipmentDefault">Choose an object</option>' + 
+                                '<option value="equipmentDefault">### EQUIPMENT ###</option>';
+
+                // draw a value for each equipment in the list                
+                for(let i in equipments){
+                    let equipment = equipments[i];
+                    actorFormCode += '<option id="EQUIPMENT" value="'+(equipment.uniqueID)+'">'+equipment.name+'</option>';
+                }
+
+                // draw a value for each chemical in the list
+                // if at least one chemical is present
+                if(Object.keys(chemInfos).length > 0){
+                    actorFormCode += '<option value="chemicalDefault">### CHEMICALS ###</option>';
+                    for(let key in chemInfos){
+                        let chem = chemInfos[key];
+                        actorFormCode += '<option id="CHEMICAL" value="'+(key)+'">'+ chem.name + " - " + chem.formula +'</option>';
+                    }
+                }
+                actorFormCode += '</select>';
+
+                // set form contents to generated code
+                stepFormDiv.innerHTML = actorFormCode;
+            break;
+            
+            // draw chemical instance form when user wishes to add a chemical to a step 
+            case STEP_PROCESS_CHEMICAL_CREATION:
+                
+                // draw amount and concentration inputs
+                // TODO display appropriate unit depending on lab / chemical temperature
+                let chemicalCreationFormCode = '<br><input id="quantity" type="number" min = 0 placeholder="Enter amount">'+
+                                                '<input id="concentration" type="number" min = 0 placeholder="Enter concentration">'+
+                                                '<input type="button" value="Create chemical instance" onclick="handleFormAction(STEP_PROCESS_CHEMICAL_CREATION)">';
+                
+                // set form contents to generated code
+                stepFormDiv.innerHTML = chemicalCreationFormCode;
+            break;
+            
+            // draw dropdown with list of available equipment and chemicals to choose from
+            // TODO make this generate only valid receiver options based on the actor object
+            case STEP_PROCESS_RECEIVER:
+                // draw placeholder and equipment category values
+                let receiverFormCode = '<br><label for="receiver">Choose your receiver: </label>'+
+                        '<select name="receiver" id="receiver" onchange="handleFormAction(STEP_PROCESS_RECEIVER)">' + 
+                        '<option value="equipmentDefault">Choose an object</option>' + 
+                        '<option value="equipmentDefault">### EQUIPMENT ###</option>';
+                
+                // draw a value for each equipment in the list
+                for(let i in equipments){
+                    let equipment = equipments[i];
+                    receiverFormCode += '<option id="EQUIPMENT" value="'+(equipment.uniqueID)+'">'+equipment.name+'</option>';
+                }
+
+                // draw a value for each chemical if at least one is in list
+                if(Object.keys(chemInfos).length > 0){
+                    receiverFormCode += '<option value="chemicalDefault">### CHEMICALS ###</option>';
+                    for(let key in chemInfos){
+                        let chem = chemInfos[key];
+                        receiverFormCode += '<option id="CHEMICAL" value="'+(key)+'">'+ chem.name + " - " + chem.formula +'</option>';
+                    }
+                }
+                receiverFormCode += '</select>';
+                
+                // set form contents which generated code
+                stepFormDiv.innerHTML = receiverFormCode;
+            break;
+            
+            // draw dropdown containing each actor function 
+            case STEP_PROCESS_FUNCTION:
+
+                // draw placeholder value
+                let functionFormCode = '<br><label for="function">Choose your function: </label>'+
+                                        '<select name="function" id="function" onchange="handleFormAction(STEP_PROCESS_FUNCTION)">' + 
+                                        '<option value="functionDefault">### FUNCTION ###</option>';
+                
+                // create a simulation object for the actor to obtain access to function descriptions
+                let actorSimulationObject = idToEquipment(equipments[stepInProgress.actorID].equipmentID);
+
+                // array containing function descriptions
+                let validFunctions = actorSimulationObject.getFuncDescriptions();
+                
+                // create value for each function
+                for(let i in validFunctions){
+                    functionFormCode += '<option id="FUNCTION" value="'+(i)+'">'+validFunctions[i]+'</option>';
+                }
+                functionFormCode += '</select>';
+
+                // set form contents to generated code
+                stepFormDiv.innerHTML = functionFormCode;
+            break;
+            
+            // draw summary of the step with given actor, receiver, and function information
+            case STEP_PROCESS_SUMMARY:
+
+                let summaryCode = '<br>' + 
+                
+                // if actor / receiver is equipment, display name of equipment, otherwise display chemical name, quantity, and amount
+                (stepInProgress.actorIsEquipment ? equipments[uniqueIDToIndex(stepInProgress.actorID, equipments)].name : chemInfos[stepInProgress.chemInstanceToAdd.id].name + ", quantity=" + stepInProgress.chemInstanceToAdd.quantity + ", concentration=" + stepInProgress.chemInstanceToAdd.concentration) +
+                " acts on " + 
+                (stepInProgress.receiverIsEquipment ? equipments[uniqueIDToIndex(stepInProgress.receiverID, equipments)].name : chemInfos[stepInProgress.chemInstanceToAdd.id].name + ", quantity=" + stepInProgress.chemInstanceToAdd.quantity + ", concentration=" + stepInProgress.chemInstanceToAdd.concentration) +
+                " with function " +
+                
+                // include function description
+                stepInProgress.functionDescription + 
+                '<br> <input type="button" value="Create Step" onclick="handleFormAction(STEP_PROCESS_SUMMARY)">';
+
+                // set form contents to generated code
+                stepFormDiv.innerHTML = summaryCode;
+            break;
+        }
+    }
+
+    /*
+        handles transitions when submitting partial step information
+        based on given stateNumber
+        1 - actor selection has been submitted
+        2 - chemical instance information has been submitted
+        3 - receiver selection has been submitted
+        4 - function selection has been submitted
+        5 - step confirmation has been submitted
+
+    ########## NOTE: this function is the yang to changeStepForm's yin
+    ########## when working on one, you will almost certainly have to modify
+    ########## or reference the other.
+    */
+    function handleFormAction(stateNumber){
+        switch(stateNumber){
+            
+            // handle actor selection
+            case STEP_PROCESS_ACTOR:
+                
+                // selection element 
+                let actorSelection = document.getElementById("actor");
+
+                // selected option
+                let actorChoice = actorSelection.options[actorSelection.selectedIndex];
+
+                // valid choices will have an integer value
+                if(isNaN(parseInt(actorChoice.value))){
+                    return;
+                }
+                
+                // set step actor type accordingly
+                stepInProgress.actorIsEquipment = actorChoice.id == "EQUIPMENT" ? true : false;
+
+                // set actor id
+                stepInProgress.actorID = actorChoice.value;
+
+                console.log('step after actor selection');
+                console.log(stepInProgress);
+
+                // update form to draw appropriate next state
+                stepInProgress.actorIsEquipment ? changeStepFormState(STEP_PROCESS_RECEIVER) : changeStepFormState(STEP_PROCESS_CHEMICAL_CREATION);
+            break;
+            
+            // handle chemical creation
+            case STEP_PROCESS_CHEMICAL_CREATION:
+
+                // quantity of generated chemical
+                let quantity = document.getElementById('quantity').value;
+                
+                // concentration of generated chemical
+                let concentration = document.getElementById('concentration').value;
+
+                // quantity and concentration must be a numeric amount
+                if(quantity == "" || concentration == "" || isNaN(quantity) || isNaN(concentration)){
+                    return;
+                }
+                else{
+                    // chem was chosen as actor, which from the sim standpoint,
+                    // is incorrect, and needs to be changed here
+                    if(stepInProgress.receiverID == null){
+                        console.log(stepInProgress);
+                        
+                        // add chemical instance to step to be added to chems list later 
+                        stepInProgress.chemInstanceToAdd = {id: stepInProgress.actorID, quantity: quantity, concentration: concentration, uniqueID: nextUniqueID};
+                        
+                        // change chemical from actor to receiver in step 
+                        stepInProgress.receiverID = nextUniqueID++;
+                        stepInProgress.receiverIsEquipment = false;
+                        delete stepInProgress.actorID;
+                        delete stepInProgress.actorIsEquipment;
+
+                        // must now obtain actor information
+                        changeStepFormState(STEP_PROCESS_RECEIVER);
+                    
+                    // otherwise, chem was chosen as receiver, which is fine
+                    } else{
+
+                        // add chemical instance to step to be added to chems list later
+                        stepInProgress.chemInstanceToAdd = {id: stepInProgress.receiverID, quantity: quantity, concentration: concentration, uniqueID: nextUniqueID};
+                        
+                        // set index of receiver in step to be next index of chems list
+                        stepInProgress.receiverID = nextUniqueID++;
+                        console.log(stepInProgress);
+                        console.log(chems);
+                        
+                        // must now obtain function choice
+                        changeStepFormState(STEP_PROCESS_FUNCTION);
+                    }
+                }
+            break;
+            
+            // handle receiver selection
+            case STEP_PROCESS_RECEIVER:
+                // selection element 
+                let receiverSelection = document.getElementById("receiver");
+
+                // selected option
+                let receiverChoice = receiverSelection.options[receiverSelection.selectedIndex];
+
+                // valid choices will have an integer value
+                if(isNaN(parseInt(receiverChoice.value))){
+                    return;
+                }
+                
+                // must check for chemical case, as sim logic dictates adding to container
+                // has container as actor, chem as receiver
+                // this will be true when chemical was selected as actor, when in the sim,
+                // it is actually the receiver...
+
+                // TODO check for invalid step compositions
+                if(stepInProgress.actorID == null){
+                    
+                    // set step receiver type accordingly
+                    stepInProgress.actorIsEquipment = receiverChoice.id == "EQUIPMENT" ? true : false;
+
+                    // set actor id
+                    stepInProgress.actorID = receiverChoice.value;
+
+                    // update form to draw appropriate next state
+                    stepInProgress.actorIsEquipment ? changeStepFormState(STEP_PROCESS_FUNCTION) : changeStepFormState(STEP_PROCESS_CHEMICAL_CREATION);
+                } else{
+                    
+                    // set step receiver type accordingly
+                    stepInProgress.receiverIsEquipment = receiverChoice.id == "EQUIPMENT" ? true : false;
+
+                    // set receiver id
+                    stepInProgress.receiverID = receiverChoice.value;
+
+                    // update form to draw appropriate next state
+                    stepInProgress.receiverIsEquipment ? changeStepFormState(STEP_PROCESS_FUNCTION) : changeStepFormState(STEP_PROCESS_CHEMICAL_CREATION);
+                }
+                console.log('step after receiver selection');
+                console.log(stepInProgress);
+            break;
+            
+            // handle function selection
+            case STEP_PROCESS_FUNCTION:
+
+                // selection element 
+                let functionSelection = document.getElementById("function");
+
+                // selected option
+                let functionChoice = functionSelection.options[functionSelection.selectedIndex];
+
+                // valid choices will have an integer value
+                if(isNaN(parseInt(functionChoice.value))){
+                    return;
+                }
+                
+                // set step function accordingly
+                // function description indices are one off from function mapping indices in sim, must add 1
+                stepInProgress.functionID = parseInt(functionChoice.value)+1;
+                stepInProgress.functionDescription = functionChoice.innerHTML;
+
+                console.log('step after function selection');
+                console.log(stepInProgress);
+
+                // update form, draw summary
+                changeStepFormState(STEP_PROCESS_SUMMARY);
+            break;
+            
+            // handle step summary confirmation
+            case STEP_PROCESS_SUMMARY:
+                // if a chemical instance is part of this step, push it to chems list
+                if(stepInProgress.chemInstanceToAdd != null && stepInProgress.chemInstanceToAdd != undefined){
+                    chems.push(stepInProgress.chemInstanceToAdd);
+                    delete stepInProgress.chemInstanceToAdd;
+                }
+
+                // put new step information in step list
+                steps.push(stepInProgress);
+
+                // reset in progress step object for new step
+                stepInProgress = {};
+                
+                // update step list display information
+                updateExperimentStepList();
+
+                // draw experiment submit button if not already drawn
+                if(!canSubmitExperiment){
+                    document.getElementById("experimentInformationBox").insertAdjacentHTML(
+                        'beforeend', '<input type="button" value="Submit Experiment" onclick="submitExperiment()">');
+                    canSubmitExperiment = true;
+                }
+                
+                // reset form to actor selection state
+                changeStepFormState(STEP_PROCESS_ACTOR);
+            break;
+        }
+    }
+
+    // updates contents of the "equipment in experiment" list div
+    function updateExperimentEquipmentList(){
+        equipmentListDiv.innerHTML = "Equipment in experiment: <br>";
+        let keys = Object.keys(displayEquipment);
+        for(let i in keys){
+            let equip = displayEquipment[keys[i]];
+            if(equip != null){
+                equipmentListDiv.innerHTML += "<div id='experimentEquipmentComponent'>"+equip.name+": "+equip.quantity+"</div>";
+            }
+        }
+    }
+
+    // updates contents of the "steps in experiment" list div
+    function updateExperimentStepList(){
+        stepListDiv.innerHTML = "Steps in experiment: <br>";
+        
+        // draw each step in experiment 
+        for(let i = 0; i < steps.length; i++){
+            let step = steps[i];
+            stepListDiv.innerHTML += '<div id="experimentStepComponent"> Step ' + (i+1) + ": " +
+            // if actor / receiver is equipment, draw name, otherwise draw chemical name, quantity, and concentration
+            // TODO fix attrocious uniqueIDToIndex repeats
+            (step.actorIsEquipment ? equipments[uniqueIDToIndex(step.actorID, equipments)].name : chemInfos[chems[uniqueIDToIndex(step.actorID, chems)].id].name + ", quantity=" + chems[uniqueIDToIndex(step.actorID, chems)].quantity + ", concentration=" + chems[uniqueIDToIndex(step.actorID, chems)].concentration) +
+            " acts on " + 
+            (step.receiverIsEquipment ? equipments[uniqueIDToIndex(step.receiverID, equipments)].name : chemInfos[chems[uniqueIDToIndex(step.receiverID, chems)].id].name + ", quantity=" + chems[uniqueIDToIndex(step.receiverID, chems)].quantity + ", concentration=" + chems[uniqueIDToIndex(step.receiverID, chems)].concentration) +
+            " with function " +
+            
+            // draw function description
+            step.functionDescription + 
+            '</div>';
+
+        }
+    }
+
+    // Creates list on webpage of all addable equipment
+    function loadEquipment(){
+        let equipmentListDiv = document.getElementById("equipmentListContainer");
+        for(let i = 0; i < allEquipmentList.length; i++){
+            let equipment = allEquipmentList[i];
+            equipmentListDiv.innerHTML += "<div id='equipmentPiece' onclick='addEquipment("+i+")'>"+equipment.name+"</div>";
+        }
+    }
+
+    // given the index within allEquipmentsList of a piece of equipment,
+    // either add that piece of equipment to the experiment equipment list
+    // or increment the current quantity within the list, and update the display
+    function addEquipment(equipmentIndex){
+
+        let equipment = allEquipmentList[equipmentIndex];
+        
+        // equipment list summary for display purposes
+        // if this type of equipment has been added already, increment quantity,
+        // otherwise add id and name to map with quantity 1
+        if(displayEquipment[equipmentIndex] != null){
+            displayEquipment[equipmentIndex].quantity++;
+        } else{
+            displayEquipment[equipmentIndex] = {equipmentID: equipment.equipmentID, name: equipment.name, quantity: 1};
+        }
+
+        // give unique ID to this equipment to be used when building steps
+        let equipWithUID = {equipmentID: equipment.equipmentID, name: equipment.name, uniqueID: nextUniqueID++};
+
+        // experiment equipment list
+        equipments.push(equipWithUID);
+        
+        // try to load simulation script for this equipment in order to
+        // obtain function descriptions when used in step creation
+        loadEquipmentScript(equipment.equipmentID);
+
+        // update equipment list on page
+        updateExperimentEquipmentList();
+
+        // determine if a step can be made with the addition of this equipment
+        changeStepFormState(STEP_SHOW_FORM);
+    }
+
+    // dynamically loads the appropriate script for a piece of equipment
+    // to be used for testing step / experiment validity
+    // equipmentIndex: the index of the equipment in allEquipmentList (in ObjectIDs.js)
+    function loadEquipmentScript(equipmentIndex){
+        let scriptURL = null;
+
+        // if this is the first time this function is called, must import Images.js 
+        // in order to obtain function descriptions when used in a step
+        // TODO in order to display image previews
+        if(!loadedAnything){
+            let equipmentScript = document.createElement("script");
+            equipmentScript.setAttribute("async", "false");
+            equipmentScript.setAttribute("src", "./simulation/Images.js");
+            document.body.appendChild(equipmentScript);
+            loadedAnything = true;
+        }
+
+        // if this category of equipment hasn't been imported yet, import all relevant scripts.
+        switch(equipmentIndex){
+            case ID_EQUIP_BEAKER_50mL:
+            case ID_EQUIP_BEAKER_150mL:
+            case ID_EQUIP_BEAKER_250mL:
+            case ID_EQUIP_BEAKER_600mL:
+                
+                // if any beaker was already added to the experiment, then no need to reimport the script
+                if(equipmentScriptStatus[ID_EQUIP_BEAKER_50mL]){
+                    return;
+                }
+                
+                // otherwise, import beaker script and change flag for all beakers
+                scriptURL = "./simulation/ExperimentObjects/Containers/Beaker.js";
+                equipmentScriptStatus[ID_EQUIP_BEAKER_50mL] = true;
+                equipmentScriptStatus[ID_EQUIP_BEAKER_150mL] = true;
+                equipmentScriptStatus[ID_EQUIP_BEAKER_250mL] = true;
+                equipmentScriptStatus[ID_EQUIP_BEAKER_600mL] = true;
+            break;
+            
+            case ID_EQUIP_SCALE:
+
+                // same logic as beaker case above
+                if(equipmentScriptStatus[ID_EQUIP_SCALE]){
+                    return;
+                }
+                scriptURL = "./simulation/ExperimentObjects/Scale.js";
+                equipmentScriptStatus[ID_EQUIP_SCALE] = true;
+            break;
+            
+            case ID_EQUIP_TRASHCAN:
+
+                // same logic as beaker case above
+                if(equipmentScriptStatus[ID_EQUIP_TRASHCAN]){
+                    return;
+                }
+                scriptURL = "./simulation/ExperimentObjects/Disposers/Trashcan.js";
+                equipmentScriptStatus[ID_EQUIP_TRASHCAN] = true;
+            break;
+            
+            case ID_EQUIP_GRADUATED_25mL:
+            case ID_EQUIP_GRADUATED_50mL:
+            case ID_EQUIP_GRADUATED_100mL:
+            case ID_EQUIP_GRADUATED_1000mL:
+                
+                // same logic as beaker case above
+                if(equipmentScriptStatus[ID_EQUIP_GRADUATED_25mL]){
+                    return;
+                }
+                scriptURL = "./simulation/ExperimentObjects/Containers/GraduatedCylinder.js";
+                equipmentScriptStatus[ID_EQUIP_GRADUATED_25mL] = true;
+                equipmentScriptStatus[ID_EQUIP_GRADUATED_50mL] = true;
+                equipmentScriptStatus[ID_EQUIP_GRADUATED_100mL] = true;
+                equipmentScriptStatus[ID_EQUIP_GRADUATED_1000mL] = true;
+            break;
+            
+            case ID_EQUIP_FLASK_25mL:
+            case ID_EQUIP_FLASK_50mL:
+            case ID_EQUIP_FLASK_125mL:
+            case ID_EQUIP_FLASK_1000mL:
+                // same logic as beaker case above
+                if(equipmentScriptStatus[ID_EQUIP_FLASK_25mL]){
+                    return;
+                }
+                scriptURL = "./simulation/ExperimentObjects/Containers/ErlenmeyerFlask.js";
+                equipmentScriptStatus[ID_EQUIP_FLASK_25mL] = true;
+                equipmentScriptStatus[ID_EQUIP_FLASK_50mL] = true;
+                equipmentScriptStatus[ID_EQUIP_FLASK_125mL] = true;
+                equipmentScriptStatus[ID_EQUIP_FLASK_1000mL] = true;
+            break;
+            
+            case ID_EQUIP_WEIGH_BOAT:
+                // same logic as beaker case above
+                if(equipmentScriptStatus[ID_EQUIP_WEIGH_BOAT]){
+                    return;
+                }
+                scriptURL = "./simulation/ExperimentObjects/Containers/WeighBoat.js";
+                equipmentScriptStatus[ID_EQUIP_WEIGH_BOAT] = true;
+            break;
+            
+            case ID_EQUIP_STIR_ROD:
+                // same logic as beaker case above
+                if(equipmentScriptStatus[ID_EQUIP_STIR_ROD]){
+                    return;
+                }
+                scriptURL = "./simulation/ExperimentObjects/StirRod.js";
+                equipmentScriptStatus[ID_EQUIP_STIR_ROD] = true;
+            break;
+
+            case ID_EQUIP_EYE_DROPPER:
+                if(equipmentScriptStatus[ID_EQUIP_EYE_DROPPER]){
+                    return;
+                }
+                scriptURL = "./simulation/ExperimentObjects/Containers/EyeDropper.js";
+                equipmentScriptStatus[ID_EQUIP_EYE_DROPPER] = true;
+            break;
+
+            case ID_EQUIP_REFRACTOMETER:
+                if(equipmentScriptStatus[ID_EQUIP_REFRACTOMETER]){
+                    return;
+                }
+                scriptURL = "./simulation/ExperimentObjects/Refractometer.js";
+                equipmentScriptStatus[ID_EQUIP_REFRACTOMETER] = true;
+            break;
+
+            case ID_EQUIP_REFRACTOMETER_LENS:
+                if(equipmentScriptStatus[ID_EQUIP_REFRACTOMETER_LENS]){
+                    return;
+                }
+                scriptURL = "./simulation/ExperimentObjects/Containers/RefractometerLens.js";
+                console.log(scriptURL);
+                equipmentScriptStatus[ID_EQUIP_REFRACTOMETER_LENS] = true;
+            break;
+        }
+
+        // if a script needs to be imported, import it
+        let equipmentScript = document.createElement("script");
+        equipmentScript.setAttribute("async", "false");
+        equipmentScript.setAttribute("src", scriptURL);
+        document.body.appendChild(equipmentScript);
+    }
+
+    // given the index within allChemicalsList of a chemical,
+    // add it to the experiment chemical list if not already in list
+    // and then update list display 
+    function addChemical(chemicalIndex){
+        // allChemicalsList found in chemicalFormHandler.js
+        // contains all chemical information in DB
+        let chemicalToAdd = allChemicalsList[chemicalIndex];
+        let chemID = chemicalToAdd.chemicalInformationID;
+
+        // ensure chem isn't already in experiment
+        for(let key in chemInfos){
+            if(key == chemID){
+                console.log("chem already in list");
+                return;
+            }
+        }
+        
+        // add chemical properties to properties map
+        chemInfos[chemID] = chemicalToAdd;
+
+        // update list of chemicals in experiment 
+        updateExperimentChemicalList();
+
+        // determine if a valid step can be created with the addition of this chemical
+        changeStepFormState(STEP_SHOW_FORM);
+    }
+
+    // updates contents of the "chemicals in experiment" list div
+    // NOTE: this is the chemical properties, not chemical instance list
+    // NOTE: chemical instance information is displayed in step information list
+    function updateExperimentChemicalList(){
+        chemicalListDiv.innerHTML = "Chemicals in experiment: <br>";
+        for(let key in chemInfos){
+            let chem = chemInfos[key];
+            chemicalListDiv.innerHTML += "<div id='experimentChemicalComponent'>"+chem.name+": "+chem.formula+"</div>";
+        }
+    }
+
+    // given the index of an equation in allEquationsList, 
+    // add equation and all its chemical components not in chemical information list
+    // to experiment equation and chemical information list, respectively 
+    function addEquation(equationIndex){
+        // allEquationList found in equationFormHandler.js
+        // contains all equation information in DB
+        let equationToAdd = allEquationList[equationIndex];
+        let equationID = equationToAdd.equationID;
+
+        // ensure equation isn't already in experiment
+        for(let i = 0; i < equations.length; i++){
+            if(equations[i].equationID === equationID){
+                console.log("equation already in list");
+                return;
+            }
+        }
+
+        // add equation to experiment equation list
+        equations.push(equationToAdd);
+        
+        // ensure reactants / products properties for this equation are in chemical properties list
+        // TODO: the following could be O(n) with a map but the implementation is left as an exercise to the reader
+        // TODO: the listIndex trick is awful, please fix
+
+        // for each reactant in equation
+        for(let i = 0; i < equationToAdd.reactantFormulas.length; i++){
+            let reactant = equationToAdd.reactantFormulas[i];
+            let reactantInList = false;
+            
+            // for each chemical in chemical information list
+            // TODO this loop could easily be eliminated...
+            for(let key in chemInfos){
+                let infoInList = chemInfos[key];
+                
+                // if reactant is in list, no need to add
+                if(infoInList.formula === reactant){
+                    reactantInList = true;
+                    break;
+                }
+            }
+            
+            // reactant isn't in chemical information list, so add it
+            if(!reactantInList){
+
+                // add reactant information to chemical information list
+                addChemical(allChemicalsMap[reactant].listIndex);
+
+                // determine if a valid step can be created with the addition of this chemical
+                changeStepFormState(STEP_SHOW_FORM);
+            }
+        }
+
+        // here, we follow the exact same logic, except we target
+        // the products in the equation, rather than the reactants
+        for(let i = 0; i < equationToAdd.productFormulas.length; i++){
+            let product = equationToAdd.productFormulas[i];
+            let productInList = false;
+            for(let key in chemInfos){
+                let infoInList = chemInfos[key];
+                if(infoInList.formula === product){
+                    productInList = true;
+                    break;
+                }
+            }
+            if(!productInList){
+                addChemical(allChemicalsMap[product].listIndex);
+                changeStepFormState(STEP_SHOW_FORM);
+            }
+        }
+    }
+
+    // Overwrites creation page HTML to notify user they must log in / verify 
+    // their account before they're able to create an experiment
+    function writePermissionNotice(){
+        document.getElementById("creationPageForm").innerHTML = "You must be <a href='/'> logged in</a>" +
+        " and have verified your account via email in order to create an experiment. <br>If you don't have an account, <a href='/signup'>sign up.</a>";
+    }
+
+    // menu toggle animation
+    function toggleVisibility(div){
+        div.style.display = div.style.display == "inline" ? "none" : "inline";
+    }
+
+    // compiles all relevant lists into an experiment object to be submitted to back end for submission
+    function submitExperiment(){
+        
+        // obtain experiment title
+        let title = document.getElementById("experimentNameBox").value;
+        
+        // if invalid title, draw error message
+        if(title == "" || title == null){
+            document.getElementById("experimentSubmissionButtonError").innerHTML = "Please enter a name for your experiment.";
+            return;
+        }
+
+        // no error, so clear error message
+        document.getElementById("experimentSubmissionButtonError").innerHTML = "";
+        
+        // chemInfos map to list
+        // Jackson can't 'map' a map to an array,
+        // so convert chem infos map to array
+        let chemInfosList = [];
+        let keys = Object.keys(chemInfos);
+        for(key in keys){
+            chemInfosList.push(chemInfos[keys[key]]);
+        }
+
+        // equipment formatting
+        // simply convert fields found in this file to JSON fields
+        // as Jackson requires exact field name matching
+        let equipmentList = [];
+        let equipmentKeys = Object.keys(displayEquipment);
+        for(let i in equipmentKeys){
+            let equip = displayEquipment[equipmentKeys[i]];
+            equip[EXP_JSON_EQUIP_AMOUNT] = equip.quantity;
+            delete equip.quantity;
+            equip[EXP_JSON_EQUIP_OBJ_ID] = equip.equipmentID;
+            delete equip.equipmentID;
+            equipmentList.push(equip);
+        }
+
+        // chemical instances formatting
+        // simply convert fields found in this file to JSON fields
+        // as Jackson requires exact field name matching
+        for(let i in chems){
+            let chem = chems[i];
+            chem[EXP_JSON_CHEM_MASS] = chem.quantity;
+            delete chem.quantity;
+        }
+
+        // simulation requires step actor / receiver IDs to be indices in their respective arrays, which haven't been built yet
+        // so, create said arrays and swap actor / receiver IDs with indices the object will be in on sim.
+
+        // equipment is currently in order that equipment objects were selected, need to be in ascending order by equipmentID
+        equipments.sort(function (equip1, equip2){
+            return equip1.equipmentID - equip2.equipmentID;
+        });
+
+        console.log("before");
+        console.log(chems);
+        // similar thing for chem instances, although they must be sorted by ID, then mass, then concentration.
+        chems.sort(function(chem1, chem2){
+            // sort first by ID
+           if(chem1.id == chem2.id){
+               // then by mass, floating point so be careful with comparison
+                if(chem1[EXP_JSON_CHEM_MASS] - chem2[EXP_JSON_CHEM_MASS] < 0.0001){
+                    return chem1.concentration - chem2.concentration;
+                }
+                // if ID and mass are (almost) equal, sort by concentration
+                return chem1[EXP_JSON_CHEM_MASS] - chem2[EXP_JSON_CHEM_MASS];
+           }
+           return chem1.id - chem2.id;
+        });
+        console.log("after");
+        console.log(chems);
+
+        console.log("before");
+        console.log(steps);
+        // now, go through steps and update actor / receiver ID to index in array, rather than unique ID
+        for(let x in steps){
+            let step = steps[x];
+            step.actorID = uniqueIDToIndex(step.actorID, step.actorIsEquipment ? equipments : chems);
+            step.receiverID = uniqueIDToIndex(step.receiverID, step.receiverIsEquipment ? equipments : chems);
+        }
+        console.log("after");
+        console.log(steps);
+
+        // step formatting
+        // simply convert fields found in this file to JSON fields
+        // as Jackson requires exact field name matching
+        for(let i in steps){
+            let step = steps[i];
+            step[EXP_JSON_INS_STEP_NUM] = parseInt(i)+1;
+            step[EXP_JSON_INS_ACTOR_INDEX] = step.actorID;
+            delete step.actorID;
+            step[EXP_JSON_INS_ACTOR_IS_EQUIP] = step.actorIsEquipment;
+            delete step.actorIsEquipment;
+            step[EXP_JSON_INS_RECEIVER_INDEX] = step.receiverID;
+            delete step.receiverID;
+            step[EXP_JSON_INS_RECEIVER_IS_EQUIP] = step.receiverIsEquipment;
+            delete step.receiverIsEquipment;
+        }
+
+        // create experiment object
+        let experiment = {};
+
+        // create coupling object that will be mapped to UserAndExperiment on backend
+        let grouping = {};
+        console.log(chemInfos);
+        console.log(chemInfosList);
+
+        // set relevant experiment properties
+        experiment[EXP_JSON_TITLE] = title;
+        experiment[EXP_JSON_CREATOR] = user.fullName;
+        experiment[EXP_JSON_CHEM_PROPERTIES] = chemInfosList;
+        experiment[EXP_JSON_EQUATIONS] = equations;
+        experiment[EXP_JSON_EQUIPMENT] = equipmentList;
+        experiment[EXP_JSON_CHEMICALS] = chems;
+        experiment[EXP_JSON_INSTRUCTIONS] = steps;
+
+        // couple experiment and user
+        grouping = {experiment, user};
+        console.log(grouping);
+
+        // submit coupled object for submission on DB
+        
+        postData('save-new-creation', grouping).then(function(data){
+            if(data != -1){
+                // push newly created experiment to user experiment list
+                experiment.experimentID = data;
+                user.experiments.push(experiment);
+
+                // update user in session
+                sessionStorage.setItem("user", JSON.stringify(user));
+
+                // load newly created simulation
+                loadSimulation(data);
+            } else{
+                document.getElementById("experimentSubmissionButtonError").innerHTML = "Experiment creation failed, please try again.";
+            }
+        });
+             
+    }
+
+    // given a unique ID for an experiment object, 
+    // iterate through the given simulation list 
+    // and return the index of the object whose 
+    // unique ID matches the given one
+    // return: the index of the object whose unique ID matches the given one
+    // return: -1 if the index isn't in the list (error occurred...)
+    function uniqueIDToIndex(value, list){
+        for(let x in list){
+            if(list[x].uniqueID == value){
+                return x;
+            }
+        }
+        return -1
+    }
+
+</script>
+</html>

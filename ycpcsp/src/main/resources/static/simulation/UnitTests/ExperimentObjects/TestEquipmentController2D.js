@@ -66,6 +66,26 @@ QUnit.test('setCenter:', function(assert){
     assert.equal(equip3.position[1], 85, "Center y position should be 85");
 });
 
+QUnit.test('getCenter:', function(assert){
+    equip1.setPosition([10, 15]);
+    equip1.setSize([26, 40]);
+    let pos = control1.getCenter();
+    assert.equal(pos[0], 23, "Center x should be 23");
+    assert.equal(pos[1], 35, "Center y should be 35");
+});
+
+QUnit.test('keepInBounds:', function(assert){
+    let b = [10, 110, 90, 40];
+    equip1.setSize([20, 20]);
+    equip1.setPosition([-10, 90]);
+    control1.keepInBounds(b);
+    assert.deepEqual(equip1.position, [0, 100], "Should snap center to upper left corner of bounds");
+
+    equip1.setPosition([121, 151]);
+    control1.keepInBounds(b);
+    assert.deepEqual(equip1.position, [90, 140], "Should snap center to lower right corner of bounds");
+});
+
 QUnit.test('toRect:', function(assert){
     assert.deepEqual(control4.toRect(), [12, 14, 58, 29], "Bounds of equipment should be [12, 14, 58, 29]");
 });
@@ -84,7 +104,17 @@ QUnit.test('inBounds:', function(assert){
 });
 
 QUnit.test('reset:', function(assert){
-    assert.throws(control5.reset, "A generic EquipmentController2D object should throw an error on unimplemented reset");
+    let listen = new Listener(null, null);
+    equip5.addPositionListener(listen);
+    assert.deepEqual(equip5.positionListeners, [listen], "Checking the listener was added");
+
+    control5.reset();
+    assert.deepEqual(equip5.positionListeners, [], "Checking the listener was removed");
+});
+
+QUnit.test('update:', function(assert){
+    control1.update();
+    assert.expect(0);
 });
 
 QUnit.todo('drawSprite:', function(assert){
@@ -92,5 +122,17 @@ QUnit.todo('drawSprite:', function(assert){
 });
 
 QUnit.todo('draw:', function(assert){
+    assert.true(false);
+});
+
+QUnit.test('shouldRender:', function(assert){
+    equip1.setPosition([0, 0]);
+    equip1.setSize([10, 10]);
+    assert.true(control1.shouldRender([5, 5, 100, 100]), "Should render on intersecting bounds");
+    assert.true(control1.shouldRender([10, 7, 100, 100]), "Should render on touching bounds");
+    assert.false(control1.shouldRender([11, 11, 100, 100]), "Should not render on not touching bounds");
+});
+
+QUnit.todo('drawActionsList:', function(assert){
     assert.true(false);
 });

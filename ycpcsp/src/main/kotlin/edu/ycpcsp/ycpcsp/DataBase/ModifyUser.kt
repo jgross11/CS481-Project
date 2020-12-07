@@ -1,41 +1,36 @@
 package edu.ycpcsp.ycpcsp.DataBase
 
+import edu.ycpcsp.ycpcsp.PostDataClasses.EditUserFormData
 import edu.ycpcsp.ycpcsp.Models.User
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.*
 
-fun ModifyUser(user: User): Boolean {
-    val serverCredentials = serverCredential()
-    val username = serverCredentials?.get(0)
-    val password = serverCredentials?.get(1)
-    val url = serverCredentials?.get(2)
-
-    val connectionProps = Properties()
-    connectionProps["user"] = username
-    connectionProps["password"] = password
-    connectionProps["useSSL"] = "false"
+fun ModifyUser(editUserFormData: EditUserFormData): Boolean {
+    var connection = getDBConnection()
 
     try {
-        //test class fails here
-        Class.forName("com.mysql.jdbc.Driver")
+        if(connection != null) {
 
-        val conn = DriverManager.getConnection(url, connectionProps)
-        val st = conn.createStatement()
-
-        try{
-            val rs = st.executeUpdate("update Database.Users " +
-                    "SET firstName = \'${user.firstName}\', lastName =\'${user.lastName}\', password = \'${user.password}\', organization = \'${user.school}\'" +
-                    "WHERE email = \'${user.email}\';")
-            //The method will return true if the query was able to successful update the desired User row
-            return true
-        } catch (ex: SQLException){
-            println("Error the query returned with a null result set. The query must have been entered incorrectly")
-            ex.printStackTrace()
+            try {
+                var preparedSt = connection.prepareStatement("update Database.Users " +
+                        "SET firstName = ?, lastName = ?, password = ?, organization = ? " +
+                        "WHERE email = ?;")
+                preparedSt.setString(1, editUserFormData.firstName)
+                preparedSt.setString(2, editUserFormData.lastName)
+                preparedSt.setString(3, editUserFormData.password)
+                preparedSt.setString(4, editUserFormData.school)
+                preparedSt.setString(5, editUserFormData.email)
+                preparedSt.executeUpdate()
+                //The method will return true if the query was able to successful update the desired User row
+                return true
+            } catch (ex: SQLException) {
+                println("Error the query returned with a null result set. The query must have been entered incorrectly")
+                ex.printStackTrace()
+            }
+            //The method will return false if the query was unsuccessful
+            return false
         }
-        //The method will return false if the query was unsuccessful
-
-        return false
     } catch (ex: SQLException) {
         // handle any errors
         ex.printStackTrace()

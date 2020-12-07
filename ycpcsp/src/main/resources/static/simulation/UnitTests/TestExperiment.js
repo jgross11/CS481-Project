@@ -6,8 +6,8 @@ QUnit.module("Experiment", {
     beforeEach: function(){
         exp = new Experiment("The Title", "The Name");
         equip = new Equipment([0, 0], [100, 100], 1, null);
-        beaker1 = new BeakerController2D(new Beaker([50, 200], [150, 150], 20.0, 50.0, 0.01));
-        beaker2 = new BeakerController2D(new Beaker([250, 200], [150, 150], 20.0, 50.0, 0.01));
+        beaker1 = new BeakerController2D(new Beaker(ID_EQUIP_BEAKER_50mL));
+        beaker2 = new BeakerController2D(new Beaker(ID_EQUIP_BEAKER_250mL));
     }
 });
 
@@ -27,14 +27,16 @@ QUnit.test('setEquipment:', function(assert){
 
 QUnit.test('setChemicals:', function(assert){
     var chems = [
-        new ChemicalController2D(new Chemical(5, "", 20.0, [0, 0, 0])),
-        new ChemicalController2D(new Chemical(25, "", 10.0, [1, 40, 20])),
-        new ChemicalController2D(new Chemical(30, "", 5.0, [1, 33, 7])),
+        idToChemical(COMPOUND_WATER_ID, 25, 1),
+        idToChemical(COMPOUND_WATER_ID, 25, 1),
+        idToChemical(COMPOUND_WATER_ID, 30, 1),
+        idToChemical(ELEMENT_SODIUM_ATOMIC_NUM, 30, 1)
     ]
 
     exp.setChemicals(chems);
     assert.deepEqual(exp.chemicals, chems,
         "Given Chemical list should be equal to Chemical list in the experiment");
+    assert.equal(exp.chemTypes.length, 2, "Checking only one of each chemical type is added to chemTypes");
 });
 
 QUnit.test('setInstructions:', function(assert){
@@ -48,7 +50,12 @@ QUnit.test('setInstructions:', function(assert){
         "Instructions in Experiment should equal the set Instructions.");
 });
 
-QUnit.test('setName:', function(assert){
+QUnit.test('setTemperature:', function(assert){
+    exp.setTemperature(11);
+    assert.equal(exp.roomTemperature, 11, "Checking that temperature is correctly set");
+});
+
+QUnit.test('setTitle:', function(assert){
     assert.equal(exp.title, "The Title", 'Initial title should be "The Title"');
 
     exp.setTitle("New");
